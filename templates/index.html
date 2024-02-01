@@ -8,6 +8,7 @@
     <head>
         <title>Skill Forge</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='buttons.css') }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
     <body>
@@ -32,10 +33,15 @@
         </nav>
         
         <h1 class="main_title">Select a Programming Language</h1>
-        <button type="button" class="programming_button python">Python</button>
-        <button type="button" class="programming_button java">Java</button>
-        <button type="button" class="programming_button javascript">JavaScript</button>
-        <button type="button" class="programming_button csharp">C#</button>
+
+
+        <div class="container">
+            <div class="btn"><a href="#">Python</a></div>
+            <div class="btn"><a href="#">Java</a></div>
+            <div class="btn"><a href="#">JavaScript</a></div>
+            <div class="btn"><a href="#">C#</a></div>
+        </div>
+
     </body>
     </html>
 
