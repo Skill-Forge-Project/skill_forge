@@ -107,27 +107,27 @@
 }
 .container .btn:nth-child(1)::before, /*chnage 1*/
 .container .btn:nth-child(1)::after {
-	background: #ff1f71;
-	box-shadow: 0 0 5px #ff1f71, 0 0 15px #ff1f71, 0 0 30px #ff1f71,
-		0 0 60px #ff1f71;
+	background: #4584b6;
+	box-shadow: 0 0 5px #FFDE57, 0 0 15px #FFDE57, 0 0 30px #FFDE57,
+		0 0 60px #FFDE57;
 }
 .container .btn:nth-child(2)::before, /* 2*/
 .container .btn:nth-child(2)::after {
-	background: #2db2ff;
-	box-shadow: 0 0 5px #2db2ff, 0 0 15px #2db2ff, 0 0 30px #2db2ff,
-		0 0 60px #2db2ff;
+	background: #5382A1;
+	box-shadow: 0 0 5px #F89820, 0 0 15px #F89820, 0 0 30px #F89820,
+		0 0 60px #F89820;
 }
 .container .btn:nth-child(3)::before, /* 3*/
 .container .btn:nth-child(3)::after {
-	background: #1eff45;
-	box-shadow: 0 0 5px #1eff45, 0 0 15px #1eff45, 0 0 30px #1eff45,
-		0 0 60px #1eff45;
+	background: #F0DB4F;
+	box-shadow: 0 0 5px #323330, 0 0 15px #323330, 0 0 30px #323330,
+		0 0 60px #323330;
 }
 
 .container .btn:nth-child(4)::before, /* 3*/
 .container .btn:nth-child(4)::after {
-	background: #a202a2;
-	box-shadow: 0 0 5px #ff00d0, 0 0 15px #ff00d0, 0 0 30px #ff00d0,
-		0 0 60px #ff00d0;
+	background: #9b4993;
+	box-shadow: 0 0 5px #682876, 0 0 15px #682876, 0 0 30px #682876,
+		0 0 60px #682876;
 }
 

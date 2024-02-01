@@ -4,48 +4,15 @@ body {
     font-family: 'Inconsolata', monospace;
 }
 
+.main_title_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
 .main_title {
     font-family: 'Inconsolata', monospace;
     margin: 15px;
-}
-
-.programming_button {
-    font-family: 'Inconsolata', monospace;
-    background-color: #3498db;
-    color: #ffffff;
-    font-size: 20px;
-    padding: 10px 20px;
-    margin: 3px 10px;
-    border-radius: 5px;
-    border: 0px;
-    width: 170px;
-    transition: background-color 0.3s ease;
-    position: relative;
-    animation-name: fade-in;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes fade-in {
-    0% {
-        opacity: 0;
-        color: red;
-    }
-    25% {
-        opacity: 0.25;
-        color: orange;
-    }
-    50% {
-        opacity: 0.5;
-        color: yellow;
-    }
-    75% {
-        opacity: 0.75;
-        color: green;
-    }
-    100% {
-        opacity: 1;
-        color: rgb(255, 255, 255);
-    }
 }
 
