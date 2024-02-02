@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for, request, flash
 
 app = Flask(__name__)
 
@@ -6,9 +6,8 @@ app = Flask(__name__)
 def hello():
     return render_template('index.html')
 
-
 @app.route('/python_tasks')
-def python_tasks():
+def open_python_tasks():
     return render_template('python_tasks.html')
 
 if __name__ == '__main__':
