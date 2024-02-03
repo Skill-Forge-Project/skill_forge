@@ -3,3 +3,6 @@
 
 # Ignore docs folder
 /docs/
+
+# Ignore env variables
+.env
