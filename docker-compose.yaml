@@ -2,6 +2,7 @@ version: '3.8'
 services:
   db:
     image: postgres
+    container_name: skillforge-postgres-dev
     restart: always
     env_file:
       - .env
