@@ -4,7 +4,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: "Roboto", sans-serif;
+	font-family: 'Ubuntu', sans-serif;
 }
 
 .container {
@@ -58,7 +58,7 @@
 	left: 0;
 	width: 50%;
 	height: 100%;
-	background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+	background: linear-gradient(to left, #ffffff26, transparent);
 	transform: skewX(45deg) translate(0);
 	transition: 0.5s;
 	filter: blur(0px);
