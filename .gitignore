@@ -1,3 +1,5 @@
 # Ignore venv dir
 /venv/
 
+# Ignore docs folder
+/docs/
