@@ -43,7 +43,7 @@
                 <label>Repeat Password</label>
               </div>
 
-              <a href="#">
+              <a href="{{ url_for('register') }}">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -59,7 +59,20 @@
               </a>
             </form>
           </div>
-       
+
+          <form method="POST" class="register-form", action="{{ url_for('register') }}">
+            {{ form.hidden_tag() }}
+            <!-- <label class="special-label">{{ form.username.label }}</label> {{ form.username(size=20) }} -->
+    
+            {{ form.username.label }} {{ form.username(size=20) }}
+            {{ form.first_name.label}} {{ form.first_name(size=20) }}
+            {{ form.last_name.label}} {{ form.last_name(size=20) }}
+            {{ form.email.label }} {{ form.email(size=20) }}
+            {{ form.password.label }} {{ form.password(size=20) }}
+            {{ form.confirm.label }} {{ form.confirm(size=20) }}
+            {{ form.submit (class="register-button")}}
+        </form>
+
     </body>
 </html>
 

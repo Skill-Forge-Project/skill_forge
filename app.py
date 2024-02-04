@@ -40,27 +40,31 @@ with app.app_context():
 # App route for Register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        email = form.email.data
-        password = form.password.data
+    form = RegistrationForm
+    if request.method == 'POST':
+        email = request.form['email']
+        username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        password = request.form['password']
+        repeat_password = request.form['repeat_password']
 
-        # Check if the username or email already exists
-        existing_user = User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first()
+        # Check if passwords match
+        if password != repeat_password:
+            return render_template('register.html', error='Passwords do not match')
+
+        # Check if the email or username is already in use
+        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
         if existing_user:
-            flash('Username or email already exists. Please choose different ones.', 'danger')
-        else:
-            # Hash the password with bcrypt
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            # Create a new user and add it to the database
-            new_user = User(username=username, first_name = first_name, last_name = last_name, email=email, password=hashed_password)
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Registration successful! Please log in.', 'success')
-            # return redirect(url_for('index'))
+            return render_template('register.html', error='Email or username already in use')
+
+        # Create a new user
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user = User(email=email, username=username, first_name=first_name, last_name=last_name, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in.')
+
     return render_template('register.html', form=form)
 
 
@@ -107,4 +111,3 @@ def open_csharp_tasks():
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.run(debug=True, host = '0.0.0.0', port = '5000')
-    app.run()
