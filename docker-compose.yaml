@@ -4,8 +4,10 @@ services:
     image: postgres
     container_name: skillforge-postgres-dev
     restart: always
-    env_file:
-      - .env
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     ports:
       - '5432:5432'
     volumes: 
