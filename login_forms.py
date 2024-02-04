@@ -10,13 +10,13 @@ class LoginForm(FlaskForm):
 
 # Register Form
 class RegistrationForm(FlaskForm):
-    username = StringField('Username:', [validators.Length(min=4, max=25)])
-    first_name = StringField('First Name:', [validators.Length(min=4, max=25)])
-    last_name = StringField('Last Name:', [validators.Length(min=4, max=25)])
-    email = StringField('Email:', [validators.Email()])
-    password = PasswordField('Password:', [
+    username = StringField('', [validators.Length(min=4, max=25)], render_kw={'placeholder': 'Username'})
+    first_name = StringField('', [validators.Length(min=4, max=25)], render_kw={'placeholder': 'First name'})
+    last_name = StringField('', [validators.Length(min=4, max=25)], render_kw={'placeholder': 'Last name'})
+    email = StringField('', [validators.Email()], render_kw={'placeholder': 'Email address'})
+    password = PasswordField('', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Repeat Password:')
+    ], render_kw={'placeholder': 'Password'})
+    confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'})
     submit = SubmitField('Register')

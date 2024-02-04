@@ -52,6 +52,13 @@ footer {
     text-align: center;
 }
 
+.login-box p {
+    margin-top: 20px;
+    padding: 0px;
+    color: #fff;
+    text-align: center;
+}
+
 .login-box .user-box {
     position: relative;
 }
@@ -99,7 +106,7 @@ footer {
     text-transform: uppercase;
     overflow: hidden;
     transition: .5s;
-    margin-top: 40px;
+    margin-top: 30px;
     letter-spacing: 4px;
     margin-right: 10px;
     border: 0px;

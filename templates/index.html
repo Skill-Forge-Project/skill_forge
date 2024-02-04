@@ -10,17 +10,19 @@
     </head>
     
     <body>
-
         <div class="login-box">
-            <form method="post" action="{{ url_for('login') }}">
+            <div>
+                <h2>Sign In</h2>
+            </div>
+            <form class="user-box input" method="post" action="{{ url_for('login') }}">
                 {{ form.csrf_token }}
                 
-                <div class="user-box">
-                    {{ form.username(class="form-control", placeholder="Username", id="inputUsername") }}
+                <div>
+                    {{ form.username(class="user-box input", placeholder="Username", id="inputUsername") }}
                 </div>
 
                 <div class="user-box">
-                    {{ form.password(class="form-control", placeholder="Password", id="inputPassword") }}
+                    {{ form.password(class="input", placeholder="Password", id="inputPassword") }}
                 </div>
                 <!-- Add other form fields as needed -->
                 
@@ -37,7 +39,8 @@
                     <span></span>
                     <span></span>
                     <span></span>
-                    Register</button>
+                    Register
+                </button>
             </form>
         </div>
         <script>
