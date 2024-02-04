@@ -36,6 +36,34 @@ with app.app_context():
     # Create the database tables
     db.create_all()
 
+
+# App route for Register
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        email = form.email.data
+        password = form.password.data
+
+        # Check if the username or email already exists
+        existing_user = User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('Username or email already exists. Please choose different ones.', 'danger')
+        else:
+            # Hash the password with bcrypt
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            # Create a new user and add it to the database
+            new_user = User(username=username, first_name = first_name, last_name = last_name, email=email, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Registration successful! Please log in.', 'success')
+            # return redirect(url_for('index'))
+    return render_template('register.html', form=form)
+
+
 # App route for Login
 @app.route('/', methods=['GET', 'POST'])
 def login():

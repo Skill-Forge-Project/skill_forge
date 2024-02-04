@@ -1,3 +1,9 @@
+// Redirect to Register page
+function register() {
+    window.location.href = "{{ url_for('register') }}";
+}
+
+
 // Redirect to tasks
 function pythonTasks() {
     window.location.href = "{{ url_for('python_tasks') }}";
