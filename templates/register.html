@@ -10,69 +10,36 @@
     
     <body>
 
-        <div class="login-box">
-            <h2>Register</h2>
-            <form>
-              <div class="user-box">
-                <input type="text" name="email" required="">
-                <label>Email Adress</label>
-              </div>
-
-              <div class="user-box">
-                <input type="text" name="username" required="">
-                <label>Username</label>
-              </div>
-
-              <div class="user-box">
-                <input type="text" name="first_name" required="">
-                <label>First Name</label>
-              </div>
-
-              <div class="user-box">
-                <input type="text" name="last_name" required="">
-                <label>Last Name</label>
-              </div>
-
-              <div class="user-box">
-                <input type="password" name="password" required="">
-                <label>Password</label>
-              </div>
-
-              <div class="user-box">
-                <input type="password" name="repeat_password" required="">
-                <label>Repeat Password</label>
-              </div>
-
-              <a href="{{ url_for('register') }}">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                Create Account
-              </a>
-              <a href="{{ url_for('hello') }}">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                Sign In
-              </a>
+        <div class="container">
+            <h1>Create new account</h1>
+        </div>
+        
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <form method="POST" class="register-form", action="{{ url_for('register') }}">
+                {{ form.hidden_tag() }}
+                <!-- <label class="special-label">{{ form.username.label }}</label> {{ form.username(size=20) }} -->
+        
+                {{ form.username.label }} {{ form.username(size=20) }}
+                {{ form.first_name.label}} {{ form.first_name(size=20) }}
+                {{ form.last_name.label}} {{ form.last_name(size=20) }}
+                {{ form.email.label }} {{ form.email(size=20) }}
+                {{ form.password.label }} {{ form.password(size=20) }}
+                {{ form.confirm.label }} {{ form.confirm(size=20) }}
+                {{ form.submit (class="register-button")}}
             </form>
-          </div>
-
-          <form method="POST" class="register-form", action="{{ url_for('register') }}">
-            {{ form.hidden_tag() }}
-            <!-- <label class="special-label">{{ form.username.label }}</label> {{ form.username(size=20) }} -->
-    
-            {{ form.username.label }} {{ form.username(size=20) }}
-            {{ form.first_name.label}} {{ form.first_name(size=20) }}
-            {{ form.last_name.label}} {{ form.last_name(size=20) }}
-            {{ form.email.label }} {{ form.email(size=20) }}
-            {{ form.password.label }} {{ form.password(size=20) }}
-            {{ form.confirm.label }} {{ form.confirm(size=20) }}
-            {{ form.submit (class="register-button")}}
-        </form>
-
+            
+        </div>
+        
+        <div class="container">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
     </body>
 </html>
 

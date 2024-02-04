@@ -6,42 +6,38 @@
 
         <!-- Import Navigation bar styles -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login_form.css') }}">
+        <!-- Import Functional Scripts -->
+        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
       
     </head>
     
     <body>
 
-        <div class="login-box">
-            <h2>Login</h2>
-            <form>
-              <div class="user-box">
-                <input type="text" name="" required="">
-                <label>Email</label>
-              </div>
-              <div class="user-box">
-                <input type="password" name="" required="">
-                <label>Password</label>
-              </div>
-              <a href="#">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                Sign In
-              </a>
-              <a href="{{ url_for('register') }}">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                Sign Up
-              </a>
+        <div>
+            <form method="post" action="{{ url_for('login') }}" class="form-signin">
+                {{ form.csrf_token }}
+                
+                <label for="inputUsername" class="sr-only">Username</label>
+                {{ form.username(class="form-control", placeholder="Username", id="inputUsername") }}
+                
+                <label for="inputPassword" class="sr-only">Password</label>
+                {{ form.password(class="form-control", placeholder="Password", id="inputPassword") }}
+                
+                <!-- Add other form fields as needed -->
+            
+                <button type="submit" class="btn btn-lg btn-primary btn-block">Login</button>
+                <button type="submit" class="btn btn-lg btn-primary btn-block" onclick="register()">Register</button>
+        
             </form>
         </div>
-
-
-        <!-- Import Functional Scripts -->
-        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+        <script>
+            function register() {
+                window.location.href = "{{ url_for('register') }}";
+            }
+            function login(){
+                window.location.href = "{{ url_for('login') }}";
+            }
+        </script>
         <footer id="footer">
             <p>SoftUni Discord Community. All rights reserved 2024</p>
         </footer>
