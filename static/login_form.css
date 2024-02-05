@@ -14,7 +14,7 @@ body {
     background: linear-gradient(#141e30, #243b55);
 }
 
-footer {
+.info {
     font-family: 'Ubuntu', sans-serif;
     font-size: 12px;
     color: #ffffff;
@@ -25,8 +25,8 @@ footer {
     align-items: center;
     clear: both;
     position: absolute;
-    margin-top: 20px;
-    
+    margin-top: 250px;
+ 
 }
 
 .login-box {

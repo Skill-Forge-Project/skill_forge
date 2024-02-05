@@ -42,7 +42,11 @@
                     Register
                 </button>
             </form>
+            <!-- <div class="info" id="footer">
+                <p>SoftUni Discord Community. All rights reserved 2024</p>
+            </div> -->
         </div>
+
         <script>
             function register() {
                 window.location.href = "{{ url_for('register') }}";
@@ -51,9 +55,8 @@
                 window.location.href = "{{ url_for('login') }}";
             }
         </script>
-        <footer id="footer">
-            <p>SoftUni Discord Community. All rights reserved 2024</p>
-        </footer>
+        
+
     </body>
 </html>
 
