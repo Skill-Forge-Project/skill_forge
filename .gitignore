@@ -6,3 +6,6 @@
 
 # Ignore env variables
 .env
+
+# Ignore pycache dir
+/__pycache__/
