@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+        <title>Skill Forge</title>
+
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='login_form.css') }}">
+    </head>
+    
+    <body>
+
+        <div class="login-box">
+            <div class="user-box">
+                <h2>Create new account</h2>
+            </div>
+            
+            <div>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <form method="POST" class="user-box input", action="{{ url_for('register') }}">
+                    {{ form.hidden_tag() }}
+                    <!-- <label class="special-label">{{ form.username.label }}</label> {{ form.username(size=20) }} -->
+                    <div class="user-box">{{ form.username.label }} {{ form.username(size=20) }}</div>
+                    <div class="user-box">{{ form.first_name.label}} {{ form.first_name(size=20) }}</div>
+                    <div class="user-box">{{ form.last_name.label}} {{ form.last_name(size=20) }}</div>
+                    <div class="user-box">{{ form.email.label }} {{ form.email(size=20) }}</div>
+                    <div class="user-box">{{ form.password.label }} {{ form.password(size=20) }}</div>
+                    <div class="user-box">{{ form.confirm.label }} {{ form.confirm(size=20) }}</div>
+                    <div class="user-box">
+                        <button type="submit" class="btn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            Submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="user-box">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            </div>
+        </div>
+    </body>
+</html>
+

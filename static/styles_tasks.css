@@ -1,0 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+
+.section-container {
+    font-family: 'Ubuntu', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    overflow-y: auto;
+    max-height: 150px; /* Set the maximum height for the scrollable section */
+}
+
+.visible {
+    opacity: 1;
+}
+
+
+.be_advise {
+    color: #ae0303cf;
+}
+
+button {
+    cursor: pointer;
+}
