@@ -14,6 +14,70 @@ body {
     background: linear-gradient(#141e30, #243b55);
 }
 
+.section-container {
+    font-family: 'Ubuntu', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.section {
+    font-family: 'Ubuntu', sans-serif;
+    background: rgba(0, 0, 0, .5);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: left;
+    align-items: left;
+    margin-top: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    /* border: 1px solid #2196f3; */
+}
+
+.section.inner-shadow {
+    /* width: 200px; */
+    /* height: 100px; */
+    /* background-color: #2196f3; */
+    border-radius: 10px;
+    /* box-shadow: inset 1cap 20px 20px -25px #2196f3; */
+    /* margin: 20px; */
+}
+
+.section h3 {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 20px;
+    margin: 5px;
+    padding: 0;
+    color: #d2d0d0;
+    text-align: left;
+}
+
+.content {
+    font-family: 'Ubuntu', sans-serif;
+    margin: 5px;
+    padding: 0;
+    color: #d2d0d0;
+    text-align: left;
+}
+
+.visible {
+    opacity: 1;
+}
+
+
+.section.content.be_advise {
+    color: #ae0303cf;
+}
+
+button {
+    cursor: pointer;
+}
+
 .info {
     font-family: 'Ubuntu', sans-serif;
     font-size: 12px;
@@ -26,6 +90,7 @@ body {
     clear: both;
     position: absolute;
     margin-top: 250px;
+ 
 }
 
 .button-container {
@@ -34,6 +99,7 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+
 }
 
 .login-box {
@@ -67,15 +133,6 @@ body {
     padding: 0px;
     color: #fff;
     text-align: center;
-}
-
-.login-box a {
-    margin: auto;
-    text-decoration: none;
-}
-
-.login-box a:hover {
-    color: #fff;
 }
 
 .login-box .user-box {
@@ -132,7 +189,6 @@ body {
     width: 300px;
 }
 
-
 /* Python button styles */
 .login-box .btn.python-btn {
     font-family: 'Ubuntu', sans-serif;
@@ -143,9 +199,9 @@ body {
     background: #ffde57; /* Unique color for Python button hover */
     color: #4584b6;
     border-radius: 5px;
-    box-shadow: 0 0 5px #4584b6,
+    box-shadow: 0 0 5px #ffde57,
                 0 0 25px #4584b6,
-                0 0 50px #4584b6,
+                0 0 50px #ffde57,
                 0 0 100px #4584b6;
 }
 
@@ -160,9 +216,9 @@ body {
     color: #5382a1;
     border-radius: 5px;
     box-shadow: 0 0 5px #5382a1,
-                0 0 25px #5382a1,
+                0 0 25px #f89820,
                 0 0 50px #5382a1,
-                0 0 100px #5382a1;
+                0 0 100px #f89820;
 }
 
 .user-box .btn .java-btn span:nth-child(1) {
@@ -178,10 +234,10 @@ body {
     background: #f0db4f; /* Unique color for JavaScript button hover */
     color: #000000;
     border-radius: 5px;
-    box-shadow: 0 0 5px #f0db4f,
-                0 0 25px #000000,
-                0 0 50px #f0db4f,
-                0 0 100px #000000;
+    box-shadow: 0 0 5px #323330,
+                0 0 25px #f0db4f,
+                0 0 50px #323330,
+                0 0 100px #323330;
 }
 
 .js-btn span:nth-child(1) {
@@ -195,12 +251,12 @@ body {
 
 .login-box .btn.csharp-btn:hover {
     background: #9b4993; /* Unique color for C# button hover */
-    color: #682876;
+    color: #fff;
     border-radius: 5px;
     box-shadow: 0 0 5px #682876,
                 0 0 25px #682876,
                 0 0 50px #682876,
-                0 0 100px #682876;
+                0 0 100px #9b4993;
 }
 
 
@@ -224,7 +280,7 @@ body {
     left: -100%;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent);
+    background: linear-gradient(90deg, transparent, #03e9f4);
     animation: btn-anim1 1s linear infinite;
 }
 
@@ -245,7 +301,7 @@ body {
     right: 0;
     width: 2px;
     height: 100%;
-    background: linear-gradient(180deg, transparent);
+    background: linear-gradient(180deg, transparent, #03e9f4);
     animation: btn-anim2 1s linear infinite;
     animation-delay: .25s
 }
@@ -266,7 +322,7 @@ body {
     right: -100%;
     width: 100%;
     height: 2px;
-    background: linear-gradient(270deg, transparent);
+    background: linear-gradient(270deg, transparent, #03e9f4);
     animation: btn-anim3 1s linear infinite;
     animation-delay: .5s
 }
@@ -287,7 +343,7 @@ body {
     left: 0;
     width: 2px;
     height: 100%;
-    background: linear-gradient(360deg, transparent);
+    background: linear-gradient(360deg, transparent, #03e9f4);
     animation: btn-anim4 1s linear infinite;
     animation-delay: .75s
 }

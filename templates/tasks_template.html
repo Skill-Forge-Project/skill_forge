@@ -7,7 +7,7 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
         <title>Python Tasks</title>
         <!-- Import Navigation bar styles -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles_tasks.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tasks_template.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='buttons.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -35,37 +35,37 @@
         </nav>
 
         <div class="container section-container">
-            <div class="section visible" id="section1">
-                <h2>Novice Quests</h2>
-                <p>Novice quests are simple tasks designed for beginners. Each problem you solve will give you 30XP.</p>
+            <div class="section inner-shadow visible" id="section1">
+                <h3>Novice Quests</h3>
+                <p class="content">Novice quests are simple tasks designed for beginners. Each problem you solve will give you 30XP.</p>
                 <!-- Add more content here as needed -->
             </div>
     
-            <div class="section visible" id="section2">
-                <h2>Adventurous Challenges</h2>
-                <p>Adventurous challenges offer a moderate level of difficulty, suitable for members with a 
+            <div class="section inner-shadow visible" id="section2">
+                <h3>Adventurous Challenges</h3>
+                <p class="content">Adventurous challenges offer a moderate level of difficulty, suitable for members with a 
                     bit of experience. These tasks involve data structures, basic algorythms, 
                     more complex logical operations. For each problem you will be awarded with 60XP.</p>
                 <!-- Add more content here as needed -->
             </div>
     
-            <div class="section visible" id="section3">
-                <h2>Epic Campaigns</h2>
-                <p>Epic campaigns are high-stakes and challenging quests that demand advanced skills.
+            <div class="section inner-shadow visible" id="section3">
+                <h3>Epic Campaigns</h3>
+                <p class="content">Epic campaigns are high-stakes and challenging quests that demand advanced skills.
                     You will have to solve complex algorythms, work with OOP principles and advanced data structures.
                     Each task will give you 100XP.
                 </p>
                 <!-- Add more content here as needed -->
             </div>
 
-            <div class="section visible" id="section3">
-                <h2>Abyssal Trials</h2>
-                <p class="be_advise">
+            <div class="section inner-shadow visible" id="section3">
+                <h3>Abyssal Trials</h3>
+                <p class="content be_advise">
                     BE ADVISE! You will have only one chance per week to submit your solution!
                     If your solution is not 100% correct you will loose XP, the amount of points which
                     is not enough to finish your task.
                 </p>
-                <p>Abyssal Trials are the most challenging quests in the realm, 
+                <p class="content">Abyssal Trials are the most challenging quests in the realm, 
                     reserved for the bravest and most experienced adventurers. 
                     These nightmare-level tasks plunge players into the depths of chaos and require 
                     unparalleled skill, strategy, and determination to overcome. Solve any of these
