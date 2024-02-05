@@ -4,6 +4,7 @@ body {
     font-family: 'Ubuntu', sans-serif;
 }
 
+
 .main_title_container {
     /* font-family: 'Ubuntu', sans-serif; */
     display: flex;
@@ -16,4 +17,5 @@ body {
     /* font-family: 'Ubuntu', sans-serif; */
     margin: 15px;
 }
+
 
