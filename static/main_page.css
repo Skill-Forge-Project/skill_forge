@@ -34,7 +34,7 @@ body {
     position: relative;
     justify-content: center;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 20px;
 
 }
 
@@ -45,7 +45,7 @@ body {
     flex-direction: row;
     top: 50%;
     left: 50%;
-    width: 600px;
+    width: 800px;
     height: 50px;
     padding: 40px;
     transform: translate(-50%, -50%);
@@ -120,19 +120,91 @@ body {
     transition: .5s;
     margin-top: 0px;
     letter-spacing: 4px;
-    margin-right: 10px;
+    margin: 10px;
     border: 0px;
+    width: 300px;
 }
 
-.login-box .btn:hover {
-    background: #03e9f4;
+/* Python button styles */
+.login-box .btn.python-btn {
+    font-family: 'Ubuntu', sans-serif;
+    font-family: sans-serif;
+}
+
+.login-box .btn.python-btn:hover {
+    background: #ffde57; /* Unique color for Python button hover */
     color: #fff;
     border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-        0 0 25px #03e9f4,
-        0 0 50px #03e9f4,
-        0 0 100px #03e9f4;
+    box-shadow: 0 0 5px #ffde57,
+                0 0 25px #4584b6,
+                0 0 50px #ffde57,
+                0 0 100px #4584b6;
 }
+
+
+/* Java button styles */
+.login-box .btn.java-btn {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.login-box .btn.java-btn:hover {
+    background: #f89820; /* Unique color for Java button hover */
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #5382a1,
+                0 0 25px #f89820,
+                0 0 50px #5382a1,
+                0 0 100px #f89820;
+}
+
+.user-box .btn .java-btn span:nth-child(1) {
+    background: linear-gradient(90deg, transparent, #4caf50); /* Unique color for Java button animation */
+}
+
+/* JavaScript button styles */
+.login-box .btn.js-btn {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.login-box .btn.js-btn:hover {
+    background: #f0db4f; /* Unique color for JavaScript button hover */
+    color: #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #323330,
+                0 0 25px #f0db4f,
+                0 0 50px #323330,
+                0 0 100px #323330;
+}
+
+.js-btn span:nth-child(1) {
+    background: linear-gradient(90deg, transparent, #2196f3); /* Unique color for JavaScript button animation */
+}
+
+/* C# button styles */
+.login-box .btn.csharp-btn {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.login-box .btn.csharp-btn:hover {
+    background: #9b4993; /* Unique color for C# button hover */
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #682876,
+                0 0 25px #682876,
+                0 0 50px #682876,
+                0 0 100px #9b4993;
+}
+
+
+/* .login-box .btn:hover {
+    background: #ffde57;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ffde57,
+        0 0 25px #4584b6,
+        0 0 50px #ffde57,
+        0 0 100px #4584b6;
+} */
 
 .login-box .btn span {
     position: absolute;
@@ -147,6 +219,7 @@ body {
     background: linear-gradient(90deg, transparent, #03e9f4);
     animation: btn-anim1 1s linear infinite;
 }
+
 
 @keyframes btn-anim1 {
     0% {
@@ -221,3 +294,4 @@ body {
         bottom: 100%;
     }
 }
+
