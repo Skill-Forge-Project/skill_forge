@@ -1,21 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
+
+
 
 html {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     height: 100%;
 }
 
 body {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
     background: linear-gradient(#141e30, #243b55);
 }
 
 .section-container {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     display: flex;
     flex-direction: column;
     padding-top: 20px;
@@ -24,7 +29,7 @@ body {
 }
 
 .section {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     background: rgba(0, 0, 0, .5);
     color: #ffffff;
     display: flex;
@@ -49,7 +54,7 @@ body {
 }
 
 .section h3 {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     font-size: 20px;
     margin: 5px;
     padding: 0;
@@ -58,7 +63,7 @@ body {
 }
 
 .content {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     margin: 5px;
     padding: 0;
     color: #d2d0d0;
@@ -79,7 +84,7 @@ button {
 }
 
 .info {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     font-size: 12px;
     color: #ffffff;
     margin: 0px;
@@ -103,7 +108,7 @@ button {
 }
 
 .login-box {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     position: absolute;
     display: flex;
     flex-direction: row;
@@ -191,7 +196,7 @@ button {
 
 /* Python button styles */
 .login-box .btn.python-btn {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     font-family: sans-serif;
 }
 
@@ -208,7 +213,7 @@ button {
 
 /* Java button styles */
 .login-box .btn.java-btn {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
 .login-box .btn.java-btn:hover {
@@ -227,7 +232,7 @@ button {
 
 /* JavaScript button styles */
 .login-box .btn.js-btn {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
 .login-box .btn.js-btn:hover {
@@ -246,7 +251,7 @@ button {
 
 /* C# button styles */
 .login-box .btn.csharp-btn {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
 .login-box .btn.csharp-btn:hover {

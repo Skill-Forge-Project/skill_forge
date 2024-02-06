@@ -1,14 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
 
 
 body {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
 
 .main_title_container {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,7 +21,7 @@ body {
 }
 
 .main_title {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     margin: 15px;
 }
 
