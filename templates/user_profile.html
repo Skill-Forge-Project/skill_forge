@@ -4,7 +4,7 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
         <title>Skill Forge</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main_page.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='user_profile.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
@@ -30,23 +30,27 @@
             </div>
             <div class="user_section">
                 <div class="user_profile" >
-                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_python_tasks') }}">
                 </div>
             </div>  
         </nav>
-        
-        <div class="main_title_container">
-            <h1 class="main_title">Select a Programming Language</h1>
-        </div>
 
-        <div class="button-container">
-            <div class="button-container login-box">
-                <div class="btn python-btn" onclick=location.href="{{ url_for('open_python_tasks') }}">Python</div>
-                <div class="btn java-btn" onclick=location.href="{{ url_for('open_java_tasks') }}">Java</div>
-                <div class="btn js-btn" onclick=location.href="{{ url_for('open_js_tasks') }}">JavaScript</div>
-                <div class="btn csharp-btn" onclick=location.href="{{ url_for('open_csharp_tasks') }}">C#</div>
+        <div class="user_info">
+            <div class="left_pane">
+                <div class="user_avatar"></div>
+                <p class="user_name">Put Username Here</p>
+            </div>
+
+            <div class="right_pane">
+                <div class="user_data">
+                    <p>First Name</p>
+                    <p>Last Name</p>
+                    <p>Email</p>
+                    <p>Date of registration</p>
+                </div>
             </div>
         </div>
+
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

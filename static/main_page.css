@@ -133,7 +133,7 @@ body {
     overflow: hidden;
     transition: .5s;
     margin-top: 0px;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     margin: 10px;
     border: 0px;
     width: 300px;
@@ -143,7 +143,8 @@ body {
 /* Python button styles */
 .login-box .btn.python-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    font-family: sans-serif;
+    justify-content: center;
+    text-align: center;
 }
 
 .login-box .btn.python-btn:hover {
@@ -160,6 +161,8 @@ body {
 /* Java button styles */
 .login-box .btn.java-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
+    justify-content: center;
+    text-align: center;
 }
 
 .login-box .btn.java-btn:hover {
@@ -179,6 +182,8 @@ body {
 /* JavaScript button styles */
 .login-box .btn.js-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
+    justify-content: center;
+    text-align: center;
 }
 
 .login-box .btn.js-btn:hover {
@@ -198,6 +203,9 @@ body {
 /* C# button styles */
 .login-box .btn.csharp-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
+    justify-content: center;
+    text-align: center;
+    
 }
 
 .login-box .btn.csharp-btn:hover {
@@ -310,3 +318,11 @@ body {
     }
 }
 
+.user_section {
+    justify-content: right;
+}
+
+.user_section .user_profile {
+    justify-content: right;
+    cursor: pointer;
+}

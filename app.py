@@ -121,6 +121,10 @@ def hello():
 def main_page():
     return render_template('main.html')
 
+@app.route('/user_profile')
+def open_user_profile():
+    return render_template('user_profile.html')
+
 # App Routes to tasks
 @app.route('/python_tasks')
 def open_python_tasks():
