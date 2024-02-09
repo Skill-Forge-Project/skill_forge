@@ -78,6 +78,8 @@ body {
     font-size: 16px;
     margin: 10px;
     border: 2px solid #243b55;
+    height: 40%;
+    width: 50%;
 }
 
 .user_data {
