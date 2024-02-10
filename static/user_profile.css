@@ -44,14 +44,17 @@ body {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
+    margin-right: 20px;
     margin-bottom: 20px;
+    align-items: center;
+    
 }
 
 .user_avatar {
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
     border: 2px solid #243b55;
     border-radius: 10px;
     font-family: 'JetBrainsMonoRegular', sans-serif;
@@ -60,6 +63,31 @@ body {
     margin-top: 20px;
     box-sizing: border-box;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 15px #141e30, inset 0 0 20px #243b55;
+    background-size: cover;
+    background-position: center;
+}
+
+.user_name.ch_av_btn {
+    position: relative;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    letter-spacing: 1px;
+    margin: 10px;
+    border: 0px;
+    height: 35px;
+    width: 75%;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .user_name {

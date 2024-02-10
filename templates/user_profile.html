@@ -31,14 +31,33 @@
             <div class="user_section">
                 <div class="user_profile" >
                     <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_python_tasks') }}">
+
                 </div>
             </div>  
         </nav>
 
         <div class="user_info">
             <div class="left_pane">
-                <div class="user_avatar"></div>
+
+                <div>
+                    {% if avatar %}
+                        <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
+                    {% else %}
+                    <!-- Display a default avatar image if the user does not have an avatar -->
+                        <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                    {% endif %}
+                </div>
+
+                <!-- <form id="avatarForm" action="/upload_avatar" method="post" enctype="multipart/form-data">
+                    <input type="file" id="upload_avatar" name="avatar" style="display: none;" accept="image/*" onchange="document.getElementById('save_avatar').submit();">
+                    <input type="submit" id="save_avatar" value="Upload Avatar" style="display: none;">
+                    <div class="user_name ch_av_btn" onclick="document.getElementById('upload_avatar').click()">Change Avatar</div>
+                </form>  -->
+
+
+                
                 <p class="user_name">{{ user.username }}<br>ID: {{ user.user_id }}</p>
+                <p class="user_name">XP: {{ user.xp }}<br>Level:<br>{{ user.level }}</p>
             </div>
 
             <div class="right_pane">
@@ -46,9 +65,14 @@
                     <p>First Name: {{ user.first_name }}</p>
                     <p>Last Name: {{ user.last_name }}</p>
                     <p>Email: {{ user.email }}</p>
-                    <p>Date of registration: </p>
+                    <p>Date of registration: {{ formatted_date }}</p>
                 </div>
+                <form action="/upload_avatar" method="post" enctype="multipart/form-data">
+                    <input type="file" name="avatar" accept="image/*">
+                    <input type="submit" value="Upload Avatar">
+                </form>
             </div>
+
         </div>
 
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>

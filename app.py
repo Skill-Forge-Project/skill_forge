@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
-import os, psycopg2
+import os, psycopg2, base64
+
 
 from login_forms import LoginForm, RegistrationForm
 
@@ -33,10 +34,15 @@ login_manager.login_message_category = 'info'
 class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    xp = db.Column(db.Integer, default=0)
+    level = db.Column(db.Integer, default=1)
+    rank = db.Column(db.String(30), default="Novice Adventurer")
+    avatar = db.Column(db.LargeBinary, default=None)
+    date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
     
     # Class constuctor
@@ -99,7 +105,6 @@ def register():
 @app.route('/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    print("Form called")
     if form.validate_on_submit():
         print("Validation succesful!")
         user = User.query.filter_by(username=form.username.data).first()
@@ -107,11 +112,9 @@ def login():
         # Create session for the user. This is needed for the login manager and for reading the data from the database
         session['user_id'] = user.user_id
         
+        # Log in the user
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            print("Login Succesful!")
             login_user(user, force = True)
-            flash('Login successful!', 'success')
-            print("Redirect me!")
             return redirect(url_for('main_page'))
         else:
             flash('Login unsuccessful. Please check your username and password.', 'danger')
@@ -140,8 +143,40 @@ def open_user_profile():
     
     # Get the user info from the database
     user = User.query.get(user_id)
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
     
-    return render_template('user_profile.html', user=user)
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    
+    return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
+
+@app.route('/upload_avatar', methods=['POST'])
+def upload_avatar():
+    # Get user ID from session or request parameters
+    user_id = session.get('user_id') or request.form.get('user_id')
+    if user_id is None:
+        # Handle case where user is not logged in
+        return redirect(url_for('login'))
+    
+    # Check if the avatar file is provided in the request
+    if 'avatar' not in request.files:
+        # Handle case where no file is uploaded
+        flash('No avatar file uploaded', 'error')
+        return redirect(request.url)
+    
+    # Get the uploaded file data
+    avatar_file = request.files['avatar']
+    
+    # Read the file data as bytes
+    avatar_data = avatar_file.read()
+    
+    # Update the user's avatar in the database
+    user = User.query.get(user_id)
+    user.avatar = avatar_data
+    db.session.commit()
+    
+    # Redirect to the user profile page or any other page
+    return redirect(url_for('open_user_profile'))
 
 # App Routes to tasks
 @login_required
