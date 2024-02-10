@@ -1,9 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
-import os
+import os, psycopg2
 
 from login_forms import LoginForm, RegistrationForm
 
@@ -21,6 +21,7 @@ bcrypt = Bcrypt(app)
 
 # Init the database connection
 db = SQLAlchemy(app)
+conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI'))
 
 # Init the login manager
 login_manager = LoginManager(app)
@@ -31,7 +32,7 @@ login_manager.login_message_category = 'info'
 # Define User model
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
@@ -48,11 +49,11 @@ class User(db.Model):
     
     # Get the user_ID
     def get_id(self):
-        return str(self.id)
+        return str(self.user_id)
     
     # Print the User info
     def get_userinfo(self):
-        return f'User {self.username}\nID: {self.id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
+        return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
 
 @login_manager.user_loader
@@ -102,6 +103,10 @@ def login():
     if form.validate_on_submit():
         print("Validation succesful!")
         user = User.query.filter_by(username=form.username.data).first()
+        
+        # Create session for the user. This is needed for the login manager and for reading the data from the database
+        session['user_id'] = user.user_id
+        
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             print("Login Succesful!")
             login_user(user, force = True)
@@ -117,27 +122,44 @@ def login():
 def hello():
     return render_template('index.html')
 
+@login_required
 @app.route('/main')
 def main_page():
     return render_template('main.html')
 
+
+@login_required
 @app.route('/user_profile')
 def open_user_profile():
-    return render_template('user_profile.html')
+    # If user is not logged in, redirect to login page
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    # Get the User ID for the session
+    user_id = session['user_id']
+    
+    # Get the user info from the database
+    user = User.query.get(user_id)
+    
+    return render_template('user_profile.html', user=user)
 
 # App Routes to tasks
+@login_required
 @app.route('/python_tasks')
 def open_python_tasks():
     return render_template('python_tasks.html')
 
+@login_required
 @app.route('/js_tasks')
 def open_js_tasks():
     return render_template('js_tasks.html')
 
+@login_required
 @app.route('/java_tasks')
 def open_java_tasks():
     return render_template('java_tasks.html')
 
+@login_required
 @app.route('/c_sharp_tasks')
 def open_csharp_tasks():
     return render_template('c_sharp_tasks.html')

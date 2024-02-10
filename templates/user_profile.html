@@ -38,15 +38,15 @@
         <div class="user_info">
             <div class="left_pane">
                 <div class="user_avatar"></div>
-                <p class="user_name">Put Username Here</p>
+                <p class="user_name">{{ user.username }}<br>ID: {{ user.user_id }}</p>
             </div>
 
             <div class="right_pane">
                 <div class="user_data">
-                    <p>First Name</p>
-                    <p>Last Name</p>
-                    <p>Email</p>
-                    <p>Date of registration</p>
+                    <p>First Name: {{ user.first_name }}</p>
+                    <p>Last Name: {{ user.last_name }}</p>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Date of registration: </p>
                 </div>
             </div>
         </div>

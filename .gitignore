@@ -9,3 +9,6 @@
 
 # Ignore pycache dir
 /__pycache__/
+
+# Add requirements
+requirements.txt
