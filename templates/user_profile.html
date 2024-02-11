@@ -18,7 +18,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">About</a>
@@ -30,8 +30,7 @@
             </div>
             <div class="user_section">
                 <div class="user_profile" >
-                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_python_tasks') }}">
-
+                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
                 </div>
             </div>  
         </nav>
