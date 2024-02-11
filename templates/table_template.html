@@ -94,6 +94,18 @@
                                             </ul>
                                         </td> -->
                                     </tr>
+                                    {% for quest in quests %}
+                                        <tr>
+                                            <td>{{ quest.task_id }}</td>
+                                            <td>{{ quest.quest_name }}</td>
+                                            <td>{{ quest.difficulty }}</td>
+                                            <td>{{ quest.xp }}</td>
+                                            <td>{{ quest.author }}</td>
+                                            <td>130<p>times</p></td>
+                                            <td>{{ quest.date_added }}</td>
+                                            <td>{{ quest.last_modified }}</td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>

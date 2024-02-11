@@ -41,8 +41,8 @@ sql = """INSERT INTO coding_quests (language, difficulty, quest_name, quest_auth
 
 
 # Define the parameters for the query
-params = ('Python', 'Novice Quests', 'Sum Numbers', 'Aleksandar Karastoyanov', '2024-02-11', '2024-02-11',
-          'Write a function which returns the sum of two numbers', 
+params = ('Python', 'Novice Quests', 'Sum Numbers', 'Aleksandar Karastoyanov', '2024-02-10', '2024-02-10',
+          'Write a function which returns the divison of two numbers', 
           "import unittest\n\ndef add_numbers(a, b):\n    '''\n    Function to add two numbers.\n    '''\n    \n    return a + b\n\nclass TestAddNumbers(unittest.TestCase):\n    def test_positive_numbers(self):\n        self.assertEqual(add_numbers(3, 5), 8)\n\n    def test_negative_numbers(self):\n        self.assertEqual(add_numbers(-3, -5), -8)\n\n    def test_mixed_numbers(self):\n        self.assertEqual(add_numbers(-3, 5), 2)\n\n    def test_zero(self):\n        self.assertEqual(add_numbers(0, 0), 0)\n\nif __name__ == '__main__':\n    unittest.main()",
           "class TestAddNumbers(unittest.TestCase):\n    def test_positive_numbers(self):\n        self.assertEqual(add_numbers(3, 5), 8)\n\n    def test_negative_numbers(self):\n        self.assertEqual(add_numbers(-3, -5), -8)\n\n    def test_mixed_numbers(self):\n        self.assertEqual(add_numbers(-3, 5), 2)\n\n    def test_zero(self):\n        self.assertEqual(add_numbers(0, 0), 0)\n\nif __name__ == '__main__':\n    unittest.main()",
           '30')

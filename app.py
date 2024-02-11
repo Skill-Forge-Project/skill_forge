@@ -62,10 +62,10 @@ class User(db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
-
+# Class for storing the quests(exercises)
 class Quest(db.Model):
     __tablename__ = 'coding_quests'
-    task_id = db.Column(db.Integer, primary_key=True)
+    quest_id = db.Column(db.Integer, primary_key=True)
     language = db.Column(db.String(50), nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
     quest_name = db.Column(db.String(255), nullable=False)
@@ -76,9 +76,10 @@ class Quest(db.Model):
     function_template = db.Column(db.Text, nullable=False)
     unit_tests = db.Column(db.Text, nullable=False)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
+    
 
     def __repr__(self):
-        return f"<Quest(task_id={self.task_id}, quest_name='{self.quest_name}', language='{self.language}', difficulty='{self.difficulty}', xp='{self.xp}')>"
+        return f"task_id={self.quest_id}, quest_name='{self.quest_name}', language='{self.language}', difficulty='{self.difficulty}', xp='{self.xp}'"
     
 
 
@@ -223,15 +224,13 @@ def open_csharp_tasks():
 @login_required
 @app.route('/table_template')
 def open_table_template():
-    return render_template('table_template.html')
-
-# Load all the quests from the database
-@login_required
-@app.route('/quests')
-def quests():
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    return render_template('quests.html', quests=all_quests)
+    print(all_quests)
+    return render_template('table_template.html', quests=all_quests)
+
+
+
 
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
