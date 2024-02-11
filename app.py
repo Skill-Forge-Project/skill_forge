@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
 import os, psycopg2, base64
+from datetime import datetime
 
 
 from login_forms import LoginForm, RegistrationForm
@@ -60,6 +61,25 @@ class User(db.Model):
     # Print the User info
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
+
+
+class Quest(db.Model):
+    __tablename__ = 'coding_quests'
+    task_id = db.Column(db.Integer, primary_key=True)
+    language = db.Column(db.String(50), nullable=False)
+    difficulty = db.Column(db.String(50), nullable=False)
+    quest_name = db.Column(db.String(255), nullable=False)
+    quest_author = db.Column(db.String(255), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    last_modified = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
+    condition = db.Column(db.Text, nullable=False)
+    function_template = db.Column(db.Text, nullable=False)
+    unit_tests = db.Column(db.Text, nullable=False)
+    xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
+
+    def __repr__(self):
+        return f"<Quest(task_id={self.task_id}, quest_name='{self.quest_name}', language='{self.language}', difficulty='{self.difficulty}', xp='{self.xp}')>"
+    
 
 
 @login_manager.user_loader
@@ -198,6 +218,20 @@ def open_java_tasks():
 @app.route('/c_sharp_tasks')
 def open_csharp_tasks():
     return render_template('c_sharp_tasks.html')
+
+# Change from template to real page!!!!
+@login_required
+@app.route('/table_template')
+def open_table_template():
+    return render_template('table_template.html')
+
+# Load all the quests from the database
+@login_required
+@app.route('/quests')
+def quests():
+    # Retrieve all quests from the database
+    all_quests = Quest.query.all()
+    return render_template('quests.html', quests=all_quests)
 
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True

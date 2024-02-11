@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+        <title>Python Tasks</title>
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tasks_template.css') }}">
+        <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='buttons.css') }}"> -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="skill_forge_image">
+                <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+            </div>
+
+            <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="user_section">
+                <div class="user_profile" >
+                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                </div>
+            </div>  
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-1 col-md-10">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-sm-3 col-xs-12">
+                                    <h4 class="title">Quests <span>List</span></h4>
+                                </div>
+                                <div class="col-sm-9 col-xs-12 text-right">
+                                    <div class="btn_group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <button class="btn btn-default" title="Reload"><i class="fa fa-sync-alt"></i></button>
+                                        <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
+                                        <button class="btn btn-default" title="Excel"><i class="fas fa-file-excel"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Quest ID</th>
+                                        <th>Quest Name</th>
+                                        <th>Difficulty</th>
+                                        <th>XP</th>
+                                        <th>Author</th>
+                                        <th>Solved</th>
+                                        <th>Created on</th>
+                                        <th>Last modified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>01</td>
+                                        <td>Test Quest</td>
+                                        <td>Novice Quests</td>
+                                        <td>30</td>
+                                        <td>Aleksandar Karastoyanov</td>
+                                        <td>130<p>times</p></td>
+                                        <td>2024-02-11</td>
+                                        <td>2024-02-11</td>
+                                        <!-- <td>
+                                            <ul class="action-list">
+                                                <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a></li>
+                                                <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a></li>
+                                            </ul>
+                                        </td> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col col-sm-6 col-xs-6">showing <b>5</b> out of <b>25</b> entries</div>
+                                <div class="col-sm-6 col-xs-6">
+                                    <ul class="pagination hidden-xs pull-right">
+                                        <li><a href="#"><</a></li>
+                                        <li class="active"><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#">></a></li>
+                                    </ul>
+                                    <ul class="pagination visible-xs pull-right">
+                                        <li><a href="#"><</a></li>
+                                        <li><a href="#">></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
