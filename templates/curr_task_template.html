@@ -13,19 +13,11 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         
         <!-- Include Ace code editor -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha384-CKgLUDfd0pZjD+8lcnE3emxyJikVM1MHF0Feh+CWbo1+hR7BgFtks+GL4gV5tDrL" crossorigin="anonymous"></script>
-    
-        <style>
-            #editor {
-                height: 300px;
-                border: 1px solid lightgray;
-            }
-        </style>
-    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha384-CKgLUDfd0pZjD+8lcnE3emxyJikVM1MHF0Feh+CWbo1+hR7BgFtks+GL4gV5tDrL" crossorigin="anonymous"></script>    
     </head>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="skill_forge_image">
-                <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+                <img src="../static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
             </div>
 
             <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
@@ -47,7 +39,7 @@
             </div>
             <div class="user_section">
                 <div class="user_profile" >
-                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                    <img src="../static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
                 </div>
             </div>  
         </nav>
@@ -55,7 +47,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
-                    <h4>Task: {{ quest.quest_name }}</h4>
+                    <h4>Quest: {{ quest.quest_name }}</h4>
                     <p><strong>Difficulty:</strong> {{ quest.difficulty }}</p>
                     <p><strong>XP:</strong> {{ quest.xp }}</p>
                     <p><strong>Author:</strong> {{ quest.quest_author }}</p>
