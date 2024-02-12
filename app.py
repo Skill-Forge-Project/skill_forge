@@ -220,7 +220,7 @@ def open_java_tasks():
 def open_csharp_tasks():
     return render_template('c_sharp_tasks.html')
 
-# Change from template to real page!!!!
+# Change from template to real page!!!! Redirect to the table with all tasks
 @login_required
 @app.route('/table_template')
 def open_table_template():
@@ -228,6 +228,16 @@ def open_table_template():
     all_quests = Quest.query.all()
     print(all_quests)
     return render_template('table_template.html', quests=all_quests)
+
+
+# Change from template to real page!!!!
+@login_required
+@app.route('/quest/<int:quest_id>')
+def open_curr_task(quest_id):
+    # Retrieve the specific quest from the database, based on the quest_id
+    quest = Quest.query.get(quest_id)
+    print(quest)
+    return render_template('curr_task_template.html', quest=quest)
 
 
 

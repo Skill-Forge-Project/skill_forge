@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+        <title>Python Tasks</title>
+        
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tasks_template.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        
+        <!-- Include Ace code editor -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha384-CKgLUDfd0pZjD+8lcnE3emxyJikVM1MHF0Feh+CWbo1+hR7BgFtks+GL4gV5tDrL" crossorigin="anonymous"></script>
+    
+        <style>
+            #editor {
+                height: 300px;
+                border: 1px solid lightgray;
+            }
+        </style>
+    
+    </head>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="skill_forge_image">
+                <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+            </div>
+
+            <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="user_section">
+                <div class="user_profile" >
+                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                </div>
+            </div>  
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <h4>Task: {{ quest.quest_name }}</h4>
+                    <p><strong>Difficulty:</strong> {{ quest.difficulty }}</p>
+                    <p><strong>XP:</strong> {{ quest.xp }}</p>
+                    <p><strong>Author:</strong> {{ quest.quest_author }}</p>
+                    <p><strong>Task Description:</strong></p>
+                    <p>{{ quest.condition }}</p>
+                    <hr>
+                    <h4>Paste Your Solution Here:</h4>
+                    <div id="editor">Paste your code here</div>
+                    <button id="checkButton" class="btn btn-primary mt-3">Check Solution</button>
+                    <div id="output" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Script to initialize Ace editor -->
+        <script>
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/chrome");
+            editor.getSession().setMode("ace/mode/python");
+    
+            // Event listener for the "Check Solution" button
+            document.getElementById('checkButton').addEventListener('click', function() {
+                var solution = editor.getValue();
+                // Perform the solution check and display the output
+                // You need to implement the solution checking logic here
+                document.getElementById('output').innerHTML = '<p>Solution checking result will be displayed here.</p>';
+            });
+        </script>
+
+    <body>
+
+    </body>
