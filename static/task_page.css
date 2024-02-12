@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    height: 100%;
+}
+
+body {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#141e30, #243b55);
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 100px !important;
+    justify-content: center !important;
+    align-content: center !important;
+    width: 90% !important;
+}
+
+.row {
+    color: #d2d0d0;
+}
+
+.row .panel .panel-heading .title {
+    color: #d2d0d0;
+}
+
+.panel {
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px #d2d0d06b !important;
+    border-radius: 10px !important;
+    /* background-color: rgba(0, 0, 0, .5); */
+}
+
+.panel .panel-heading {
+    background-color: #141e30;
+}
+
+table {
+    /* box-shadow: 0 15px 25px rgba(0, 0, 0, .6) !important; */
+    box-sizing: border-box;
+    background-color: #141e30 !important;
+
+}
+
+.panel .panel-footer {
+    background-color: #141e30 !important;
+    padding: 2px;   
+
+}
+
+tbody {
+    /* box-shadow: 0 15px 25px rgba(0, 0, 0, .6); */
+    box-sizing: border-box;
+    
+    /* background: rgba(0, 0, 0, .5); */
+}
+
+th {
+    color: #d2d0d0 !important;
+}
+
+td {
+    color: #d2d0d0 !important;
+}

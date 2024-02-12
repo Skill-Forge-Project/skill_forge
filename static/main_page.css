@@ -3,6 +3,8 @@
 @font-face {
     font-family: 'JetBrainsMonoRegular';
     src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
 
@@ -34,7 +36,7 @@ body {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: #d2d0d0;
 }
 
 .main_title {
@@ -55,7 +57,7 @@ body {
 
 .section.section-container {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #ffffff;
+    color: #d2d0d0;
     background: rgba(0, 0, 0, .5);
     display: flex;
     position: relative;
@@ -78,13 +80,12 @@ body {
 }
 
 .section h3 {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-family: 'JetBrainsMonoBold', sans-serif;
     font-size: 20px;
     margin: 5px;
     padding: 0;
     color: #d2d0d0;
     text-align: left;
-    cursor: pointer;
     align-items: center;
     justify-content: center;
 }
