@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    height: 100%;
+    justify-self: center;
+    align-items: center;
+}
+
+body {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #d2d0d0;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(#141e30, #243b55);
+    align-items: center;
+    justify-content: center;
+    height: 95%;
+}
+
+
+.task-container {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #d2d0d0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-content: center !important;
+    width: 90% !important;
+    left: 5%;
+    right: 5%;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 50px !important;
+    
+}
+
+.first-row {
+    display: flex;
+    flex-direction: row;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.second-row {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+    
+}
+
+.second-row p {
+    margin-right: 15px;
+}
+
+.third-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.forth-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.input-row {
+    display: flex;
+    flex-direction: row;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 20px;
+}
+
+.buttons-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.output-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+
+.CodeMirror.cm-s-dracula {
+    width: 100%;
+    /* height: 50%; */
+}
