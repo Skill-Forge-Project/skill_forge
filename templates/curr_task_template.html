@@ -65,15 +65,16 @@
                 <h4 style="color: #03e9f4">Paste Your Solution Here:</h4>
             </div> -->
             <div class="input-row">
-                <textarea id="editor"> {{ quest.function_template }} </textarea>
+                <textarea id="editor">{{ quest.function_template }}</textarea>
+            </div>
+            <div class="output-row">
+                <div id="output" class="mt-3"></div>
             </div>
             <div class="buttons-row">
                 <button id="submitSolution" class="submit-buton">Submit Solution</button>
                 <button id="reportQuest" class="report-buton">Report Quest</button>
             </div>
-            <div class="output-row">
-                <div id="output" class="mt-3"></div>
-            </div>
+
         </div>
     
         <!-- Include Ace code editor and Prism libraries -->
