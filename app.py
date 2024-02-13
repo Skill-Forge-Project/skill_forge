@@ -1,10 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
 import os, psycopg2, base64
 from datetime import datetime
+import subprocess
+import unittest
 
 
 from login_forms import LoginForm, RegistrationForm
@@ -238,6 +240,24 @@ def open_curr_task(quest_id):
     quest = Quest.query.get(quest_id)
     print(quest)
     return render_template('curr_task_template.html', quest=quest)
+
+
+# # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
+# Route to handle solution submission
+@login_required
+@app.route('/submit-solution', methods=['POST'])
+def submit_solution():
+    print("The button was called successfully!")
+    user_code = request.form.get('user_code')
+    unit_tests = request.form.get('unit_tests')
+    total_code = user_code + '\n\n' + unit_tests
+    try:
+        user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
+    except subprocess.CalledProcessError as e:
+        user_output = e.output
+        print(f'The output of the user code is: {user_output}')
+    print(f'The output of the user code is: {user_output}')
+    return user_output
 
 
 
