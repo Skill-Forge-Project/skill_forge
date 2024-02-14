@@ -107,7 +107,7 @@ body {
 
 .input-row {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background: rgba(0, 0, 0, .5);
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px;
@@ -144,7 +144,24 @@ body {
 }
 
 
+.input-row .CodeMirror {
+    /* border: 5px solid #eee; */
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.CodeMirror-scroll {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
 .CodeMirror.cm-s-dracula {
     width: 100%;
+    box-sizing: border-box;
+    display: flex;
     /* height: 50%; */
 }
