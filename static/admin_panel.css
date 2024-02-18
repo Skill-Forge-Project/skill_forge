@@ -37,7 +37,7 @@ body {
     border-radius: 10px;
     padding: 10px;
     width: auto;
-    margin-top: 100px;
+    margin-top: 70px;
     margin-left: 20px;
     margin-right: 20px;
     align-items: center;
@@ -89,9 +89,20 @@ body {
     padding: 10px;
     width: auto;
     height: auto;
-    margin-top: 100px;
+    margin-top: 50px;
     margin-left: 20px;
     margin-right: 20px;
     align-items: center;
     justify-content: center;
+}
+
+.content {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    width: 1000px;
 }

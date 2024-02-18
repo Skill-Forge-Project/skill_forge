@@ -3,6 +3,7 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin_panel.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin_panel_add_quest.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -40,16 +41,72 @@
 
     <div class="main_container">
         <div class="btn-section">
-            <!-- Add id attribute to each content section -->
-            <div id="addQuest" class="section-btn">Add New Quest Content</div>
-            <div id="editQuest" class="section-btn">Edit Quest Content</div>
-            <div id="manageUsers" class="section-btn">Manage Users Content</div>
-            <div id="checkReports" class="section-btn">Check Reports Content</div>
-            <div id="viewLogs" class="section-btn">View Logs Content</div>
+            <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest Content</div>
+            <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest Content</div>
+            <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users Content</div>
+            <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports Content</div>
+            <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs Content</div>
         </div>
         <div class="content-section">
+            <!-- Add New Quest Panel -->
+            <div id="addQuestContent" class="content" style="display: none;">
+                <div class="row">
+                    <h4><strong class="row-label">Quest Name: </strong></h4>
+                    <form>
+                        <input type="text" name="quest_name" id="quest_name_input" class="quest_name_input">
+                    </form>
+                </div>
+                <div class="row">
+                    <h4><strong class="row-label">Quest Language: </strong></h4>
+                    <select name="quest_language" id="quest_language_input" class="quest_language_input">
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="Java">Java</option>
+                        <option value="C++">C++</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <h4><strong class="row-label">Quest Difficulty: </strong></h4>
+                    <select name="quest_difficulty" id="quest_difficulty_input" class="quest_difficulty_input">
+                        <option value="Python">Novice Quests</option>
+                        <option value="JavaScript">Adventurous Challenges</option>
+                        <option value="Java">Epic Campaigns</option>
+                        <option value="C++">Abyssal Trials</option>
+                    </select>
+                </div>
+                <div class="row" style="flex-direction: column;">
+                    <h4><strong class="row-label">Quest Condition: </strong></h4>
+                    <input type="text" name="quest_condition" id="quest_condition">
+                </div>
+                <div class="row">
+                    <h4><strong class="row-label">Quest Template: </strong></h4>
+                </div>
+                <div class="row">
+                    <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
+                </div>
+            </div>
+
+            <div id="editQuestContent" class="content" style="display: none;">Edit Quest Content</div>
+            <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
+            <div id="checkReportsContent" class="content" style="display: none;">Check Reports Content</div>
+            <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
         </div>
-    </div>  
+    </div>
+
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script>
+        function toggleContent(sectionId) {
+            // Hide all content sections except the one clicked
+            var contentSections = document.querySelectorAll('.content');
+            contentSections.forEach(function(section) {
+                if (section.id === sectionId + 'Content') {
+                    section.style.display = section.style.display === 'none' ? 'block' : 'none';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 
 
