@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge - Admin Panel</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='admin_panel.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="skill_forge_image">
+            <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+        </div>
+
+        <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <div class="user_pane">
+            <div class="admin-btn" onclick=location.href="{{ url_for('open_table_template') }}">Admin Panel</div>
+            <div class="logout-btn" navbar-nav nav-link" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
+            <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+        </div>  
+    </nav>
+
+    <div class="main_container">
+        <div class="btn-section">
+            <!-- Add id attribute to each content section -->
+            <div id="addQuest" class="section-btn">Add New Quest Content</div>
+            <div id="editQuest" class="section-btn">Edit Quest Content</div>
+            <div id="manageUsers" class="section-btn">Manage Users Content</div>
+            <div id="checkReports" class="section-btn">Check Reports Content</div>
+            <div id="viewLogs" class="section-btn">View Logs Content</div>
+        </div>
+        <div class="content-section">
+        </div>
+    </div>  
+</body>
+
+
+</html>

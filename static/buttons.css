@@ -56,9 +56,11 @@
     width: 300px;
 }
 
+
 /* Python button styles */
 .button-box .btn.python-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
 }
 
 .button-box .btn.python-btn:hover {

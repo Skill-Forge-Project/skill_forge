@@ -1,14 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Enum
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
-import os, psycopg2, base64
+import os, psycopg2, base64, subprocess, unittest, random, string
 from datetime import datetime
-import subprocess
-import unittest
-
-
 from login_forms import LoginForm, RegistrationForm
 
 # Load the env variables
@@ -36,7 +33,8 @@ login_manager.login_message_category = 'info'
 # Define User model
 class User(db.Model):
     __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(10), primary_key=True)
+    user_role = db.Column(Enum('User', 'Admin', name='user_role_enum'), default='User', nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
@@ -55,6 +53,18 @@ class User(db.Model):
         self.last_name = last_name
         self.password = password
         self.email = email
+        self.generate_user_id()
+        
+    # Generate random UserID
+    def generate_user_id(self):
+        prefix = 'USR-'
+        suffix_length = 6
+        while True:
+            suffix = ''.join(random.choices(string.digits, k=suffix_length))
+            user_id = f"{prefix}{suffix}"
+            if not User.query.filter_by(user_id=user_id).first():
+                self.user_id = user_id
+                break
     
     # Get the user_ID
     def get_id(self):
@@ -71,6 +81,7 @@ class Quest(db.Model):
     language = db.Column(db.String(50), nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
     quest_name = db.Column(db.String(255), nullable=False)
+    solved_times = db.Column(db.Integer, default=0, nullable=True)
     quest_author = db.Column(db.String(255), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
     last_modified = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
@@ -78,16 +89,35 @@ class Quest(db.Model):
     function_template = db.Column(db.Text, nullable=False)
     unit_tests = db.Column(db.Text, nullable=False)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
+
+        
+    # Generate random QuestID
+    def generate_quest_id(self):
+        if Quest.query.first(language='Python'):
+            prefix = 'PY-'
+        elif Quest.query.first(language='JavaScript'):
+            prefix = 'JS-'
+        elif Quest.query.first(language='Java'):
+            prefix = 'JV-'
+        elif Quest.query.first(language='C#'):
+            prefix = 'CS-'
+        suffix_length = 6
+        while True:
+            suffix = ''.join(random.choices(string.digits, k=suffix_length))
+            quest_id = f"{prefix}{suffix}"
+            if not Quest.query.filter_by(quest_id=quest_id).first():
+                self.quest_id = quest_id
+                break
     
 
     def __repr__(self):
-        return f"task_id={self.quest_id}, quest_name='{self.quest_name}', language='{self.language}', difficulty='{self.difficulty}', xp='{self.xp}'"
+        return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
     
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(user_id)
 
 with app.app_context():
     # Create the database tables
@@ -153,6 +183,12 @@ def hello():
 def main_page():
     return render_template('main.html')
 
+
+# Redirect to the Admin Panel (Admin Role in the database is needed)
+@login_required
+@app.route('/admin_panel')
+def open_admin_panel():
+    return render_template('admin_panel.html')
 
 @login_required
 @app.route('/user_profile')
@@ -234,7 +270,7 @@ def open_table_template():
 
 # Change from template to real page!!!!
 @login_required
-@app.route('/quest/<int:quest_id>')
+@app.route('/quest/<quest_id>')
 def open_curr_task(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)

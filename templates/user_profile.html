@@ -37,32 +37,29 @@
 
         <div class="user_info">
             <div class="left_pane">
-
                 <div>
                     {% if avatar %}
                         <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
                     {% else %}
-                    <!-- Display a default avatar image if the user does not have an avatar -->
                         <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
                     {% endif %}
                 </div>
+                <p class="user_name">{{ user.username }}</p>
 
-                <!-- <form id="avatarForm" action="/upload_avatar" method="post" enctype="multipart/form-data">
-                    <input type="file" id="upload_avatar" name="avatar" style="display: none;" accept="image/*" onchange="document.getElementById('save_avatar').submit();">
-                    <input type="submit" id="save_avatar" value="Upload Avatar" style="display: none;">
-                    <div class="user_name ch_av_btn" onclick="document.getElementById('upload_avatar').click()">Change Avatar</div>
-                </form>  -->
-
-
-                
-                <p class="user_name">{{ user.username }}<br>ID: {{ user.user_id }}</p>
-                <p class="user_name">XP: {{ user.xp }}<br>Level:<br>{{ user.level }}</p>
             </div>
 
-            <div class="right_pane">
+            <!-- <div class="right_pane">
+                <div class="user_stats">
+                    <p class="user_id">USER ID: {{ user.user_id }}</p>
+                    <p class="user_xp">XP: {{ user.xp }}<br>Level: {{ user.level }}</p><p>Rank: {{ user.rank }}</p>
+                </div>
                 <div class="user_data">
-                    <p>First Name: {{ user.first_name }}</p>
-                    <p>Last Name: {{ user.last_name }}</p>
+                    <div class="user-data fname">
+                        <p class="user-data fname lt">First Name:</p> <p class="user-data fname rt"> {{ user.first_name }}</p>
+                    </div>
+                    <div class="user-data lname">
+                        <p class="user-data lname lt">Last Name:</p> <p class="user-data lname rt"> {{ user.last_name }}</p>
+                    </div>
                     <p>Email: {{ user.email }}</p>
                     <p>Date of registration: {{ formatted_date }}</p>
                 </div>
@@ -70,6 +67,26 @@
                     <input type="file" name="avatar" accept="image/*">
                     <input type="submit" value="Upload Avatar">
                 </form>
+            </div> -->
+            <div class="right_pane">
+                <div class="user_stats">
+                    <p class="user_data_labels">USER ID: {{ user.user_id }}</p>
+                    <p class="user_data_labels">LEVEL: {{ user.level }} XP: {{ user.xp }}</p>
+                    <p class="user_data_labels">RANK: {{ user.rank }}</p>
+                </div>
+                <div class="user_data">
+                    <p class="user_data_labels">FIRST NAME: <input class="user_data_cnts" type="text" name="first_name" id="first_name" value="{{ user.first_name }}"></p>
+                    <p class="user_data_labels">LAST NAME: <input class="user_data_cnts" type="text" name="last_name" id="last_name" value="{{ user.last_name }}"></p>
+                    <p class="user_data_labels">EMAIL: <input class="user_data_cnts" type="text" name="email" id="email" value="{{ user.email }}"></p>
+                    <p class="user_data_labels">DATE OF REGISTRATION: {{ formatted_date }}</p>
+                </div>
+                <div class="change_avatar_form">
+                    <p class="user_data_labels">CHANGE AVATAR</p>
+                    <form action="/upload_avatar" method="post" enctype="multipart/form-data" class="change_avatar">
+                        <input type="file" name="avatar" accept="image/*">
+                        <input class="form_button" type="submit" value="Upload Avatar">
+                    </form>
+                </div>
             </div>
 
         </div>

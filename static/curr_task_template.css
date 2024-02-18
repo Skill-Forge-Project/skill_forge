@@ -144,6 +144,62 @@ body {
 }
 
 
+.submit-buton {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+}
+
+.submit-buton:hover {
+    background: #03e9f4;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4;
+}
+
+.report-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+}
+
+.report-button:hover {
+    background: #900303ba;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #ff0000ba,
+        0 0 20px #ff0000ba,
+        0 0 20px #ff0000ba,
+        0 0 20px #ff0000ba;
+}
+
 .input-row .CodeMirror {
     /* border: 5px solid #eee; */
     border-radius: 10px;
