@@ -57,8 +57,9 @@ body {
     margin-bottom: 20px;
     margin-top: 10px;
     margin-left: 10px;
-    padding: 20px;
+    padding: 10px;
 }
+
 
 .row-label {
     font-size: 16px;
@@ -121,4 +122,25 @@ body {
     margin-left: 10px;
     padding-left: 10px;
     padding-top: 10px;
+}
+
+.input-row .CodeMirror {
+    border: 5px solid #eee;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.CodeMirror-scroll {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    /* display: flex; */
+}
+
+.CodeMirror.cm-s-dracula {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
 }

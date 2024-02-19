@@ -3,6 +3,7 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}"> -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -66,11 +67,11 @@
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Language: </strong></h4>
-                    <select name="quest_language" id="quest_language_input" class="dropdown_input">
+                    <select name="quest_language" id="quest_language_input" class="dropdown_input">ь
                         <option value="Python">Python</option>
                         <option value="JavaScript">JavaScript</option>
                         <option value="Java">Java</option>
-                        <option value="C++">C++</option>
+                        <option value="C++">C#</option>
                     </select>
                 </div>
                 <div class="input-row">
@@ -85,13 +86,13 @@
                 <div class="input-row" style="flex-direction: column;">
                     <h4><strong class="row-label">Quest Condition: </strong></h4>
                     <form action="/submit-condition" method="post">
-                        <textarea type="text" name="quest_condition" id="quest_condition" rows="10" class="text_input"></textarea>
+                        <textarea type="text" name="quest_condition" id="quest_condition" rows="10" class="text_input">  </textarea>
                     </form>
                 </div>
                 <div class="input-row" style="flex-direction: column;">
                     <h4><strong class="row-label">Quest Template: </strong></h4>
                     <form action="/submit-template" method="post">
-                        <textarea name="function-template" id="editor"></textarea>
+                        <textarea class="input-row" name="function_template" id="editor"></textarea>
                     </form>
                 </div>
                 <div class="input-row">
@@ -108,10 +109,12 @@
 
     <script>
         // Initialize CodeMirror editor
+        var selectedLanguage = document.getElementById("quest_language_input").value;
         var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
             lineNumbers: true,
-            mode: "python",
+            mode: selectedLanguage.toLowerCase(),
             theme: "dracula",
+            indentUnit: 4,
             autoCloseBrackets: true,
             matchBrackets: true,
             scrollbars: true,
