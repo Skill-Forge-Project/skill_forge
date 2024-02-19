@@ -21,6 +21,7 @@ body {
     background: linear-gradient(#141e30, #243b55);
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
 }
 
 .container {

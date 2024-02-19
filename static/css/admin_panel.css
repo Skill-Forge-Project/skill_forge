@@ -9,7 +9,7 @@
 
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    height: 100%;
+    height: auto;
 }
 
 body {
@@ -19,6 +19,8 @@ body {
     background: linear-gradient(#141e30, #243b55);
     align-items: center;
     justify-content: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .main_container {

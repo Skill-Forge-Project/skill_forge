@@ -7,8 +7,8 @@
         <title>Python Tasks</title>
         
         <!-- Import Navigation bar styles -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='curr_task_template.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <!-- Include CodeMirror library -->
@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
         <!-- Include CodeMirror CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-          <!-- Include CodeMirror mode (e.g., Python) -->
+        <!-- Include CodeMirror mode (e.g., Python) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
         
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -83,7 +83,6 @@
         </div>
     
         <script>
-            console.log("I am reading the script!");
             // Initialize CodeMirror editor
             var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
                 lineNumbers: true,
