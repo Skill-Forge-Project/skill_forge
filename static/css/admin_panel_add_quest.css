@@ -139,12 +139,46 @@ body {
     width: 100%;
     box-sizing: border-box;
     display: flex;
-    
-
 }
 
 .CodeMirror.cm-s-dracula {
     width: 100%;
     box-sizing: border-box;
     display: flex;
+}
+
+
+.btn-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.submit-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+}
+
+.submit-button:hover {
+    background: #03e9f4;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4;
 }

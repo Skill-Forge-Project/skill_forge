@@ -5,8 +5,8 @@
         <title>Skill Forge</title>
         <!-- Import Navigation bar styles -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login_form.css') }}">
-        <!-- Import Functional Scripts -->
-        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+
     </head>
     
     <body>
@@ -16,7 +16,6 @@
             </div>
             <form class="user-box input" method="post" action="{{ url_for('login') }}">
                 {{ form.csrf_token }}
-                
                 <div>
                     {{ form.username(class="user-box input", placeholder="Username", id="inputUsername") }}
                 </div>
@@ -24,27 +23,13 @@
                 <div class="user-box">
                     {{ form.password(class="input", placeholder="Password", id="inputPassword") }}
                 </div>
-                <!-- Add other form fields as needed -->
-                
-                
                 <button type="submit" class="user-box btn">Login</button>
-                <button type="submit" class="user-box btn" onclick="register()">Register</button>
+                <button type="button" class="user-box btn" onclick=location.href="{{ url_for('register') }}">Register</button>
             </form>
-            <!-- <div class="info" id="footer">
-                <p>SoftUni Discord Community. All rights reserved 2024</p>
-            </div> -->
         </div>
-
-        <script>
-            function register() {
-                window.location.href = "{{ url_for('register') }}";
-            }
-            function login(){
-                window.location.href = "{{ url_for('login') }}";
-            }
-        </script>
-        
-
     </body>
+    <footer class="footer">
+        <p>SoftUni Discord Community. All rights reserved 2024</p>
+    </footer>
 </html>
 

@@ -143,7 +143,7 @@ body {
 }
 
 
-.submit-buton {
+.submit-button {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     position: relative;
     display: inline-block;
@@ -161,7 +161,7 @@ body {
     width: 250px;
 }
 
-.submit-buton:hover {
+.submit-button:hover {
     background: #03e9f4;
     color: #000;
     border-radius: 5px;
