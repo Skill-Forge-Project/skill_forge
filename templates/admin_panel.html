@@ -86,17 +86,16 @@
                 <div class="input-row" style="flex-direction: column;">
                     <h4><strong class="row-label">Quest Condition: </strong></h4>
                     <form action="/submit-condition" method="post">
-                        <textarea type="text" name="quest_condition" id="quest_condition" rows="10" class="text_input">  </textarea>
+                        <textarea type="text" name="quest_condition" id="quest_condition" rows="10" class="text_input"></textarea>
                     </form>
                 </div>
                 <div class="input-row" style="flex-direction: column;">
                     <h4><strong class="row-label">Quest Template: </strong></h4>
-                    <form action="/submit-template" method="post">
-                        <textarea class="input-row" name="function_template" id="editor"></textarea>
-                    </form>
+                    <textarea name="function_template" id="template"></textarea>
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
+                    <textarea name="quest_unitests" id="unit_tests"></textarea>
                 </div>
             </div>
 
@@ -110,15 +109,27 @@
     <script>
         // Initialize CodeMirror editor
         var selectedLanguage = document.getElementById("quest_language_input").value;
-        var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+        var template = CodeMirror.fromTextArea(document.getElementById("template"), {
             lineNumbers: true,
             mode: selectedLanguage.toLowerCase(),
             theme: "dracula",
-            indentUnit: 4,
+            indentUnit: 2,
             autoCloseBrackets: true,
             matchBrackets: true,
             scrollbars: true,
         });
+        var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests"), {
+            lineNumbers: true,
+            mode: selectedLanguage.toLowerCase(),
+            theme: "dracula",
+            indentUnit: 2,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            scrollbars: true,
+        });
+        template.refresh();
+        unit_tests.refresh();
+
     </script>
 
     <!-- JavaScript to toggle visibility of content sections -->
