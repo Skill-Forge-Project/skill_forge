@@ -10,9 +10,10 @@
     </head>
     
     <body>
+
         <div class="login-box">
-            <div>
-                <h2>Sign In</h2>
+            <div class="sign-in-label">
+                <h2 class="sign-in-label">Sign In</h2>
             </div>
             <form class="user-box input" method="post" action="{{ url_for('login') }}">
                 {{ form.csrf_token }}
@@ -20,8 +21,8 @@
                     {{ form.username(class="user-box input", placeholder="Username", id="inputUsername") }}
                 </div>
 
-                <div class="user-box">
-                    {{ form.password(class="input", placeholder="Password", id="inputPassword") }}
+                <div>
+                    {{ form.password(class="user-box input", placeholder="Password", id="inputPassword") }}
                 </div>
                 <button type="submit" class="user-box btn">Login</button>
                 <button type="button" class="user-box btn" onclick=location.href="{{ url_for('register') }}">Register</button>
