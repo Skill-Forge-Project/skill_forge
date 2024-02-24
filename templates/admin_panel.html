@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
     <!-- Include CodeMirror CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-    <!-- Include CodeMirror mode (e.g., Python) -->
+    <!-- Include CodeMirror modes -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
@@ -66,11 +68,11 @@
                     </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Language: </strong></h4>
-                        <select name="quest_language" id="quest_language_input" class="dropdown_input">ь
+                        <select name="quest_language" id="quest_language_input" class="dropdown_input">
                             <option value="Python">Python</option>
                             <option value="JavaScript">JavaScript</option>
                             <option value="Java">Java</option>
-                            <option value="C++">C#</option>
+                            <option value="C#">C#</option>
                         </select>
                     </div>
                     <div class="input-row">
@@ -107,28 +109,60 @@
     </div>
 
     <script>
-        // Initialize CodeMirror editor in the Admin Panel - New Quest Submit
-        var selectedLanguage = document.getElementById("quest_language_input").value;
+        // Initialize CodeMirror editors
         var template = CodeMirror.fromTextArea(document.getElementById("template_input"), {
             lineNumbers: true,
-            mode: selectedLanguage.toLowerCase(),
             theme: "dracula",
             indentUnit: 2,
             autoCloseBrackets: true,
             matchBrackets: true,
-            scrollbars: true,
+            scrollbars: true
         });
+    
         var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_input"), {
             lineNumbers: true,
-            mode: selectedLanguage.toLowerCase(),
             theme: "dracula",
             indentUnit: 2,
-            CloseBrackets: true,
+            autoCloseBrackets: true,
             matchBrackets: true,
-            scrollbars: true,
+            scrollbars: true
         });
-        template.refresh();
-        unit_tests.refresh();
+    
+        // Function to update modes of CodeMirror editors
+        function updateModes(selectedLanguage) {
+            var mode;
+            console.log(selectedLanguage);
+            switch(selectedLanguage) {
+                case 'Python':
+                    mode = 'python';
+                    break;
+                case 'JavaScript':
+                    mode = 'javascript';
+                    break;
+                case 'Java':
+                    mode = 'text/x-java';
+                    break;
+                case 'C#':
+                    mode = 'text/x-csharp';
+                    break;
+            }
+            console.log(mode);
+            template.setOption("mode", mode);
+            unit_tests.setOption("mode", mode);
+            // Refresh the editors after updating the mode
+            template.refresh();
+            unit_tests.refresh();
+        }
+    
+        // Event listener for changes in select element
+        document.getElementById("quest_language_input").addEventListener("change", function() {
+            var selectedLanguage = this.value;
+            updateModes(selectedLanguage);
+        });
+    
+        // Initialize modes based on the initial selected language
+        var initialSelectedLanguage = document.getElementById("quest_language_input").value;
+        updateModes(initialSelectedLanguage);
     </script>
 
     <!-- JavaScript to toggle visibility of content sections -->
