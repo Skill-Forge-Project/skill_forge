@@ -77,7 +77,7 @@ class User(db.Model):
 # Class for storing the quests(exercises)
 class Quest(db.Model):
     __tablename__ = 'coding_quests'
-    quest_id = db.Column(db.Integer, primary_key=True)
+    quest_id = db.Column(db.String(10), primary_key=True)
     language = db.Column(db.String(50), nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
     quest_name = db.Column(db.String(255), nullable=False)
