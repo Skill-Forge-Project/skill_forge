@@ -58,7 +58,7 @@
         </div>
         <div class="content-section">
             <!-- Add New Quest Panel -->
-            <form>
+            <form action="/submit_quest" method="post">
                 <div id="addQuestContent" class="content" style="display: none;">
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Name: </strong></h4>
@@ -76,10 +76,9 @@
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Difficulty: </strong></h4>
                         <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                            <option value="Python">Novice Quests</option>
-                            <option value="JavaScript">Adventurous Challenges</option>
-                            <option value="Java">Epic Campaigns</option>
-                            <option value="C++">Abyssal Trials</option>
+                            <option value="Novice Quests">Novice Quests</option>
+                            <option value="Adventurous Challenges">Adventurous Challenges</option>
+                            <option value="Epic Campaigns">Epic Campaigns</option>
                         </select>
                     </div>
                     <div class="input-row" style="flex-direction: column;">
@@ -95,7 +94,7 @@
                         <textarea name="quest_unitests" id="unit_tests_input"></textarea>
                     </div>
                     <div class="btn-row">
-                        <button type="submit" id="submitQuest" class="submit-button">Submit Quest</button>
+                        <button type="submit" id="submitQuest" class="submit-button" onclick=location.href="{{ url_for('submit_quest') }}">Submit Quest</button>
                     </div>
                 </div>
             </form>

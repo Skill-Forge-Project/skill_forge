@@ -90,30 +90,70 @@ class Quest(db.Model):
     unit_tests = db.Column(db.Text, nullable=False)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
 
-        
-    # Generate random QuestID
-    def generate_quest_id(self):
-        if Quest.query.first(language='Python'):
-            prefix = 'PY-'
-        elif Quest.query.first(language='JavaScript'):
-            prefix = 'JS-'
-        elif Quest.query.first(language='Java'):
-            prefix = 'JV-'
-        elif Quest.query.first(language='C#'):
-            prefix = 'CS-'
-        suffix_length = 6
-        while True:
-            suffix = ''.join(random.choices(string.digits, k=suffix_length))
-            quest_id = f"{prefix}{suffix}"
-            if not Quest.query.filter_by(quest_id=quest_id).first():
-                self.quest_id = quest_id
-                break
-    
-
     def __repr__(self):
         return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
     
+# Submit new quest as admin from the admin panel
+@app.route('/submit_quest', methods=['GET', 'POST'])
+def submit_quest():
+    language = request.form['quest_language']
+    difficulty = request.form['quest_difficulty']
+    quest_name = request.form['quest_name']
+    quest_condition = request.form['quest_condition']
+    function_template = request.form['function_template']
+    unit_tests = request.form['quest_unitests']
+    
 
+
+    # Generate random suffix
+    suffix_length = 6
+    suffix = ''.join(random.choices(string.digits, k=suffix_length))
+    # Determine prefix based on language
+    if request.form['quest_language'] == 'Python':
+        prefix = 'PY-'
+    elif request.form['quest_language'] == 'Java':
+        prefix = 'JV-'
+    elif request.form['quest_language'] == 'JavaScript':
+        prefix = 'JS-'
+    elif request.form['quest_language'] == 'C#':
+        prefix = 'CS-'
+    else:
+        prefix = 'UNK-'  # Default prefix for unknown languages
+    # Construct quest ID
+    quest_id = f"{prefix}{suffix}"
+    
+    # Assing XP points based on difficulty
+    xp = 0
+    if request.form['quest_difficulty'] == 'Novice Quests':
+        xp = 30
+    elif request.form['quest_difficulty'] == 'Adventurous Challenges':
+        xp = 60
+    elif request.form['quest_difficulty'] == 'Epic Campaigns':
+        xp = 100
+    
+    print(language, difficulty, quest_name, quest_condition, function_template, unit_tests, xp)
+    
+    # Create a new Quest object
+    new_quest = Quest(
+        quest_id= quest_id,
+        language=language,
+        difficulty=difficulty,
+        quest_name=quest_name,
+        quest_author='Your Author',  # Replace with actual author name
+        date_added=datetime.now(),
+        last_modified=datetime.now(),
+        condition=quest_condition,
+        function_template=function_template,
+        unit_tests=unit_tests,
+        xp=str(xp)
+    )
+
+    # Add the new quest to the database session
+    db.session.add(new_quest)
+    db.session.commit()
+
+    # Redirect to a success page or main page
+    return redirect(url_for('open_admin_panel'))
 
 @login_manager.user_loader
 def load_user(user_id):
