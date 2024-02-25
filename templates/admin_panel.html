@@ -131,7 +131,6 @@
         // Function to update modes of CodeMirror editors
         function updateModes(selectedLanguage) {
             var mode;
-            console.log(selectedLanguage);
             switch(selectedLanguage) {
                 case 'Python':
                     mode = 'python';
@@ -146,7 +145,6 @@
                     mode = 'text/x-csharp';
                     break;
             }
-            console.log(mode);
             template.setOption("mode", mode);
             unit_tests.setOption("mode", mode);
             // Refresh the editors after updating the mode
