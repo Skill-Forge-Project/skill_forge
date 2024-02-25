@@ -24,6 +24,18 @@ body {
     min-height: 100vh;
 }
 
+.top_label {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    /* font-size: 20px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color:#d2d0d0;
+    margin-top: 100px;
+    margin-bottom: 0px;
+}
+
 .container {
     display: flex;
     flex-direction: column;

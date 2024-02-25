@@ -19,6 +19,8 @@ table.dataTable thead .sorting_desc_disabled:before {
   bottom: .5em;
 }
 
+
+
 .row.justify-content-center {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
@@ -89,18 +91,13 @@ table.dataTable thead .sorting_desc_disabled:before {
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px !important;
-    margin-top: 50px !important;
+    margin-top: 10px !important;
 
 }
 
 .row {
   margin: 0px !important;
 }
-
-/* .col-sm-12.col-md-6 {
-  padding-right: 0px !important;
-  padding-left: 0px !important;
-} */
 
 th {
   font-family: 'JetBrainsMonoRegular', sans-serif;
