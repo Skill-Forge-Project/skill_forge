@@ -314,7 +314,6 @@ def open_table_template():
 def open_curr_task(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
-    print(quest)
     return render_template('curr_task_template.html', quest=quest)
 
 
@@ -323,7 +322,6 @@ def open_curr_task(quest_id):
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
-    print("The button was called successfully!")
     user_code = request.form.get('user_code')
     unit_tests = request.form.get('unit_tests')
     total_code = user_code + '\n\n' + unit_tests
@@ -331,7 +329,6 @@ def submit_solution():
         user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
     except subprocess.CalledProcessError as e:
         user_output = e.output
-        print(f'The output of the user code is: {user_output}')
     print(f'The output of the user code is: {user_output}')
     return user_output
 
