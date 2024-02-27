@@ -54,62 +54,38 @@
     vertical-align: middle;
 }
 
-.navbar .navbar-nav .nav-item .nav-link {
-    color: #03e9f4;
+.navbar .navbar-nav .nav-item .nav-link,
+.navbar-light .navbar-nav .nav-link {
+    color: #03e9f4 !important;
 }
 
-.navbar .navbar-nav .nav-item .nav-link:hover {
-    color: #d2d0d0; /* Change the color to red when active or hovered */
-    background: #4584b6; /* Unique color for Python button hover */
-    /* color: #4584b6; */
+.navbar .navbar-nav .nav-item .nav-link:hover,
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #141e30 !important;
+    background: #03e9f4;
     border-radius: 5px;
-    box-shadow: 0 0 5px #4584b6,
-                0 0 25px #4584b6,
-                0 0 50px #4584b6,
-                0 0 100px #4584b6;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 10px #03e9f4,
+                0 0 15px #03e9f4,
+                0 0 30px #03e9f4;
 }
 
 .user_pane {
     display: flex;
     flex-direction: row;
     padding: 0px;
+    margin-left: 960px;
 }
 
-
-.logout-btn {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    background: linear-gradient(#141e30, #243b55);
-    color: #03e9f4;
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    border-radius: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-    width: 80px;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    vertical-align: middle;
+.user_image {
+    align-items: right;
+    justify-content: right;
+    margin-left: 10px;
     cursor: pointer;
-    padding-left: 5px;
-    padding-right: 5px;
-
 }
 
-.logout-btn:hover {
-    color: #d2d0d0; /* Change the color to red when active or hovered */
-    background: #4584b6; /* Unique color for Python button hover */
-    /* color: #4584b6; */
-    border-radius: 5px;
-    box-shadow: 0 0 5px #4584b6,
-                0 0 25px #4584b6,
-                0 0 50px #4584b6,
-                0 0 100px #4584b6;
-}
 
-.admin-btn {
+.navbar-link.admin-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#880000, #6a0400);
     color: #ffffff;
@@ -130,7 +106,7 @@
     padding-right: 5px;
 }
 
-.admin-btn:hover {
+.navbar-link.admin-btn:hover {
     border-radius: 5px;
     box-shadow: 0 0 2px #ff0000ba,
     0 0 20px #ff0000ba,

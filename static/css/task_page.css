@@ -7,8 +7,6 @@
     src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
-
-
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     height: 100%;

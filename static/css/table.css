@@ -19,8 +19,6 @@ table.dataTable thead .sorting_desc_disabled:before {
   bottom: .5em;
 }
 
-
-
 .row.justify-content-center {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
@@ -28,7 +26,6 @@ table.dataTable thead .sorting_desc_disabled:before {
   width: 100% !important;
   margin: 0px !important;
 }
-
 
 .col-lg-10 {
   display: flex;

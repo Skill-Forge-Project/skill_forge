@@ -32,13 +32,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sumbit Quest</a>
+                    </li>
+                    <div class="user_pane">
+                        <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
+                        <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
+                        <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                    </div>  
                 </ul>
             </div>
-            <div class="user_pane">
-                <div class="admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
-                <div class="logout-btn" navbar-nav nav-link" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
-                <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
-            </div>  
+
         </nav>
         
         <div class="main_container">
