@@ -304,7 +304,6 @@ def open_csharp_tasks():
 def open_table_template():
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    print(all_quests)
     return render_template('table_template.html', quests=all_quests)
 
 

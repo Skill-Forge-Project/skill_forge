@@ -64,10 +64,10 @@
     color: #141e30 !important;
     background: #03e9f4;
     border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
+    box-shadow: 0 0 2px #03e9f4,
+                0 0 5px #03e9f4,
                 0 0 10px #03e9f4,
-                0 0 15px #03e9f4,
-                0 0 30px #03e9f4;
+                0 0 15px #03e9f4;
 }
 
 .user_pane {
