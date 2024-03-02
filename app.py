@@ -200,10 +200,14 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         print("Validation succesful!")
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
         
-        # Create session for the user. This is needed for the login manager and for reading the data from the database
-        session['user_id'] = user.user_id
+        if user:
+            # Create session for the user. This is needed for the login manager and for reading the data from the database
+            session['user_id'] = user.user_id
+        else:
+            # Return some error!!!!!!
+            pass
         
         # Log in the user
         if user and bcrypt.check_password_hash(user.password, form.password.data):
