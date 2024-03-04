@@ -19,12 +19,15 @@ table.dataTable thead .sorting_desc_disabled:before {
   bottom: .5em;
 }
 
+
 .row.justify-content-center {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-  width: 100% !important;
+  width: auto !important;
   margin: 0px !important;
+  justify-content: center;
+  align-items: center;
 }
 
 .col-lg-10 {
@@ -32,11 +35,11 @@ table.dataTable thead .sorting_desc_disabled:before {
   flex-direction: column;
   margin: 0px !important;
   padding: 0px !important;
-  /* margin-top: 50px !important; */
   width: 100% !important;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+
 
 }
 
@@ -44,7 +47,7 @@ table.dataTable thead .sorting_desc_disabled:before {
   display: flex;
   flex-direction: column;
   margin: 0px !important;
-  width: 100% !important;
+  width: auto !important;
   padding: 0px !important;
 }
 
@@ -65,8 +68,8 @@ table.dataTable thead .sorting_desc_disabled:before {
   color: #03e9f4 !important;
   justify-content: right !important;
   align-items: right !important;
-  /* margin: 10px !important; */
   padding: 0px !important;
+  width: 100% !important;
 }
 
 .card.rounded.shadow.border-0 {
@@ -80,24 +83,37 @@ table.dataTable thead .sorting_desc_disabled:before {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     display: flex;
     flex-direction: row;
-    width: 100% !important;
+    width: auto !important;
     margin: 0px !important;
-    /* padding: 10px !important; */
     justify-content: center;
     background: linear-gradient(#141e30, #243b55) !important;
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px !important;
-    /* margin-top: 10px !important; */
+    padding: 0px !important;
 
 }
 
 .row {
   margin: 0px !important;
+  width: 100% !important;
 }
 
 th {
   font-family: 'JetBrainsMonoRegular', sans-serif;
   font-size: 16px;
   color: #03e9f4 !important;
+  width: auto !important;
+}
+
+td {
+  font-family: 'JetBrainsMonoRegular', sans-serif;
+  font-size: 14px;
+  color: #03e9f4 !important;
+  width: auto !important;
+}
+
+td {
+  color: #d2d0d0 !important;
+  width: auto !important;
 }

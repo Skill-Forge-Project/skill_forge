@@ -98,6 +98,7 @@ body {
     justify-content: center;
 }
 
+
 .content {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #ffffff;
@@ -108,3 +109,4 @@ body {
     padding: 10px;
     width: 1000px;
 }
+

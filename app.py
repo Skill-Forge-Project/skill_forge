@@ -232,7 +232,9 @@ def main_page():
 @login_required
 @app.route('/admin_panel')
 def open_admin_panel():
-    return render_template('admin_panel.html')
+    # Retrieve all quests from the database
+    all_quests = Quest.query.all()
+    return render_template('admin_panel.html', quests=all_quests)
 
 @login_required
 @app.route('/user_profile')
@@ -309,7 +311,6 @@ def open_table_template():
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
     return render_template('table_template.html', quests=all_quests)
-
 
 # Change from template to real page!!!!
 @login_required
