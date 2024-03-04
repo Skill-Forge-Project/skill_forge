@@ -3,9 +3,9 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
-    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}"> -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table_edit_quest_adm_panel.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Include CodeMirror library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
@@ -17,6 +17,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <!-- Include bootstrap dataTables libraries -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
@@ -101,7 +107,42 @@
                 </div>
             </form>
 
-            <div id="editQuestContent" class="content" style="display: none;">Edit Quest Content</div>
+            <div id="editQuestContent" class="content" style="display: none;">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                      <div class="col-lg-10">
+                        <div class="card rounded shadow border-0">
+                          <div class="card-body p-5 bg-white rounded">
+                            <div class="table-responsive">
+                              <table id="example" class="table table-striped table-bordered">
+                                <thead>
+                                  <tr>
+                                    <th>Quest ID</th>
+                                    <th>Quest Name</th>
+                                    <th>Language</th>
+                                    <th>Difficulty</th>
+                                    <th>Author</th>
+                                    <th>Date Created</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
             <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
             <div id="checkReportsContent" class="content" style="display: none;">Check Reports Content</div>
             <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
@@ -177,6 +218,13 @@
             });
         }
     </script>
+    <script>
+        $(function () {
+          $(document).ready(function () {
+            $('#example').DataTable();
+          });
+        });
+      </script>
 </body>
 
 
