@@ -31,7 +31,7 @@ login_manager.login_message_category = 'info'
 
 
 # Define User model
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(10), primary_key=True)
     user_role = db.Column(Enum('User', 'Admin', name='user_role_enum'), default='User', nullable=False)
@@ -229,8 +229,8 @@ def main_page():
 
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
-@login_required
 @app.route('/admin_panel')
+@login_required
 def open_admin_panel():
     return render_template('admin_panel.html')
 
