@@ -304,7 +304,7 @@ def open_java_tasks():
 def open_csharp_tasks():
     return render_template('c_sharp_tasks.html')
 
-# Change from template to real page!!!! Redirect to the table with all tasks
+# Redirect to the table with all tasks. Change from template to real page!!!! 
 @login_required
 @app.route('/table_template')
 def open_table_template():
@@ -312,7 +312,7 @@ def open_table_template():
     all_quests = Quest.query.all()
     return render_template('table_template.html', quests=all_quests)
 
-# Change from template to real page!!!!
+# Open Quest for submitting. Change from template to real page!!!!
 @login_required
 @app.route('/quest/<quest_id>')
 def open_curr_task(quest_id):
@@ -320,6 +320,13 @@ def open_curr_task(quest_id):
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
 
+# Open Quest for editing from the Admin Panel
+@login_required
+@app.route('/edit_quest/<quest_id>')
+def open_edit_quest(quest_id):
+    # Retrieve the specific quest from the database, based on the quest_id
+    quest = Quest.query.get(quest_id)
+    return render_template('edit_quest.html', quest=quest)
 
 # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
 # Route to handle solution submission

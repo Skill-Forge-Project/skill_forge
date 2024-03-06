@@ -6,8 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url_for('static', filename='css/table_edit_quest_adm_panel.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_table_edit_quest.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Include CodeMirror library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
@@ -65,12 +64,11 @@
 
     <div class="main_container">
         <div class="btn-section">
-            <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest Content</div>
-            <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest Content</div>
-            <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users Content</div>
-            <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports Content
-            </div>
-            <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs Content</div>
+            <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest</div>
+            <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest</div>
+            <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users</div>
+            <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports</div>
+            <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs</div>
         </div>
         <div class="content-section">
             <!-- Add New Quest Panel -->
@@ -140,7 +138,7 @@
                                                 {% for quest in quests %}
                                                 <tr>
                                                     <td>{{ quest.quest_id }}</td>
-                                                    <td>{{ quest.quest_name }}</td>
+                                                    <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
                                                     <td>{{ quest.language }}</td>
                                                     <td>{{ quest.difficulty }}</td>
                                                     <td>{{ quest.quest_author }}</td>
