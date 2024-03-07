@@ -232,7 +232,16 @@ def main_page():
 @app.route('/admin_panel')
 @login_required
 def open_admin_panel():
-    return render_template('admin_panel.html')
+    # Get the User ID for the session
+    logged_user_id = session['user_id']
+
+    # Get the user object with the User ID from the session
+    currently_logged_user = User.query.get(logged_user_id)
+
+    if currently_logged_user.user_role == "Admin":
+        return render_template('admin_panel.html')
+    
+    return redirect(url_for('login'))
 
 @login_required
 @app.route('/user_profile')

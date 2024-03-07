@@ -9,7 +9,6 @@
   <!-- Import Navigation bar styles -->
   <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tasks_template.css') }}"> -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/task_page.css') }}">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -22,6 +21,7 @@
   <!-- <script src="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"></script> -->
   <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
 
 
 </head>
@@ -29,34 +29,43 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="skill_forge_image">
-      <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px"
-        onclick=location.href="{{ url_for('main_page') }}">
+        <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
     </div>
 
     <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
     </button>
+    
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
-        </li>
-      </ul>
+        <ul class="navbar-nav">
+            <li class="left-side">
+                <ul>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sumbit Quest</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="user_pane">
+                {% if current_user.user_role == "Admin" %}
+                  <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
+                {% endif %}
+                <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
+                <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+            </li>  
+        </ul>
     </div>
-    <div class="user_section">
-      <div class="user_profile">
-        <img src="static/images/user.png" width="35" height="35"
-          onclick=location.href="{{ url_for('open_user_profile') }}">
-      </div>
-    </div>
+
   </nav>
 
   <div class="top_label">
