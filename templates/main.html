@@ -42,7 +42,6 @@
                     </li>
 
                     <li class="user_pane">
-                        <h1>{{ current_user.user_role }}</h1>
                         {% if current_user.user_role == "Admin" %}
                             <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
                         {% endif %}
