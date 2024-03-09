@@ -19,6 +19,10 @@ table.dataTable thead .sorting_desc_disabled:before {
   bottom: .5em;
 }
 
+.container-fluid {
+  padding: 0px !important;
+  background: #d2d0d0;
+}
 
 .row.justify-content-center {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
