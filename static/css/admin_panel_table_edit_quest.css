@@ -39,8 +39,6 @@ table.dataTable thead .sorting_desc_disabled:before {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-
-
 }
 
 .table-responsive {
@@ -96,7 +94,7 @@ table.dataTable thead .sorting_desc_disabled:before {
 
 .row {
   margin: 0px !important;
-  width: 100% !important;
+  width: auto !important;
 }
 
 th {

@@ -155,6 +155,32 @@ def submit_quest():
     # Redirect to a success page or main page
     return redirect(url_for('open_admin_panel'))
 
+@app.route('/edit_quest_db', methods=['GET', 'POST'])
+def edit_quest_db():
+    quest_id = request.form['quest_id']
+    quest_name = request.form['quest_name']
+    quest_language = request.form['quest_language']
+    quest_difficulty = request.form['quest_difficulty']
+    quest_condition = request.form['quest_condition']
+    function_template = request.form['function_template']
+    unit_tests = request.form['quest_unitests']
+    
+    quest = Quest.query.get(quest_id)
+    print(quest)
+    if quest:
+        quest.quest_name = quest_name
+        quest.language = quest_language
+        quest.difficulty = quest_difficulty
+        quest.condition = quest_condition
+        quest.function_template = function_template
+        quest.unit_tests = unit_tests
+        
+        db.session.commit()
+        
+        return redirect(url_for('open_admin_panel'))
+    else:
+        return 'Quest not found!', 404
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)

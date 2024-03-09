@@ -55,9 +55,11 @@
 
     <body>
         <div class="content-section">
-            <!-- Add New Quest Panel -->
-            <div id="addQuestContent" class="content">
-                <form action="/submit_quest" method="post">
+            <div id="editQuestContent" class="content">
+                <form action="/edit_quest_db" method="post">
+                    <div>
+                        <input type="hidden" name="quest_id" value="{{ quest.quest_id }}">
+                    </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Name: </strong></h4>
                         <input type="text" name="quest_name" id="quest_name_input" class="text_input" value="{{ quest.quest_name}}">
@@ -92,8 +94,8 @@
                         <textarea name="quest_unitests" id="unit_tests_input">{{ quest.unit_tests }}</textarea>
                     </div>
                     <div class="btn-row">
-                        <button type="submit" id="submitQuest" class="submit-button"
-                            onclick=location.href="{{ url_for('submit_quest') }}">Save Changes</button>
+                        <button type="submit" id="editQuest" class="submit-button"
+                            onclick=location.href="{{ url_for('edit_quest_db') }}">Save Changes</button>
                     </div>
                 </form>
             </div>
