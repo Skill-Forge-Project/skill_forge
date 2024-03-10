@@ -1,10 +1,35 @@
-footer {
-    position: fixed;
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: middle;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
+    height: 20px;
+    background-color: transparent;
+    /* padding: 20px; */
     text-align: center;
+    /* margin-top: auto; */
+    margin-bottom: 0px;
+}
+
+p {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #d2d0d0;
+    margin: 0px;
+    padding: 0px;
+    font-size: 14px;
+    text-align: center;
+    /* margin-bottom: 20px !important; */
+    margin-top: 0px;
 }

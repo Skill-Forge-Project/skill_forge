@@ -231,7 +231,7 @@ def register():
 
 # App route for Login
 @app.route('/', methods=['GET', 'POST'])
-def login():
+def login():    
     form = LoginForm()
     if form.validate_on_submit():
         print("Validation succesful!")
