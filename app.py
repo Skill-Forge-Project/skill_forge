@@ -268,6 +268,10 @@ def open_admin_panel():
         return render_template('admin_panel.html')
     
     return redirect(url_for('login'))
+    # Retrieve all quests from the database
+    # all_quests = Quest.query.all()
+    # return render_template('admin_panel.html', quests=all_quests)
+
 
 @login_required
 @app.route('/user_profile')
@@ -377,6 +381,8 @@ def submit_solution():
     return user_output
 
 
+
+
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True, host = '0.0.0.0', port = os.getenv('DEBUG_PORT'))
+    app.run(debug=True, host = '0.0.0.0', port = '5000')
