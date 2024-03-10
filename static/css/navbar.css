@@ -113,6 +113,11 @@
     0 0 20px #ff0000ba;
 }
 
+
+nav {
+    width: 100%;
+}
+
 #navbarNav .navbar-nav {
     display: flex;
     justify-content: space-between;
@@ -123,4 +128,5 @@
     display: flex;
     text-decoration: none;
     list-style: none;
+
 }

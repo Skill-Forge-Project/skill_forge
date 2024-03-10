@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
-    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}"> -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_table_edit_quest.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Include CodeMirror library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
@@ -16,18 +18,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <!-- Include bootstrap dataTables libraries -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="skill_forge_image">
-            <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+            <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px"
+                onclick=location.href="{{ url_for('main_page') }}">
         </div>
 
         <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
@@ -59,24 +70,30 @@
                 </li>  
             </ul>
         </div>
-
+        <div class="user_pane">
+            <div class="admin-btn" onclick=location.href="{{ url_for('open_table_template') }}">Admin Panel</div>
+            <div class="logout-btn" navbar-nav nav-link" onclick=location.href="{{ url_for('open_table_template') }}">
+                Log Out</div>
+            <img src="static/images/user.png" width="35" height="35"
+                onclick=location.href="{{ url_for('open_user_profile') }}">
+        </div>
     </nav>
 
     <div class="main_container">
         <div class="btn-section">
-            <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest Content</div>
-            <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest Content</div>
-            <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users Content</div>
-            <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports Content</div>
-            <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs Content</div>
+            <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest</div>
+            <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest</div>
+            <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users</div>
+            <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports</div>
+            <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs</div>
         </div>
         <div class="content-section">
             <!-- Add New Quest Panel -->
-            <form action="/submit_quest" method="post">
-                <div id="addQuestContent" class="content" style="display: none;">
+            <div id="addQuestContent" class="content" style="display: none;">
+                <form action="/submit_quest" method="post">
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Name: </strong></h4>
-                            <input type="text" name="quest_name" id="quest_name_input" class="text_input">
+                        <input type="text" name="quest_name" id="quest_name_input" class="text_input">
                     </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Language: </strong></h4>
@@ -97,7 +114,8 @@
                     </div>
                     <div class="input-row" style="flex-direction: column;">
                         <h4><strong class="row-label">Quest Condition: </strong></h4>
-                            <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10" class="text_input"></textarea>
+                        <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
+                            class="text_input"></textarea>
                     </div>
                     <div class="input-row" style="flex-direction: column;">
                         <h4><strong class="row-label">Quest Template: </strong></h4>
@@ -108,12 +126,51 @@
                         <textarea name="quest_unitests" id="unit_tests_input"></textarea>
                     </div>
                     <div class="btn-row">
-                        <button type="submit" id="submitQuest" class="submit-button" onclick=location.href="{{ url_for('submit_quest') }}">Submit Quest</button>
+                        <button type="submit" id="submitQuest" class="submit-button"
+                            onclick=location.href="{{ url_for('submit_quest') }}">Submit Quest</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Edit Quest Panel -->
+            <div id="editQuestContent" class="content" style="display: none;">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card rounded shadow border-0">
+                                <div class="card-body p-5 bg-white rounded">
+                                    <div class="table-responsive">
+                                        <table id="example" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Quest ID</th>
+                                                    <th>Quest Name</th>
+                                                    <th>Language</th>
+                                                    <th>Difficulty</th>
+                                                    <th>Author</th>
+                                                    <th>Date Created</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for quest in quests %}
+                                                <tr>
+                                                    <td>{{ quest.quest_id }}</td>
+                                                    <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                                                    <td>{{ quest.language }}</td>
+                                                    <td>{{ quest.difficulty }}</td>
+                                                    <td>{{ quest.quest_author }}</td>
+                                                    <td>{{ quest.date_added }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
-
-            <div id="editQuestContent" class="content" style="display: none;">Edit Quest Content</div>
+            </div>
             <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
             <div id="checkReportsContent" class="content" style="display: none;">Check Reports Content</div>
             <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
@@ -130,7 +187,7 @@
             matchBrackets: true,
             scrollbars: true
         });
-    
+
         var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_input"), {
             lineNumbers: true,
             theme: "dracula",
@@ -139,11 +196,11 @@
             matchBrackets: true,
             scrollbars: true
         });
-    
+
         // Function to update modes of CodeMirror editors
         function updateModes(selectedLanguage) {
             var mode;
-            switch(selectedLanguage) {
+            switch (selectedLanguage) {
                 case 'Python':
                     mode = 'python';
                     break;
@@ -163,13 +220,13 @@
             template.refresh();
             unit_tests.refresh();
         }
-    
+
         // Event listener for changes in select element
-        document.getElementById("quest_language_input").addEventListener("change", function() {
+        document.getElementById("quest_language_input").addEventListener("change", function () {
             var selectedLanguage = this.value;
             updateModes(selectedLanguage);
         });
-    
+
         // Initialize modes based on the initial selected language
         var initialSelectedLanguage = document.getElementById("quest_language_input").value;
         updateModes(initialSelectedLanguage);
@@ -180,7 +237,7 @@
         function toggleContent(sectionId) {
             // Hide all content sections except the one clicked
             var contentSections = document.querySelectorAll('.content');
-            contentSections.forEach(function(section) {
+            contentSections.forEach(function (section) {
                 if (section.id === sectionId + 'Content') {
                     section.style.display = 'block';
                 } else {
@@ -188,6 +245,13 @@
                 }
             });
         }
+    </script>
+    <script>
+        $(function () {
+            $(document).ready(function () {
+                $('#example').DataTable();
+            });
+        });
     </script>
 </body>
 
