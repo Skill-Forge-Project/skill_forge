@@ -181,6 +181,15 @@ def edit_quest_db():
     else:
         return 'Quest not found!', 404
 
+# Open Quest for editing from the Admin Panel
+@login_required
+@app.route('/edit_quest/<quest_id>')
+def open_edit_quest(quest_id):
+    # Retrieve the specific quest from the database, based on the quest_id
+    quest = Quest.query.get(quest_id)
+    return render_template('edit_quest.html', quest=quest)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -258,6 +267,10 @@ def main_page():
 @app.route('/admin_panel')
 @login_required
 def open_admin_panel():
+    
+    # Retrieve all quests from the database
+    all_quests = Quest.query.all()
+    
     # Get the User ID for the session
     logged_user_id = session['user_id']
 
@@ -265,12 +278,9 @@ def open_admin_panel():
     currently_logged_user = User.query.get(logged_user_id)
 
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html')
+        return render_template('admin_panel.html', quests=all_quests)
     
     return redirect(url_for('login'))
-    # Retrieve all quests from the database
-    # all_quests = Quest.query.all()
-    # return render_template('admin_panel.html', quests=all_quests)
 
 
 @login_required
@@ -356,14 +366,6 @@ def open_curr_task(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
-
-# Open Quest for editing from the Admin Panel
-@login_required
-@app.route('/edit_quest/<quest_id>')
-def open_edit_quest(quest_id):
-    # Retrieve the specific quest from the database, based on the quest_id
-    quest = Quest.query.get(quest_id)
-    return render_template('edit_quest.html', quest=quest)
 
 # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
 # Route to handle solution submission
