@@ -367,23 +367,34 @@ def open_curr_task(quest_id):
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
 
-# # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
+
 # Route to handle solution submission
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
-    user_code = request.form.get('user_code')
-    unit_tests = request.form.get('unit_tests')
-    total_code = user_code + '\n\n' + unit_tests
-    try:
-        user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
-    except subprocess.CalledProcessError as e:
-        user_output = e.output
-    print(f'The output of the user code is: {user_output}')
-    return user_output
-
-
-
+    current_quest_language = request.form.get('quest_language')
+    
+    if current_quest_language == 'Python':
+        # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
+        user_code = request.form.get('user_code')
+        unit_tests = request.form.get('unit_tests')
+        total_code = user_code + '\n\n' + unit_tests
+        try:
+            user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
+        except subprocess.CalledProcessError as e:
+            user_output = e.output
+        print(f'The output of the user code is: {user_output}')
+        return user_output
+    
+    elif current_quest_language == 'JavaScript':
+    # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+        pass
+    elif current_quest_language == 'Java':
+    # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+        pass
+    elif current_quest_language == 'C#':
+    # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+        pass
 
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
