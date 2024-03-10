@@ -4,7 +4,7 @@ from sqlalchemy import Enum
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, unittest, random, string
+import os, psycopg2, base64, subprocess, unittest, random, string, requests
 from datetime import datetime
 from login_forms import LoginForm, RegistrationForm
 
@@ -373,7 +373,7 @@ def open_curr_task(quest_id):
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
     current_quest_language = request.form.get('quest_language')
-    
+    print(f'Current Languange is: {current_quest_language}')
     if current_quest_language == 'Python':
         # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
         user_code = request.form.get('user_code')
@@ -388,7 +388,26 @@ def submit_solution():
     
     elif current_quest_language == 'JavaScript':
     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-        pass
+        try:
+            user_code = request.form.get('user_code')
+            unit_tests = request.form.get('unit_tests')
+            total_code = user_code + '\n\n' + unit_tests
+            server_url = 'http://localhost:3000/execute'
+            data = {'code': user_code, 'unitTests': unit_tests}
+            print(f'Data: {data}')
+            response = requests.post(server_url, json=data)
+            response.raise_for_status()
+            result = response.json()['testResults']
+            print(f'Test results: {result}')
+            print(response.json()['testResults'])
+        except requests.RequestException as e:
+            print(f'Error: {e}')
+            result = 'Error: Could not connect to the server.' 
+        except KeyError:
+            print('Error parsing JSON response: "testResults" key not found')
+        except Exception as e:
+            print(f'An unexpected error occurred: {e}')
+            
     elif current_quest_language == 'Java':
     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
         pass
