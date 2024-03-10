@@ -334,13 +334,16 @@ def open_curr_task(quest_id):
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
+    libraries = r'import unittest, io, contextlib, re'
     user_code = request.form.get('user_code')
     unit_tests = request.form.get('unit_tests')
-    total_code = user_code + '\n\n' + unit_tests
-    try:
-        user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
-    except subprocess.CalledProcessError as e:
-        user_output = e.output
+    total_code = libraries + '\n\n' + user_code + '\n\n' + unit_tests
+    user_output = subprocess.run(['./venv/bin/python3.11', '-c', total_code], check=True, capture_output=True, text=True).stdout
+    # try:
+    #     user_output = subprocess.run(['./venv/bin/python3.11', '-c', total_code], check=True, capture_output=True, text=True).stdout
+    #     print(user_output)
+    # except subprocess.CalledProcessError as e:
+    #     user_output = e.output
     print(f'The output of the user code is: {user_output}')
     return user_output
 
