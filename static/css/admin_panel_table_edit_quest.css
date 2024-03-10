@@ -21,15 +21,16 @@ table.dataTable thead .sorting_desc_disabled:before {
 
 .container-fluid {
   padding: 0px !important;
-  background: #d2d0d0;
+  /* background: #d2d0d0; */
+  
 }
 
 .row.justify-content-center {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
   width: auto !important;
   margin: 0px !important;
+  padding: 0px !important;
   justify-content: center;
   align-items: center;
 }
@@ -43,6 +44,7 @@ table.dataTable thead .sorting_desc_disabled:before {
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0) !important;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+  width: auto;
 }
 
 .table-responsive {
@@ -85,7 +87,7 @@ table.dataTable thead .sorting_desc_disabled:before {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     display: flex;
     flex-direction: row;
-    width: auto !important;
+    width: 100% !important;
     margin: 0px !important;
     justify-content: center;
     background: linear-gradient(#141e30, #243b55) !important;
