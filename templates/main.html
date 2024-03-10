@@ -5,10 +5,10 @@
         <title>Skill Forge</title>
         <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}"> -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main_page.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/buttons.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     </head>
     
     <body>
@@ -24,23 +24,30 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                    <li class="left-side">
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Sumbit Quest</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Sumbit Quest</a>
-                    </li>
-                    <div class="user_pane">
-                        <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
+
+                    <li class="user_pane">
+                        {% if current_user.user_role == "Admin" %}
+                            <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
+                        {% endif %}
                         <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
                         <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
-                    </div>  
+                    </li>  
                 </ul>
             </div>
 

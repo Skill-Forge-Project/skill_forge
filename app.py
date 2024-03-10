@@ -31,7 +31,7 @@ login_manager.login_message_category = 'info'
 
 
 # Define User model
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(10), primary_key=True)
     user_role = db.Column(Enum('User', 'Admin', name='user_role_enum'), default='User', nullable=False)
@@ -255,12 +255,19 @@ def main_page():
 
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
-@login_required
 @app.route('/admin_panel')
+@login_required
 def open_admin_panel():
-    # Retrieve all quests from the database
-    all_quests = Quest.query.all()
-    return render_template('admin_panel.html', quests=all_quests)
+    # Get the User ID for the session
+    logged_user_id = session['user_id']
+
+    # Get the user object with the User ID from the session
+    currently_logged_user = User.query.get(logged_user_id)
+
+    if currently_logged_user.user_role == "Admin":
+        return render_template('admin_panel.html')
+    
+    return redirect(url_for('login'))
 
 @login_required
 @app.route('/user_profile')

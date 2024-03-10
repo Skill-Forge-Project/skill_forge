@@ -74,7 +74,6 @@
     display: flex;
     flex-direction: row;
     padding: 0px;
-    margin-left: 960px;
 }
 
 .user_image {
@@ -117,4 +116,17 @@
 
 nav {
     width: 100%;
+}
+
+#navbarNav .navbar-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#navbarNav .navbar-nav .left-side ul {
+    display: flex;
+    text-decoration: none;
+    list-style: none;
+
 }
