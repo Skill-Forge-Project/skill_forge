@@ -16,6 +16,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+srv_address = os.getenv("SERVER_IP_ADDR")
 
 # Init the password hashing
 bcrypt = Bcrypt(app)
@@ -391,17 +392,30 @@ def submit_solution():
         try:
             user_code = request.form.get('user_code')
             unit_tests = request.form.get('unit_tests')
-            total_code = user_code + '\n\n' + unit_tests
-            # print(total_code)
-            user_output = subprocess.Popen(['npx', 'jest'], 
-                                           stdin=subprocess.PIPE, 
-                                           stdout=subprocess.PIPE, 
-                                           stderr=subprocess.PIPE)
-            stdout, stderr = user_output.communicate(input=user_code.encode())
-            print(stdout, stderr)
-            return stdout.decode('utf-8')
+            
+            ############# KEEP THIS CODE JUST IN CASE. IT'S WORKING BUT NEEDS TO BE JSON-FIED ##########################
+            # print(user_code)
+            # command = [
+            #     'curl', 
+            #     '-X', 'POST', 
+            #     '-H', 'Content-Type: application/json', 
+            #     # '-d', f'{{"code": "{user_code}", "unit_tests": "{unit_tests}"}}', 
+            #     '-d', f'{{"code": "{user_code}"}}',
+            #     'http://192.168.0.169:3000/execute'
+            # ]
+            # result = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=True)
+            # print(result.stdout)
+            # print(result.stderr)
+            # return result.stdout
+            #############################################################################################################
+            
+            server_url = f"http://{srv_address}:3000/execute"
+            response = requests.post(server_url, json={'code': user_code})
+            result = response.json()['result']
+            return jsonify({'result': result})
         except Exception as e:
             print(f'An unexpected error occurred: {e}')
+            return e
             
     elif current_quest_language == 'Java':
     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
