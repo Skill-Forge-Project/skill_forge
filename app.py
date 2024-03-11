@@ -16,6 +16,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+# The specific server ip address. Should be included in the .env file
 srv_address = os.getenv("SERVER_IP_ADDR")
 
 # Init the password hashing
