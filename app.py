@@ -392,19 +392,14 @@ def submit_solution():
             user_code = request.form.get('user_code')
             unit_tests = request.form.get('unit_tests')
             total_code = user_code + '\n\n' + unit_tests
-            server_url = 'http://localhost:3000/execute'
-            data = {'code': user_code, 'unitTests': unit_tests}
-            print(f'Data: {data}')
-            response = requests.post(server_url, json=data)
-            response.raise_for_status()
-            result = response.json()['testResults']
-            print(f'Test results: {result}')
-            print(response.json()['testResults'])
-        except requests.RequestException as e:
-            print(f'Error: {e}')
-            result = 'Error: Could not connect to the server.' 
-        except KeyError:
-            print('Error parsing JSON response: "testResults" key not found')
+            # print(total_code)
+            user_output = subprocess.Popen(['npx', 'jest'], 
+                                           stdin=subprocess.PIPE, 
+                                           stdout=subprocess.PIPE, 
+                                           stderr=subprocess.PIPE)
+            stdout, stderr = user_output.communicate(input=user_code.encode())
+            print(stdout, stderr)
+            return stdout.decode('utf-8')
         except Exception as e:
             print(f'An unexpected error occurred: {e}')
             

@@ -1,0 +1,5 @@
+# Ignore file while building the node-js server image
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore

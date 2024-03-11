@@ -25,9 +25,8 @@ services:
     restart: always
     ports:
       - '3000:3000'
-    command: ["node", "server.js"]
     volumes:
-      - ./js-backend-server/run-node-server:/app
+      - ./js-backend-server/server:/app
 
 
 volumes:
