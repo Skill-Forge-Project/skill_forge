@@ -13,10 +13,7 @@ COPY . .
 EXPOSE 3000
 
 # Install dependencies
-RUN npm install express
-RUN npm install jest
-RUN npm install node-fetch
-RUN nom install body-parser
+RUN npm install body-parser chai mocha node-fetch express
 
 # Run the server
 CMD ["node", "server.js"]
