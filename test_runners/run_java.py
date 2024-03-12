@@ -3,7 +3,7 @@ import os
 
 def run_code(java_code):
     # Save the Java code to a file
-    with open("Main.java", "w") as file:
+    with open(f"Main.java", "w") as file:
         file.write(java_code)
 
     # Compile the Java code

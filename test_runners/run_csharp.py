@@ -39,8 +39,8 @@ class Program
 
 # Use for debuging porposes only
 # Execute C# code
-# stdout, stderr = run_code(csharp_code)
-# print("STDOUT:")
-# print(stdout)
-# print("STDERR:")
-# print(stderr)
+stdout, stderr = run_code(csharp_code)
+print("STDOUT:")
+print(stdout)
+print("STDERR:")
+print(stderr)

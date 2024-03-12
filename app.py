@@ -96,8 +96,8 @@ class Quest(db.Model):
     condition = db.Column(db.Text, nullable=False)
     function_template = db.Column(db.Text, nullable=False)
     unit_tests = db.Column(db.Text, nullable=False)
-    test_inputs = db.Column(db.String(10), nullable=True)
-    test_outputs = db.Column(db.String(10), nullable=True)
+    test_inputs = db.Column(db.Text, nullable=True)
+    test_outputs = db.Column(db.Text, nullable=True)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
     type = db.Column(db.String(20), nullable=True)
 
@@ -388,8 +388,12 @@ def submit_solution():
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
+        quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
+        quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
+        print(f'Quest inputs: {quest_inputs}')
+        print(f'Quest outputs: {quest_outputs}')
         if current_quest_language == 'Python':
-            user_output = run_python.run_code(user_code)
+            user_output = run_python.run_code(user_code, quest_inputs, quest_outputs)
             return user_output
         elif current_quest_language == 'JavaScript':
             user_output = run_javascript.run_code(user_code)
@@ -402,7 +406,7 @@ def submit_solution():
             return user_output
         
     # Handle the advanced quests testing (requires unit tests)
-    elif current_quest_language == 'Advanced':
+    elif current_quest_type == 'Advanced':
         print(f'Current Languange is: {current_quest_language}')
         if current_quest_language == 'Python':
             # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
@@ -455,4 +459,4 @@ def submit_solution():
 
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True, host = '0.0.0.0', port = '5000')
+    app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
