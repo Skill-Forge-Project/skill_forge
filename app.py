@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Enum
 from flask_bcrypt import Bcrypt  # Password hashing
@@ -8,10 +8,12 @@ import os, psycopg2, base64, subprocess, unittest, random, string
 from datetime import datetime
 from login_forms import LoginForm, RegistrationForm
 
+
 # Load the env variables
 load_dotenv()
 
 app = Flask(__name__)
+
 
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
@@ -28,6 +30,9 @@ conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI'))
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+
+# Register route for user submit form(user_submit_quest.py)
+import user_submit_quest
 
 
 # Define User model
@@ -155,6 +160,7 @@ def submit_quest():
     # Redirect to a success page or main page
     return redirect(url_for('open_admin_panel'))
 
+# Handle quest edit from the Admin Panel
 @app.route('/edit_quest_db', methods=['GET', 'POST'])
 def edit_quest_db():
     quest_id = request.form['quest_id']
@@ -387,4 +393,4 @@ def submit_solution():
 
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True, host = '0.0.0.0', port = '5000')
+    app.run(debug=True, host = '0.0.0.0', port = os.getenv('DEBUG_PORT'))
