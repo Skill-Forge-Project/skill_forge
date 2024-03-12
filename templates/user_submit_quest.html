@@ -105,16 +105,6 @@
                 <h4><strong class="row-label">Quest Unit Tests (Only for Abyssal Trials difficulty): </strong></h4>
                 <textarea name="quest_unitests" id="unit_tests_input"></textarea>
             </div>
-            {% if quest_difficulty == "Novice Quests" %}
-                quest_type = "Basic"
-            {% elif quest_difficulty == "Adventurous Challenges" %}
-                quest_type = "Basic"
-            {% elif quest_difficulty == "Epic Campaigns" %}
-                quest_type = "Basic"
-            {% elif quest_difficulty == "Abyssal Trials" %}
-                quest_type = "Advanced"
-            {% endif %}
-            <input type="hidden" id="quest_type" name="quest_type" value="{{ quest_type }}">
             <div class="btn-row">
                 <button type="submit" id="submitQuest" class="submit-button"
                     onclick=location.href="{{ url_for('user_submit_quest') }}">Submit Quest</button>

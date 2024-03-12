@@ -1,13 +1,13 @@
 from __main__ import app, db
 from datetime import datetime
-from flask import Blueprint, request, redirect, url_for, render_template
-from flask_login import login_required
+from flask import Blueprint, request, redirect, url_for, render_template, session
+from flask_login import login_required, current_user
 import random, string
 from app import User
 
 
 # Define the database table for the submitted quests
-class SubmitedQuest():
+class SubmitedQuest(db.Model):
     __tablename__ = 'user_submited_quests'
     quest_id = db.Column(db.String(10), primary_key=True)
     language = db.Column(db.String(50), nullable=False)
@@ -15,6 +15,7 @@ class SubmitedQuest():
     quest_name = db.Column(db.String(255), nullable=False)
     # solved_times = db.Column(db.Integer, default=0, nullable=True)
     quest_author = db.Column(db.String(255), nullable=False)
+    quest_author_id = db.Column(db.String(255), nullable=False)
     status = db.Column(db.Enum('Pending', 'Approved', 'Rejected', name='quest_submit_status'), nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
     last_modified = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
@@ -29,7 +30,7 @@ class SubmitedQuest():
 
 # Redirect to the user submit quest page
 @login_required
-@app.route('/submit_new_quest')
+@app.route('/user_submit_quest')
 def open_user_submit_quest():
     return render_template('user_submit_quest.html')
 
@@ -45,10 +46,7 @@ def user_submit_quest():
     unit_tests = request.form['quest_unitests']
     quest_inputs = request.form['quest_inputs']
     quest_outputs = request.form['quest_outputs']
-    quest_type = request.form['quest_type']
     
-
-
     # Generate random suffix
     suffix_length = 6
     suffix = ''.join(random.choices(string.digits, k=suffix_length))
@@ -68,15 +66,27 @@ def user_submit_quest():
     
     # Assing XP points based on difficulty
     xp = 0
+    quest_type = ''
     if request.form['quest_difficulty'] == 'Novice Quests':
         xp = 30
+        quest_type = 'Basic'
     elif request.form['quest_difficulty'] == 'Adventurous Challenges':
         xp = 60
+        quest_type = 'Basic'
     elif request.form['quest_difficulty'] == 'Epic Campaigns':
         xp = 100
-
+        quest_type = 'Basic'
+    elif request.form['quest_difficulty'] == 'Abyssal Trials':
+        quest_type = 'Advanced'
+        
     # Define default state for the quest (Pending)
     state = 'Pending'
+    
+    # Get the User ID for the session
+    logged_user_id = current_user.user_id
+    logged_username = current_user.username
+    print(logged_user_id)
+    print(logged_username)
     
     # Create a new Quest object
     new_user_submitted_quest = SubmitedQuest(
@@ -84,7 +94,9 @@ def user_submit_quest():
         language=language,
         difficulty=difficulty,
         quest_name=quest_name,
-        quest_author=User.query.get(User.username),  # Replace with actual author name
+        quest_author=logged_username, 
+        quest_author_id=logged_user_id,
+        status='Pending', # Default status is 'Pending
         date_added=datetime.now(),
         last_modified=datetime.now(),
         condition=quest_condition,
@@ -96,4 +108,8 @@ def user_submit_quest():
         xp=str(xp)
     )
     
-    return render_template('user_submit_quest')
+    # Add the new quest to the database session
+    db.session.add(new_user_submitted_quest)
+    db.session.commit()
+    
+    return redirect(url_for('open_user_submit_quest'))
