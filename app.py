@@ -1,12 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Enum
+from flask_migrate import Migrate
+from sqlalchemy import Enum, ARRAY
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, unittest, random, string, requests
 from datetime import datetime
 from login_forms import LoginForm, RegistrationForm
+# Import test runner
+from test_runners import run_python, run_javascript, run_java, run_csharp
+
 
 # Load the env variables
 load_dotenv()
@@ -25,6 +29,7 @@ bcrypt = Bcrypt(app)
 
 # Init the database connection
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI'))
 
 # Init the login manager
@@ -91,7 +96,10 @@ class Quest(db.Model):
     condition = db.Column(db.Text, nullable=False)
     function_template = db.Column(db.Text, nullable=False)
     unit_tests = db.Column(db.Text, nullable=False)
+    test_inputs = db.Column(db.String(10), nullable=True)
+    test_outputs = db.Column(db.String(10), nullable=True)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
+    type = db.Column(db.String(20), nullable=True)
 
     def __repr__(self):
         return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
@@ -106,8 +114,6 @@ def submit_quest():
     function_template = request.form['function_template']
     unit_tests = request.form['quest_unitests']
     
-
-
     # Generate random suffix
     suffix_length = 6
     suffix = ''.join(random.choices(string.digits, k=suffix_length))
@@ -376,55 +382,76 @@ def open_curr_task(quest_id):
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
     current_quest_language = request.form.get('quest_language')
-    print(f'Current Languange is: {current_quest_language}')
-    if current_quest_language == 'Python':
-        # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
-        user_code = request.form.get('user_code')
-        unit_tests = request.form.get('unit_tests')
-        total_code = user_code + '\n\n' + unit_tests
-        try:
-            user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
-        except subprocess.CalledProcessError as e:
-            user_output = e.output
-        print(f'The output of the user code is: {user_output}')
-        return user_output
+    current_quest_type = request.form.get('quest_type')
+    print(f"Current quest type is: {current_quest_type}")
     
-    elif current_quest_language == 'JavaScript':
-    # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-        try:
+    # Handle the simple quests testing
+    if current_quest_type == 'Basic':
+        user_code = request.form.get('user_code')
+        if current_quest_language == 'Python':
+            user_output = run_python.run_code(user_code)
+            return user_output
+        elif current_quest_language == 'JavaScript':
+            user_output = run_javascript.run_code(user_code)
+            return user_output
+        elif current_quest_language == 'Java':
+            user_output = run_java.run_code(user_code)
+            return user_output
+        elif current_quest_language == 'C#':
+            user_output = run_csharp.run_code(user_code)
+            return user_output
+        
+    # Handle the advanced quests testing (requires unit tests)
+    elif current_quest_language == 'Advanced':
+        print(f'Current Languange is: {current_quest_language}')
+        if current_quest_language == 'Python':
+            # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
             user_code = request.form.get('user_code')
             unit_tests = request.form.get('unit_tests')
-            
-            ############# KEEP THIS CODE JUST IN CASE. IT'S WORKING BUT NEEDS TO BE JSON-FIED ##########################
-            # print(user_code)
-            # command = [
-            #     'curl', 
-            #     '-X', 'POST', 
-            #     '-H', 'Content-Type: application/json', 
-            #     # '-d', f'{{"code": "{user_code}", "unit_tests": "{unit_tests}"}}', 
-            #     '-d', f'{{"code": "{user_code}"}}',
-            #     'http://192.168.0.169:3000/execute'
-            # ]
-            # result = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=True)
-            # print(result.stdout)
-            # print(result.stderr)
-            # return result.stdout
-            #############################################################################################################
-            
-            server_url = f"http://{srv_address}:3000/execute"
-            response = requests.post(server_url, json={'code': user_code})
-            result = response.json()['result']
-            return jsonify({'result': result})
-        except Exception as e:
-            print(f'An unexpected error occurred: {e}')
-            return e
-            
-    elif current_quest_language == 'Java':
-    # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-        pass
-    elif current_quest_language == 'C#':
-    # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-        pass
+            total_code = user_code + '\n\n' + unit_tests
+            try:
+                user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
+            except subprocess.CalledProcessError as e:
+                user_output = e.output
+            print(f'The output of the user code is: {user_output}')
+            return user_output
+        
+        elif current_quest_language == 'JavaScript':
+        # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+            try:
+                user_code = request.form.get('user_code')
+                unit_tests = request.form.get('unit_tests')
+                
+                ############# KEEP THIS CODE JUST IN CASE. IT'S WORKING BUT NEEDS TO BE JSON-FIED ##########################
+                # print(user_code)
+                # command = [
+                #     'curl', 
+                #     '-X', 'POST', 
+                #     '-H', 'Content-Type: application/json', 
+                #     # '-d', f'{{"code": "{user_code}", "unit_tests": "{unit_tests}"}}', 
+                #     '-d', f'{{"code": "{user_code}"}}',
+                #     'http://192.168.0.169:3000/execute'
+                # ]
+                # result = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=True)
+                # print(result.stdout)
+                # print(result.stderr)
+                # return result.stdout
+                #############################################################################################################
+                
+                server_url = f"http://{srv_address}:3000/execute"
+                response = requests.post(server_url, json={'code': user_code})
+                result = response.json()['result']
+                return jsonify({'result': result})
+            except Exception as e:
+                print(f'An unexpected error occurred: {e}')
+                return e
+                
+        elif current_quest_language == 'Java':
+        # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+            pass
+        elif current_quest_language == 'C#':
+        # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+            pass
 
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True

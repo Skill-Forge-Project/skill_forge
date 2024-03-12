@@ -84,7 +84,8 @@
                 <form action="/submit-solution" method="post">
                     <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
                     <input type="hidden" id="unit_tests" name="unit_tests" value="{{ quest.unit_tests }}">
-                    <input type="hidden" id="quest_language" name="quest_language" value="{{ quest.language}}">
+                    <input type="hidden" id="quest_language" name="quest_language" value="{{ quest.language }}">
+                    <input type="hidden" id="quest_type" name="quest_type" value="{{ quest.type }}">
                     <button type="submit" id="submitSolution" class="submit-button" onclick=location.href="{{ url_for('submit_solution') }}">Submit Quest</button>
                     <button id="reportQuest" class="report-button">Report Quest</button>
                 </form>
