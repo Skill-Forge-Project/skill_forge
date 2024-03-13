@@ -19,4 +19,4 @@ console.log('Hello, world!');
 """
 
 # Use for debuging porposes only
-run_code(js_code)
+# run_code(js_code)
