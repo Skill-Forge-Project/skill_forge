@@ -9,11 +9,15 @@
 
 # Ignore pycache dir
 /__pycache__/
+*/__pycache__/
 
 # Add requirements
 requirements.txt
 
-# Ignore node js server node_modules
+
+# Ignore node modules files on the node js server
+/js-backend-server/server/node_modules/
 js-backend-server/server/node_modules/
 
-*/__pycache__
+# Ignore Flask db migrations
+/migrations/
