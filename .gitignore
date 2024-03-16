@@ -15,3 +15,5 @@ requirements.txt
 
 # Ignore node js server node_modules
 js-backend-server/server/node_modules/
+
+*/__pycache__
