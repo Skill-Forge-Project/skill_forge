@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
+
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    height: 100%;
+}
+
+body {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: linear-gradient(#141e30, #243b55);
+    min-height: 100vh;
+}
+
+.user_info {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    display: flex;
+    flex-direction: row;
+    width: 200px;
+    height: 100px;
+    position: absolute;
+    margin-top: 60px;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    height: 700px;
+    box-sizing: border-box;
+    box-shadow: 0 25px 25px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+}
+
+.left_pane {
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    
+}
+
+.user_avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* background-color: #ffffff; */
+    border: 2px solid #243b55;
+    border-radius: 10px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    width: 200px;
+    height: 300px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 15px #141e30, inset 0 0 20px #243b55;
+    background-size: cover;
+    background-position: center;
+}
+
+.user_name.ch_av_btn {
+    position: relative;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    letter-spacing: 1px;
+    margin: 10px;
+    border: 0px;
+    height: 35px;
+    width: 75%;
+    align-items: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.user_name {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 20px;
+    color: #03e9f4;
+    text-align: center;
+    margin-top: 10px;
+    margin: 5px;
+    /* margin-top: auto;  */
+}
+
+
+.right_pane {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.user_stats {
+    position: relative;
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    align-items: left;
+    padding-top: 7px;
+    
+}
+
+.user_data {
+    position: relative;
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    /* margin-bottom: 20px; */
+    align-items: left;
+    padding-top: 7px;
+}
+
+.change_avatar_form {
+    position: relative;
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    width: 100%;
+    height: 17%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    align-items: left;
+    padding-top: 7px;
+}
+
+.change_avatar {
+    padding-left: 20px;
+}
+
+.user_data_labels {
+    color: #03e9f4;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.user_data_cnts {
+    display: flex;
+    flex-direction: row;
+    background-color: #d2d0d0;
+    margin-left: 20px;
+    border-radius: 7px;
+}
+
+.form_button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    /* letter-spacing: 4px; */
+    margin: 10px;
+    border: 0px;
+    width: 150px;
+    border-radius: 10px;
+}
+
+.form_button:hover {
+    background: #03e9f4; 
+    color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 10px #03e9f4,
+                0 0 15px #03e9f4,
+                0 0 20px #03e9f4;
+}

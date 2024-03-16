@@ -1,0 +1,5 @@
+# Ignore files while building the node-js server image
+
+Dockerfile
+.dockerignore
+test.py

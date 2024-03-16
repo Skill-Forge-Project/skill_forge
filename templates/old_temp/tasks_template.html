@@ -7,22 +7,27 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
         <title>Python Tasks</title>
         <!-- Import Navigation bar styles -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles_tasks.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tasks_template.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='buttons.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='navbar.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
 
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Skill Forge</a>
+            <div class="skill_forge_image">
+                <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+            </div>
+
+            <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">About</a>
@@ -32,40 +37,45 @@
                     </li>
                 </ul>
             </div>
+            <div class="user_section">
+                <div class="user_profile" >
+                    <img src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                </div>
+            </div>  
         </nav>
 
         <div class="container section-container">
-            <div class="section visible" id="section1">
-                <h2>Novice Quests</h2>
-                <p>Novice quests are simple tasks designed for beginners. Each problem you solve will give you 30XP.</p>
+            <div class="section inner-shadow visible" id="section1">
+                <h3 onclick=location.href="{{ url_for('open_table_template') }}">Novice Quests</h3>
+                <p class="content">Novice quests are simple tasks designed for beginners. Each problem you solve will give you 30XP.</p>
                 <!-- Add more content here as needed -->
             </div>
     
-            <div class="section visible" id="section2">
-                <h2>Adventurous Challenges</h2>
-                <p>Adventurous challenges offer a moderate level of difficulty, suitable for members with a 
+            <div class="section inner-shadow visible" id="section2">
+                <h3>Adventurous Challenges</h3>
+                <p class="content">Adventurous challenges offer a moderate level of difficulty, suitable for members with a 
                     bit of experience. These tasks involve data structures, basic algorythms, 
                     more complex logical operations. For each problem you will be awarded with 60XP.</p>
                 <!-- Add more content here as needed -->
             </div>
     
-            <div class="section visible" id="section3">
-                <h2>Epic Campaigns</h2>
-                <p>Epic campaigns are high-stakes and challenging quests that demand advanced skills.
+            <div class="section inner-shadow visible" id="section3">
+                <h3>Epic Campaigns</h3>
+                <p class="content">Epic campaigns are high-stakes and challenging quests that demand advanced skills.
                     You will have to solve complex algorythms, work with OOP principles and advanced data structures.
                     Each task will give you 100XP.
                 </p>
                 <!-- Add more content here as needed -->
             </div>
 
-            <div class="section visible" id="section3">
-                <h2>Abyssal Trials</h2>
-                <p class="be_advise">
+            <div class="section inner-shadow visible" id="section3">
+                <h3>Abyssal Trials</h3>
+                <p class="content be_advise">
                     BE ADVISE! You will have only one chance per week to submit your solution!
                     If your solution is not 100% correct you will loose XP, the amount of points which
                     is not enough to finish your task.
                 </p>
-                <p>Abyssal Trials are the most challenging quests in the realm, 
+                <p class="content">Abyssal Trials are the most challenging quests in the realm, 
                     reserved for the bravest and most experienced adventurers. 
                     These nightmare-level tasks plunge players into the depths of chaos and require 
                     unparalleled skill, strategy, and determination to overcome. Solve any of these
