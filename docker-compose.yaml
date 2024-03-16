@@ -1,5 +1,7 @@
 version: '3.8'
 services:
+
+  # Development PostgreSQL database instance
   db:
     image: postgres
     container_name: skillforge-postgres-dev
@@ -13,6 +15,22 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+
+  # The node server is being used to serve the unit test execution for the JS quests on port 3000
+  js-server:
+    build:
+      context: ./js-backend-server
+      dockerfile: Dockerfile
+    container_name: skillforge-js-server-dev
+    restart: always
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./js-backend-server/server:/app
+
+
 volumes:
+  js-server:
+    driver: local
   db:
     driver: local
