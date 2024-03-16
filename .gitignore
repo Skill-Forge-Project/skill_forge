@@ -14,8 +14,10 @@
 # Add requirements
 requirements.txt
 
+
 # Ignore node modules files on the node js server
 /js-backend-server/server/node_modules/
+js-backend-server/server/node_modules/
 
 # Ignore Flask db migrations
 /migrations/
