@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_submit_quest.css') }}">
+    <!-- Include CodeMirror library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <!-- Include CodeMirror theme (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+    <!-- Include CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+    <!-- Include CodeMirror modes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="skill_forge_image">
+            <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
+        </div>
+
+        <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="left-side">
+                    <ul>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Sumbit Quest</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="user_pane">
+                    {% if current_user.user_role == "Admin" %}
+                        <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
+                    {% endif %}
+                    <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
+                    <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                </li>  
+            </ul>
+        </div>
+    </nav>
+
+    <form action="/user_submit_quest" method="post">
+        <div id="addQuestContent" class="content">
+            <div class="input-row">
+                <h4><strong class="row-label">Quest Name: </strong></h4>
+                <input type="text" name="quest_name" id="quest_name_input" class="text_input">
+            </div>
+            <div class="input-row">
+                <h4><strong class="row-label">Quest Language: </strong></h4>
+                <select name="quest_language" id="quest_language_input" class="dropdown_input">
+                    <option value="Python">Python</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="Java">Java</option>
+                    <option value="C#">C#</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <h4><strong class="row-label">Quest Difficulty: </strong></h4>
+                <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
+                    <option value="Novice Quests">Novice Quests</option>
+                    <option value="Adventurous Challenges">Adventurous Challenges</option>
+                    <option value="Epic Campaigns">Epic Campaigns</option>
+                </select>
+            </div>
+            <div class="input-row" style="flex-direction: column;">
+                <h4><strong class="row-label">Quest Condition: </strong></h4>
+                <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
+                    class="text_input"></textarea>
+            </div>
+            <div class="input-row" style="flex-direction: column;">
+                <h4><strong class="row-label">Quest Template: </strong></h4>
+                <textarea name="function_template" id="template_input"></textarea>
+            </div>
+            <div class="input-row" style="flex-direction: column;">
+                <h4><strong class="row-label">Inputs Samples: </strong></h4>
+                <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument, second_argument....] [first_argument, second_argument....]</p>
+                <textarea class="text_input" name="quest_inputs" id="quest_inputs_input"></textarea>
+            </div>
+            <div class="input-row" style="flex-direction: column;">
+                <h4><strong class="row-label">Outputs Samples: </strong></h4>
+                <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the inputs in format: [output, output...] [output, output...]</p>
+                <textarea class="text_input" name="quest_outputs" id="quest_outputs_input"></textarea>
+            </div>
+            <div class="input-row">
+                <h4><strong class="row-label">Quest Unit Tests (Only for Abyssal Trials difficulty): </strong></h4>
+                <textarea name="quest_unitests" id="unit_tests_input"></textarea>
+            </div>
+            <div class="btn-row">
+                <button type="submit" id="submitQuest" class="submit-button"
+                    onclick=location.href="{{ url_for('user_submit_quest') }}">Submit Quest</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // Initialize CodeMirror editors
+        var template = CodeMirror.fromTextArea(document.getElementById("template_input"), {
+            lineNumbers: true,
+            theme: "dracula",
+            indentUnit: 2,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            scrollbars: true
+        });
+
+        var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_input"), {
+            lineNumbers: true,
+            theme: "dracula",
+            indentUnit: 2,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            scrollbars: true
+        });
+
+        // Function to update modes of CodeMirror editors
+        function updateModes(selectedLanguage) {
+            var mode;
+            switch (selectedLanguage) {
+                case 'Python':
+                    mode = 'python';
+                    break;
+                case 'JavaScript':
+                    mode = 'javascript';
+                    break;
+                case 'Java':
+                    mode = 'text/x-java';
+                    break;
+                case 'C#':
+                    mode = 'text/x-csharp';
+                    break;
+            }
+            template.setOption("mode", mode);
+            unit_tests.setOption("mode", mode);
+            // Refresh the editors after updating the mode
+            template.refresh();
+            unit_tests.refresh();
+        }
+
+        // Event listener for changes in select element
+        document.getElementById("quest_language_input").addEventListener("change", function () {
+            var selectedLanguage = this.value;
+            updateModes(selectedLanguage);
+        });
+
+        // Initialize modes based on the initial selected language
+        var initialSelectedLanguage = document.getElementById("quest_language_input").value;
+        updateModes(initialSelectedLanguage);
+    </script>
+
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script>
+        function toggleContent(sectionId) {
+            // Hide all content sections except the one clicked
+            var contentSections = document.querySelectorAll('.content');
+            contentSections.forEach(function (section) {
+                if (section.id === sectionId + 'Content') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
