@@ -124,10 +124,11 @@
                         <textarea name="quest_unitests" id="unit_tests_input">{{ submited_quest.unit_tests }}</textarea>
                     </div>
                     <div class="btn-row">
-                        <button type="submit" id="editQuest" class="submit-button"
-                            onclick=location.href="{{ url_for('edit_quest_db') }}">Approve Quest</button>
-                        <button type="submit" id="editQuest" class="submit-button"
-                            onclick=location.href="{{ url_for('edit_quest_db') }}">Request Changes</button>
+                        <!-- Redirect to real routes once impemented -->
+                        <button type="submit" id="editQuest" class="submit-button approve-btn"
+                            onclick=location.href="{{ url_for('open_admin_panel') }}">Approve Quest</button>
+                        <button type="submit" id="editQuest" class="submit-button request-changes-btn"
+                            onclick=location.href="{{ url_for('open_admin_panel') }}">Request Changes</button>
                     </div>
                 </form>
             </div>

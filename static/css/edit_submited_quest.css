@@ -164,14 +164,16 @@ body {
     justify-content: right;
 }
 
-.submit-button {
+/* Approve Button Custom Style */
+.submit-button.approve-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-weight: bold;
     position: relative;
     display: inline-block;
     border-radius: 10px;
     padding: 10px 20px;
-    color: #03e9f4;
-    background-color: #141e30;
+    color: #000;
+    background-color: #00830b;
     font-size: 16px;
     text-decoration: none;
     text-transform: uppercase;
@@ -183,12 +185,43 @@ body {
     width: 250px;
 }
 
-.submit-button:hover {
-    background: #03e9f4;
+.submit-button.approve-btn:hover {
+    background: #00830b;
     color: #000;
     border-radius: 5px;
-    box-shadow: 0 0 2px #03e9f4,
-        0 0 20px #03e9f4,
-        0 0 20px #03e9f4,
-        0 0 20px #03e9f4;
+    box-shadow: 0 0 2px #0bf403bd,
+        0 0 20px #0bf403bd,
+        0 0 20px #0bf403bd,
+        0 0 20px #0bf403bd;
+}
+
+/* Request Changes Button Custom Style */
+.submit-button.request-changes-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: #000;
+    background-color: #830000;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+}
+
+.submit-button.request-changes-btn:hover {
+    background: #830000;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #e9685fbd,
+        0 0 20px #e9685fbd,
+        0 0 20px #e9685fbd,
+        0 0 20px #e9685fbd;
 }
