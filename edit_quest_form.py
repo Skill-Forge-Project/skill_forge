@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 import random, string
 from admin_submit_quest import Quest
 
+edit_quest_form_bp = Blueprint('get_all_edit_quests', __name__)
 
 # Handle quest edit from the Admin Panel
 @app.route('/edit_quest_db', methods=['GET', 'POST'])
@@ -32,12 +33,4 @@ def edit_quest_db():
         return redirect(url_for('open_admin_panel'))
     else:
         return 'Quest not found!', 404
-
-
-# Get all quests from the database
-@login_required
-@app.route('/admin_panel')
-def get_all_edit_quests():
-    open_all_quests = Quest.query.all()
-    return render_template('admin_panel.html', open_all_quests=open_all_quests)
 

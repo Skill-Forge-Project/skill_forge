@@ -3,8 +3,8 @@ from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
 import random, string
-from app import User
 
+user_submit_quest_bp = Blueprint('get_all_submited_quests', __name__)
 
 # Define the database table for the submitted quests
 class SubmitedQuest(db.Model):
@@ -114,15 +114,6 @@ def user_submit_quest():
     
     return redirect(url_for('open_user_submit_quest'))
 
-
-# Get all user submited quests from the database
-@login_required
-@app.route('/admin_panel')
-def get_all_submited_quests():
-    all_submited_quests = SubmitedQuest.query.all()
-    return render_template('admin_panel.html', all_submited_quests=all_submited_quests)
-
-# Redirect to edit page for the specific submited quest
 @login_required
 @app.route('/open_submited_quest/<quest_id>')
 def open_submited_quest(quest_id):

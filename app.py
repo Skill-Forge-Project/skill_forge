@@ -18,7 +18,6 @@ load_dotenv()
 
 app = Flask(__name__)
 
-
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -39,10 +38,9 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-# Register route for user submit form(user_submit_quest.py)
-import user_submit_quest
-import edit_quest_form
-from admin_submit_quest import Quest
+# Register blueprints
+from admin_submit_quest import Quest # handle as Blueprint!!!
+from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 
 # Define User model
 class User(UserMixin, db.Model):
@@ -169,7 +167,8 @@ def open_admin_panel():
     
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    
+    all_submited_quests = SubmitedQuest.query.all()
+
     # Get the User ID for the session
     logged_user_id = session['user_id']
 
@@ -177,7 +176,7 @@ def open_admin_panel():
     currently_logged_user = User.query.get(logged_user_id)
 
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html', quests=all_quests)
+        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests)
     
     return redirect(url_for('login'))
 
