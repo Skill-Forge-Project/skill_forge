@@ -5,6 +5,7 @@
     <title>Skill Forge - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_review_submit_quest.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_table_edit_quest.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -20,13 +21,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
     <!-- Include bootstrap dataTables libraries -->
     <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/showContentsSections.js.js') }}"></script>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
 
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
 </head>
 
 <body>
@@ -163,6 +169,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Review Submitted Quests Panel -->
             <div id="checkSubmittedQuestsContent" class="content" style="display: none;">
                 <div class="container-fluid">
@@ -180,10 +187,11 @@
                                                     <th>Difficulty</th>
                                                     <th>Author</th>
                                                     <th>Date Created</th>
+                                                    <th>Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for quest in quests %}
+                                                {% for quest in all_submited_quests %}
                                                 <tr>
                                                     <td>{{ quest.quest_id }}</td>
                                                     <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
@@ -191,6 +199,7 @@
                                                     <td>{{ quest.difficulty }}</td>
                                                     <td>{{ quest.quest_author }}</td>
                                                     <td>{{ quest.date_added }}</td>
+                                                    <td>{{ quest.status }}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -202,88 +211,17 @@
                     </div>
                 </div>             
             </div>
+
             <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
             <div id="checkReportsContent" class="content" style="display: none;">Check Reports Content</div>
             <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
         </div>
     </div>
+    <!-- JavaScript script to handle the CodeMirror custom fields -->
+    <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+    <!-- JavaScript managing the content in the Bootstrap table -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
 
-    <script>
-        // Initialize CodeMirror editors
-        var template = CodeMirror.fromTextArea(document.getElementById("template_input"), {
-            lineNumbers: true,
-            theme: "dracula",
-            indentUnit: 2,
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            scrollbars: true
-        });
-
-        var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_input"), {
-            lineNumbers: true,
-            theme: "dracula",
-            indentUnit: 2,
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            scrollbars: true
-        });
-
-        // Function to update modes of CodeMirror editors
-        function updateModes(selectedLanguage) {
-            var mode;
-            switch (selectedLanguage) {
-                case 'Python':
-                    mode = 'python';
-                    break;
-                case 'JavaScript':
-                    mode = 'javascript';
-                    break;
-                case 'Java':
-                    mode = 'text/x-java';
-                    break;
-                case 'C#':
-                    mode = 'text/x-csharp';
-                    break;
-            }
-            template.setOption("mode", mode);
-            unit_tests.setOption("mode", mode);
-            // Refresh the editors after updating the mode
-            template.refresh();
-            unit_tests.refresh();
-        }
-
-        // Event listener for changes in select element
-        document.getElementById("quest_language_input").addEventListener("change", function () {
-            var selectedLanguage = this.value;
-            updateModes(selectedLanguage);
-        });
-
-        // Initialize modes based on the initial selected language
-        var initialSelectedLanguage = document.getElementById("quest_language_input").value;
-        updateModes(initialSelectedLanguage);
-    </script>
-
-    <!-- JavaScript to toggle visibility of content sections -->
-    <script>
-        function toggleContent(sectionId) {
-            // Hide all content sections except the one clicked
-            var contentSections = document.querySelectorAll('.content');
-            contentSections.forEach(function (section) {
-                if (section.id === sectionId + 'Content') {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-        }
-    </script>
-    <script>
-        $(function () {
-            $(document).ready(function () {
-                $('#example').DataTable();
-            });
-        });
-    </script>
 </body>
 
 

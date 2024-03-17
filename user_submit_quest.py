@@ -113,3 +113,11 @@ def user_submit_quest():
     db.session.commit()
     
     return redirect(url_for('open_user_submit_quest'))
+
+
+# Get all user submited quests from the database
+@login_required
+@app.route('/admin_panel')
+def get_all_submited_quests():
+    all_submited_quests = SubmitedQuest.query.all()
+    return render_template('admin_panel.html', all_submited_quests=all_submited_quests)
