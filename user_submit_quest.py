@@ -121,3 +121,10 @@ def user_submit_quest():
 def get_all_submited_quests():
     all_submited_quests = SubmitedQuest.query.all()
     return render_template('admin_panel.html', all_submited_quests=all_submited_quests)
+
+# Redirect to edit page for the specific submited quest
+@login_required
+@app.route('/open_submited_quest/<quest_id>')
+def open_submited_quest(quest_id):
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    return render_template('edit_submited_quest.html', submited_quest=submited_quest)

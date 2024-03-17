@@ -1,228 +1,230 @@
 <!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+        <title>Skill Forge - Admin Panel</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_review_submit_quest.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_table_edit_quest.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Include CodeMirror library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <!-- Include CodeMirror theme (optional) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+        <!-- Include CodeMirror CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+        <!-- Include CodeMirror modes -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+        <!-- Include bootstrap dataTables libraries -->
+        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/showContentsSections.js.js') }}"></script>
 
-<head>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-    <title>Skill Forge - Admin Panel</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_add_quest.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_review_submit_quest.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel_table_edit_quest.css') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Include CodeMirror library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
-    <!-- Include CodeMirror theme (optional) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
-    <!-- Include CodeMirror CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-    <!-- Include CodeMirror modes -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-    <!-- Include bootstrap dataTables libraries -->
-    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
-    <!-- JavaScript to toggle visibility of content sections -->
-    <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
-
-    <script src="{{ url_for('static', filename='js/showContentsSections.js.js') }}"></script>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
 
 
-</head>
+    </head>
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="skill_forge_image">
-            <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
-        </div>
-
-        <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="left-side">
-                    <ul>
-                        <li class="nav-item">
-                            <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Sumbit Quest</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="user_pane">
-                    {% if current_user.user_role == "Admin" %}
-                        <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
-                    {% endif %}
-                    <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
-                    <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
-                </li>  
-            </ul>
-        </div>
-    </nav>
-
-    <div class="main_container">
-        <div class="btn-section">
-            <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest</div>
-            <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest</div>
-            <div id="checkSubmittedQuests" class="section-btn" onclick="toggleContent('checkSubmittedQuests')">Review Submitted Quests</div>
-            <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users</div>
-            <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports</div>
-            <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs</div>
-        </div>
-        <div class="content-section">
-            <!-- Add New Quest Panel -->
-            <div id="addQuestContent" class="content" style="display: none;">
-                <form action="/submit_quest" method="post">
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Name: </strong></h4>
-                        <input type="text" name="quest_name" id="quest_name_input" class="text_input">
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Language: </strong></h4>
-                        <select name="quest_language" id="quest_language_input" class="dropdown_input">
-                            <option value="Python">Python</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="Java">Java</option>
-                            <option value="C#">C#</option>
-                        </select>
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                        <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                            <option value="Novice Quests">Novice Quests</option>
-                            <option value="Adventurous Challenges">Adventurous Challenges</option>
-                            <option value="Epic Campaigns">Epic Campaigns</option>
-                        </select>
-                    </div>
-                    <div class="input-row" style="flex-direction: column;">
-                        <h4><strong class="row-label">Quest Condition: </strong></h4>
-                        <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
-                            class="text_input"></textarea>
-                    </div>
-                    <div class="input-row" style="flex-direction: column;">
-                        <h4><strong class="row-label">Quest Template: </strong></h4>
-                        <textarea name="function_template" id="template_input"></textarea>
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
-                        <textarea name="quest_unitests" id="unit_tests_input"></textarea>
-                    </div>
-                    <div class="btn-row">
-                        <button type="submit" id="submitQuest" class="submit-button"
-                            onclick=location.href="{{ url_for('submit_quest') }}">Submit Quest</button>
-                    </div>
-                </form>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="skill_forge_image">
+                <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
             </div>
 
-            <!-- Edit Quest Panel -->
-            <div id="editQuestContent" class="content" style="display: none;">
-                <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-10">
-                            <div class="card rounded shadow border-0">
-                                <div class="card-body p-5 bg-white rounded">
-                                    <div class="table-responsive">
-                                        <table id="example" class="table table-striped table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Quest ID</th>
-                                                    <th>Quest Name</th>
-                                                    <th>Language</th>
-                                                    <th>Difficulty</th>
-                                                    <th>Author</th>
-                                                    <th>Date Created</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for quest in quests %}
-                                                <tr>
-                                                    <td>{{ quest.quest_id }}</td>
-                                                    <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
-                                                    <td>{{ quest.language }}</td>
-                                                    <td>{{ quest.difficulty }}</td>
-                                                    <td>{{ quest.quest_author }}</td>
-                                                    <td>{{ quest.date_added }}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+            <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="left-side">
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Sumbit Quest</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="user_pane">
+                        {% if current_user.user_role == "Admin" %}
+                            <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
+                        {% endif %}
+                        <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
+                        <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
+                    </li>  
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main_container">
+            <div class="btn-section">
+                <div id="addQuest" class="section-btn" onclick="toggleContent('addQuest')">Add New Quest</div>
+                <div id="editQuest" class="section-btn" onclick="toggleContent('editQuest')">Edit Quest</div>
+                <div id="checkSubmittedQuests" class="section-btn" onclick="toggleContent('checkSubmittedQuests')">Review Submitted Quests</div>
+                <div id="manageUsers" class="section-btn" onclick="toggleContent('manageUsers')">Manage Users</div>
+                <div id="checkReports" class="section-btn" onclick="toggleContent('checkReports')">Check Reports</div>
+                <div id="viewLogs" class="section-btn" onclick="toggleContent('viewLogs')">View Logs</div>
+            </div>
+            <div class="content-section">
+                <!-- Add New Quest Panel -->
+                <div id="addQuestContent" class="content" style="display: none;">
+                    <form action="/submit_quest" method="post">
+                        <div class="input-row">
+                            <h4><strong class="row-label">Quest Name: </strong></h4>
+                            <input type="text" name="quest_name" id="quest_name_input" class="text_input">
+                        </div>
+                        <div class="input-row">
+                            <h4><strong class="row-label">Quest Language: </strong></h4>
+                            <select name="quest_language" id="quest_language_input" class="dropdown_input">
+                                <option value="Python">Python</option>
+                                <option value="JavaScript">JavaScript</option>
+                                <option value="Java">Java</option>
+                                <option value="C#">C#</option>
+                            </select>
+                        </div>
+                        <div class="input-row">
+                            <h4><strong class="row-label">Quest Difficulty: </strong></h4>
+                            <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
+                                <option value="Novice Quests">Novice Quests</option>
+                                <option value="Adventurous Challenges">Adventurous Challenges</option>
+                                <option value="Epic Campaigns">Epic Campaigns</option>
+                            </select>
+                        </div>
+                        <div class="input-row" style="flex-direction: column;">
+                            <h4><strong class="row-label">Quest Condition: </strong></h4>
+                            <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
+                                class="text_input"></textarea>
+                        </div>
+                        <div class="input-row" style="flex-direction: column;">
+                            <h4><strong class="row-label">Quest Template: </strong></h4>
+                            <textarea name="function_template" id="template_input"></textarea>
+                        </div>
+                        <div class="input-row">
+                            <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
+                            <textarea name="quest_unitests" id="unit_tests_input"></textarea>
+                        </div>
+                        <div class="btn-row">
+                            <button type="submit" id="submitQuest" class="submit-button"
+                                onclick=location.href="{{ url_for('submit_quest') }}">Submit Quest</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Edit Quest Panel -->
+                <div id="editQuestContent" class="content" style="display: none;">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="card rounded shadow border-0">
+                                    <div class="card-body p-5 bg-white rounded">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Quest ID</th>
+                                                        <th>Quest Name</th>
+                                                        <th>Language</th>
+                                                        <th>Difficulty</th>
+                                                        <th>Author</th>
+                                                        <th>Date Created</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for quest in quests %}
+                                                    <tr>
+                                                        <td>{{ quest.quest_id }}</td>
+                                                        <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                                                        <td>{{ quest.language }}</td>
+                                                        <td>{{ quest.difficulty }}</td>
+                                                        <td>{{ quest.quest_author }}</td>
+                                                        <td>{{ quest.date_added }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Review Submitted Quests Panel -->
-            <div id="checkSubmittedQuestsContent" class="content" style="display: none;">
-                <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-10">
-                            <div class="card rounded shadow border-0">
-                                <div class="card-body p-5 bg-white rounded">
-                                    <div class="table-responsive">
-                                        <table id="example" class="table table-striped table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Quest ID</th>
-                                                    <th>Quest Name</th>
-                                                    <th>Language</th>
-                                                    <th>Difficulty</th>
-                                                    <th>Author</th>
-                                                    <th>Date Created</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for quest in all_submited_quests %}
-                                                <tr>
-                                                    <td>{{ quest.quest_id }}</td>
-                                                    <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
-                                                    <td>{{ quest.language }}</td>
-                                                    <td>{{ quest.difficulty }}</td>
-                                                    <td>{{ quest.quest_author }}</td>
-                                                    <td>{{ quest.date_added }}</td>
-                                                    <td>{{ quest.status }}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                <!-- Review Submitted Quests Panel -->
+                <div id="checkSubmittedQuestsContent" class="content" style="display: none;">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="card rounded shadow border-0">
+                                    <div class="card-body p-5 bg-white rounded">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Quest ID</th>
+                                                        <th>Quest Name</th>
+                                                        <th>Language</th>
+                                                        <th>Difficulty</th>
+                                                        <th>Author</th>
+                                                        <th>Date Created</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for quest in all_submited_quests %}
+                                                    <tr>
+                                                        <td>{{ quest.quest_id }}</td>
+                                                        <td><a href="{{ url_for('open_submited_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                                                        <td>{{ quest.language }}</td>
+                                                        <td>{{ quest.difficulty }}</td>
+                                                        <td>{{ quest.quest_author }}</td>
+                                                        <td>{{ quest.date_added }}</td>
+                                                        <td>{{ quest.status }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>             
+                    </div>             
+                </div>
+
+                <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
+                <div id="checkReportsContent" class="content" style="display: none;">Check Reports Content</div>
+                <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
             </div>
-
-            <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
-            <div id="checkReportsContent" class="content" style="display: none;">Check Reports Content</div>
-            <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
         </div>
-    </div>
-    <!-- JavaScript script to handle the CodeMirror custom fields -->
-    <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
-    <!-- JavaScript managing the content in the Bootstrap table -->
-    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+        <!-- JavaScript script to handle the CodeMirror custom fields. 
+            This script should be loaded after the initialization of the fields above! 
+        -->
+        <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+        <!-- JavaScript managing the content in the Bootstrap table -->
+        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
 
-</body>
+    </body>
 
 
 </html>
