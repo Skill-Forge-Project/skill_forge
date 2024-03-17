@@ -115,6 +115,8 @@ def user_submit_quest():
     
     return redirect(url_for('open_user_submit_quest'))
 
+
+# Open User Submited Quest for editing from the Admin Panel
 @login_required
 @app.route('/open_submited_quest/<quest_id>')
 def open_submited_quest(quest_id):
