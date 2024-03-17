@@ -153,7 +153,7 @@
                                                     {% for quest in all_quests %}
                                                     <tr>
                                                         <td>{{ quest.quest_id }}</td>
-                                                        <td><a href="{{ url_for('open_admin_panel', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                                                        <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
                                                         <td>{{ quest.language }}</td>
                                                         <td>{{ quest.difficulty }}</td>
                                                         <td>{{ quest.quest_author }}</td>
@@ -194,7 +194,7 @@
                                                     {% for quest in all_submited_quests %}
                                                     <tr>
                                                         <td>{{ quest.quest_id }}</td>
-                                                        <td><a href="{{ url_for('open_admin_panel', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                                                        <td><a href="{{ url_for('open_submited_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
                                                         <td>{{ quest.language }}</td>
                                                         <td>{{ quest.difficulty }}</td>
                                                         <td>{{ quest.quest_author }}</td>

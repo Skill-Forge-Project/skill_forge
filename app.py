@@ -39,6 +39,8 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 # Register blueprints
+from edit_quest_form import edit_quest_form_bp
+from user_submit_quest import user_submit_quest_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 

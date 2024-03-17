@@ -4,7 +4,8 @@ from flask import Blueprint, request, redirect, url_for, render_template, sessio
 from flask_login import login_required, current_user
 import random, string
 
-user_submit_quest_bp = Blueprint('get_all_submited_quests', __name__)
+# BLueprint to handle opening of specific submited quest
+user_submit_quest_bp = Blueprint('open_submited_quest', __name__)
 
 # Define the database table for the submitted quests
 class SubmitedQuest(db.Model):
