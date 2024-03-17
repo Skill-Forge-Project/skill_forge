@@ -24,7 +24,7 @@
         <!-- JavaScript to toggle visibility of content sections -->
         <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
         <!-- JavaScript to toggle visibility of content sections -->
-        <script src="{{ url_for('static', filename='js/showContentsSections.js.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
@@ -150,10 +150,10 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for quest in quests %}
+                                                    {% for quest in open_all_quests %}
                                                     <tr>
                                                         <td>{{ quest.quest_id }}</td>
-                                                        <td><a href="{{ url_for('open_edit_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                                                        <td><a href="{{ url_for('get_all_edit_quests', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
                                                         <td>{{ quest.language }}</td>
                                                         <td>{{ quest.difficulty }}</td>
                                                         <td>{{ quest.quest_author }}</td>
