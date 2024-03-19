@@ -4,8 +4,11 @@ from flask import Blueprint, request, redirect, url_for, render_template, sessio
 from flask_login import login_required, current_user
 import random, string
 
-# BLueprint to handle opening of specific submited quest
+
+# Blueprint to handle opening of specific submited quest
 user_submit_quest_bp = Blueprint('open_submited_quest', __name__)
+# Blueprint to handle the commit of the submited quest into the database
+user_submit_dbsubmit_quest_bp = Blueprint('user_submit_quest', __name__)
 
 # Define the database table for the submitted quests
 class SubmitedQuest(db.Model):
@@ -84,10 +87,8 @@ def user_submit_quest():
     state = 'Pending'
     
     # Get the User ID for the session
-    logged_user_id = current_user.user_id
-    logged_username = current_user.username
-    print(logged_user_id)
-    print(logged_username)
+    current_user_id = current_user.user_id
+    current_username = current_user.username
     
     # Create a new Quest object
     new_user_submitted_quest = SubmitedQuest(
@@ -95,8 +96,8 @@ def user_submit_quest():
         language=language,
         difficulty=difficulty,
         quest_name=quest_name,
-        quest_author=logged_username, 
-        quest_author_id=logged_user_id,
+        quest_author=current_username, 
+        quest_author_id=current_user_id,
         status='Pending', # Default status is 'Pending
         date_added=datetime.now(),
         last_modified=datetime.now(),
