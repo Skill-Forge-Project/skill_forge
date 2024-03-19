@@ -68,8 +68,11 @@ def submit_quest():
         xp = 100
         type = 'Basic'
     
-    
+    # Get the currently logged in user's username
     current_username = current_user.username
+    
+    # Get the current time
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     # Create a new Quest object
     new_quest = Quest(
@@ -78,8 +81,8 @@ def submit_quest():
         difficulty=difficulty,
         quest_name=quest_name,
         quest_author=current_username,
-        date_added=datetime.now.strftime("%Y-%m-%d %H:%M:%S"),
-        last_modified=datetime.now.strftime("%Y-%m-%d %H:%M:%S"),
+        date_added=current_time,
+        last_modified=current_time,
         condition=quest_condition,
         function_template=function_template,
         unit_tests=unit_tests,
