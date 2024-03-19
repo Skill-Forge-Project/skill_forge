@@ -57,14 +57,19 @@ def submit_quest():
     
     # Assing XP points based on difficulty
     xp = 0
+    type = ''
     if request.form['quest_difficulty'] == 'Novice Quests':
         xp = 30
+        type = 'Basic'
     elif request.form['quest_difficulty'] == 'Adventurous Challenges':
         xp = 60
+        type = 'Basic'
     elif request.form['quest_difficulty'] == 'Epic Campaigns':
         xp = 100
+        type = 'Basic'
     
-    print(language, difficulty, quest_name, quest_condition, function_template, unit_tests, xp)
+    
+    current_username = current_user.username
     
     # Create a new Quest object
     new_quest = Quest(
@@ -72,12 +77,15 @@ def submit_quest():
         language=language,
         difficulty=difficulty,
         quest_name=quest_name,
-        quest_author='Your Author',  # Replace with actual author name
-        date_added=datetime.now(),
-        last_modified=datetime.now(),
+        quest_author=current_username,
+        date_added=datetime.now.strftime("%Y-%m-%d %H:%M:%S"),
+        last_modified=datetime.now.strftime("%Y-%m-%d %H:%M:%S"),
         condition=quest_condition,
         function_template=function_template,
         unit_tests=unit_tests,
+        # test_inputs=quest_inputs, # New fields to be added in the Admin form
+        # test_outputs=quest_outputs, # New fields to be added in the Admin form
+        type=type,
         xp=str(xp)
     )
 

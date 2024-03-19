@@ -42,6 +42,7 @@ login_manager.login_message_category = 'info'
 from edit_quest_form import edit_quest_form_bp
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
+from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 
