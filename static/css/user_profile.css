@@ -210,3 +210,34 @@ body {
                 0 0 15px #03e9f4,
                 0 0 20px #03e9f4;
 }
+
+/* .user_info .right_pane .user_data input {
+    width: 900%;
+    padding: 0 0;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    background: transparent;
+} */
+
+.right_pane {
+    display: flex;
+    flex-direction: column;
+}
+
+.right_pane div {
+    display: flex;
+}
+
+.right_pane .user_data input {
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #abaaaa;
+    outline: none;
+    border-radius: 0;
+    width: 20%;
+}
