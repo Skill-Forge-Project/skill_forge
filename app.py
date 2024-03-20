@@ -194,7 +194,6 @@ def open_user_profile():
     
     # Get the User ID for the session
     user_id = session['user_id']
-    username = session['username']
     
     # Get the user info from the database
     user = User.query.get(user_id)

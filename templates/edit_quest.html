@@ -77,7 +77,6 @@
         <div class="content-section">
             <div id="editQuestContent" class="content">
                 <form action="/edit_quest_db" method="post">
-                    {% for quest in all_quests %}
                     <div>
                         <input type="hidden" name="quest_id" value="{{ quest.quest_id }}">
                     </div>
