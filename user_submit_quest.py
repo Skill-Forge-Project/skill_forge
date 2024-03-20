@@ -28,7 +28,6 @@ class SubmitedQuest(db.Model):
     language = db.Column(db.String(50), nullable=False)
     difficulty = db.Column(db.String(50), nullable=False)
     quest_name = db.Column(db.String(255), nullable=False)
-    # solved_times = db.Column(db.Integer, default=0, nullable=True)
     quest_author = db.Column(db.String(255), nullable=False)
     quest_author_id = db.Column(db.String(255), nullable=False)
     status = db.Column(db.Enum('Pending', 'Approved', 'Rejected', name='quest_submit_status'), nullable=False)
@@ -101,6 +100,9 @@ def user_submit_quest():
     current_user_id = current_user.user_id
     current_username = current_user.username
     
+    # Get the current time
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
     # Create a new Quest object
     new_user_submitted_quest = SubmitedQuest(
         quest_id= quest_id,
@@ -110,8 +112,8 @@ def user_submit_quest():
         quest_author=current_username, 
         quest_author_id=current_user_id,
         status='Pending', # Default status is 'Pending
-        date_added=datetime.now.strftime("%Y-%m-%d %H:%M:%S"),
-        last_modified=datetime.now.strftime("%Y-%m-%d %H:%M:%S"),
+        date_added=current_time,
+        last_modified=current_time,
         condition=quest_condition,
         function_template=function_template,
         unit_tests=unit_tests,
