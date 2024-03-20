@@ -7,10 +7,12 @@ This file handles the functionality for submiting a new quest as a regular user.
 """
 
 from __main__ import app, db
+# from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
-import random, string
+from sqlalchemy.dialects.postgresql import JSON
+import random, string, json
 from admin_submit_quest import Quest
 
 
@@ -40,6 +42,7 @@ class SubmitedQuest(db.Model):
     test_outputs = db.Column(db.Text, nullable=True)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
     type = db.Column(db.Enum('Basic', 'Advanced', name='quest_type'), nullable=True)
+    comments=db.Column(JSON, nullable=True) # Store comments for the submited quests
 
 
 # Redirect to the user submit quest page
