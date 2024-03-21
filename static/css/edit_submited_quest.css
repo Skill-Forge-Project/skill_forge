@@ -225,3 +225,75 @@ body {
         0 0 20px #e9685fbd,
         0 0 20px #e9685fbd;
 }
+
+
+/* Comments Section styling */
+.row {
+
+    width: 100% !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.col-md-7 {
+    width: 100% !important;
+    margin: 0px !important;
+    padding: 0px !important;
+
+}
+.card {
+    background: linear-gradient(#141e30, #243b55) !important;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6) !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+    /* background-color: #fff; */
+    color: #d2d0d0;
+    border: none;
+}
+
+.form-color {
+    background: linear-gradient(#141e30) !important;
+}
+
+.form-control {
+    background: #243b55 !important;
+    color: #d2d0d0 !important;
+    width: 100% !important;
+    height: 48px;
+    border-radius: 25px
+}
+
+.form-control:focus {
+    color: #d2d0d0;
+    background-color: #fff;
+    border-color: #03e9f4;
+    outline: 0;
+    box-shadow: none;
+    text-indent: 10px
+}
+
+.c-badge {
+    background-color: #35b69f;
+    color: white;
+    height: 20px;
+    font-size: 11px;
+    width: 100px !important;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2px
+}
+
+.comment-text {
+    font-size: 13px
+}
+
+.wish {
+    color: #35b69f
+}
+
+.user-feed {
+    font-size: 14px;
+    margin-top: 12px
+}
