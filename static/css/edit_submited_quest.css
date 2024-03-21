@@ -254,13 +254,17 @@ body {
 .form-color {
     background: linear-gradient(#141e30) !important;
 }
+.mt-3.d-flex.flex-row.align-items-center.p-3.form-color {
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+}
 
 .form-control {
     background: #243b55 !important;
     color: #d2d0d0 !important;
     width: 100% !important;
     height: 48px;
-    border-radius: 25px
+    border-radius: 25px;
 }
 
 .form-control:focus {
@@ -269,7 +273,6 @@ body {
     border-color: #03e9f4;
     outline: 0;
     box-shadow: none;
-    text-indent: 10px
 }
 
 .c-badge {
