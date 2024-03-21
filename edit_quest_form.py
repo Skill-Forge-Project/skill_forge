@@ -45,6 +45,7 @@ def edit_quest_db():
     else:
         return 'Quest not found!', 404
 
+
 # Open Quest for editing from the Admin Panel
 @login_required
 @app.route('/edit_quest/<quest_id>')
@@ -52,4 +53,3 @@ def open_edit_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('edit_quest.html', quest=quest)
-

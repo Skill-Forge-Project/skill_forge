@@ -1,210 +1,232 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-        <title>Skill Forge - Admin Panel</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_submited_quest.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
-        <!-- Import Navigation bar styles -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <!-- Include CodeMirror library -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
-        <!-- Include CodeMirror theme (optional) -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
-        <!-- Include CodeMirror CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-        <!-- Include CodeMirror modes -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-        <!-- Include bootstrap dataTables libraries -->
-        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
-        <!-- JavaScript to toggle visibility of content sections -->
-        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
-        <!-- JavaScript to toggle visibility of content sections -->
-        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
-        <!-- Data Table Boostrap libraries -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-        <!-- Comments Section Bootstrap libraries -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge - Admin Panel</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_submited_quest.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+    <!-- Import Navigation bar styles -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include CodeMirror library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <!-- Include CodeMirror theme (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+    <!-- Include CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+    <!-- Include CodeMirror modes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <!-- Include bootstrap dataTables libraries -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+    <!-- Data Table Boostrap libraries -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Comments Section Bootstrap libraries -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
 
-    </head>
+</head>
 
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="skill_forge_image">
-                <img src="../static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
-            </div>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="skill_forge_image">
+            <img src="../static/images/anvil.png" alt="Skill Forge" width="50px" height="50px"
+                onclick=location.href="{{ url_for('main_page') }}">
+        </div>
 
-            <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="left-side">
-                        <ul>
-                            <li class="nav-item">
-                                <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" onclick=location.href="{{ url_for('open_user_submit_quest') }}">Sumbit Quest</a>
-                            </li>
-                        </ul>
-                    </li>
+        <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                    <li class="user_pane">
-                        {% if current_user.user_role == "Admin" %}
-                            <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
-                        {% endif %}
-                        <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
-                        <img class="user_image" src="../static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
-                    </li>  
-                </ul>
-            </div>
-        </nav>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="left-side">
+                    <ul>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick=location.href="{{ url_for('open_user_submit_quest') }}">Sumbit
+                                Quest</a>
+                        </li>
+                    </ul>
+                </li>
 
-        <div class="content-section">
-            <div id="editQuestContent" class="content">
-                <form action="/approve_submited_quest " method="post">
-                    <div class="input-row">
-                        <div>
-                            <p class="quest-data-labels" name="submited_quest_id">Generated Quest ID: {{ submited_quest.quest_id
-                                }}</p>
-                            <p class="quest-data-labels" name="submited_quest_status">Current Quest Status: {{
-                                submited_quest.status }}</p>
-                            <p class="quest-data-labels" name="submited_quest_author">Quest Author: {{
-                                submited_quest.quest_author }}</p>
-                            <p class="quest-data-labels" name="submited_quest_author_id">Quest Author ID: {{
-                                submited_quest.quest_author_id }}</p>
-                            <p class="quest-data-labels" name="submited_quest_date_added">Date Submited: {{
-                                submited_quest.date_added }}</p>
-                        </div>
+                <li class="user_pane">
+                    {% if current_user.user_role == "Admin" %}
+                    <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin
+                        Panel</div>
+                    {% endif %}
+                    <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log
+                        Out</div>
+                    <img class="user_image" src="../static/images/user.png" width="35" height="35"
+                        onclick=location.href="{{ url_for('open_user_profile') }}">
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content-section">
+        <div id="editQuestContent" class="content">
+            <form action="/approve_submited_quest " method="post">
+                <div class="input-row">
+                    <div>
+                        <p class="quest-data-labels" name="submited_quest_id">Generated Quest ID: {{
+                            submited_quest.quest_id
+                            }}</p>
+                        <p class="quest-data-labels" name="submited_quest_status">Current Quest Status: {{
+                            submited_quest.status }}</p>
+                        <p class="quest-data-labels" name="submited_quest_author">Quest Author: {{
+                            submited_quest.quest_author }}</p>
+                        <p class="quest-data-labels" name="submited_quest_author_id">Quest Author ID: {{
+                            submited_quest.quest_author_id }}</p>
+                        <p class="quest-data-labels" name="submited_quest_date_added">Date Submited: {{
+                            submited_quest.date_added }}</p>
                     </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Name: </strong></h4>
-                        <input type="text" name="submited_quest_name" id="quest_name_input" class="text_input"
-                            value="{{ submited_quest.quest_name }}">
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Language: </strong></h4>
-                        <select name="submited_quest_language" id="quest_language_input" class="dropdown_input">
-                            <option value="Python" {% if submited_quest.language=='Python' %} selected {% endif %}>Python
-                            </option>
-                            <option value="JavaScript" {% if submited_quest.language=='JavaScript' %} selected {% endif %}>
-                                JavaScript</option>
-                            <option value="Java" {% if submited_quest.language=='Java' %} selected {% endif %}>Java</option>
-                            <option value="C#" {% if submited_quest.language=='C#' %} selected {% endif %}>C#</option>
-                        </select>
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                        <select name="submited_quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                            <option value="Novice Quests" {% if submited_quest.difficulty=='Novice Quests' %} selected {% endif
-                                %}>Novice Quests</option>
-                            <option value="Adventurous Challenges" {% if submited_quest.difficulty=='Adventurous Challenges' %}
-                                selected {% endif %}>Adventurous Challenges</option>
-                            <option value="Epic Campaigns" {% if submited_quest.difficulty=='Epic Campaigns' %} selected {%
-                                endif %}>Epic Campaigns</option>
-                        </select>
-                    </div>
-                    <div class="input-row" style="flex-direction: column;">
-                        <h4><strong class="row-label">Quest Condition: </strong></h4>
-                        <textarea type="text" name="submited_quest_condition" id="quest_condition_input" rows="10"
-                            class="text_input">{{ submited_quest.condition }}</textarea>
-                    </div>
-                    <div class="input-row" style="flex-direction: column;">
-                        <h4><strong class="row-label">Quest Template: </strong></h4>
-                        <textarea name="submited_function_template"
-                            id="template_input">{{ submited_quest.function_template }}</textarea>
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
-                        <textarea name="submited_quest_unitests"
-                            id="unit_tests_input">{{ submited_quest.unit_tests }}</textarea>
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Test Inputs: </strong></h4>
-                        <textarea name="submited_quest_inputs" id="tests_inputs"
-                            class="text_input">{{ submited_quest.test_inputs }}</textarea>
-                    </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Test Oututs: </strong></h4>
-                        <textarea name="submited_quest_outputs" id="tests_outputs"
-                            class="text_input">{{ submited_quest.test_outputs }}</textarea>
-                    </div>
-                    <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
-                    <input type="hidden" name="submited_quest_author" value="{{ submited_quest.quest_author}}">
-                    <input type="hidden" name="submited_quest_date_added" value="{{ submited_quest.date_added}}">
-        
-                    <!-- Bootstrap Comments Section -->
-                    <div class="input-row">
-                        <div class="container mt-5 mb-5">
-                            <div class="row height d-flex justify-content-center align-items-center">
-                                <div class="col-md-7">
-                                    <div class="card">
-                                        <div class="p-3">
-                                            <h6>Comments</h6>
-                                        </div>
-                                        <div class="mt-3 d-flex flex-row align-items-center p-3 form-color"> <img
-                                                src="https://i.imgur.com/zQZSWrt.jpg" width="50" class="rounded-circle mr-2">
-                                            <textarea class="form-control" placeholder="Enter your comment..."></textarea></div>
-                                        {% if submited_quest.comments %}
-                                            {% for comment in submited_quest.comments %}
-                                            <div class="mt-2">
-                                                <div class="d-flex flex-row p-3">
-                                                    <img src="https://i.imgur.com/zQZSWrt.jpg" width="40" height="40"
-                                                        class="rounded-circle mr-3">
-                                                    <div class="w-100">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="d-flex flex-row align-items-center">
-                                                                <span class="mr-2">{{comment["username"]}}</span>
-                                                                <small class="c-badge">Top Comment</small>
-                                                            </div>
-                                                            <small>{{comment["date_added"]}}</small>
-                                                        </div>
-                                                        <p class="text-justify comment-text mb-0">{{comment["content"]}}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                        {% endif %}
+                </div>
+                <div class="input-row">
+                    <h4><strong class="row-label">Quest Name: </strong></h4>
+                    <input type="text" name="submited_quest_name" id="quest_name_input" class="text_input"
+                        value="{{ submited_quest.quest_name }}">
+                </div>
+                <div class="input-row">
+                    <h4><strong class="row-label">Quest Language: </strong></h4>
+                    <select name="submited_quest_language" id="quest_language_input" class="dropdown_input">
+                        <option value="Python" {% if submited_quest.language=='Python' %} selected {% endif %}>Python
+                        </option>
+                        <option value="JavaScript" {% if submited_quest.language=='JavaScript' %} selected {% endif %}>
+                            JavaScript</option>
+                        <option value="Java" {% if submited_quest.language=='Java' %} selected {% endif %}>Java</option>
+                        <option value="C#" {% if submited_quest.language=='C#' %} selected {% endif %}>C#</option>
+                    </select>
+                </div>
+                <div class="input-row">
+                    <h4><strong class="row-label">Quest Difficulty: </strong></h4>
+                    <select name="submited_quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
+                        <option value="Novice Quests" {% if submited_quest.difficulty=='Novice Quests' %} selected {%
+                            endif %}>Novice Quests</option>
+                        <option value="Adventurous Challenges" {% if submited_quest.difficulty=='Adventurous Challenges'
+                            %} selected {% endif %}>Adventurous Challenges</option>
+                        <option value="Epic Campaigns" {% if submited_quest.difficulty=='Epic Campaigns' %} selected {%
+                            endif %}>Epic Campaigns</option>
+                    </select>
+                </div>
+                <div class="input-row" style="flex-direction: column;">
+                    <h4><strong class="row-label">Quest Condition: </strong></h4>
+                    <textarea type="text" name="submited_quest_condition" id="quest_condition_input" rows="10"
+                        class="text_input">{{ submited_quest.condition }}</textarea>
+                </div>
+                <div class="input-row" style="flex-direction: column;">
+                    <h4><strong class="row-label">Quest Template: </strong></h4>
+                    <textarea name="submited_function_template"
+                        id="template_input">{{ submited_quest.function_template }}</textarea>
+                </div>
+                <div class="input-row">
+                    <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
+                    <textarea name="submited_quest_unitests"
+                        id="unit_tests_input">{{ submited_quest.unit_tests }}</textarea>
+                </div>
+                <div class="input-row">
+                    <h4><strong class="row-label">Quest Test Inputs: </strong></h4>
+                    <textarea name="submited_quest_inputs" id="tests_inputs"
+                        class="text_input">{{ submited_quest.test_inputs }}</textarea>
+                </div>
+                <div class="input-row">
+                    <h4><strong class="row-label">Quest Test Oututs: </strong></h4>
+                    <textarea name="submited_quest_outputs" id="tests_outputs"
+                        class="text_input">{{ submited_quest.test_outputs }}</textarea>
+                </div>
+                <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
+                <input type="hidden" name="submited_quest_author" value="{{ submited_quest.quest_author}}">
+                <input type="hidden" name="submited_quest_date_added" value="{{ submited_quest.date_added}}">
+            </form>
+            <!-- Bootstrap Comments Section -->
+            <form action="/post_comment" method="post">
+                <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
+                <input type="hidden" name="submited_quest_comments" value="{{ submited_quest.comments }}">
+                <div class="input-row">
+                    <div class="container mt-5 mb-5">
+                        <div class="row height d-flex justify-content-center align-items-center">
+                            <div class="col-md-7">
+                                <div class="card">
+                                    <div class="p-3">
+                                        <h6>Comments</h6>
                                     </div>
+                                    <div class="mt-3 d-flex flex-row align-items-center p-3 form-color"> <img
+                                            src="https://i.imgur.com/zQZSWrt.jpg" width="50"
+                                            class="rounded-circle mr-2">
+                                        <textarea class="form-control" placeholder="Enter your comment..." name="submited_quest_comment"></textarea>
+                                    </div>
+                                    <div class="submit-comment-btn-area">
+                                        <button type="submit" id="submitComment"
+                                            class="submit-button submit-comment-btn">
+                                            <a href="{{ url_for('post_comment') }}"></a>Comment</button>
+                                    </div>
+                                    {% if submited_quest.comments %}
+                                    {% for comment in submited_quest.comments %}
+                                    <div class="mt-2">
+                                        <div class="d-flex flex-row p-3">
+                                            <img src="https://i.imgur.com/zQZSWrt.jpg" width="40" height="40"
+                                                class="rounded-circle mr-3">
+                                            <div class="w-100">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex flex-row align-items-center">
+                                                        <span class="mr-2">{{comment["username"]}}</span>
+                                                        <small class="c-badge">Top Comment</small>
+                                                    </div>
+                                                    <small>{{comment["posted_at"]}}</small>
+                                                </div>
+                                                <p class="text-justify comment-text mb-0" name="submited_quest_comment">
+                                                    {{comment["comment"]}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="btn-row">
-                        <!-- Redirect to real routes once impemented -->
-                        <button type="submit" id="editQuest" class="submit-button approve-btn">
-                            <a href="{{ url_for('approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Approve Quest</button>
-                        <button type="submit" id="editQuest" class="submit-button request-changes-btn"
-                            onclick=location.href="{{ url_for('open_admin_panel') }}">Request Changes</button>
-                    </div>
-                </form>
+                </div>
+            </form>
+
+            <div class="btn-row">
+                <!-- Redirect to real routes once impemented -->
+                <button type="submit" id="editQuest" class="submit-button approve-btn">
+                    <a href="{{ url_for('approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Approve
+                    Quest</button>
+                <button type="submit" id="editQuest" class="submit-button request-changes-btn"
+                    onclick=location.href="{{ url_for('open_admin_panel') }}">Request Changes</button>
             </div>
+
+        </div>
 
         <!-- JavaScript script to handle the CodeMirror custom fields. 
             This script should be loaded after the initialization of the fields above! 
         -->
         <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
-    </body>
+</body>
+
 </html>

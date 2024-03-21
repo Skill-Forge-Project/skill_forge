@@ -12,6 +12,7 @@ from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
 from sqlalchemy.dialects.postgresql import JSON
+from sqlalchemy.exc import IntegrityError
 import random, string, json
 from admin_submit_quest import Quest
 
@@ -195,3 +196,30 @@ def approve_submited_quest():
     db.session.commit()
     print("Quest was submitted successfully!")
     return redirect(url_for('open_admin_panel'))
+
+
+# Post new comment in comments sections
+@login_required
+@app.route('/post_comment', methods=['POST'])
+def post_comment():
+    submited_quest_id = request.form['submited_quest_id']
+    all_comments = eval(request.form['submited_quest_comments'])
+    comment = request.form['submited_quest_comment']
+    user_id = current_user.user_id
+    username = current_user.username
+    
+    print(all_comments)
+    
+    # Get the current time
+    current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    created_at = current_time
+    
+    current_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
+    data = {'username': username, 'user_id': user_id, 'posted_at': created_at, 'comment': comment}
+    all_comments.append(data)
+    current_quest.comments = all_comments
+    print(current_quest.comments)
+    
+    db.session.commit()
+    
+    return render_template('edit_submited_quest.html', submited_quest=current_quest)

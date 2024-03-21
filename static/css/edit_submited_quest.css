@@ -227,6 +227,47 @@ body {
 }
 
 
+/* Submit Comment Button Custom Style */
+.submit-comment-btn-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: right;
+}
+
+.submit-button.submit-comment-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 8px;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    /* padding: 10px 20px; */
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    /* transition: .6s; */
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 150px;
+    height: 30px;
+}
+
+.submit-button.submit-comment-btn:hover {
+    background: #03e9f4;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4;
+}
+
+
 /* Comments Section styling */
 .row {
 
