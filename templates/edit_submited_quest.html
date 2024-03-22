@@ -161,7 +161,17 @@
                 <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
                 <input type="hidden" name="submited_quest_author" value="{{ submited_quest.quest_author}}">
                 <input type="hidden" name="submited_quest_date_added" value="{{ submited_quest.date_added}}">
+                <div class="btn-row">
+                    <!-- Redirect to real routes once impemented -->
+                    <button type="submit" id="approveQuestButton" class="submit-button approve-btn" name="action" value="approve">
+                        <a href="{{ url_for('approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Approve Quest</button>
+                    <button type="submit" id="requestChangeButton" class="submit-button request-changes-btn" name="action" value="request-changes">
+                        <a href="{{ url_for('approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Request Changes</button>
+                    <button type="submit" id="rejectButton" class="submit-button reject-btn" name="action" value="reject">
+                        <a href="{{ url_for('approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Reject Quest</button>
+                </div>
             </form>
+
             <!-- Bootstrap Comments Section -->
             <form action="/post_comment" method="post">
                 <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
@@ -211,18 +221,6 @@
                     </div>
                 </div>
             </form>
-
-            <div class="btn-row">
-                <!-- Redirect to real routes once impemented -->
-                <button type="submit" id="editQuest" class="submit-button approve-btn">
-                    <a href="{{ url_for('approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Approve
-                    Quest</button>
-                <button type="submit" id="editQuest" class="submit-button request-changes-btn"
-                    onclick=location.href="{{ url_for('open_admin_panel') }}">Request Changes</button>
-                <button type="submit" id="editQuest" class="submit-button reject-btn"
-                    onclick=location.href="{{ url_for('open_admin_panel') }}">Reject Quest</button>
-            </div>
-
         </div>
 
         <!-- JavaScript script to handle the CodeMirror custom fields. 
