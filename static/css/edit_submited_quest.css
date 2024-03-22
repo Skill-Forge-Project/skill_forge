@@ -204,7 +204,7 @@ body {
     border-radius: 10px;
     padding: 10px 20px;
     color: #000;
-    background-color: #830000;
+    background-color: #f79a04;
     font-size: 16px;
     text-decoration: none;
     text-transform: uppercase;
@@ -217,13 +217,44 @@ body {
 }
 
 .submit-button.request-changes-btn:hover {
-    background: #830000;
+    background: #f79a04;
     color: #000;
     border-radius: 5px;
-    box-shadow: 0 0 2px #e9685fbd,
-        0 0 20px #e9685fbd,
-        0 0 20px #e9685fbd,
-        0 0 20px #e9685fbd;
+    box-shadow: 0 0 2px #f3ff0fbd,
+        0 0 20px #f3ff0fbd,
+        0 0 20px #f3ff0fbd,
+        0 0 20px #f3ff0fbd;
+}
+
+/* Reject Quest Button Custom Style */
+.submit-button.reject-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: #000;
+    background-color: #e31c02e3;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+}
+
+.submit-button.reject-btn:hover {
+    background: #e31c02e3;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #f73333bd,
+        0 0 20px #f73333bd,
+        0 0 20px #f73333bd,
+        0 0 20px #f73333bd;
 }
 
 
