@@ -16,6 +16,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <!-- Include bootstrap dataTables libraries -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+    <!-- JavaScript to toggle visibility of content sections -->
+    <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
 </head>
 
 <body>
@@ -111,76 +117,10 @@
             </div>
         </div>
     </form>
-
-    <script>
-        // Initialize CodeMirror editors
-        var template = CodeMirror.fromTextArea(document.getElementById("template_input"), {
-            lineNumbers: true,
-            theme: "dracula",
-            indentUnit: 2,
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            scrollbars: true
-        });
-
-        var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_input"), {
-            lineNumbers: true,
-            theme: "dracula",
-            indentUnit: 2,
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            scrollbars: true
-        });
-
-        // Function to update modes of CodeMirror editors
-        function updateModes(selectedLanguage) {
-            var mode;
-            switch (selectedLanguage) {
-                case 'Python':
-                    mode = 'python';
-                    break;
-                case 'JavaScript':
-                    mode = 'javascript';
-                    break;
-                case 'Java':
-                    mode = 'text/x-java';
-                    break;
-                case 'C#':
-                    mode = 'text/x-csharp';
-                    break;
-            }
-            template.setOption("mode", mode);
-            unit_tests.setOption("mode", mode);
-            // Refresh the editors after updating the mode
-            template.refresh();
-            unit_tests.refresh();
-        }
-
-        // Event listener for changes in select element
-        document.getElementById("quest_language_input").addEventListener("change", function () {
-            var selectedLanguage = this.value;
-            updateModes(selectedLanguage);
-        });
-
-        // Initialize modes based on the initial selected language
-        var initialSelectedLanguage = document.getElementById("quest_language_input").value;
-        updateModes(initialSelectedLanguage);
-    </script>
-
-    <!-- JavaScript to toggle visibility of content sections -->
-    <script>
-        function toggleContent(sectionId) {
-            // Hide all content sections except the one clicked
-            var contentSections = document.querySelectorAll('.content');
-            contentSections.forEach(function (section) {
-                if (section.id === sectionId + 'Content') {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-        }
-    </script>
+    <!-- JavaScript script to handle the CodeMirror custom fields. 
+        This script should be loaded after the initialization of the fields above! 
+    -->
+    <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
 </body>
 
 </html>

@@ -28,6 +28,8 @@ def edit_quest_db():
     quest_condition = request.form['quest_condition']
     function_template = request.form['function_template']
     unit_tests = request.form['quest_unitests']
+    input_tests = request.form['quest_test_inputs']
+    output_tests = request.form['quest_test_outputs']
     
     quest = Quest.query.get(quest_id)
     print(quest)
@@ -38,6 +40,8 @@ def edit_quest_db():
         quest.condition = quest_condition
         quest.function_template = function_template
         quest.unit_tests = unit_tests
+        quest.input_tests = input_tests
+        quest.output_tests = output_tests
         
         db.session.commit()
         

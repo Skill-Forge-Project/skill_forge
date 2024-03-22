@@ -109,6 +109,18 @@
                         <h4><strong class="row-label">Quest Template: </strong></h4>
                         <textarea name="function_template" id="template_input">{{ quest.function_template }}</textarea>
                     </div>
+                    <div>
+                        <div class="input-row" style="flex-direction:column;">
+                            <h4><strong class="row-label">Quest Tests Inputs: </strong></h4>
+                            <textarea name="quest_test_inputs" id="input_tests" class="text_input">{{ quest.test_inputs }}</textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-row" style="flex-direction:column;">
+                            <h4><strong class="row-label">Quest Tests Outputs: </strong></h4>
+                            <textarea name="quest_test_outputs" id="output_tests" class="text_input">{{ quest.test_outputs }}</textarea>
+                        </div>
+                    </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
                         <textarea name="quest_unitests" id="unit_tests_input">{{ quest.unit_tests }}</textarea>
