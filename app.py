@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum, ARRAY
 from flask_bcrypt import Bcrypt  # Password hashing
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, unittest, random, string, requests
 from datetime import datetime
@@ -330,6 +330,8 @@ def open_user_profile():
     
     return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
 
+
+# Change the User avatar route
 @app.route('/upload_avatar', methods=['POST'])
 def upload_avatar():
     # Get user ID from session or request parameters
@@ -356,6 +358,23 @@ def upload_avatar():
     db.session.commit()
     
     # Redirect to the user profile page or any other page
+    return redirect(url_for('open_user_profile'))
+
+
+# Update User info route (Self-Update)
+@login_required
+@app.route('/self_update', methods=['GET', 'POST'])
+def user_self_update():
+    current_user_id = current_user.user_id
+    new_first_name = request.form.get('change_first_name')
+    new_last_name = request.form.get('change_last_name')
+    new_email_address = request.form.get('change_email')
+    
+    user = User.query.get(current_user_id)
+    user.first_name = new_first_name
+    user.last_name = new_last_name
+    user.email = new_email_address
+    db.session.commit()
     return redirect(url_for('open_user_profile'))
 
 # App Routes to tasks

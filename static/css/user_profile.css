@@ -229,6 +229,8 @@ body {
 }
 
 .right_stats {
+    display: flex;
+    flex-direction: column;
     color: #d2d0d0;
     margin: 0 0 0 10px;
     width: auto;
@@ -237,9 +239,12 @@ body {
     padding: 0px;
     margin-bottom: 0px;
     vertical-align: middle;
+    align-items: center;
 }
 
 .right_stats_edit {
+    display: flex;
+    flex-direction: column;
     background-color: transparent;
     border: 0px;
     color: #d2d0d0;
@@ -248,8 +253,10 @@ body {
     outline: none;
     cursor: text;
     resize: none;
-    height: 30px;
+    height: 24px;
     padding: 0px;
+    vertical-align: middle;
+    align-items: center;
 }
 
 .right_stats_edit:hover {
