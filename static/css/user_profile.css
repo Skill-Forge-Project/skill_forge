@@ -264,6 +264,54 @@ body {
     justify-content: right;
 }
 
+.change_avatar_form  {
+    padding: 0px;
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    margin-right: 30px;
+    color: #03e9f4;
+    background: transparent;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.change_avatar_label {
+    color: #03e9f4;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+
+input {
+    background-color: transparent;
+    color: #03e9f4;
+    border: 0px;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: auto;
+    height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: middle;
+}
+
+input #file-upload-buton {
+    padding: 0px;
+    margin: 0px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 40px;
+    border: 0px;
+    vertical-align: middle;
+}
+
 .submit-buton {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#141e30, #243b55);

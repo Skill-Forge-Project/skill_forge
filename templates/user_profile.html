@@ -90,6 +90,15 @@
 
                     <!-- Buttons section -->
                     <div class="btn-section">
+                        
+                        <div class="change_avatar_form">
+                            <p class="change_avatar_label">CHANGE AVATAR</p>
+                            <form action="/upload_avatar" method="post" enctype="multipart/form-data">
+                                <input type="file" name="avatar" accept="image/*">
+                                <input class="submit-buton avatar" type="submit" value="Upload Avatar">
+                            </form>
+                        </div>
+
                         <button type="submit" id="saveUserChanges" class="submit-buton"
                             onclick=location.href="{{ url_for('submit_quest') }}">Save Changes</button>
                     </div>
