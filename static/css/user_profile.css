@@ -164,13 +164,13 @@ body {
     border-radius: 10px;
     width: auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-left: 20px;
     margin-right: 20px;
     margin-bottom: 10px;
-    height: 40px;
+    height: auto;
     vertical-align: middle;
-    align-items: center;
+    align-items: left;
 }
 
 .user_stats.sub_status {

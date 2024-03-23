@@ -76,30 +76,34 @@
                         <!-- User information section -->
                         <h3 class="left_status h3">User Information</h3>
                         <div class="user_stats">
-                            <p class="left_stats">User ID:</p>
-                            <p class="right_stats" name="user_id">{{ user.user_id }}</p>
-                        </div>
-                        <div class="user_stats">
-                            <p class="left_stats">Username:</p>
-                            <p class="right_stats">{{ user.username }}</p>
-                        </div>
-                        <div class="user_stats">
-                            <p class="left_stats">First Name:</p>
-                            <textarea cols="40" class="right_stats_edit" name="change_first_name"
-                                contenteditable="true">{{ user.first_name }}</textarea>
-                        </div>
-                        <div class="user_stats">
-                            <p class="left_stats">Last Name:</p>
-                            <textarea cols="50" class="right_stats_edit" name="change_last_name"
-                                contenteditable="true">{{ user.last_name }}</textarea>
-                        </div>
-                        <div class="user_stats">
-                            <p class="left_stats">Email:</p>
-                            <textarea cols="50" class="right_stats_edit" contenteditable="true"
-                                name="change_email">{{ user.email }}</textarea>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">User ID:</p>
+                                <p class="right_stats" name="user_id">{{ user.user_id }}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Username:</p>
+                                <p class="right_stats">{{ user.username }}</p>
+                            </div>
+
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">First Name:</p>
+                                <textarea cols="40" class="right_stats_edit" name="change_first_name"
+                                    contenteditable="true">{{ user.first_name }}</textarea>
+                            </div>
+
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Last Name:</p>
+                                <textarea cols="50" class="right_stats_edit" name="change_last_name"
+                                    contenteditable="true">{{ user.last_name }}</textarea>
+                            </div>
+
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Email:</p>
+                                <textarea cols="50" class="right_stats_edit" contenteditable="true"
+                                    name="change_email">{{ user.email }}</textarea>
+                            </div>
                         </div>
                     </div>
-
 
                     <!-- Buttons section -->
                     <div class="btn-section">
@@ -107,6 +111,8 @@
                             onclick=location.href="{{ url_for('user_self_update') }}">Save Changes</button>
                     </div>
                 </form>
+
+                <!-- Change avatar form -->
                 <div class="change-avatar-section">
                     <p class="ca-1">Change Avatar</p>
                     <form action="/upload_avatar" method="post" enctype="multipart/form-data" class="ca-2">
@@ -119,52 +125,54 @@
                     <!-- User stats section -->
                     <h3 class="left_status h3">User Stats</h3>
                     <div class="user_stats">
-                        <p class="left_stats">Date Registration:</p>
-                        <p class="right_stats">{{ user.date_registered }}</p>
-                    </div>
-                    <div class="user_stats">
-                        <p class="left_stats">Level:</p>
-                        <p class="right_stats">{{ user.level }} - {{user.xp}} XP Points</p>
-                    </div>
-                    <div class="user_stats">
-                        <p class="left_stats">Rank:</p>
-                        <p class="right_stats">{{ user.rank }}</p>
-                    </div>
-                    <div class="user_stats">
-                        <p class="left_stats">Total Solved Quests:</p>
-                        <p class="right_stats">Database migrations needed</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">Python:</p>
-                        <p class="right_stats">0</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">Java:</p>
-                        <p class="right_stats">0</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">JavaScript:</p>
-                        <p class="right_stats">0</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">C# Quests:</p>
-                        <p class="right_stats">0</p>
-                    </div>
-                    <div class="user_stats">
-                        <p class="left_stats">Total Submited Quests:</p>
-                        <p class="right_stats">Database migrations needed</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">Approved:</p>
-                        <p class="right_stats">0</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">Pending:</p>
-                        <p class="right_stats">0</p>
-                    </div>
-                    <div class="user_stats sub_status">
-                        <p class="left_stats">Rejected:</p>
-                        <p class="right_stats">0</p>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Date Registration:</p>
+                            <p class="right_stats">{{ user.date_registered }}</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Level:</p>
+                            <p class="right_stats">{{ user.level }} - {{user.xp}} XP Points</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Rank:</p>
+                            <p class="right_stats">{{ user.rank }}</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Total Solved Quests:</p>
+                            <p class="right_stats">Database migrations needed</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Python:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Java:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;JavaScript:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;C# Quests:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Total Submited Quests:</p>
+                            <p class="right_stats">Database migrations needed</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Approved:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Pending:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Rejected:</p>
+                            <p class="right_stats">0</p>
+                        </div>
                     </div>
                 </div>
             </div>
