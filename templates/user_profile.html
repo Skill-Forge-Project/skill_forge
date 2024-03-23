@@ -90,10 +90,19 @@
                     <p class="user_data_labels">RANK: {{ user.rank }}</p>
                 </div>
                 <div class="user_data">
-                    <p class="user_data_labels">FIRST NAME: <input class="user_data_cnts" type="text" name="first_name" id="first_name" value="{{ user.first_name }}"></p>
-                    <p class="user_data_labels">LAST NAME: <input class="user_data_cnts" type="text" name="last_name" id="last_name" value="{{ user.last_name }}"></p>
-                    <p class="user_data_labels">EMAIL: <input class="user_data_cnts" type="text" name="email" id="email" value="{{ user.email }}"></p>
-                    <p class="user_data_labels">DATE OF REGISTRATION: {{ formatted_date }}</p>
+                    <form action="" method="POST">
+                        <p class="user_data_labels">{{ form.first_name.label }} {{ form.first_name(value=current_user.first_name) }}</p>
+                        <p class="user_data_labels">{{ form.last_name.label }} {{ form.last_name(value=current_user.last_name) }}</p>
+                        <p class="user_data_labels">{{ form.email.label }} {{ form.email(value=current_user.email) }}</p>
+
+                        <p>{{ form.submit() }}</p> 
+                        
+                        <!-- <p class="user_data_labels">FIRST NAME: <input class="user_data_cnts" type="text" name="first_name" id="first_name" value="{{ user.first_name }}"></p>
+                        <p class="user_data_labels">LAST NAME: <input class="user_data_cnts" type="text" name="last_name" id="last_name" value="{{ user.last_name }}"></p>
+                        <p class="user_data_labels">EMAIL: <input class="user_data_cnts" type="text" name="email" id="email" value="{{ user.email }}"></p>
+                        <p class="user_data_labels">DATE OF REGISTRATION: {{ formatted_date }}</p> -->
+                        
+                    </form>
                 </div>
                 <div class="change_avatar_form">
                     <p class="user_data_labels">CHANGE AVATAR</p>
