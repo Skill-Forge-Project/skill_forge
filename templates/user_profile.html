@@ -65,6 +65,7 @@
 
             <form class="center_pane_form">
                 <div class="center_pane">
+                    <!-- User information section -->
                     <h3 class="left_status h3">User Information</h3>
                     <div class="user_stats">
                         <p class="left_stats">User ID:</p>
@@ -86,7 +87,14 @@
                         <p class="left_stats">Email:</p>
                         <textarea cols="50" class="right_stats_edit" contenteditable="true">{{ user.email }}</textarea>
                     </div>
-                    
+
+                    <!-- Buttons section -->
+                    <div class="btn-section">
+                        <button type="submit" id="saveUserChanges" class="submit-buton"
+                            onclick=location.href="{{ url_for('submit_quest') }}">Save Changes</button>
+                    </div>
+
+                    <!-- User stats section -->
                     <h3 class="left_status h3">User Stats</h3>
                     <div class="user_stats">
                         <p class="left_stats">Date Registration:</p>
