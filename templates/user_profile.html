@@ -63,7 +63,7 @@
 
             </div>
 
-            <form class="center_pane_form">
+            <div class="center_pane_form">
                 <div class="center_pane">
                     <!-- User information section -->
                     <h3 class="left_status h3">User Information</h3>
@@ -93,10 +93,8 @@
                         
                         <div class="change_avatar_form">
                             <p class="change_avatar_label">CHANGE AVATAR</p>
-                            <form action="/upload_avatar" method="post" enctype="multipart/form-data">
-                                <input type="file" name="avatar" accept="image/*">
-                                <input class="submit-buton avatar" type="submit" value="Upload Avatar">
-                            </form>
+                            <input type="file" name="avatar" accept="image/*">
+                            <input class="submit-buton avatar" type="submit" value="Change Avatar">
                         </div>
 
                         <button type="submit" id="saveUserChanges" class="submit-buton"
@@ -154,7 +152,7 @@
                         <p class="right_stats">0</p>
                     </div>
                 </div>
-            </form>
+            </div>
 
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
