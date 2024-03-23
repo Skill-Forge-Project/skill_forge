@@ -63,8 +63,9 @@
 
             </div>
 
-            <form>
-                <div class="right_pane">
+            <form class="center_pane_form">
+                <div class="center_pane">
+                    <h3 class="left_status h3">User Information</h3>
                     <div class="user_stats">
                         <p class="left_stats">User ID:</p>
                         <p class="right_stats">{{ user.user_id }}</p>
@@ -75,19 +76,68 @@
                     </div>
                     <div class="user_stats">
                         <p class="left_stats">First Name:</p>
-                        <p class="right_stats_edit" contenteditable="true">{{ user.first_name }}</p>
+                        <textarea cols="40" class="right_stats_edit" contenteditable="true">{{ user.first_name }}</textarea>
                     </div>
                     <div class="user_stats">
                         <p class="left_stats">Last Name:</p>
-                        <p class="right_stats_edit" contenteditable="true">{{ user.last_name }}</p>
+                        <textarea cols="50" class="right_stats_edit" contenteditable="true">{{ user.last_name }}</textarea>
                     </div>
                     <div class="user_stats">
                         <p class="left_stats">Email:</p>
-                        <p class="right_stats_edit" contenteditable="true">{{ user.email }}</p>
+                        <textarea cols="50" class="right_stats_edit" contenteditable="true">{{ user.email }}</textarea>
+                    </div>
+                    
+                    <h3 class="left_status h3">User Stats</h3>
+                    <div class="user_stats">
+                        <p class="left_stats">Date Registration:</p>
+                        <p class="right_stats">{{ user.date_registered }}</p>
+                    </div>
+                    <div class="user_stats">
+                        <p class="left_stats">Level:</p>
+                        <p class="right_stats">{{ user.level }} - {{user.xp}} XP Points</p>
+                    </div>
+                    <div class="user_stats">
+                        <p class="left_stats">Rank:</p>
+                        <p class="right_stats">{{ user.rank }}</p>
+                    </div>
+                    <div class="user_stats">
+                        <p class="left_stats">Total Solved Quests:</p>
+                        <p class="right_stats">Database migrations needed</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">Python:</p>
+                        <p class="right_stats">0</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">Java:</p>
+                        <p class="right_stats">0</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">JavaScript:</p>
+                        <p class="right_stats">0</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">C# Quests:</p>
+                        <p class="right_stats">0</p>
+                    </div>
+                    <div class="user_stats">
+                        <p class="left_stats">Total Submited Quests:</p>
+                        <p class="right_stats">Database migrations needed</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">Approved:</p>
+                        <p class="right_stats">0</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">Pending:</p>
+                        <p class="right_stats">0</p>
+                    </div>
+                    <div class="user_stats sub_status">
+                        <p class="left_stats">Rejected:</p>
+                        <p class="right_stats">0</p>
                     </div>
                 </div>
             </form>
-        </div>
 
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
