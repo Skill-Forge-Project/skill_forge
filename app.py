@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum, ARRAY
 from flask_bcrypt import Bcrypt  # Password hashing
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, unittest, random, string, requests
 from datetime import datetime
@@ -90,6 +90,13 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
+
+# Update user information form
+@login_required
+@app.route('/update_user_info', methods=['POST'])
+def update_user_info():
+    user_first_name = request.form['first_name']
+
 # Class for storing the quests(exercises)
 class Quest(db.Model):
     __tablename__ = 'coding_quests'
@@ -112,13 +119,6 @@ class Quest(db.Model):
     def __repr__(self):
         return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
     
-
-class EditUserProfileForm(FlaskForm):
-    first_name = StringField('First Name')
-    last_name = StringField('Last Name')
-    email = StringField('Email')
-    submit = SubmitField('Save')
-
 
 # Submit new quest as admin from the admin panel
 @app.route('/submit_quest', methods=['GET', 'POST'])
@@ -316,7 +316,7 @@ def open_user_profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    form = EditUserProfileForm()
+    
     
     # Get the User ID for the session
     user_id = session['user_id']
@@ -327,16 +327,11 @@ def open_user_profile():
     
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-
-    if request.method == 'POST':
-        user.first_name = form.first_name.data
-        user.last_name = form.last_name.data
-        user.email = form.email.data
-        db.session.commit()
-        return redirect(url_for('open_user_profile'))
     
-    return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64, form=form)
+    return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
 
+
+# Change the User avatar route
 @app.route('/upload_avatar', methods=['POST'])
 def upload_avatar():
     # Get user ID from session or request parameters
@@ -363,6 +358,23 @@ def upload_avatar():
     db.session.commit()
     
     # Redirect to the user profile page or any other page
+    return redirect(url_for('open_user_profile'))
+
+
+# Update User info route (Self-Update)
+@login_required
+@app.route('/self_update', methods=['GET', 'POST'])
+def user_self_update():
+    current_user_id = current_user.user_id
+    new_first_name = request.form.get('change_first_name')
+    new_last_name = request.form.get('change_last_name')
+    new_email_address = request.form.get('change_email')
+    
+    user = User.query.get(current_user_id)
+    user.first_name = new_first_name
+    user.last_name = new_last_name
+    user.email = new_email_address
+    db.session.commit()
     return redirect(url_for('open_user_profile'))
 
 # App Routes to tasks
