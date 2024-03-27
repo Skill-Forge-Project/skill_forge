@@ -3,13 +3,15 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='./images/anvil.png') }}">
         <title>Python Tasks</title>
-        <!-- Import Navigation bar styles -->
+
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_quest.css') }}">
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
         
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <!-- Include CodeMirror library -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
@@ -21,51 +23,19 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-        
+        <!-- Include bootstrap dataTables libraries -->
+        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+
 
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="skill_forge_image">
-                <img src="static/images/anvil.png" alt="Skill Forge" width="50px" height="50px" onclick=location.href="{{ url_for('main_page') }}">
-            </div>
-
-            <a class="navbar-brand" onclick=location.href="{{ url_for('main_page') }}">Skill Forge</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="left-side">
-                        <ul>
-                            <li class="nav-item">
-                                <a class="nav-link" onclick=location.href="{{ url_for('main_page') }}">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Sumbit Quest</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="user_pane">
-                        {% if current_user.user_role == "Admin" %}
-                            <div class="nav-link admin-btn" onclick=location.href="{{ url_for('open_admin_panel') }}">Admin Panel</div>
-                        {% endif %}
-                        <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log Out</div>
-                        <img class="user_image" src="static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('open_user_profile') }}">
-                    </li>  
-                </ul>
-            </div>
-        </nav>
+        <!-- Include Navbar template -->
+        {% include 'navbar.html' %}
 
         <div class="content-section">
             <div id="editQuestContent" class="content">
@@ -75,7 +45,7 @@
                     </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Name: </strong></h4>
-                        <input type="text" name="quest_name" id="quest_name_input" class="text_input" value="{{ quest.quest_name}}">
+                        <input type="text" name="quest_name" id="quest_name_input" class="text_input" value="{{ quest.quest_name }}">
                     </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Language: </strong></h4>
@@ -102,6 +72,18 @@
                         <h4><strong class="row-label">Quest Template: </strong></h4>
                         <textarea name="function_template" id="template_input">{{ quest.function_template }}</textarea>
                     </div>
+                    <div>
+                        <div class="input-row" style="flex-direction:column;">
+                            <h4><strong class="row-label">Quest Tests Inputs: </strong></h4>
+                            <textarea name="quest_test_inputs" id="input_tests" class="text_input">{{ quest.test_inputs }}</textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-row" style="flex-direction:column;">
+                            <h4><strong class="row-label">Quest Tests Outputs: </strong></h4>
+                            <textarea name="quest_test_outputs" id="output_tests" class="text_input">{{ quest.test_outputs }}</textarea>
+                        </div>
+                    </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
                         <textarea name="quest_unitests" id="unit_tests_input">{{ quest.unit_tests }}</textarea>
@@ -112,74 +94,10 @@
                     </div>
                 </form>
             </div>
-            <script>
-                // Initialize CodeMirror editors
-                var template = CodeMirror.fromTextArea(document.getElementById("template_input"), {
-                    lineNumbers: true,
-                    theme: "dracula",
-                    indentUnit: 2,
-                    autoCloseBrackets: true,
-                    matchBrackets: true,
-                    scrollbars: true
-                });
+        <!-- JavaScript script to handle the CodeMirror custom fields. 
+            This script should be loaded after the initialization of the fields above! 
+        -->
+        <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
         
-                var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_input"), {
-                    lineNumbers: true,
-                    theme: "dracula",
-                    indentUnit: 2,
-                    autoCloseBrackets: true,
-                    matchBrackets: true,
-                    scrollbars: true
-                });
-        
-                // Function to update modes of CodeMirror editors
-                function updateModes(selectedLanguage) {
-                    var mode;
-                    switch (selectedLanguage) {
-                        case 'Python':
-                            mode = 'python';
-                            break;
-                        case 'JavaScript':
-                            mode = 'javascript';
-                            break;
-                        case 'Java':
-                            mode = 'text/x-java';
-                            break;
-                        case 'C#':
-                            mode = 'text/x-csharp';
-                            break;
-                    }
-                    template.setOption("mode", mode);
-                    unit_tests.setOption("mode", mode);
-                    // Refresh the editors after updating the mode
-                    template.refresh();
-                    unit_tests.refresh();
-                }
-        
-                // Event listener for changes in select element
-                document.getElementById("quest_language_input").addEventListener("change", function () {
-                    var selectedLanguage = this.value;
-                    updateModes(selectedLanguage);
-                });
-        
-                // Initialize modes based on the initial selected language
-                var initialSelectedLanguage = document.getElementById("quest_language_input").value;
-                updateModes(initialSelectedLanguage);
-            </script>
-        
-            <!-- JavaScript to toggle visibility of content sections -->
-            <script>
-                function toggleContent(sectionId) {
-                    // Hide all content sections except the one clicked
-                    var contentSections = document.querySelectorAll('.content');
-                    contentSections.forEach(function (section) {
-                        if (section.id === sectionId + 'Content') {
-                            section.style.display = 'block';
-                        } else {
-                            section.style.display = 'none';
-                        }
-                    });
-                }
-            </script>
     </body>
 </html>

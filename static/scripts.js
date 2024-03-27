@@ -23,16 +23,3 @@ function csharpTasks() {
     window.location.href = "{{ url_for('c_sharp_tasks') }}";
 }
 
-function showContent(sectionId) {
-    // Hide all content sections
-    var contentSections = document.querySelectorAll('.content');
-    contentSections.forEach(function(section) {
-        section.style.display = 'none';
-    });
-
-    // Show the selected content section
-    var selectedSection = document.getElementById(sectionId);
-    if (selectedSection) {
-        selectedSection.style.display = 'block';
-    }
-}

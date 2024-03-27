@@ -42,9 +42,13 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-# Register route for user submit form(user_submit_quest.py)
-import user_submit_quest
-
+# Register blueprints
+from edit_quest_form import edit_quest_form_bp
+from user_submit_quest import user_submit_quest_bp
+from user_submit_quest import user_submit_dbsubmit_quest_bp
+from user_submit_quest import approve_submited_quest_bp
+from admin_submit_quest import Quest # handle as Blueprint!!!
+from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 
 # Define User model
 class User(UserMixin, db.Model):
@@ -215,7 +219,6 @@ def open_edit_quest(quest_id):
     quest = Quest.query.get(quest_id)
     return render_template('edit_quest.html', quest=quest)
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -296,7 +299,8 @@ def open_admin_panel():
     
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    
+    all_submited_quests = SubmitedQuest.query.all()
+
     # Get the User ID for the session
     logged_user_id = session['user_id']
 
@@ -304,7 +308,7 @@ def open_admin_panel():
     currently_logged_user = User.query.get(logged_user_id)
 
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html', quests=all_quests)
+        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests)
     
     return redirect(url_for('login'))
 

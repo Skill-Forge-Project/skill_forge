@@ -184,3 +184,6 @@ body {
         0 0 20px #03e9f4;
 }
 
+textarea {
+    height: min-content;
+}
