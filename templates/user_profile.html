@@ -20,40 +20,141 @@
                         <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
                     {% else %}
                         <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+
+
                     {% endif %}
-                </div>
-                <p class="user_name">{{ user.username }}</p>
+                    <div class="nav-link logout-btn" onclick=location.href="{{ url_for('open_table_template') }}">Log
+                        Out</div>
+                    <img class="user_image" src="static/images/user.png" width="35" height="35"
+                        onclick=location.href="{{ url_for('open_user_profile') }}">
+                </li>
+            </ul>
+        </div>
 
+    <div class="user_info">
+        <div class="left_pane">
+            <div>
+                {% if avatar %}
+                <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
+                {% else %}
+                <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                {% endif %}
             </div>
+            <p class="user_name">{{ user.username }}</p>
 
-            <div class="right_pane">
-                <div class="user_stats">
-                    <p class="user_data_labels">USER ID: {{ user.user_id }}</p>
-                    <p class="user_data_labels">LEVEL: {{ user.level }} XP: {{ user.xp }}</p>
-                    <p class="user_data_labels">RANK: {{ user.rank }}</p>
-                </div>
-                <div class="user_data">
-                    <p class="user_data_labels">FIRST NAME: <input class="user_data_cnts" type="text" name="first_name" id="first_name" value="{{ user.first_name }}"></p>
-                    <p class="user_data_labels">LAST NAME: <input class="user_data_cnts" type="text" name="last_name" id="last_name" value="{{ user.last_name }}"></p>
-                    <p class="user_data_labels">EMAIL: <input class="user_data_cnts" type="text" name="email" id="email" value="{{ user.email }}"></p>
-                    <p class="user_data_labels">DATE OF REGISTRATION: {{ formatted_date }}</p>
-                </div>
-                <div class="change_avatar_form">
-                    <p class="user_data_labels">CHANGE AVATAR</p>
-                    <form action="/upload_avatar" method="post" enctype="multipart/form-data" class="change_avatar">
-                        <input type="file" name="avatar" accept="image/*">
-                        <input class="form_button" type="submit" value="Upload Avatar">
+        <div style="display:flex; flex-direction:column;width:100%">
+            <div class="center_pane_form">
+                <form action="/self_update" method="post" enctype="multipart/form-data">
+                    <div class="center_pane">
+                        <!-- User information section -->
+                        <h3 class="left_status h3">User Information</h3>
+                        <div class="user_stats">
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">User ID:</p>
+                                <p class="right_stats" name="user_id">{{ user.user_id }}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Username:</p>
+                                <p class="right_stats">{{ user.username }}</p>
+                            </div>
+
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">First Name:</p>
+                                <textarea cols="40" class="right_stats_edit" name="change_first_name"
+                                    contenteditable="true">{{ user.first_name }}</textarea>
+                            </div>
+
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Last Name:</p>
+                                <textarea cols="50" class="right_stats_edit" name="change_last_name"
+                                    contenteditable="true">{{ user.last_name }}</textarea>
+                            </div>
+
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Email:</p>
+                                <textarea cols="50" class="right_stats_edit" contenteditable="true"
+                                    name="change_email">{{ user.email }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Buttons section -->
+                    <div class="btn-section">
+                        <button type="submit" id="saveUserChanges" class="submit-buton"
+                            onclick=location.href="{{ url_for('user_self_update') }}">Save Changes</button>
+                    </div>
+                </form>
+
+                <!-- Change avatar form -->
+                <div class="change-avatar-section">
+                    <p class="ca-1">Change Avatar</p>
+                    <form action="/upload_avatar" method="post" enctype="multipart/form-data" class="ca-2">
+                        <input class="ca-3" type="file" name="avatar" accept="image/*">
+                        <input class="ca-4" type="submit" value="Update Avatar">
                     </form>
+                </div>
+
+                <div class="center_pane_form">
+                    <!-- User stats section -->
+                    <h3 class="left_status h3">User Stats</h3>
+                    <div class="user_stats">
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Date Registration:</p>
+                            <p class="right_stats">{{ user.date_registered }}</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Level:</p>
+                            <p class="right_stats">{{ user.level }} - {{user.xp}} XP Points</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Rank:</p>
+                            <p class="right_stats">{{ user.rank }}</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Total Solved Quests:</p>
+                            <p class="right_stats">Database migrations needed</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Python:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Java:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;JavaScript:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;C# Quests:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Total Submited Quests:</p>
+                            <p class="right_stats">Database migrations needed</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Approved:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Pending:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">&emsp;Rejected:</p>
+                            <p class="right_stats">0</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 
-    </body>
+</body>
 
 </html>
-
