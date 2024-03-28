@@ -38,6 +38,8 @@ def submit_quest():
     quest_condition = request.form['quest_condition']
     function_template = request.form['function_template']
     unit_tests = request.form['quest_unitests']
+    quest_inputs = request.form['quest_inputs']
+    quest_outputs = request.form['quest_outputs']
     
     # Generate random suffix
     suffix_length = 6
@@ -87,8 +89,8 @@ def submit_quest():
         condition=quest_condition,
         function_template=function_template,
         unit_tests=unit_tests,
-        # test_inputs=quest_inputs, # New fields to be added in the Admin form
-        # test_outputs=quest_outputs, # New fields to be added in the Admin form
+        test_inputs=quest_inputs,
+        test_outputs=quest_outputs,
         type=type,
         xp=str(xp)
     )
