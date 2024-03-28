@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 
 app.config['SECRET_KEY'] = os.urandom(24).hex()
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # The specific server ip address. Should be included in the .env file
@@ -32,11 +32,11 @@ bcrypt = Bcrypt(app)
 # Init the database connection
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_PROD'))
+conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
 
 # Init the login manager
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'login's
 login_manager.login_message_category = 'info'
 
 # Register blueprints
