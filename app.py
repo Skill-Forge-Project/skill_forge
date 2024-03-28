@@ -11,9 +11,6 @@ from login_forms import LoginForm, RegistrationForm
 # Import test runner
 from test_runners import run_python, run_javascript, run_java, run_csharp
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-
 
 
 # Load the env variables
@@ -203,8 +200,6 @@ def open_user_profile():
     # If user is not logged in, redirect to login page
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    
     
     # Get the User ID for the session
     user_id = session['user_id']
