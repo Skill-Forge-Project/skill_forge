@@ -316,8 +316,9 @@ def submit_solution():
         print(f'Quest outputs: {quest_outputs}')
 
         if current_quest_language == 'Python':
-            user_output = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            return redirect(url_for('open_user_profile'))
+            successful_tests, unsuccessful_tests = run_python.run_code(user_code, quest_inputs, quest_outputs)
+            # return redirect(url_for('open_user_profile'))
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests})
 
         elif current_quest_language == 'JavaScript':
             user_output = run_javascript.run_code(user_code)
