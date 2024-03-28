@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum, ARRAY
 from flask_bcrypt import Bcrypt  # Password hashing
-from flask_login import LoginManager, UserMixin, login_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, unittest, random, string, requests
 from datetime import datetime
@@ -39,9 +39,13 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-# Register route for user submit form(user_submit_quest.py)
-import user_submit_quest
-
+# Register blueprints
+from edit_quest_form import edit_quest_form_bp
+from user_submit_quest import user_submit_quest_bp
+from user_submit_quest import user_submit_dbsubmit_quest_bp
+from user_submit_quest import approve_submited_quest_bp
+from admin_submit_quest import Quest # handle as Blueprint!!!
+from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 
 # Define User model
 class User(UserMixin, db.Model):
@@ -87,122 +91,13 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
-# Class for storing the quests(exercises)
-class Quest(db.Model):
-    __tablename__ = 'coding_quests'
-    quest_id = db.Column(db.String(10), primary_key=True)
-    language = db.Column(db.String(50), nullable=False)
-    difficulty = db.Column(db.String(50), nullable=False)
-    quest_name = db.Column(db.String(255), nullable=False)
-    solved_times = db.Column(db.Integer, default=0, nullable=True)
-    quest_author = db.Column(db.String(255), nullable=False)
-    date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
-    last_modified = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
-    condition = db.Column(db.Text, nullable=False)
-    function_template = db.Column(db.Text, nullable=False)
-    unit_tests = db.Column(db.Text, nullable=False)
-    test_inputs = db.Column(db.Text, nullable=True)
-    test_outputs = db.Column(db.Text, nullable=True)
-    xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
-    type = db.Column(db.String(20), nullable=True)
 
-    def __repr__(self):
-        return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
-    
-# Submit new quest as admin from the admin panel
-@app.route('/submit_quest', methods=['GET', 'POST'])
-def submit_quest():
-    language = request.form['quest_language']
-    difficulty = request.form['quest_difficulty']
-    quest_name = request.form['quest_name']
-    quest_condition = request.form['quest_condition']
-    function_template = request.form['function_template']
-    unit_tests = request.form['quest_unitests']
-    
-    # Generate random suffix
-    suffix_length = 6
-    suffix = ''.join(random.choices(string.digits, k=suffix_length))
-    # Determine prefix based on language
-    if request.form['quest_language'] == 'Python':
-        prefix = 'PY-'
-    elif request.form['quest_language'] == 'Java':
-        prefix = 'JV-'
-    elif request.form['quest_language'] == 'JavaScript':
-        prefix = 'JS-'
-    elif request.form['quest_language'] == 'C#':
-        prefix = 'CS-'
-    else:
-        prefix = 'UNK-'  # Default prefix for unknown languages
-    # Construct quest ID
-    quest_id = f"{prefix}{suffix}"
-    
-    # Assing XP points based on difficulty
-    xp = 0
-    if request.form['quest_difficulty'] == 'Novice Quests':
-        xp = 30
-    elif request.form['quest_difficulty'] == 'Adventurous Challenges':
-        xp = 60
-    elif request.form['quest_difficulty'] == 'Epic Campaigns':
-        xp = 100
-    
-    print(language, difficulty, quest_name, quest_condition, function_template, unit_tests, xp)
-    
-    # Create a new Quest object
-    new_quest = Quest(
-        quest_id= quest_id,
-        language=language,
-        difficulty=difficulty,
-        quest_name=quest_name,
-        quest_author='Your Author',  # Replace with actual author name
-        date_added=datetime.now(),
-        last_modified=datetime.now(),
-        condition=quest_condition,
-        function_template=function_template,
-        unit_tests=unit_tests,
-        xp=str(xp)
-    )
-
-    # Add the new quest to the database session
-    db.session.add(new_quest)
-    db.session.commit()
-
-    # Redirect to a success page or main page
-    return redirect(url_for('open_admin_panel'))
-
-# Handle quest edit from the Admin Panel
-@app.route('/edit_quest_db', methods=['GET', 'POST'])
-def edit_quest_db():
-    quest_id = request.form['quest_id']
-    quest_name = request.form['quest_name']
-    quest_language = request.form['quest_language']
-    quest_difficulty = request.form['quest_difficulty']
-    quest_condition = request.form['quest_condition']
-    function_template = request.form['function_template']
-    unit_tests = request.form['quest_unitests']
-    
-    quest = Quest.query.get(quest_id)
-    print(quest)
-    if quest:
-        quest.quest_name = quest_name
-        quest.language = quest_language
-        quest.difficulty = quest_difficulty
-        quest.condition = quest_condition
-        quest.function_template = function_template
-        quest.unit_tests = unit_tests
-        
-        db.session.commit()
-        
-        return redirect(url_for('open_admin_panel'))
-    else:
-        return 'Quest not found!', 404
-
-# Open Quest for editing from the Admin Panel
+# Update user information form
 @login_required
-@app.route('/edit_quest/<quest_id>')
-def open_edit_quest(quest_id):
-    # Retrieve the specific quest from the database, based on the quest_id
-    quest = Quest.query.get(quest_id)
-    return render_template('edit_quest.html', quest=quest)
+@app.route('/update_user_info', methods=['POST'])
+def update_user_info():
+    user_first_name = request.form['first_name']
+
 
 
 @login_manager.user_loader
@@ -285,7 +180,8 @@ def open_admin_panel():
     
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    
+    all_submited_quests = SubmitedQuest.query.all()
+
     # Get the User ID for the session
     logged_user_id = session['user_id']
 
@@ -293,13 +189,13 @@ def open_admin_panel():
     currently_logged_user = User.query.get(logged_user_id)
 
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html', quests=all_quests)
+        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests)
     
     return redirect(url_for('login'))
 
 
 @login_required
-@app.route('/user_profile')
+@app.route('/user_profile', methods=['POST', 'GET'])
 def open_user_profile():
     # If user is not logged in, redirect to login page
     if 'user_id' not in session:
@@ -317,6 +213,8 @@ def open_user_profile():
     
     return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
 
+
+# Change the User avatar route
 @app.route('/upload_avatar', methods=['POST'])
 def upload_avatar():
     # Get user ID from session or request parameters
@@ -343,6 +241,23 @@ def upload_avatar():
     db.session.commit()
     
     # Redirect to the user profile page or any other page
+    return redirect(url_for('open_user_profile'))
+
+
+# Update User info route (Self-Update)
+@login_required
+@app.route('/self_update', methods=['GET', 'POST'])
+def user_self_update():
+    current_user_id = current_user.user_id
+    new_first_name = request.form.get('change_first_name')
+    new_last_name = request.form.get('change_last_name')
+    new_email_address = request.form.get('change_email')
+    
+    user = User.query.get(current_user_id)
+    user.first_name = new_first_name
+    user.last_name = new_last_name
+    user.email = new_email_address
+    db.session.commit()
     return redirect(url_for('open_user_profile'))
 
 # App Routes to tasks
@@ -401,8 +316,9 @@ def submit_solution():
         print(f'Quest outputs: {quest_outputs}')
 
         if current_quest_language == 'Python':
-            user_output = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            return redirect(url_for('open_user_profile'))
+            successful_tests, unsuccessful_tests = run_python.run_code(user_code, quest_inputs, quest_outputs)
+            # return redirect(url_for('open_user_profile'))
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests})
 
         elif current_quest_language == 'JavaScript':
             user_output = run_javascript.run_code(user_code)
