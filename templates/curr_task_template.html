@@ -38,7 +38,7 @@
         </div> 
         <div class="input-row">
             <form id="submit_form" action="/submit-solution">
-                <textarea class="input-row" name="user_code" id="template_input">{{ quest.function_template }}</textarea>
+                <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
                 <input type="hidden" id="quest_inputs" name="quest_inputs" value="{{ quest.test_inputs }}">
                 <input type="hidden" id="quest_outputs" name="quest_outputs" value="{{ quest.test_outputs }}">
                 <input type="hidden" id="unit_tests" name="unit_tests" value="{{ quest.unit_tests }}">
@@ -81,9 +81,17 @@
         });
     </script>
 
-    <!-- JavaScript script to handle the CodeMirror custom fields. 
-        This script should be loaded after the initialization of the fields above! 
-    -->
-    <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+    <script>
+        // Initialize CodeMirror editor
+        var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+            lineNumbers: true,
+            mode: "python",
+            theme: "dracula",
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            indentUnit: 4,
+            scrollbars: true,
+        });
+    </script>
 </body>
 </html>
