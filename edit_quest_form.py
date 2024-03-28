@@ -5,8 +5,8 @@ This file handles the functionality for editing a quest from the Admin Panel.
 - edit_quest_form_bp is Blueprint which makes available the routes from the main app.
 """
 
-# from __main__ import app, db
-from app import app, db # Use this instead of the above line for db migrations
+from __main__ import app, db
+# from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
