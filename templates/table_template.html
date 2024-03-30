@@ -56,7 +56,7 @@
                   {% for quest in quests %}
                   <tr>
                     <td>{{ quest.quest_id }}</td>
-                    <td>{{ quest.quest_name }}</td>
+                    <td><a href="{{ url_for('open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
                     <td>{{ quest.language }}</td>
                     <td>{{ quest.difficulty }}</td>
                     <td>{{ quest.quest_author }}</td>

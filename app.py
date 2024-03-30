@@ -301,7 +301,7 @@ def open_table_template():
 # Open Quest for submitting. Change from template to real page!!!!
 @login_required
 @app.route('/quest/<quest_id>')
-def open_curr_task(quest_id):
+def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
