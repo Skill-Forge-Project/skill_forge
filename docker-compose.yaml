@@ -3,7 +3,7 @@ services:
 
   # Skill-Forge application
   skill-forge-app:
-    image: skillforge-app:1.0
+    image: skillforge-app:1.2
     build:
       context: .
       dockerfile: Dockerfile 
@@ -12,7 +12,7 @@ services:
     ports:
       - '5005:5000'
     volumes:
-      - /app:/app
+      - app:/app
 
   # Development PostgreSQL database instance
   db:
