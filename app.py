@@ -226,10 +226,14 @@ def open_user_profile():
 @login_required
 @app.route('/user_profile/<username>', methods=['POST', 'GET'])
 def open_user_profile_view(username):
+    # Get the user info from the database
     user = User.query.filter_by(username=username).first()
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     if user:
         # Render the user profile template with the user data
-        return render_template('user_profile_view.html', user=user)
+        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
     else:
         # Handle the case where the user is not found
         return "User not found", 404

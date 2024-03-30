@@ -10,13 +10,16 @@
     </head>
 
     <body>
+        <!-- Include Navbar template -->
+        {% include 'navbar.html' %}
+
         <div class="user_info">
             <div class="left_pane">
                 <div>
                     {% if avatar %}
                     <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
                     {% else %}
-                    <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                    <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
                     {% endif %}
                 </div>
                 <p class="user_name">{{ user.username }}</p>
@@ -41,36 +44,21 @@
     
                                 <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                                     <p class="left_stats">First Name:</p>
-                                    <textarea cols="40" class="right_stats_edit" name="change_first_name">{{ user.first_name }}</textarea>
+                                    <p class="right_stats">{{ user.first_name }}</p>
                                 </div>
     
                                 <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                                     <p class="left_stats">Last Name:</p>
-                                    <textarea cols="50" class="right_stats_edit" name="change_last_name">{{ user.last_name }}</textarea>
+                                    <p class="right_stats">{{ user.last_name }}</p>
                                 </div>
     
                                 <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                                     <p class="left_stats">Email:</p>
-                                    <textarea cols="50" class="right_stats_edit"name="change_email">{{ user.email }}</textarea>
+                                    <p class="right_stats">{{ user.email }}</p>
                                 </div>
                             </div>
                         </div>
-    
-                        <!-- Buttons section -->
-                        <!-- <div class="btn-section">
-                            <button type="submit" id="saveUserChanges" class="submit-buton"
-                                onclick=location.href="{{ url_for('user_self_update') }}">Save Changes</button>
-                        </div> -->
                     </form>
-    
-                    <!-- Change avatar form -->
-                    <!-- <div class="change-avatar-section">
-                        <p class="ca-1">Change Avatar</p>
-                        <form action="/upload_avatar" method="post" enctype="multipart/form-data" class="ca-2">
-                            <input class="ca-3" type="file" name="avatar" accept="image/*">
-                            <input class="ca-4" type="submit" value="Update Avatar">
-                        </form>
-                    </div> -->
     
                     <div class="center_pane_form">
                         <!-- User stats section -->
@@ -114,11 +102,11 @@
                             </div>
                             <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                                 <p class="left_stats">&emsp;Approved:</p>
-                                <p class="right_stats">{{ user.total_rejected_approved_quests}}</p>
+                                <p class="right_stats">{{ user.total_approved_submited_quests}}</p>
                             </div>
                             <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                                 <p class="left_stats">&emsp;Pending:</p>
-                                <p class="right_stats">{{ user.total_rejected_pending_quests}}</p>
+                                <p class="right_stats">{{ user.total_pending_submited_quests}}</p>
                             </div>
                             <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                                 <p class="left_stats">&emsp;Rejected:</p>
