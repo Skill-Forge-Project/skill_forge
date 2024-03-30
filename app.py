@@ -202,9 +202,9 @@ def open_admin_panel():
     
     return redirect(url_for('login'))
 
-
+# Route to handle the user profile (self-open)
 @login_required
-@app.route('/user_profile', methods=['POST', 'GET'])
+@app.route('/my_profile', methods=['POST', 'GET'])
 def open_user_profile():
     # If user is not logged in, redirect to login page
     if 'user_id' not in session:
@@ -219,8 +219,21 @@ def open_user_profile():
     
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    
+
     return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
+
+# Route to handle the user profile (self-open)
+@login_required
+@app.route('/user_profile/<username>', methods=['POST', 'GET'])
+def open_user_profile_view(username):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        # Render the user profile template with the user data
+        return render_template('user_profile_view.html', user=user)
+    else:
+        # Handle the case where the user is not found
+        return "User not found", 404
+
 
 
 # Change the User avatar route
@@ -296,7 +309,8 @@ def open_csharp_tasks():
 def open_table_template():
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    return render_template('table_template.html', quests=all_quests)
+    all_users = User.query.all()
+    return render_template('table_template.html', quests=all_quests, users=all_users)
 
 # Open Quest for submitting. Change from template to real page!!!!
 @login_required

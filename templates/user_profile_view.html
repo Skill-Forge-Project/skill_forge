@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+        <title>Skill Forge</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_profile.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    </head>
+
+    <body>
+        <div class="user_info">
+            <div class="left_pane">
+                <div>
+                    {% if avatar %}
+                    <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
+                    {% else %}
+                    <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                    {% endif %}
+                </div>
+                <p class="user_name">{{ user.username }}</p>
+    
+            </div>
+    
+            <div style="display:flex; flex-direction:column;width:100%">
+                <div class="center_pane_form">
+                    <form action="/self_update" method="post" enctype="multipart/form-data">
+                        <div class="center_pane">
+                            <!-- User information section -->
+                            <h3 class="left_status h3">User Information</h3>
+                            <div class="user_stats">
+                                <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                    <p class="left_stats">User ID:</p>
+                                    <p class="right_stats" name="user_id">{{ user.user_id }}</p>
+                                </div>
+                                <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                    <p class="left_stats">Username:</p>
+                                    <p class="right_stats">{{ user.username }}</p>
+                                </div>
+    
+                                <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                    <p class="left_stats">First Name:</p>
+                                    <textarea cols="40" class="right_stats_edit" name="change_first_name">{{ user.first_name }}</textarea>
+                                </div>
+    
+                                <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                    <p class="left_stats">Last Name:</p>
+                                    <textarea cols="50" class="right_stats_edit" name="change_last_name">{{ user.last_name }}</textarea>
+                                </div>
+    
+                                <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                    <p class="left_stats">Email:</p>
+                                    <textarea cols="50" class="right_stats_edit"name="change_email">{{ user.email }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Buttons section -->
+                        <!-- <div class="btn-section">
+                            <button type="submit" id="saveUserChanges" class="submit-buton"
+                                onclick=location.href="{{ url_for('user_self_update') }}">Save Changes</button>
+                        </div> -->
+                    </form>
+    
+                    <!-- Change avatar form -->
+                    <!-- <div class="change-avatar-section">
+                        <p class="ca-1">Change Avatar</p>
+                        <form action="/upload_avatar" method="post" enctype="multipart/form-data" class="ca-2">
+                            <input class="ca-3" type="file" name="avatar" accept="image/*">
+                            <input class="ca-4" type="submit" value="Update Avatar">
+                        </form>
+                    </div> -->
+    
+                    <div class="center_pane_form">
+                        <!-- User stats section -->
+                        <h3 class="left_status h3">User Stats</h3>
+                        <div class="user_stats">
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Date Registration:</p>
+                                <p class="right_stats">{{ user.date_registered }}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Level:</p>
+                                <p class="right_stats">{{ user.level }} - {{user.xp}} XP Points</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Rank:</p>
+                                <p class="right_stats">{{ user.rank }}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Total Solved Quests:</p>
+                                <p class="right_stats">{{ user.total_solved_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;Python:</p>
+                                <p class="right_stats">{{ user.total_python_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;Java:</p>
+                                <p class="right_stats">{{ user.total_java_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;JavaScript:</p>
+                                <p class="right_stats">{{ user.total_javascript_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;C# Quests:</p>
+                                <p class="right_stats">{{ user.total_csharp_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">Total Submited Quests:</p>
+                                <p class="right_stats">{{ user.total_submited_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;Approved:</p>
+                                <p class="right_stats">{{ user.total_rejected_approved_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;Pending:</p>
+                                <p class="right_stats">{{ user.total_rejected_pending_quests}}</p>
+                            </div>
+                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                                <p class="left_stats">&emsp;Rejected:</p>
+                                <p class="right_stats">{{ user.total_rejected_submited_quests}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+            <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    </body>
+</html>
