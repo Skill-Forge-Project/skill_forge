@@ -36,7 +36,7 @@ conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
 
 # Init the login manager
 login_manager = LoginManager(app)
-login_manager.login_view = 'login's
+login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 # Register blueprints
