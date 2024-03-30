@@ -62,6 +62,15 @@ class User(UserMixin, db.Model):
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
+    total_solved_quests = db.Column(db.Integer, default=0)
+    total_python_quests = db.Column(db.Integer, default=0)
+    total_java_quests = db.Column(db.Integer, default=0)
+    total_javascript_quests = db.Column(db.Integer, default=0)
+    total_csharp_quests = db.Column(db.Integer, default=0)
+    total_submited_quests = db.Column(db.Integer, default=0)
+    total_approved_submited_quests = db.Column(db.Integer, default=0)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0)
+    total_pending_submited_quests = db.Column(db.Integer, default=0)
     
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
@@ -193,9 +202,9 @@ def open_admin_panel():
     
     return redirect(url_for('login'))
 
-
+# Route to handle the user profile (self-open)
 @login_required
-@app.route('/user_profile', methods=['POST', 'GET'])
+@app.route('/my_profile', methods=['POST', 'GET'])
 def open_user_profile():
     # If user is not logged in, redirect to login page
     if 'user_id' not in session:
@@ -210,8 +219,25 @@ def open_user_profile():
     
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    
+
     return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
+
+# Route to handle the user profile (self-open)
+@login_required
+@app.route('/user_profile/<username>', methods=['POST', 'GET'])
+def open_user_profile_view(username):
+    # Get the user info from the database
+    user = User.query.filter_by(username=username).first()
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    if user:
+        # Render the user profile template with the user data
+        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
+    else:
+        # Handle the case where the user is not found
+        return "User not found", 404
+
 
 
 # Change the User avatar route
@@ -287,12 +313,13 @@ def open_csharp_tasks():
 def open_table_template():
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
-    return render_template('table_template.html', quests=all_quests)
+    all_users = User.query.all()
+    return render_template('table_template.html', quests=all_quests, users=all_users)
 
 # Open Quest for submitting. Change from template to real page!!!!
 @login_required
 @app.route('/quest/<quest_id>')
-def open_curr_task(quest_id):
+def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)

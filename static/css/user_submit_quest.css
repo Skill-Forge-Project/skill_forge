@@ -9,21 +9,19 @@
 
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    height: auto;
-    justify-self: center;
-    align-items: center;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
 }
 
 body {
+    flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #d2d0d0;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(#141e30, #243b55);
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
     align-items: center;
     justify-content: center;
-    height: auto;
-    min-height: 100vh;
 }
 
 .content {

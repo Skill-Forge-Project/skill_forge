@@ -56,14 +56,15 @@
                   {% for quest in quests %}
                   <tr>
                     <td>{{ quest.quest_id }}</td>
-                    <td>{{ quest.quest_name }}</td>
+                    <td><a href="{{ url_for('open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
                     <td>{{ quest.language }}</td>
                     <td>{{ quest.difficulty }}</td>
-                    <td>{{ quest.quest_author }}</td>
+                    <td>
+                      <a href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a>
+                    </td>
                     <td>{{ quest.date_added }}</td>
                   </tr>
                   {% endfor %}
-
                 </tbody>
               </table>
             </div>
