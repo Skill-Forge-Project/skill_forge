@@ -33,6 +33,7 @@ class Quest(db.Model):
     test_outputs = db.Column(db.Text, nullable=True)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
     type = db.Column(db.String(20), nullable=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=True)
 
     def __repr__(self):
         return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
