@@ -10,3 +10,9 @@ $(function () {
       $('#example').DataTable();
   });
 });
+
+$(function () {
+  $(document).ready(function () {
+      $('#example-2').DataTable();
+  });
+});
