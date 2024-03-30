@@ -62,6 +62,15 @@ class User(UserMixin, db.Model):
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
+    total_solved_quests = db.Column(db.Integer, default=0)
+    total_python_quests = db.Column(db.Integer, default=0)
+    total_java_quests = db.Column(db.Integer, default=0)
+    total_javascript_quests = db.Column(db.Integer, default=0)
+    total_csharp_quests = db.Column(db.Integer, default=0)
+    total_submited_quests = db.Column(db.Integer, default=0)
+    total_approved_submited_quests = db.Column(db.Integer, default=0)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0)
+    total_pending_submited_quests = db.Column(db.Integer, default=0)
     
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):

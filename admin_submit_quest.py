@@ -1,3 +1,11 @@
+"""
+This file handles the functionality for submiting a quest from the Admin Panel.
+- Class:Quest is the model for the Quest table in the database.
+- submit_quest function handles the form submission and updates the quest in the database.
+"""
+
+
+
 from __main__ import app, db
 # from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
