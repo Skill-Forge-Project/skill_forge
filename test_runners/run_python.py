@@ -20,18 +20,24 @@ def run_code(python_code, inputs, outputs):
         # Decode output from bytes to string
         stdout_str = stdout.decode('utf-8').replace('\n', '')
         stderr_str = stderr.decode('utf-8')
-
+        
         if correct_output == stdout_str:
             successful_tests += 1
-            # print('YES, IT IS CORRECT, CONGRATS!')
         else:
             unsuccessful_tests += 1
-            # print('INCORRECT!')
+        
+        if unsuccessful_tests == 0:
+            message = 'Congratulations! Your solution is correct!'
+        elif successful_tests > 0 and unsuccessful_tests > 0:
+            message = 'Your solution is partially correct! Try again!'
+        elif successful_tests == 0 and unsuccessful_tests > 0:
+            message = 'Your solution is incorrect! Try again!'
 
     print(f'All tests: {tests_count}')
     print(f"You have {successful_tests} successful tests")
     print(f"You have {unsuccessful_tests} unsuccessful tests")
-    return successful_tests, unsuccessful_tests
+    print(f'The message is "{message}"')
+    return successful_tests, unsuccessful_tests, message
 
 
 # Example Python code

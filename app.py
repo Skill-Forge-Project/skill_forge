@@ -343,13 +343,20 @@ def submit_solution():
         print(f'Quest outputs: {quest_outputs}')
 
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests = run_python.run_code(user_code, quest_inputs, quest_outputs)
+            successful_tests, unsuccessful_tests, message = run_python.run_code(user_code, quest_inputs, quest_outputs)
             # return redirect(url_for('open_user_profile'))
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests})
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
 
         elif current_quest_language == 'JavaScript':
-            user_output = run_javascript.run_code(user_code)
-            return user_output
+            user_code = request.form.get('user_code')
+            print(user_code)
+            quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
+            quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
+            print(f'Quest inputs: {quest_inputs}')
+            print(f'Quest outputs: {quest_outputs}')
+            successful_tests, unsuccessful_tests, message = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+        
         elif current_quest_language == 'Java':
             user_output = run_java.run_code(user_code)
             return user_output

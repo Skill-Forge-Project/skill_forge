@@ -16,7 +16,7 @@ body {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(#141e30, #243b55);
+    background: linear-gradient(#141e30, #243b55) !important;
     align-items: center;
     justify-content: center;
     min-height: 100vh;

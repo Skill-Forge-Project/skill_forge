@@ -49,9 +49,10 @@
             </form>
         </div>
         <div id="test_results" class="output-row">
-            <h2>Test Results</h2>
-            <div id="successful_tests"></div>
-            <div id="unsuccessful_tests"></div>
+            <h2 class="test-results-label">Test Results</h2>
+            <div id="message" class="tests-results-info message"></div>
+            <div id="successful_tests" class="tests-results-info possitive-results"></div>
+            <div id="unsuccessful_tests" class="tests-results-info negative-results"></div>
         </div>
     </div>
 
@@ -72,6 +73,7 @@
                         // Update the divs with the returned test results
                         $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
                         $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
+                        $('#message').text(response.message);
                     },
                     error: function (error) {
                         console.error(error);
