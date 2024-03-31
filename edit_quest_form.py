@@ -11,7 +11,7 @@ from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
 import random, string
-from admin_submit_quest import Quest
+from admin_submit_quest import Quest, ReportedQuest
 from user_submit_quest import SubmitedQuest
 
 # Blueprint to handle opening of specific quest from the database fro editing
@@ -32,7 +32,9 @@ def edit_quest_db():
     output_tests = request.form['quest_test_outputs']
     
     quest = Quest.query.get(quest_id)
+    reported_quest = ReportedQuest.query.get(quest_id)
     print(quest)
+    print(reported_quest.report_status)
     if quest:
         quest.quest_name = quest_name
         quest.language = quest_language
@@ -42,6 +44,11 @@ def edit_quest_db():
         quest.unit_tests = unit_tests
         quest.input_tests = input_tests
         quest.output_tests = output_tests
+
+        # If this is True it means that the user is editing a reported quest (there is a chosen radion button)
+        if request.form.get('progress_option'):
+            print(request.form.get('progress_option'))
+            reported_quest.report_status = request.form.get('progress_option')
         
         db.session.commit()
         
@@ -57,3 +64,12 @@ def open_edit_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('edit_quest.html', quest=quest)
+
+
+# Open Reported Quest for editing from the Admin Panel
+@login_required
+@app.route('/edit_reported_quest/<quest_id>')
+def open_edit_reported_quest(quest_id):
+    quest = Quest.query.get(quest_id)
+    reported_quest = ReportedQuest.query.get(quest_id)
+    return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)

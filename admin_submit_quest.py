@@ -46,7 +46,6 @@ class ReportedQuest(db.Model):
     report_status = db.Column(db.Enum('In Progress', 'Resolved', 'Not Resolved', name='repost_status'), nullable=False)
 
 
-
 # Submit new quest as admin from the admin panel
 @app.route('/submit_quest', methods=['GET', 'POST'])
 def submit_quest():
