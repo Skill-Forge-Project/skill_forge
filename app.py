@@ -329,37 +329,35 @@ def open_curr_quest(quest_id):
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
+    user_id = current_user.user_id
+    username = current_user.username
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
+    current_quest_id = request.form.get('quest_id')
     print(f"Current quest type is: {current_quest_type}")
     
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
-        print(user_code)
         quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-        print(f'Quest inputs: {quest_inputs}')
-        print(f'Quest outputs: {quest_outputs}')
 
+        # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            # return redirect(url_for('open_user_profile'))
             return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
 
         elif current_quest_language == 'JavaScript':
             user_code = request.form.get('user_code')
-            print(user_code)
             quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
             quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-            print(f'Quest inputs: {quest_inputs}')
-            print(f'Quest outputs: {quest_outputs}')
             successful_tests, unsuccessful_tests, message = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
             return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
         
         elif current_quest_language == 'Java':
-            user_output = run_java.run_code(user_code)
-            return user_output
+            successful_tests, unsuccessful_tests, message = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+        
         elif current_quest_language == 'C#':
             user_output = run_csharp.run_code(user_code)
             return user_output

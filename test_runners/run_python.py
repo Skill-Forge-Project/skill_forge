@@ -32,11 +32,6 @@ def run_code(python_code, inputs, outputs):
             message = 'Your solution is partially correct! Try again!'
         elif successful_tests == 0 and unsuccessful_tests > 0:
             message = 'Your solution is incorrect! Try again!'
-
-    print(f'All tests: {tests_count}')
-    print(f"You have {successful_tests} successful tests")
-    print(f"You have {unsuccessful_tests} unsuccessful tests")
-    print(f'The message is "{message}"')
     return successful_tests, unsuccessful_tests, message
 
 
