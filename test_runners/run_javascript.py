@@ -19,6 +19,7 @@ def run_code(js_code, inputs, outputs):
         
         # Decode output from bytes to string
         stdout_str = stdout.decode('utf-8').replace('\n', '')
+        stdout_str = stdout_str.replace('undefined', '')
         stderr_str = stderr.decode('utf-8')
         
         if correct_output == stdout_str:
