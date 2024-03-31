@@ -36,8 +36,9 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
 
         # Execute the Java code
         try:
-            current_input = ' '.join([str(element) for element in inputs[i]]) 
-            print(current_input)
+            current_input = ' '.join([str(element) for element in inputs[i]])
+            current_output = outputs[i][0]
+            print(f"{current_input} -> {current_output}")
             execute_command = ['java', 'Main'] + current_input.split()
             execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             execute_output, execute_error = execute_process.communicate()
@@ -46,7 +47,7 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
                 return 0, tests_count, f"Execution Error: {execute_error.decode('utf-8')}"
             else:
                 # Check if output matches expected output
-                if execute_output.decode('utf-8').strip() == outputs[i][0]:
+                if str(execute_output.decode('utf-8').replace('\n', '')) == str(current_output):
                     successful_tests += 1
                 else:
                     unsuccessful_tests += 1
@@ -54,13 +55,15 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
             print("Error:", e)
             return 0, tests_count, "Error occurred during Java code execution."
                     
-    # Determine message based on test results
-    if unsuccessful_tests == 0:
-        message = 'Congratulations! Your solution is correct!'
-    elif successful_tests > 0 and unsuccessful_tests > 0:
-        message = 'Your solution is partially correct! Try again!'
-    elif successful_tests == 0 and unsuccessful_tests > 0:
-        message = 'Your solution is incorrect! Try again!'
+        # Determine message based on test results
+        if unsuccessful_tests == 0:
+            message = 'Congratulations! Your solution is correct!'
+        elif successful_tests > 0 and unsuccessful_tests > 0:
+            message = 'Your solution is partially correct! Try again!'
+        elif successful_tests == 0 and unsuccessful_tests > 0:
+            message = 'Your solution is incorrect! Try again!'
+    
+    os.chdir("../../../")
 
     return successful_tests, unsuccessful_tests, message
 
