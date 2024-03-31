@@ -203,20 +203,24 @@
                                                         <th>Difficulty</th>
                                                         <th>Author</th>
                                                         <th>Date Created</th>
-                                                        <th>Status</th>
+                                                        <th>Report Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for quest in all_submited_quests %}
-                                                    <tr>
-                                                        <td>{{ quest.quest_id }}</td>
-                                                        <td><a href="{{ url_for('open_submited_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
-                                                        <td>{{ quest.language }}</td>
-                                                        <td>{{ quest.difficulty }}</td>
-                                                        <td>{{ quest.quest_author }}</td>
-                                                        <td>{{ quest.date_added }}</td>
-                                                        <td>{{ quest.status }}</td>
-                                                    </tr>
+                                                    {% for reported_quest in reported_quests %}
+                                                        {% for quest in all_quests %}
+                                                            {% if quest.quest_id == reported_quest.quest_id %}
+                                                                <tr>
+                                                                    <td>{{ quest.quest_id }}</td>
+                                                                    <td>{{ quest.quest_name }}</td>
+                                                                    <td>{{ quest.language }}</td>
+                                                                    <td>{{ quest.difficulty }}</td>
+                                                                    <td>{{ quest.quest_author }}</td>
+                                                                    <td>{{ quest.date_added }}</td>
+                                                                    <td>{{ reported_quest.report_status }}</td>
+                                                                </tr>
+                                                            {% endif %}
+                                                        {% endfor%}
                                                     {% endfor %}
                                                 </tbody>
                                             </table>

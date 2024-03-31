@@ -44,7 +44,7 @@ from edit_quest_form import edit_quest_form_bp
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
-from admin_submit_quest import Quest # handle as Blueprint!!!
+from admin_submit_quest import Quest, ReportedQuest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 
 # Define User model
@@ -197,8 +197,11 @@ def open_admin_panel():
     # Get the user object with the User ID from the session
     currently_logged_user = User.query.get(logged_user_id)
 
+    # Get all reported quests
+    all_reported_quests = ReportedQuest.query.all()
+
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests)
+        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests, reported_quests=all_reported_quests)
     
     return redirect(url_for('login'))
 
@@ -325,10 +328,21 @@ def open_curr_quest(quest_id):
     return render_template('curr_task_template.html', quest=quest)
 
 
+# Route to handle `Report Quest` Button
+@login_required
+@app.route('/report_quest/<curr_quest_id>')
+def report_quest(curr_quest_id):
+    quest = Quest.query.get(curr_quest_id)
+    reported_quest = ReportedQuest(quest_id=quest.quest_id, report_status='Not Resolved')
+    db.session.add(reported_quest)
+    db.session.commit()
+    return 'reported?'
+
 # Route to handle solution submission
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
+    print(ReportedQuest.query.all())
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     print(f"Current quest type is: {current_quest_type}")
