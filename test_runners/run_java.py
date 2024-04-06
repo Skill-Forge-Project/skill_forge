@@ -10,7 +10,6 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     directory = f"{username}_{user_id}_{quest_id}"
     os.makedirs(os.path.join("test_runners/java-files", directory), exist_ok=True)
     os.chdir(os.path.join("test_runners/java-files", directory))
-    print(os.getcwd())
     for i in range(tests_count):
         file_path = os.path.join(os.getcwd(), "Main.java")
         class_path = os.path.join(os.getcwd(), "Main.class")
@@ -38,7 +37,6 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
         try:
             current_input = ' '.join([str(element) for element in inputs[i]])
             current_output = outputs[i][0]
-            print(f"{current_input} -> {current_output}")
             execute_command = ['java', 'Main'] + current_input.split()
             execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             execute_output, execute_error = execute_process.communicate()

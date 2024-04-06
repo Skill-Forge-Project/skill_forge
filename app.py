@@ -359,7 +359,7 @@ def submit_solution():
             return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
         
         elif current_quest_language == 'C#':
-            user_output = run_csharp.run_code(user_code)
+            user_output = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
             return user_output
         
     # Handle the advanced quests testing (requires unit tests)
