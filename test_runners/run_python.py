@@ -11,7 +11,10 @@ def run_code(python_code, inputs, outputs):
         correct_output = str(outputs[i][0])  # THIS NEEDS TO BE CHANGED !!
 
         function_name = re.findall(r"(?<=def ).*(?=\()", python_code)
-        current_python_code = python_code + '\n\n' + f'print({function_name[0]}({current_input}))'
+        if current_input.isalpha():
+            current_python_code = python_code + '\n\n' + f'print({function_name[0]}("{current_input}"))'
+        else:
+            current_python_code = python_code + '\n\n' + f'print({function_name[0]}({current_input}))'
 
         # Use subprocess to run Python code
         process = subprocess.Popen(['python', '-c', current_python_code], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
