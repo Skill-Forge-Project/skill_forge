@@ -40,11 +40,11 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 # Register blueprints
-from edit_quest_form import edit_quest_form_bp
+from edit_quest_form import edit_quest_form_bp, ReportedQuest
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
-from admin_submit_quest import Quest, ReportedQuest # handle as Blueprint!!!
+from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 
 # Define User model
@@ -326,17 +326,6 @@ def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
-
-
-# Route to handle `Report Quest` Button
-@login_required
-@app.route('/report_quest/<curr_quest_id>')
-def report_quest(curr_quest_id):
-    quest = Quest.query.get(curr_quest_id)
-    reported_quest = ReportedQuest(quest_id=quest.quest_id, report_status='Not Resolved')
-    db.session.add(reported_quest)
-    db.session.commit()
-    return 'reported?'
 
 # Route to handle solution submission
 @login_required

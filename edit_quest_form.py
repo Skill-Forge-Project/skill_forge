@@ -14,6 +14,7 @@ from flask_login import login_required, current_user
 import random, string
 from admin_submit_quest import Quest
 from user_submit_quest import SubmitedQuest
+from sqlalchemy import ForeignKey
 
 # Blueprint to handle opening of specific quest from the database fro editing
 edit_quest_form_bp = Blueprint('open_edit_quest', __name__)
@@ -81,3 +82,14 @@ def open_edit_reported_quest(quest_id):
     quest = Quest.query.get(quest_id)
     reported_quest = ReportedQuest.query.get(quest_id)
     return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)
+
+
+# Route to handle `Report Quest` Button
+@login_required
+@app.route('/report_quest/<curr_quest_id>')
+def report_quest(curr_quest_id):
+    quest = Quest.query.get(curr_quest_id)
+    reported_quest = ReportedQuest(quest_id=quest.quest_id, report_status='Not Resolved')
+    db.session.add(reported_quest)
+    db.session.commit()
+    return 'reported?'

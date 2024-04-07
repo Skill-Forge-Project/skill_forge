@@ -12,7 +12,6 @@ from datetime import datetime
 from flask import request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
 import random, string
-from sqlalchemy import ForeignKey
 
 
 
