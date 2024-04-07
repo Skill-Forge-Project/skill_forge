@@ -38,12 +38,6 @@ class Quest(db.Model):
 
     def __repr__(self):
         return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
-    
-
-class ReportedQuest(db.Model):
-    __tablename__ = 'reported_quests'
-    quest_id = db.Column(db.String(10), ForeignKey('coding_quests.quest_id'), primary_key=True)
-    report_status = db.Column(db.Enum('In Progress', 'Resolved', 'Not Resolved', name='repost_status'), nullable=False)
 
 
 # Submit new quest as admin from the admin panel

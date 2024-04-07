@@ -3,6 +3,7 @@ This file handles the functionality for editing a quest from the Admin Panel.
 - edit_quest_db function handles the form submission and updates the quest in the database.
 - open_edit_quest route opens the quest for editing from the Admin Panel.
 - edit_quest_form_bp is Blueprint which makes available the routes from the main app.
+- the `ReportedQuest` class is the table which stores the reported quests from the users
 """
 
 from __main__ import app, db
@@ -11,11 +12,18 @@ from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
 import random, string
-from admin_submit_quest import Quest, ReportedQuest
+from admin_submit_quest import Quest
 from user_submit_quest import SubmitedQuest
 
 # Blueprint to handle opening of specific quest from the database fro editing
 edit_quest_form_bp = Blueprint('open_edit_quest', __name__)
+
+
+# The table which will store the reorted quests from the users
+class ReportedQuest(db.Model):
+    __tablename__ = 'reported_quests'
+    quest_id = db.Column(db.String(10), ForeignKey('coding_quests.quest_id'), primary_key=True)
+    report_status = db.Column(db.Enum('In Progress', 'Resolved', 'Not Resolved', name='repost_status'), nullable=False)
 
 
 # Handle quest edit from the Admin Panel
