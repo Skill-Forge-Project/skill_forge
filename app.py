@@ -331,7 +331,6 @@ def open_curr_quest(quest_id):
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
-    print(ReportedQuest.query.all())
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     print(f"Current quest type is: {current_quest_type}")
