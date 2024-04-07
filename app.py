@@ -286,35 +286,53 @@ def user_self_update():
     db.session.commit()
     return redirect(url_for('open_user_profile'))
 
-# App Routes to tasks
-@login_required
-@app.route('/python_tasks')
-def open_python_tasks():
-    return render_template('python_tasks.html')
+# # App Routes to Quests
+# @login_required
+# @app.route('/python_quests')
+# def open_python_quests():
+#     # Retrieve all python quests from the database
+#     python_quests = Quest.query.filter(Quest.language == 'Python').all()
+#     # Retrieve all users from the database
+#     all_users = User.query.all()
+#     return render_template('python_tasks.html', quests=python_quests, users=all_users)
 
-@login_required
-@app.route('/js_tasks')
-def open_js_tasks():
-    return render_template('js_tasks.html')
+# @login_required
+# @app.route('/js_quests')
+# def open_js_quests():
+#     # Retrieve all javascript quests from the database
+#     js_quests = Quest.query.filter(Quest.language == 'JavaScript').all()
+#     # Retrieve all users from the database
+#     all_users = User.query.all()
+#     return render_template('js_tasks.html', quests=js_quests, users=all_users)
 
-@login_required
-@app.route('/java_tasks')
-def open_java_tasks():
-    return render_template('java_tasks.html')
+# @login_required
+# @app.route('/java_quests')
+# def open_java_quests():
+#     # Retrieve all java quests from the database
+#     java_quests = Quest.query.filter(Quest.language == 'Java').all()
+#     # Retrieve all users from the database
+#     all_users = User.query.all()
+#     return render_template('java_tasks.html', quests=java_quests, users=all_users)
 
-@login_required
-@app.route('/c_sharp_tasks')
-def open_csharp_tasks():
-    return render_template('c_sharp_tasks.html')
+# @login_required
+# @app.route('/c_sharp_quests')
+# def open_csharp_quests():
+#     # Retrieve all c# quests from the database
+#     csharp_quests = Quest.query.filter(Quest.language == 'C#').all()
+#     # Retrieve all users from the database
+#     all_users = User.query.all()
+#     return render_template('c_sharp_tasks.html', quests=csharp_quests, users=all_users)
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
 @login_required
-@app.route('/table_template')
-def open_table_template():
+@app.route('/quests_table/<language>')
+def open_quests_table(language):
     # Retrieve all quests from the database
-    all_quests = Quest.query.all()
+    all_quests = Quest.query.filter(Quest.language == language).all()
+    
+    # Retrieve all users from the database
     all_users = User.query.all()
-    return render_template('table_template.html', quests=all_quests, users=all_users)
+    return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
 
 # Open Quest for submitting. Change from template to real page!!!!
 @login_required
@@ -359,8 +377,8 @@ def submit_solution():
             return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
         
         elif current_quest_language == 'C#':
-            user_output = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
-            return user_output
+            successful_tests, unsuccessful_tests, message = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
         
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':

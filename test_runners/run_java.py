@@ -1,43 +1,41 @@
 import subprocess
 import os
 
-def run_code(java_code, inputs, outputs, user_id, username, quest_id):
+def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
     
-    # Generate a unique dir and file name for the Java code
+    # Generate a unique dir and file name for the C# code
     directory = f"{username}_{user_id}_{quest_id}"
-    os.makedirs(os.path.join("test_runners/java-files", directory), exist_ok=True)
-    os.chdir(os.path.join("test_runners/java-files", directory))
+    os.makedirs(os.path.join("test_runners/csharp-files", directory), exist_ok=True)
+    os.chdir(os.path.join("test_runners/csharp-files", directory))
     for i in range(tests_count):
-        file_path = os.path.join(os.getcwd(), "Main.java")
-        class_path = os.path.join(os.getcwd(), "Main.class")
-        
-        # Save the Java code to a file
+        file_path = os.path.join(os.getcwd(), "Program.cs")
+        # Save the C# code to a file
         try:
-            with open(file_path, "w") as java_file:
-                java_file.write(java_code)
+            with open(file_path, "w") as csharp_file:
+                csharp_file.write(csharp_code)
         except Exception as e:
             print("Error:", e)
-            return 0, tests_count, "Error occurred while saving Java code to file."
+            return 0, tests_count, "Error occurred while saving C# code to file."
 
-        # Compile the Java code
+        # Compile the C# code
         try:
-            compile_process = subprocess.Popen(['javac', file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            compile_process = subprocess.Popen(['csc', file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             compile_output, compile_error = compile_process.communicate()
             if compile_error:
                 print("Compilation Error:", compile_error.decode('utf-8'))
                 return 0, tests_count, f"Compilation Error: {compile_error.decode('utf-8')}"
         except Exception as e:
             print("Error:", e)
-            return 0, tests_count, "Error occurred during Java code compilation."
+            return 0, tests_count, "Error occurred during C# code compilation."
 
-        # Execute the Java code
+        # Execute the C# code
         try:
             current_input = ' '.join([str(element) for element in inputs[i]])
             current_output = outputs[i][0]
-            execute_command = ['java', 'Main'] + current_input.split()
+            execute_command = ['mono', 'Program.exe'] + current_input.split()
             execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             execute_output, execute_error = execute_process.communicate()
             if execute_error:
@@ -51,7 +49,7 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
                     unsuccessful_tests += 1
         except Exception as e:
             print("Error:", e)
-            return 0, tests_count, "Error occurred during Java code execution."
+            return 0, tests_count, "Error occurred during C# code execution."
                     
         # Determine message based on test results
         if unsuccessful_tests == 0:
