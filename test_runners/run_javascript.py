@@ -7,8 +7,9 @@ def run_code(js_code, inputs, outputs):
     unsuccessful_tests = 0
     
     for i in range(tests_count):
-        current_input = ', '.join([str(element) for element in inputs[i]])  # THIS NEEDS TO BE CHANGED (MAYBE)
-        correct_output = str(outputs[i][0])  # THIS NEEDS TO BE CHANGED !!
+        current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
+        current_input = ', '.join(current_input)
+        correct_output = str(outputs[i][0])
         
         function_name = re.findall(r"(?<=function ).*(?=\()", js_code)
         if current_input.isalpha():
