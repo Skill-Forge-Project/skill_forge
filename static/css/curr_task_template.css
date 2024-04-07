@@ -11,19 +11,19 @@
 
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    justify-self: center;
-    align-items: center;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
 }
 
 body {
+    flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #d2d0d0;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(#141e30, #243b55);
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
 }
 
 
@@ -43,6 +43,7 @@ body {
     border-radius: 10px;
     padding: 10px;
     margin-top: 50px !important;
+    margin-bottom: 20px;
     
 }
 
@@ -219,4 +220,36 @@ body {
     box-sizing: border-box;
     display: flex;
     /* height: 50%; */
+}
+
+.test-results-label {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-content: center !important;
+    position: relative;
+}
+
+.tests-results-info {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-content: center !important;
+    position: relative;
+}
+
+.tests-results-info.message {
+    color: #d2d0d0;
+}
+
+.tests-results-info.possitive-results {
+    color: #0bf403bd;
+}
+
+.tests-results-info.negative-results {
+    color: #f73333bd;
 }

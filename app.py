@@ -62,6 +62,15 @@ class User(UserMixin, db.Model):
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
+    total_solved_quests = db.Column(db.Integer, default=0)
+    total_python_quests = db.Column(db.Integer, default=0)
+    total_java_quests = db.Column(db.Integer, default=0)
+    total_javascript_quests = db.Column(db.Integer, default=0)
+    total_csharp_quests = db.Column(db.Integer, default=0)
+    total_submited_quests = db.Column(db.Integer, default=0)
+    total_approved_submited_quests = db.Column(db.Integer, default=0)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0)
+    total_pending_submited_quests = db.Column(db.Integer, default=0)
     
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
@@ -193,9 +202,9 @@ def open_admin_panel():
     
     return redirect(url_for('login'))
 
-
+# Route to handle the user profile (self-open)
 @login_required
-@app.route('/user_profile', methods=['POST', 'GET'])
+@app.route('/my_profile', methods=['POST', 'GET'])
 def open_user_profile():
     # If user is not logged in, redirect to login page
     if 'user_id' not in session:
@@ -210,8 +219,25 @@ def open_user_profile():
     
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    
+
     return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
+
+# Route to handle the user profile (self-open)
+@login_required
+@app.route('/user_profile/<username>', methods=['POST', 'GET'])
+def open_user_profile_view(username):
+    # Get the user info from the database
+    user = User.query.filter_by(username=username).first()
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    if user:
+        # Render the user profile template with the user data
+        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
+    else:
+        # Handle the case where the user is not found
+        return "User not found", 404
+
 
 
 # Change the User avatar route
@@ -260,39 +286,22 @@ def user_self_update():
     db.session.commit()
     return redirect(url_for('open_user_profile'))
 
-# App Routes to tasks
-@login_required
-@app.route('/python_tasks')
-def open_python_tasks():
-    return render_template('python_tasks.html')
-
-@login_required
-@app.route('/js_tasks')
-def open_js_tasks():
-    return render_template('js_tasks.html')
-
-@login_required
-@app.route('/java_tasks')
-def open_java_tasks():
-    return render_template('java_tasks.html')
-
-@login_required
-@app.route('/c_sharp_tasks')
-def open_csharp_tasks():
-    return render_template('c_sharp_tasks.html')
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
 @login_required
-@app.route('/table_template')
-def open_table_template():
+@app.route('/quests_table/<language>')
+def open_quests_table(language):
     # Retrieve all quests from the database
-    all_quests = Quest.query.all()
-    return render_template('table_template.html', quests=all_quests)
+    all_quests = Quest.query.filter(Quest.language == language).all()
+    
+    # Retrieve all users from the database
+    all_users = User.query.all()
+    return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
 
 # Open Quest for submitting. Change from template to real page!!!!
 @login_required
 @app.route('/quest/<quest_id>')
-def open_curr_task(quest_id):
+def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
@@ -302,33 +311,38 @@ def open_curr_task(quest_id):
 @login_required
 @app.route('/submit-solution', methods=['POST'])
 def submit_solution():
+    user_id = current_user.user_id
+    username = current_user.username
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
+    current_quest_id = request.form.get('quest_id')
     print(f"Current quest type is: {current_quest_type}")
     
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
-        print(user_code)
         quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-        print(f'Quest inputs: {quest_inputs}')
-        print(f'Quest outputs: {quest_outputs}')
 
+        # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            # return redirect(url_for('open_user_profile'))
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests})
+            successful_tests, unsuccessful_tests, message = run_python.run_code(user_code, quest_inputs, quest_outputs)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
 
         elif current_quest_language == 'JavaScript':
-            user_output = run_javascript.run_code(user_code)
-            return user_output
+            user_code = request.form.get('user_code')
+            quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
+            quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
+            successful_tests, unsuccessful_tests, message = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+        
         elif current_quest_language == 'Java':
-            user_output = run_java.run_code(user_code)
-            return user_output
+            successful_tests, unsuccessful_tests, message = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+        
         elif current_quest_language == 'C#':
-            user_output = run_csharp.run_code(user_code)
-            return user_output
+            successful_tests, unsuccessful_tests, message = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
         
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':

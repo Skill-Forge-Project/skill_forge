@@ -20,7 +20,7 @@
                 {% if avatar %}
                 <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
                 {% else %}
-                <img src="static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
                 {% endif %}
             </div>
             <p class="user_name">{{ user.username }}</p>
@@ -97,39 +97,39 @@
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">Total Solved Quests:</p>
-                            <p class="right_stats">Database migrations needed</p>
+                            <p class="right_stats">{{ user.total_solved_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;Python:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_python_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;Java:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_java_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;JavaScript:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_javascript_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;C# Quests:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_csharp_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">Total Submited Quests:</p>
-                            <p class="right_stats">Database migrations needed</p>
+                            <p class="right_stats">{{ user.total_submited_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;Approved:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_rejected_approved_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;Pending:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_rejected_pending_quests}}</p>
                         </div>
                         <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
                             <p class="left_stats">&emsp;Rejected:</p>
-                            <p class="right_stats">0</p>
+                            <p class="right_stats">{{ user.total_rejected_submited_quests}}</p>
                         </div>
                     </div>
                 </div>

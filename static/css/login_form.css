@@ -10,16 +10,19 @@
 
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    height: 100%;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
 }
 
 body {
+    flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: linear-gradient(#141e30, #243b55);
-    min-height: 100vh;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
 }
 
 
