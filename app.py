@@ -179,7 +179,8 @@ def hello():
 @login_required
 @app.route('/main')
 def main_page():
-    return render_template('main.html')
+    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    return render_template('main.html', server_time=server_time)
 
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
