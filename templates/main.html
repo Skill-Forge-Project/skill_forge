@@ -27,24 +27,24 @@
 
             <div class="button-container">
                 <div class="button-container button-box">
-                    <div class="btn python-btn" onclick=location.href="{{ url_for('open_table_template') }}">Python</div>
-                    <div class="btn java-btn" onclick=location.href="{{ url_for('open_table_template') }}">Java</div>
-                    <div class="btn js-btn" onclick=location.href="{{ url_for('open_table_template') }}">JavaScript</div>
-                    <div class="btn csharp-btn" onclick=location.href="{{ url_for('open_table_template') }}">C#</div>
+                    <div class="btn python-btn" onclick=location.href="{{ url_for('open_quests_table', language='Python') }}">Python</div>
+                    <div class="btn java-btn" onclick=location.href="{{ url_for('open_quests_table', language='Java') }}">Java</div>
+                    <div class="btn js-btn" onclick=location.href="{{ url_for('open_quests_table', language='JavaScript') }}">JavaScript</div>
+                    <div class="btn csharp-btn" onclick=location.href="{{ url_for('open_quests_table', language='C#') }}">C#</div>
                 </div>
             </div>
 
             <div class="section">
                 <div class="section section-container" id="section1">
                     <h3>Novice Quests</h3>
-                    <p class="content">Novice quests are simple tasks designed for beginners. Each problem you solve will give you 30XP.</p>
+                    <p class="content">Novice quests are simple quests designed for beginners. Each problem you solve will give you 30XP.</p>
                     <!-- Add more content here as needed -->
                 </div>
         
                 <div class="section section-container" id="section2">
                     <h3>Adventurous Challenges</h3>
                     <p class="content">Adventurous challenges offer a moderate level of difficulty, suitable for members with a 
-                        bit of experience. These tasks involve data structures, basic algorythms, 
+                        bit of experience. These quests involve data structures, basic algorythms, 
                         more complex logical operations. For each problem you will be awarded with 60XP.</p>
                     <!-- Add more content here as needed -->
                 </div>
@@ -67,7 +67,7 @@
                     </p>
                     <p class="content">Abyssal Trials are the most challenging quests in the realm, 
                         reserved for the bravest and most experienced adventurers. 
-                        These nightmare-level tasks plunge players into the depths of chaos and require 
+                        These nightmare-level quests plunge players into the depths of chaos and require 
                         unparalleled skill, strategy, and determination to overcome. Solve any of these
                         challenges and you will receive a unique badge.
                     </p>

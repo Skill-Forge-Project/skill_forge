@@ -11,7 +11,10 @@ def run_code(js_code, inputs, outputs):
         correct_output = str(outputs[i][0])  # THIS NEEDS TO BE CHANGED !!
         
         function_name = re.findall(r"(?<=function ).*(?=\()", js_code)
-        current_js_code = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
+        if current_input.isalpha():
+            current_js_code = js_code + '\n\n' + f'console.log({function_name[0]}("{current_input}"))'
+        else:
+            current_js_code = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
         
         # Use subprocess to run JS code
         process = subprocess.Popen(['node', '-e', current_js_code], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -19,6 +22,7 @@ def run_code(js_code, inputs, outputs):
         
         # Decode output from bytes to string
         stdout_str = stdout.decode('utf-8').replace('\n', '')
+        stdout_str = stdout_str.replace('undefined', '')
         stderr_str = stderr.decode('utf-8')
         
         if correct_output == stdout_str:
@@ -32,11 +36,6 @@ def run_code(js_code, inputs, outputs):
             message = 'Your solution is partially correct! Try again!'
         elif successful_tests == 0 and unsuccessful_tests > 0:
             message = 'Your solution is incorrect! Try again!'
-
-    print(f'All tests: {tests_count}')
-    print(f"You have {successful_tests} successful tests")
-    print(f"You have {unsuccessful_tests} unsuccessful tests")
-    print(f'The message is "{message}"')
     return successful_tests, unsuccessful_tests, message
 
 
