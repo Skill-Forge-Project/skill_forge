@@ -11,7 +11,10 @@ def run_code(js_code, inputs, outputs):
         correct_output = str(outputs[i][0])  # THIS NEEDS TO BE CHANGED !!
         
         function_name = re.findall(r"(?<=function ).*(?=\()", js_code)
-        current_js_code = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
+        if current_input.isalpha():
+            current_js_code = js_code + '\n\n' + f'console.log({function_name[0]}("{current_input}"))'
+        else:
+            current_js_code = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
         
         # Use subprocess to run JS code
         process = subprocess.Popen(['node', '-e', current_js_code], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
