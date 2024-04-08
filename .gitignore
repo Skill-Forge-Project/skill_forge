@@ -22,5 +22,5 @@ js-backend-server/server/node_modules/
 */java-files/
 */cs-files/
 
-# Ignore the node modules dir
+# Ignore node modules
 /node_modules/

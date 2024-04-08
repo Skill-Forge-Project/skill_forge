@@ -27,37 +27,62 @@
                 <h4><strong style="color: #03e9f4">Quest: </strong> {{ quest.quest_name }}</h4>
             </div>
             <div class="second-row">
-                <p><strong style="color: #03e9f4">Language: </strong> {{ quest.language }}</p>
-                <p><strong style="color: #03e9f4">Difficulty: </strong> {{ quest.difficulty }}</p>
-                <p><strong style="color: #03e9f4">XP: </strong> {{ quest.xp }}</p>
-                <p><strong style="color: #03e9f4">Author: </strong> {{ quest.quest_author }}</p>
-            </div>
-            <div class="third-row">
-                <p><strong style="color: #03e9f4">Task Description: </strong></p>
-                <p>{{ quest.condition }}</p>
-                <hr>
-            </div> 
-            <div class="input-row">
-                <form id="submit_form" action="/submit-solution">
-                    <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
-                    <input type="hidden" id="quest_id" name="quest_id" value="{{ quest.quest_id }}">
-                    <input type="hidden" id="quest_inputs" name="quest_inputs" value="{{ quest.test_inputs }}">
-                    <input type="hidden" id="quest_outputs" name="quest_outputs" value="{{ quest.test_outputs }}">
-                    <input type="hidden" id="unit_tests" name="unit_tests" value="{{ quest.unit_tests }}">
-                    <input type="hidden" id="quest_language" name="quest_language" value="{{ quest.language }}">
-                    <input type="hidden" id="quest_type" name="quest_type" value="{{ quest.type }}">
-                    <button type="button" id="submitSolution" class="submit-button">Submit Quest</button>
-                    <button type="button" id="reportQuest" class="report-button">Report Quest</button>
-                </form>
-            </div>
-            <div id="test_results" class="output-row">
-                <h2 class="test-results-label">Test Results</h2>
-                <div id="message" class="tests-results-info message"></div>
-                <div id="successful_tests" class="tests-results-info possitive-results"></div>
-                <div id="unsuccessful_tests" class="tests-results-info negative-results"></div>
-            </div>
+            <p><strong style="color: #03e9f4">Language: </strong> {{ quest.language }}</p>
+            <p><strong style="color: #03e9f4">Difficulty: </strong> {{ quest.difficulty }}</p>
+            <p><strong style="color: #03e9f4">XP: </strong> {{ quest.xp }}</p>
+            <p><strong style="color: #03e9f4">Author: </strong> <a href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></p>
         </div>
+        <div class="third-row">
+            <p><strong style="color: #03e9f4">Task Description: </strong></p>
+            <p>{{ quest.condition }}</p>
+            <hr>
+        </div> 
+        <div class="input-row">
+            <form id="submit_form" action="/submit-solution">
+                <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
+                <input type="hidden" id="quest_id" name="quest_id" value="{{ quest.quest_id }}">
+                <input type="hidden" id="quest_inputs" name="quest_inputs" value="{{ quest.test_inputs }}">
+                <input type="hidden" id="quest_outputs" name="quest_outputs" value="{{ quest.test_outputs }}">
+                <input type="hidden" id="unit_tests" name="unit_tests" value="{{ quest.unit_tests }}">
+                <input type="hidden" id="quest_language" name="quest_language" value="{{ quest.language }}">
+                <input type="hidden" id="quest_type" name="quest_type" value="{{ quest.type }}">
+                <button type="button" id="submitSolution" class="submit-button">Submit Quest</button>
+                <button type="button" id="reportQuest" class="report-button">Report Quest</button>
+            </form>
+        </div>
+        <div id="test_results" class="output-row">
+            <h2 class="test-results-label">Test Results</h2>
+            <div id="message" class="tests-results-info message"></div>
+            <div id="successful_tests" class="tests-results-info possitive-results"></div>
+            <div id="unsuccessful_tests" class="tests-results-info negative-results"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#submitSolution').click(function () {
+                // Get the current contents of the CodeMirror editor
+                var userCode = editor.getValue();
 
+                // Update the user_code input field with the current contents
+                $('#editor').val(userCode);
+                // Make an AJAX request to the Flask route
+                $.ajax({
+                    url: '/submit-solution',
+                    type: 'POST',
+                    data: $('#submit_form').serialize(),
+                    success: function (response) {
+                        // Update the divs with the returned test results
+                        $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
+                        $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
+                        $('#message').text(response.message);
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
         <!-- JavaScript script to handle the CodeMirror custom fields. 
             This script should be loaded after the initialization of the fields above! 
         -->
