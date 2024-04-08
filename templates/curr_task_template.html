@@ -39,6 +39,7 @@
         <div class="input-row">
             <form id="submit_form" action="/submit-solution">
                 <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
+                <input type="hidden" id="quest_id" name="quest_id" value="{{ quest.quest_id }}">
                 <input type="hidden" id="quest_inputs" name="quest_inputs" value="{{ quest.test_inputs }}">
                 <input type="hidden" id="quest_outputs" name="quest_outputs" value="{{ quest.test_outputs }}">
                 <input type="hidden" id="unit_tests" name="unit_tests" value="{{ quest.unit_tests }}">
@@ -49,9 +50,10 @@
             </form>
         </div>
         <div id="test_results" class="output-row">
-            <h2>Test Results</h2>
-            <div id="successful_tests"></div>
-            <div id="unsuccessful_tests"></div>
+            <h2 class="test-results-label">Test Results</h2>
+            <div id="message" class="tests-results-info message"></div>
+            <div id="successful_tests" class="tests-results-info possitive-results"></div>
+            <div id="unsuccessful_tests" class="tests-results-info negative-results"></div>
         </div>
     </div>
 
@@ -72,6 +74,7 @@
                         // Update the divs with the returned test results
                         $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
                         $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
+                        $('#message').text(response.message);
                     },
                     error: function (error) {
                         console.error(error);
