@@ -18,7 +18,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-
+# Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True

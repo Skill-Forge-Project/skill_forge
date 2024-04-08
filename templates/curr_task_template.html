@@ -16,6 +16,11 @@
     <!-- Include CodeMirror mode (e.g., Python) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- JavaScript managing the Markdown support -->
+    <script type="module" src="{{ url_for('static', filename='js/markdownSupport.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+
+
 </head>
 <body>
     <!-- Include Navbar template -->
@@ -33,7 +38,8 @@
         </div>
         <div class="third-row">
             <p><strong style="color: #03e9f4">Task Description: </strong></p>
-            <p>{{ quest.condition }}</p>
+            <textarea style="display: none;" id="markdown-textarea" rows="10" cols="50">{{ quest.condition }}</textarea>
+            <div id="html-output"></div>
             <hr>
         </div> 
         <div class="input-row">
