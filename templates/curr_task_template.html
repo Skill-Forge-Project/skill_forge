@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
     <!-- Include CodeMirror mode (e.g., Python) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -29,7 +31,7 @@
             <p><strong style="color: #03e9f4">Language: </strong> {{ quest.language }}</p>
             <p><strong style="color: #03e9f4">Difficulty: </strong> {{ quest.difficulty }}</p>
             <p><strong style="color: #03e9f4">XP: </strong> {{ quest.xp }}</p>
-            <p><strong style="color: #03e9f4">Author: </strong> <a href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></p>
+            <p><strong style="color: #03e9f4">Author: </strong> {{ quest.quest_author }}</p>
         </div>
         <div class="third-row">
             <p><strong style="color: #03e9f4">Task Description: </strong></p>
@@ -57,44 +59,9 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            $('#submitSolution').click(function () {
-                // Get the current contents of the CodeMirror editor
-                var userCode = editor.getValue();
-
-                // Update the user_code input field with the current contents
-                $('#editor').val(userCode);
-                // Make an AJAX request to the Flask route
-                $.ajax({
-                    url: '/submit-solution',
-                    type: 'POST',
-                    data: $('#submit_form').serialize(),
-                    success: function (response) {
-                        // Update the divs with the returned test results
-                        $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
-                        $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
-                        $('#message').text(response.message);
-                    },
-                    error: function (error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        // Initialize CodeMirror editor
-        var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
-            lineNumbers: true,
-            mode: "python",
-            theme: "dracula",
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            indentUnit: 4,
-            scrollbars: true,
-        });
-    </script>
+    <!-- Update Test Info Results -->
+    <script src="{{ url_for('static', filename='js/updateTestInfo.js') }}"></script>
+    <!-- Include CodeMirror handling script -->
+    <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
 </body>
 </html>
