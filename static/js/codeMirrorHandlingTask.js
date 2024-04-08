@@ -1,7 +1,7 @@
 // Function to handle CodeMirror field in the Quest editor form when user open a specific quest for submitings.
 
 // Initialize CodeMirror editors
-var quest_editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
     lineNumbers: true,
     theme: "dracula",
     indentUnit: 2,
@@ -27,9 +27,9 @@ function updateModes(selectedLanguage) {
             mode = 'text/x-csharp';
             break;
     }
-    quest_editor.setOption("mode", mode);
+    editor.setOption("mode", mode);
     // Refresh the editors after updating the mode
-    quest_editor.refresh();
+    editor.refresh();
 }
 
 // Event listener for changes in select element

@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Python Tasks</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-        <!-- Include CodeMirror library -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
-        <!-- Include CodeMirror theme (optional) -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
-        <!-- Include CodeMirror CSS -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-        <!-- Include CodeMirror mode (e.g., Python) -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-    </head>
-    <body>
-        <!-- Include Navbar template -->
-        {% include 'navbar.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Tasks</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <!-- Include CodeMirror library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <!-- Include CodeMirror theme (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+    <!-- Include CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+    <!-- Include CodeMirror mode (e.g., Python) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Include Navbar template -->
+    {% include 'navbar.html' %}
 
-        <div class="task-container">
-            <div class="first-row">
-                <h4><strong style="color: #03e9f4">Quest: </strong> {{ quest.quest_name }}</h4>
-            </div>
-            <div class="second-row">
+    <div class="task-container">
+        <div class="first-row">
+            <h4><strong style="color: #03e9f4">Quest: </strong> {{ quest.quest_name }}</h4>
+        </div>
+        <div class="second-row">
             <p><strong style="color: #03e9f4">Language: </strong> {{ quest.language }}</p>
             <p><strong style="color: #03e9f4">Difficulty: </strong> {{ quest.difficulty }}</p>
             <p><strong style="color: #03e9f4">XP: </strong> {{ quest.xp }}</p>
-            <p><strong style="color: #03e9f4">Author: </strong> <a href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></p>
+            <p><strong style="color: #03e9f4">Author: </strong> {{ quest.quest_author }}</p>
         </div>
         <div class="third-row">
             <p><strong style="color: #03e9f4">Task Description: </strong></p>
@@ -57,35 +58,10 @@
             <div id="unsuccessful_tests" class="tests-results-info negative-results"></div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $('#submitSolution').click(function () {
-                // Get the current contents of the CodeMirror editor
-                var userCode = editor.getValue();
 
-                // Update the user_code input field with the current contents
-                $('#editor').val(userCode);
-                // Make an AJAX request to the Flask route
-                $.ajax({
-                    url: '/submit-solution',
-                    type: 'POST',
-                    data: $('#submit_form').serialize(),
-                    success: function (response) {
-                        // Update the divs with the returned test results
-                        $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
-                        $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
-                        $('#message').text(response.message);
-                    },
-                    error: function (error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    </script>
-        <!-- JavaScript script to handle the CodeMirror custom fields. 
-            This script should be loaded after the initialization of the fields above! 
-        -->
-        <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
-    </body>
+    <!-- Update Test Info Results -->
+    <script src="{{ url_for('static', filename='js/updateTestInfo.js') }}"></script>
+    <!-- Include CodeMirror handling script -->
+    <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
+</body>
 </html>
