@@ -17,3 +17,6 @@ js-backend-server/server/node_modules/
 
 # Ignore Flask db migrations
 /migrations/
+
+# Ignore node modules files
+/node_modules/
