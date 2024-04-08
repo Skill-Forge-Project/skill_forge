@@ -6,8 +6,8 @@ This file handles the functionality for submiting a new quest as a regular user.
 - open_submited_quest route opens the specified quest for editing from the Admin Panel.
 """
 
-from __main__ import app, db
-# from app import app, db # Use this instead of the above line for db migrations
+# from __main__ import app, db
+from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user

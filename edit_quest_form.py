@@ -6,26 +6,31 @@ This file handles the functionality for editing a quest from the Admin Panel.
 - the `ReportedQuest` class is the table which stores the reported quests from the users
 """
 
-from __main__ import app, db
-# from app import app, db # Use this instead of the above line for db migrations
+# from __main__ import app, db
+from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
 import random, string
+from sqlalchemy.dialects.postgresql import JSON
 from admin_submit_quest import Quest
-from user_submit_quest import SubmitedQuest
 from sqlalchemy import ForeignKey
 
 # Blueprint to handle opening of specific quest from the database fro editing
 edit_quest_form_bp = Blueprint('open_edit_quest', __name__)
 
 
-# The table which will store the reorted quests from the users
+# The class which will store the reported quests from the users
 class ReportedQuest(db.Model):
     __tablename__ = 'reported_quests'
-    quest_id = db.Column(db.String(10), ForeignKey('coding_quests.quest_id'), primary_key=True)
+    report_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    quest_id = db.Column(db.String(10), ForeignKey('coding_quests.quest_id'), nullable=False)
     report_status = db.Column(db.Enum('In Progress', 'Resolved', 'Not Resolved', name='repost_status'), nullable=False)
-
+    report_user_id = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=False)
+    report_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    last_updated = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    report_reason = db.Column(db.Text, nullable=True)
+    admin_assigned = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=True)
 
 # Handle quest edit from the Admin Panel
 @app.route('/edit_quest_db', methods=['GET', 'POST'])
