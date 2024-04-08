@@ -31,7 +31,7 @@
             <p><strong style="color: #03e9f4">Language: </strong> {{ quest.language }}</p>
             <p><strong style="color: #03e9f4">Difficulty: </strong> {{ quest.difficulty }}</p>
             <p><strong style="color: #03e9f4">XP: </strong> {{ quest.xp }}</p>
-            <p><strong style="color: #03e9f4">Author: </strong> {{ quest.quest_author }}</p>
+            <p><strong style="color: #03e9f4">Author: </strong><a href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></p>
         </div>
         <div class="third-row">
             <p><strong style="color: #03e9f4">Task Description: </strong></p>
