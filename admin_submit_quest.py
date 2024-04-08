@@ -6,8 +6,8 @@ This file handles the functionality for submiting a quest from the Admin Panel.
 
 
 
-# from __main__ import app, db
-from app import app, db # Use this instead of the above line for db migrations
+from __main__ import app, db
+# from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
 from flask import request, redirect, url_for, render_template, session
 from flask_login import login_required, current_user
