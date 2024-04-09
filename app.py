@@ -327,59 +327,26 @@ def submit_solution():
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            return jsonify({
-                'successful_tests': successful_tests,
-                'unsuccessful_tests': unsuccessful_tests,
-                'message': message,
-                'zero_test_input': zero_tests[0],
-                'zero_test_output': zero_tests[1],
-                'zero_test_result': zero_tests_outputs[0],
-                'zero_test_error': zero_tests_outputs[1]
-            })
 
         elif current_quest_language == 'JavaScript':
             user_code = request.form.get('user_code')
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
-            return jsonify({
-                'successful_tests': successful_tests,
-                'unsuccessful_tests': unsuccessful_tests,
-                'message': message,
-                'zero_test_input': zero_tests[0],
-                'zero_test_output': zero_tests[1],
-                'zero_test_result': zero_tests_outputs[0],
-                'zero_test_error': zero_tests_outputs[1]
-            })
                     
         elif current_quest_language == 'Java':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
-            print(f'Succs test is: {successful_tests}')
-            print(f'Unsuccs test is: {unsuccessful_tests}')
-            print(f'Message is: {message}')
-            print(f'Zero test input is: {zero_tests[0]}')
-            print(f'Zero test output is: {zero_tests[1]}')
-            print(f'Zero test result is: {zero_tests_outputs[0]}')
-            print(f'Zero test error is: {zero_tests_outputs[1]}')
-            return jsonify({
-                'successful_tests': successful_tests,
-                'unsuccessful_tests': unsuccessful_tests,
-                'message': message,
-                'zero_test_input': zero_tests[0],
-                'zero_test_output': zero_tests[1],
-                'zero_test_result': zero_tests_outputs[0],
-                'zero_test_error': zero_tests_outputs[1]
-            })
-        
+
         elif current_quest_language == 'C#':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
-            return jsonify({
-                'successful_tests': successful_tests,
-                'unsuccessful_tests': unsuccessful_tests,
-                'message': message,
-                'zero_test_input': zero_tests[0],
-                'zero_test_output': zero_tests[1],
-                'zero_test_result': zero_tests_outputs[0],
-                'zero_test_error': zero_tests_outputs[1]
-            })
+        
+        return jsonify({
+            'successful_tests': successful_tests,
+            'unsuccessful_tests': unsuccessful_tests,
+            'message': message,
+            'zero_test_input': zero_tests[0],
+            'zero_test_output': zero_tests[1],
+            'zero_test_result': zero_tests_outputs[0],
+            'zero_test_error': zero_tests_outputs[1]
+        })
         
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':
