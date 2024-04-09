@@ -8,11 +8,12 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
     unsuccessful_tests = 0
     zero_tests = [] # Hold the first example test input and putput
     zero_tests_outputs = [] # Hold the first example after executing the user code (stdout & stderr)
-    
+
     # Generate a unique dir and file name for the Java code
     directory = f"{username}_{user_id}_{quest_id}"
     os.makedirs(os.path.join(f"test_runners/cs-files/{directory}"), exist_ok=True)
     os.chdir(os.path.join(f"test_runners/cs-files/{directory}"))
+        
     for i in range(tests_count):
         current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
         current_input = ', '.join(current_input)
@@ -20,7 +21,7 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
         file_path = os.path.join(os.getcwd(), "Program.cs")
         class_path = os.path.join(os.getcwd(), "Program.exe")
         
-        # Save the CS code to a file
+        # Save the Java code to a file
         with open(file_path, "w") as cs_file:
             cs_file.write(csharp_code)
 
@@ -30,12 +31,9 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
         stdout_str, stderr_str = compile_process.communicate()
         stdout_str = stdout_str.decode('utf-8')
         stderr = stderr_str.decode('utf-8')
-        print(f'STDOUT: {stdout_str}')
-        print(f'STDERR: {stderr_str}')
         
         # If Compilation failed
         if stderr_str:
-            
             stderr_str = re.findall(r"error CS.*", stderr)
             zero_tests_outputs.append(stdout_str)
             zero_tests_outputs.append(stderr_str)
@@ -56,7 +54,6 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
             return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
         # If Compilation was successful run and check the code
         else:
-            print("I am trying to execute the code")
             # Execute the CS code
             current_input = ' '.join([str(element) for element in inputs[i]])
             correct_output = outputs[i][0]
@@ -87,17 +84,16 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
             elif successful_tests == 0 and unsuccessful_tests > 0:
                 message = 'Your solution is incorrect! Try again!'
         
-
-            # Remove the Program.cs file
+            # Remove the files
             os.remove("Program.cs")
-            # Remove the Program.exe file
             os.remove("Program.exe")
-            # Remove the directory
-            os.chdir("../")
-            os.rmdir(directory)
-            os.chdir("../../")
+            
+    # Remove the directory
+    os.chdir("../")
+    os.rmdir(directory)
+    os.chdir("../../")
 
-            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
+    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
         
 # Example C# code
 csharp_code = """
