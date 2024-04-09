@@ -327,8 +327,20 @@ def submit_solution():
 
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests, message = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
+            print(f'The zero test input is: {zero_tests[0]}')
+            print(f'The zero test output is: {zero_tests[1]}')
+            print(f'The zero test result is: {zero_tests_outputs[0]}')
+            print(f'The zero test error is: {zero_tests_outputs[1]}')
+            return jsonify({
+                'successful_tests': successful_tests,
+                'unsuccessful_tests': unsuccessful_tests,
+                'message': message,
+                'zero_test_input': zero_tests[0],
+                'zero_test_output': zero_tests[1],
+                'zero_test_result': zero_tests_outputs[0],
+                'zero_test_error': zero_tests_outputs[1]
+            })
 
         elif current_quest_language == 'JavaScript':
             user_code = request.form.get('user_code')

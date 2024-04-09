@@ -15,6 +15,10 @@ $(document).ready(function () {
                 $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
                 $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
                 $('#message').text(response.message);
+                $('#zero-test-input').text('Given Input: ' + response.zero_test_input);
+                $('#zero-test-output').text('Expected Output: ' + response.zero_test_output);
+                $('#zero-test-stdout').text('Your Output: ' + response.zero_test_result);
+                $('#zero-test-stderr').text('Code Errors: ' + '\n' + response.zero_test_error);
             },
             error: function (error) {
                 console.error(error);
