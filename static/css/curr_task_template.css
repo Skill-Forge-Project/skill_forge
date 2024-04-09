@@ -160,6 +160,7 @@ body {
     margin: 10px;
     border: 0px;
     width: 250px;
+    cursor: pointer;
 }
 
 .submit-button:hover {
@@ -188,6 +189,7 @@ body {
     margin: 10px;
     border: 0px;
     width: 250px;
+    cursor: pointer;
 }
 
 .report-button:hover {
@@ -253,3 +255,4 @@ body {
 .tests-results-info.negative-results {
     color: #f73333bd;
 }
+

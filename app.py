@@ -18,7 +18,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-
+# Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -317,7 +317,6 @@ def submit_solution():
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
-    print(f"Current quest type is: {current_quest_type}")
     
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
@@ -327,23 +326,26 @@ def submit_solution():
 
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests, message = run_python.run_code(user_code, quest_inputs, quest_outputs)
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
 
         elif current_quest_language == 'JavaScript':
-            user_code = request.form.get('user_code')
-            quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
-            quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-            successful_tests, unsuccessful_tests, message = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
-        
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
+                    
         elif current_quest_language == 'Java':
-            successful_tests, unsuccessful_tests, message = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
-        
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+
         elif current_quest_language == 'C#':
-            successful_tests, unsuccessful_tests, message = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
-            return jsonify({'successful_tests': successful_tests, 'unsuccessful_tests': unsuccessful_tests, 'message': message})
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+        
+        return jsonify({
+            'successful_tests': successful_tests,
+            'unsuccessful_tests': unsuccessful_tests,
+            'message': message,
+            'zero_test_input': zero_tests[0],
+            'zero_test_output': zero_tests[1],
+            'zero_test_result': zero_tests_outputs[0],
+            'zero_test_error': zero_tests_outputs[1]
+        })
         
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':

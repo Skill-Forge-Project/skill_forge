@@ -10,6 +10,9 @@ WORKDIR /app
 # Install the Python app requirements
 RUN pip install -r requirements.txt --no-cache
 
+# Install NodeJS interpreter, Mono runtime and OpenJDK 17 compilers
+RUN apt update && apt install nodejs mono-complete openjdk-17-jdk-headless -y
+
 # Copy the current directory contents into the container at /app
 COPY . .
 

@@ -1,67 +1,101 @@
 import subprocess
 import os
+import re
 
-def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
+def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
+    zero_tests = [] # Hold the first example test input and putput
+    zero_tests_outputs = [] # Hold the first example after executing the user code (stdout & stderr)
     
-    # Generate a unique dir and file name for the C# code
+    # Generate a unique dir and file name for the Java code
     directory = f"{username}_{user_id}_{quest_id}"
-    os.makedirs(os.path.join("test_runners/csharp-files", directory), exist_ok=True)
-    os.chdir(os.path.join("test_runners/csharp-files", directory))
-    for i in range(tests_count):
-        file_path = os.path.join(os.getcwd(), "Program.cs")
-        # Save the C# code to a file
-        try:
-            with open(file_path, "w") as csharp_file:
-                csharp_file.write(csharp_code)
-        except Exception as e:
-            print("Error:", e)
-            return 0, tests_count, "Error occurred while saving C# code to file."
-
-        # Compile the C# code
-        try:
-            compile_process = subprocess.Popen(['csc', file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            compile_output, compile_error = compile_process.communicate()
-            if compile_error:
-                print("Compilation Error:", compile_error.decode('utf-8'))
-                return 0, tests_count, f"Compilation Error: {compile_error.decode('utf-8')}"
-        except Exception as e:
-            print("Error:", e)
-            return 0, tests_count, "Error occurred during C# code compilation."
-
-        # Execute the C# code
-        try:
-            current_input = ' '.join([str(element) for element in inputs[i]])
-            current_output = outputs[i][0]
-            execute_command = ['mono', 'Program.exe'] + current_input.split()
-            execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            execute_output, execute_error = execute_process.communicate()
-            if execute_error:
-                print("Execution Error:", execute_error.decode('utf-8'))
-                return 0, tests_count, f"Execution Error: {execute_error.decode('utf-8')}"
-            else:
-                # Check if output matches expected output
-                if str(execute_output.decode('utf-8').replace('\n', '')) == str(current_output):
-                    successful_tests += 1
-                else:
-                    unsuccessful_tests += 1
-        except Exception as e:
-            print("Error:", e)
-            return 0, tests_count, "Error occurred during C# code execution."
-                    
-        # Determine message based on test results
-        if unsuccessful_tests == 0:
-            message = 'Congratulations! Your solution is correct!'
-        elif successful_tests > 0 and unsuccessful_tests > 0:
-            message = 'Your solution is partially correct! Try again!'
-        elif successful_tests == 0 and unsuccessful_tests > 0:
-            message = 'Your solution is incorrect! Try again!'
+    os.makedirs(os.path.join(f"test_runners/java-files/{directory}"), exist_ok=True)
+    os.chdir(os.path.join(f"test_runners/java-files/{directory}"))
     
-    os.chdir("../../../")
+    for i in range(tests_count):        
+        current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
+        current_input = ', '.join(current_input)
+        correct_output = str(outputs[i][0])
+        file_path = os.path.join(os.getcwd(), "Main.java")
+        class_path = os.path.join(os.getcwd(), "Main.class")
+        
+        # Save the Java code to a file
+        with open(file_path, "w") as java_file:
+            java_file.write(java_code)
 
-    return successful_tests, unsuccessful_tests, message
+        # Compile the Java code
+        compile_process = subprocess.Popen(['javac', file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout_str, stderr_str = compile_process.communicate()
+        stdout_str = stdout_str.decode('utf-8')
+        stderr = stderr_str.decode('utf-8')
+
+        # If Compilation failed
+        if stderr_str:
+            stderr_str = re.findall(r"(?<=java:\d:)\s.*", stderr)
+            zero_tests_outputs.append(stdout_str)
+            zero_tests_outputs.append(stderr_str)
+            current_input = ' '.join([str(element) for element in inputs[i]])
+            correct_output = outputs[i][0]
+            zero_tests.append(current_input)
+            zero_tests.append(correct_output)
+            zero_tests_outputs.append(stdout_str)
+            zero_tests_outputs.append(stderr_str)
+            unsuccessful_tests = tests_count
+            message = 'Your solution is incorrect! Try again!'
+            # Remove the Main.java file
+            os.remove("Main.java")
+            # Remove the directory
+            os.chdir("../")
+            os.rmdir(directory)
+            os.chdir("../../")
+            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
+
+        # If Compilation was successful run and check the code
+        else:
+            print("I am trying to execute the code")
+            # Execute the CS code
+            current_input = ' '.join([str(element) for element in inputs[i]])
+            correct_output = outputs[i][0]
+            execute_command = ['java', 'Main'] + current_input.split()
+            execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout_str, stderr_str = execute_process.communicate()
+            stdout_str = stdout_str.decode('utf-8').replace('\n', '')
+            stderr_str = stderr_str.decode('utf-8').replace('\n', '')
+            
+                    
+            # Check if output matches expected output
+            if stdout_str == str(correct_output):
+                successful_tests += 1
+            else:
+                unsuccessful_tests += 1
+
+            # Handle the zero test case
+            if i == 0:
+                zero_tests.append(current_input)
+                zero_tests.append(correct_output)
+                zero_tests_outputs.append(stdout_str)
+                zero_tests_outputs.append(stderr_str)
+                
+            # Determine message based on test results
+            if unsuccessful_tests == 0:
+                message = 'Congratulations! Your solution is correct!'
+            elif successful_tests > 0 and unsuccessful_tests > 0:
+                message = 'Your solution is partially correct! Try again!'
+            elif successful_tests == 0 and unsuccessful_tests > 0:
+                message = 'Your solution is incorrect! Try again!'
+        
+            # Remove the files
+            os.remove("Main.java")
+            os.remove("Main.class")
+            
+    # Remove the directory
+    os.chdir("../")
+    os.rmdir(directory)
+    os.chdir("../../")
+
+    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
 
 
 

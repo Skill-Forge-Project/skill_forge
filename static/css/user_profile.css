@@ -3,6 +3,8 @@
 @font-face {
     font-family: 'JetBrainsMonoRegular';
     src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
 html {
@@ -27,7 +29,7 @@ body {
     /* background-color: red; */
     display: flex;
     flex-direction: row;
-    position: absolute;
+    position: relative;
     margin-top: 60px;
     margin-left: 10%;
     margin-right: 10%;
