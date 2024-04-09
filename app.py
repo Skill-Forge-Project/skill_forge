@@ -329,7 +329,6 @@ def submit_solution():
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
 
         elif current_quest_language == 'JavaScript':
-            user_code = request.form.get('user_code')
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
                     
         elif current_quest_language == 'Java':
