@@ -26,6 +26,8 @@ def run_code(python_code, inputs, outputs):
         # Decode output from bytes to string
         stdout_str = stdout.decode('utf-8').replace('\n', '')
         stderr_str = stderr.decode('utf-8')
+        
+        # Handle the zero test case
         if i == 0:
             zero_tests.append(current_input)
             zero_tests.append(correct_output)
