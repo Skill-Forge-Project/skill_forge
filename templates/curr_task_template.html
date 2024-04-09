@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Tasks</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
     <!-- Include CodeMirror library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
     <!-- Include CodeMirror theme (optional) -->
@@ -40,7 +40,9 @@
             <p><strong style="color: #03e9f4">Language: </strong> {{ quest.language }}</p>
             <p><strong style="color: #03e9f4">Difficulty: </strong> {{ quest.difficulty }}</p>
             <p><strong style="color: #03e9f4">XP: </strong> {{ quest.xp }}</p>
-            <p><strong style="color: #03e9f4">Author: </strong><a href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></p>
+            <p><strong style="color: #03e9f4">Author: </strong><a
+                    href="{{ url_for('open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author
+                    }}</a></p>
 
         </div>
         <div class="third-row">
@@ -84,5 +86,9 @@
     <!-- Include CodeMirror handling script -->
     <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
 </body>
+<footer>
+    <!-- Include Footer template -->
+    {% include 'footer.html' %}
+</footer>
 
 </html>
