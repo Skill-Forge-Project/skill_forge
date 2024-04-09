@@ -75,7 +75,7 @@
                         </div>
                         <div class="input-row" style="flex-direction: column;">
                             <h4><strong class="row-label">Quest Condition: </strong></h4>
-                            <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
+                            <textarea type="text" name="quest_condition" id="editor" data-preview="#preview" rows="10"
                                 class="text_input"></textarea>
                         </div>
                         <div class="input-row" style="flex-direction: column;">
@@ -194,9 +194,12 @@
             This script should be loaded after the initialization of the fields above! 
         -->
         <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+
         <!-- JavaScript managing the content in the Bootstrap table -->
         <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
 
+        <!-- JavaScript managing the Markdown support -->
+        <script src="{{ url_for('static', filename='js/markdownSupport.js') }}"></script>
     </body>
 
 

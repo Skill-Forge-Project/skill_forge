@@ -53,8 +53,8 @@
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Quest Condition: </strong></h4>
-                <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
-                    class="text_input"></textarea>
+                <textarea style="display: none;" id="markdown-textarea" rows="10" cols="50">{{ quest.condition }}</textarea>
+                <div id="html-output"></div>
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Quest Template: </strong></h4>
