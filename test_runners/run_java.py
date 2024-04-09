@@ -8,8 +8,8 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
     
     # Generate a unique dir and file name for the C# code
     directory = f"{username}_{user_id}_{quest_id}"
-    os.makedirs(os.path.join("test_runners/csharp-files", directory), exist_ok=True)
-    os.chdir(os.path.join("test_runners/csharp-files", directory))
+    os.makedirs(os.path.join(f"test_runners/java-files/{directory}"), exist_ok=True)
+    os.chdir(os.path.join("test_runners/java-files", directory))
     for i in range(tests_count):
         file_path = os.path.join(os.getcwd(), "Program.cs")
         # Save the C# code to a file

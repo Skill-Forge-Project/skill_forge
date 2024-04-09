@@ -317,7 +317,6 @@ def submit_solution():
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
-    print(f"Current quest type is: {current_quest_type}")
     
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
@@ -340,8 +339,6 @@ def submit_solution():
 
         elif current_quest_language == 'JavaScript':
             user_code = request.form.get('user_code')
-            quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
-            quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
             return jsonify({
                 'successful_tests': successful_tests,
@@ -367,6 +364,13 @@ def submit_solution():
         
         elif current_quest_language == 'C#':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            print(f'Succs test is: {successful_tests}')
+            print(f'Unsuccs test is: {unsuccessful_tests}')
+            print(f'Message is: {message}')
+            print(f'Zero test input is: {zero_tests[0]}')
+            print(f'Zero test output is: {zero_tests[1]}')
+            print(f'Zero test result is: {zero_tests_outputs[0]}')
+            print(f'Zero test error is: {zero_tests_outputs[1]}')
             return jsonify({
                 'successful_tests': successful_tests,
                 'unsuccessful_tests': unsuccessful_tests,
