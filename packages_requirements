@@ -1,4 +1,4 @@
 python3
 nodejs
 mono-complete
-javac
+openjdk-17-jdk-headless
