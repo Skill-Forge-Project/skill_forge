@@ -23,7 +23,7 @@ edit_quest_form_bp = Blueprint('open_edit_quest', __name__)
 # The class which will store the reported quests from the users
 class ReportedQuest(db.Model):
     __tablename__ = 'reported_quests'
-    report_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    report_id = db.Column(db.String(20), primary_key=True)
     quest_id = db.Column(db.String(10), ForeignKey('coding_quests.quest_id'), nullable=False)
     report_status = db.Column(db.Enum('In Progress', 'Resolved', 'Not Resolved', name='repost_status'), nullable=False)
     report_user_id = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=False)
@@ -98,15 +98,33 @@ def open_edit_reported_quest(quest_id):
 @app.route('/report_quest/<curr_quest_id>')
 def report_quest(curr_quest_id):
     quest = Quest.query.get(curr_quest_id)
-    print('TUKAAAAAAAAAAAA')
-    print(current_user.user_id)
-    reported_quest = ReportedQuest(
+    
+    # Generate random suffix
+    suffix_length = 16
+    suffix = ''.join(random.choices(string.digits, k=suffix_length))
+    prefix = 'REP-'
+    report_id = f"{prefix}{suffix}"
+    # Construct quest ID
+    while ReportedQuest.query.filter_by(report_id=report_id).first():
+        # If it exists, generate a new submission_id
+        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+        report_id = f"{prefix}{suffix}"
+    
+    # # Get the current time
+    # current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Save the submission to the database
+    new_reported_quest = ReportedQuest(
         quest_id=quest.quest_id,
+        report_id=report_id,
         report_status = 'Not Resolved',
         report_user_id = current_user.user_id,
         report_reason = 'nothing for now',  # This needs to be changed
         admin_assigned = 'USR-751694'  # This needs to be changed
     )
-    db.session.add(reported_quest)
+
+    # Add the new submission to the database session
+    db.session.add(new_reported_quest)
     db.session.commit()
-    return 'reported?'
+    
+    return redirect(url_for('open_curr_quest', quest_id=curr_quest_id))
