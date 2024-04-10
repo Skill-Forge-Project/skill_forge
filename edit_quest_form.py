@@ -62,7 +62,11 @@ def edit_quest_db():
         # If this is True it means that the user is editing a reported quest (there is a chosen radion button)
         if request.form.get('progress_option'):
             print(request.form.get('progress_option'))
-            reported_quest.report_status = request.form.get('progress_option')
+            report_progress = request.form.get('progress_option')
+            reported_quest.report_status = report_progress
+
+            if report_progress == 'Resolved':
+                db.session.delete(reported_quest)
         
         db.session.commit()
         
@@ -94,7 +98,15 @@ def open_edit_reported_quest(quest_id):
 @app.route('/report_quest/<curr_quest_id>')
 def report_quest(curr_quest_id):
     quest = Quest.query.get(curr_quest_id)
-    reported_quest = ReportedQuest(quest_id=quest.quest_id, report_status='Not Resolved')
+    print('TUKAAAAAAAAAAAA')
+    print(current_user.user_id)
+    reported_quest = ReportedQuest(
+        quest_id=quest.quest_id,
+        report_status = 'Not Resolved',
+        report_user_id = current_user.user_id,
+        report_reason = 'nothing for now',  # This needs to be changed
+        admin_assigned = 'USR-751694'  # This needs to be changed
+    )
     db.session.add(reported_quest)
     db.session.commit()
     return 'reported?'
