@@ -46,6 +46,7 @@ from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
+from user_solutions import SubmitedSolution # handle as Blueprint!!!
 
 # Define User model
 class User(UserMixin, db.Model):
@@ -337,6 +338,45 @@ def submit_solution():
         elif current_quest_language == 'C#':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
         
+        # Submit new solution to the database
+        quest_id = request.form['quest_id']
+        user_id = current_user.user_id
+        user_code = request.form['user_code']
+        successful_tests = successful_tests
+        unsuccessful_tests = unsuccessful_tests
+        quest_passed = True if unsuccessful_tests == 0 else False
+        
+        # Generate random suffix
+        suffix_length = 16
+        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+        prefix = 'SUB-'
+        submission_id = f"{prefix}{suffix}"
+        # Construct quest ID
+        while SubmitedSolution.query.filter_by(submission_id=submission_id).first():
+            # If it exists, generate a new submission_id
+            suffix = ''.join(random.choices(string.digits, k=suffix_length))
+            submission_id = f"{prefix}{suffix}"
+        
+        # Get the current time
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Save the submission to the database
+        new_submission = SubmitedSolution(
+            submission_id=submission_id,
+            user_id=user_id,
+            quest_id=quest_id,
+            submission_date=current_time,
+            user_code=user_code,
+            successful_tests=successful_tests,
+            unsuccessful_tests=unsuccessful_tests,
+            quest_passed=quest_passed
+        )
+
+        # Add the new submission to the database session
+        db.session.add(new_submission)
+        db.session.commit()
+        
+        # Return the results of the tests and the final message to the frontend
         return jsonify({
             'successful_tests': successful_tests,
             'unsuccessful_tests': unsuccessful_tests,
@@ -346,7 +386,7 @@ def submit_solution():
             'zero_test_result': zero_tests_outputs[0],
             'zero_test_error': zero_tests_outputs[1]
         })
-        
+    
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':
         print(f'Current Languange is: {current_quest_language}')

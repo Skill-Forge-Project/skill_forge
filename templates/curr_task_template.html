@@ -50,8 +50,8 @@
             <textarea style="display: none;" id="markdown-textarea" rows="10" cols="50">{{ quest.condition }}</textarea>
             <div id="html-output"></div>
         </div>
-        <div class="input-row">
-            <form id="submit_form" action="/submit-solution">
+        <form id="submit_form" action="/submit-solution">
+            <div class="input-row">
                 <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
                 <input type="hidden" id="quest_id" name="quest_id" value="{{ quest.quest_id }}">
                 <input type="hidden" id="quest_inputs" name="quest_inputs" value="{{ quest.test_inputs }}">
@@ -61,24 +61,24 @@
                 <input type="hidden" id="quest_type" name="quest_type" value="{{ quest.type }}">
                 <button type="button" id="submitSolution" class="submit-button">Submit Quest</button>
                 <button type="button" id="reportQuest" class="report-button">Report Quest</button>
-            </form>
-        </div>
-        <div id="test_results" class="output-row">
-            <h2 class="test-results-label">Test Results</h2>
-            <div id="message" class="tests-results-info message"></div>
-            <div id="successful_tests" class="tests-results-info possitive-results"></div>
-            <div id="unsuccessful_tests" class="tests-results-info negative-results"></div>
-        </div>
-        <div id="zero-test" class="output-row">
-            <h2 class="test-results-label">Zero Test</h2>
-            <div id="zero-test-input" class="zero-test input"></div>
-            <div id="zero-test-output" class="zero-test output"></div>
-        </div>
-        <div id="zero-test" class="output-row">
-            <h2 class="test-results-label">Zero Test Output</h2>
-            <div id="zero-test-stdout" class="zero-test stdout"></div>
-            <div id="zero-test-stderr" class="zero-test stderr"></div>
-        </div>
+            </div>
+            <div id="test_results" class="output-row">
+                <h2 class="test-results-label">Test Results</h2>
+                <div id="message" class="tests-results-info message"></div>
+                <div id="successful_tests" name="successful_tests" class="tests-results-info possitive-results"></div>
+                <div id="unsuccessful_tests" name="unsuccessful_tests" class="tests-results-info negative-results"></div>
+            </div>
+            <div id="zero-test" class="output-row">
+                <h2 class="test-results-label">Zero Test</h2>
+                <div id="zero-test-input" name="zero-input" class="zero-test input"></div>
+                <div id="zero-test-output" name="zero-output" class="zero-test output"></div>
+            </div>
+            <div id="zero-test" class="output-row">
+                <h2 class="test-results-label">Zero Test Output</h2>
+                <div id="zero-test-stdout" name="zero-test-stdout" class="zero-test stdout"></div>
+                <div id="zero-test-stderr" name="zero-test-stderr" class="zero-test stderr"></div>
+            </div>
+        </form>
     </div>
 
     <!-- Update Test Info Results -->
