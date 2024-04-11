@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_submit_quest.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
     <!-- Include CodeMirror library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
     <!-- Include CodeMirror theme (optional) -->
@@ -62,12 +64,14 @@
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Inputs Samples: </strong></h4>
-                <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument, second_argument....] [first_argument, second_argument....]</p>
+                <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument,
+                    second_argument....] [first_argument, second_argument....]</p>
                 <textarea class="text_input" name="quest_inputs" id="quest_inputs_input"></textarea>
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Outputs Samples: </strong></h4>
-                <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the inputs in format: [output, output...] [output, output...]</p>
+                <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the
+                    inputs in format: [output, output...] [output, output...]</p>
                 <textarea class="text_input" name="quest_outputs" id="quest_outputs_input"></textarea>
             </div>
             <div class="input-row">
@@ -85,5 +89,9 @@
     -->
     <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
 </body>
+<footer>
+    <!-- Include Footer template -->
+    {% include 'footer.html' %}
+</footer>
 
 </html>

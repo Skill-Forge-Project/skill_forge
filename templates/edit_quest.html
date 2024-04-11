@@ -10,7 +10,6 @@
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_quest.css') }}">
         <!-- Import Navigation bar styles -->
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-        
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <!-- Include CodeMirror library -->
@@ -64,7 +63,7 @@
                     </div>
                     <div class="input-row" style="flex-direction: column;">
                         <h4><strong class="row-label">Quest Condition: </strong></h4>
-                        <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10" class="text_input">{{ quest.condition }}</textarea>
+                        <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10" class="text_input">{{ quest.condition }}</textarea>          
                     </div>
                     <div class="input-row" style="flex-direction: column;">
                         <h4><strong class="row-label">Quest Template: </strong></h4>

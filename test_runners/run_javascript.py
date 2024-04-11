@@ -5,6 +5,9 @@ def run_code(js_code, inputs, outputs):
     tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
+    zero_tests = [] # Hold the first example test input and putput
+    zero_tests_outputs = [] # Hold the first example after executing the user code (stdout & stderr)
+    
     
     for i in range(tests_count):
         current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
@@ -22,9 +25,15 @@ def run_code(js_code, inputs, outputs):
         stdout, stderr = process.communicate()
         
         # Decode output from bytes to string
-        stdout_str = stdout.decode('utf-8').replace('\n', '')
-        stdout_str = stdout_str.replace('undefined', '')
+        stdout_str = stdout.decode('utf-8').replace('\n', '').replace('undefined', '') # handle undefined output as well
         stderr_str = stderr.decode('utf-8')
+        
+        # Handle the zero test case
+        if i == 0:
+            zero_tests.append(current_input)
+            zero_tests.append(correct_output)
+            zero_tests_outputs.append(stdout_str)
+            zero_tests_outputs.append(stderr_str)
         
         if correct_output == stdout_str:
             successful_tests += 1
@@ -37,7 +46,7 @@ def run_code(js_code, inputs, outputs):
             message = 'Your solution is partially correct! Try again!'
         elif successful_tests == 0 and unsuccessful_tests > 0:
             message = 'Your solution is incorrect! Try again!'
-    return successful_tests, unsuccessful_tests, message
+    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
 
 
 
