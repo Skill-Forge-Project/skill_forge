@@ -5,7 +5,7 @@ from sqlalchemy import Enum, ARRAY
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, unittest, random, string, requests
+import os, psycopg2, base64, subprocess, unittest, random, string, requests, json
 from datetime import datetime
 from login_forms import LoginForm, RegistrationForm
 # Import test runner
@@ -280,7 +280,6 @@ def user_self_update():
     new_first_name = request.form.get('change_first_name')
     new_last_name = request.form.get('change_last_name')
     new_email_address = request.form.get('change_email')
-    
     user = User.query.get(current_user_id)
     user.first_name = new_first_name
     user.last_name = new_last_name
@@ -315,6 +314,7 @@ def open_curr_quest(quest_id):
 def submit_solution():
     user_id = current_user.user_id
     username = current_user.username
+    user_xp_points = current_user.xp
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
@@ -385,10 +385,6 @@ def submit_solution():
         
         # Handle the leveling of the user
         # Update succesfully solved quests
-
-        print(solution)
-        
-        
         if update_user_stats:
             if unsuccessful_tests == 0:
                 current_user.total_solved_quests += 1
@@ -408,10 +404,21 @@ def submit_solution():
                     current_user.xp += 60
                 elif current_quest_difficulty == "Epic Campaigns":
                     current_user.xp += 100
-                
-            db.session.commit()
-        
             
+                # Update the user XP level and rank
+                with open('levels.json', 'r') as levels_file:
+                    leveling_data = json.load(levels_file)
+
+                for level in leveling_data:
+                    for level_name, level_stats in level.items():
+                        if level_stats['min_xp'] <= user_xp_points <= level_stats['max_xp']:
+                            current_user.level = level_stats['level']
+                            current_user.rank = level_name
+                            break
+
+            db.session.commit()
+                        
+
         
         # Return the results of the tests and the final message to the frontend
         return jsonify({
