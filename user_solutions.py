@@ -10,12 +10,7 @@ No matter which language is the quest OR if the solution is correct, partially c
 from __main__ import app, db
 # from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
-from flask import Blueprint, request, redirect, url_for, render_template, session
-from flask_login import login_required, current_user
-from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.exc import IntegrityError
-import random, string, json
-from admin_submit_quest import Quest
+
 
 class SubmitedSolution(db.Model):
     __tablename__ = 'user_submited_solutions'

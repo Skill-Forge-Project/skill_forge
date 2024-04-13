@@ -57,21 +57,21 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    xp = db.Column(db.Integer, default=0)
-    level = db.Column(db.Integer, default=1)
+    xp = db.Column(db.Integer, default=0, nullable=False)
+    level = db.Column(db.Integer, default=1, nullable=False)
     rank = db.Column(db.String(30), default="Novice Adventurer")
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
-    total_solved_quests = db.Column(db.Integer, default=0)
-    total_python_quests = db.Column(db.Integer, default=0)
-    total_java_quests = db.Column(db.Integer, default=0)
-    total_javascript_quests = db.Column(db.Integer, default=0)
-    total_csharp_quests = db.Column(db.Integer, default=0)
-    total_submited_quests = db.Column(db.Integer, default=0)
-    total_approved_submited_quests = db.Column(db.Integer, default=0)
-    total_rejected_submited_quests = db.Column(db.Integer, default=0)
-    total_pending_submited_quests = db.Column(db.Integer, default=0)
+    total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_python_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_java_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_javascript_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_csharp_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_approved_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_pending_submited_quests = db.Column(db.Integer, default=0, nullable=False)
     
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
@@ -318,6 +318,7 @@ def submit_solution():
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
+    current_quest_difficulty = request.form.get('quest_difficulty')
     
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
@@ -360,6 +361,12 @@ def submit_solution():
         # Get the current time
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
+        # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
+        solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
+        update_user_stats = False
+        if not solution:
+            update_user_stats = True
+            
         # Save the submission to the database
         new_submission = SubmitedSolution(
             submission_id=submission_id,
@@ -375,6 +382,36 @@ def submit_solution():
         # Add the new submission to the database session
         db.session.add(new_submission)
         db.session.commit()
+        
+        # Handle the leveling of the user
+        # Update succesfully solved quests
+
+        print(solution)
+        
+        
+        if update_user_stats:
+            if unsuccessful_tests == 0:
+                current_user.total_solved_quests += 1
+                if current_quest_language == "Python":
+                    current_user.total_python_quests += 1
+                elif current_quest_language == "JavaScript":
+                    current_user.total_javascript_quests += 1
+                elif current_quest_language == "Java":
+                    current_user.total_java_quests += 1
+                elif current_quest_language == "C#":
+                    current_user.total_csharp_quests += 1
+                
+                # Update the user XP
+                if current_quest_difficulty == "Novice Quests":
+                    current_user.xp += 30
+                elif current_quest_difficulty == "Adventurous Challenges":
+                    current_user.xp += 60
+                elif current_quest_difficulty == "Epic Campaigns":
+                    current_user.xp += 100
+                
+            db.session.commit()
+        
+            
         
         # Return the results of the tests and the final message to the frontend
         return jsonify({
