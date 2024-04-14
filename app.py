@@ -40,7 +40,7 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 # Register blueprints
-from edit_quest_form import edit_quest_form_bp
+from edit_quest_form import edit_quest_form_bp, ReportedQuest
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
@@ -199,8 +199,11 @@ def open_admin_panel():
     # Get the user object with the User ID from the session
     currently_logged_user = User.query.get(logged_user_id)
 
+    # Get all reported quests
+    all_reported_quests = ReportedQuest.query.all()
+
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests)
+        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests, reported_quests=all_reported_quests)
     
     return redirect(url_for('login'))
 
@@ -306,7 +309,6 @@ def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     return render_template('curr_task_template.html', quest=quest)
-
 
 # Route to handle solution submission
 @login_required
