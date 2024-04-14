@@ -46,9 +46,9 @@ def edit_quest_db():
     output_tests = request.form['quest_test_outputs']
     
     quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.get(quest_id)
+    reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
     print(quest)
-    print(reported_quest.report_status)
+    print(reported_quest)
     if quest:
         quest.quest_name = quest_name
         quest.language = quest_language
@@ -89,7 +89,7 @@ def open_edit_quest(quest_id):
 @app.route('/edit_reported_quest/<quest_id>')
 def open_edit_reported_quest(quest_id):
     quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.get(quest_id)
+    reported_quest = ReportedQuest.query.filter_by(quest_id=quest.quest_id).first()
     return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)
 
 
