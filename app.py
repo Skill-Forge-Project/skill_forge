@@ -202,8 +202,19 @@ def open_admin_panel():
     # Get all reported quests
     all_reported_quests = ReportedQuest.query.all()
 
+    # Get all users (this is needed so we can extract the name of the user who has reported a quest)
+    all_users = User.query.all()
+
+    # Get all admins (this is needed so we can create a dropdown menu in the `Check Reports` table)
+    all_admins = User.query.filter_by(user_role='Admin').all()
+
     if currently_logged_user.user_role == "Admin":
-        return render_template('admin_panel.html', all_quests=all_quests, all_submited_quests=all_submited_quests, reported_quests=all_reported_quests)
+        return render_template('admin_panel.html', 
+        all_quests=all_quests, 
+        all_submited_quests=all_submited_quests, 
+        reported_quests=all_reported_quests,
+        all_users=all_users,
+        all_admins=all_admins)
     
     return redirect(url_for('login'))
 
