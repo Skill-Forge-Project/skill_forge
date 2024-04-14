@@ -5,7 +5,7 @@ from sqlalchemy import Enum, ARRAY
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, unittest, random, string, requests
+import os, psycopg2, base64, subprocess, unittest, random, string, requests, json
 from datetime import datetime
 from login_forms import LoginForm, RegistrationForm
 # Import test runner
@@ -46,6 +46,7 @@ from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
+from user_solutions import SubmitedSolution # handle as Blueprint!!!
 
 # Define User model
 class User(UserMixin, db.Model):
@@ -56,21 +57,21 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    xp = db.Column(db.Integer, default=0)
-    level = db.Column(db.Integer, default=1)
+    xp = db.Column(db.Integer, default=0, nullable=False)
+    level = db.Column(db.Integer, default=1, nullable=False)
     rank = db.Column(db.String(30), default="Novice Adventurer")
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
-    total_solved_quests = db.Column(db.Integer, default=0)
-    total_python_quests = db.Column(db.Integer, default=0)
-    total_java_quests = db.Column(db.Integer, default=0)
-    total_javascript_quests = db.Column(db.Integer, default=0)
-    total_csharp_quests = db.Column(db.Integer, default=0)
-    total_submited_quests = db.Column(db.Integer, default=0)
-    total_approved_submited_quests = db.Column(db.Integer, default=0)
-    total_rejected_submited_quests = db.Column(db.Integer, default=0)
-    total_pending_submited_quests = db.Column(db.Integer, default=0)
+    total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_python_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_java_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_javascript_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_csharp_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_approved_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_pending_submited_quests = db.Column(db.Integer, default=0, nullable=False)
     
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
@@ -282,7 +283,6 @@ def user_self_update():
     new_first_name = request.form.get('change_first_name')
     new_last_name = request.form.get('change_last_name')
     new_email_address = request.form.get('change_email')
-    
     user = User.query.get(current_user_id)
     user.first_name = new_first_name
     user.last_name = new_last_name
@@ -316,9 +316,11 @@ def open_curr_quest(quest_id):
 def submit_solution():
     user_id = current_user.user_id
     username = current_user.username
+    user_xp_points = current_user.xp
     current_quest_language = request.form.get('quest_language')
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
+    current_quest_difficulty = request.form.get('quest_difficulty')
     
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
@@ -339,6 +341,88 @@ def submit_solution():
         elif current_quest_language == 'C#':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
         
+        # Submit new solution to the database
+        quest_id = request.form['quest_id']
+        user_id = current_user.user_id
+        user_code = request.form['user_code']
+        successful_tests = successful_tests
+        unsuccessful_tests = unsuccessful_tests
+        quest_passed = True if unsuccessful_tests == 0 else False
+        
+        # Generate random suffix
+        suffix_length = 16
+        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+        prefix = 'SUB-'
+        submission_id = f"{prefix}{suffix}"
+        # Construct quest ID
+        while SubmitedSolution.query.filter_by(submission_id=submission_id).first():
+            # If it exists, generate a new submission_id
+            suffix = ''.join(random.choices(string.digits, k=suffix_length))
+            submission_id = f"{prefix}{suffix}"
+        
+        # Get the current time
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
+        solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
+        update_user_stats = False
+        if not solution:
+            update_user_stats = True
+            
+        # Save the submission to the database
+        new_submission = SubmitedSolution(
+            submission_id=submission_id,
+            user_id=user_id,
+            quest_id=quest_id,
+            submission_date=current_time,
+            user_code=user_code,
+            successful_tests=successful_tests,
+            unsuccessful_tests=unsuccessful_tests,
+            quest_passed=quest_passed
+        )
+
+        # Add the new submission to the database session
+        db.session.add(new_submission)
+        db.session.commit()
+        
+        # Handle the leveling of the user
+        # Update succesfully solved quests
+        if update_user_stats:
+            if unsuccessful_tests == 0:
+                current_user.total_solved_quests += 1
+                if current_quest_language == "Python":
+                    current_user.total_python_quests += 1
+                elif current_quest_language == "JavaScript":
+                    current_user.total_javascript_quests += 1
+                elif current_quest_language == "Java":
+                    current_user.total_java_quests += 1
+                elif current_quest_language == "C#":
+                    current_user.total_csharp_quests += 1
+                
+                # Update the user XP
+                if current_quest_difficulty == "Novice Quests":
+                    current_user.xp += 30
+                elif current_quest_difficulty == "Adventurous Challenges":
+                    current_user.xp += 60
+                elif current_quest_difficulty == "Epic Campaigns":
+                    current_user.xp += 100
+            
+                # Update the user XP level and rank
+                with open('levels.json', 'r') as levels_file:
+                    leveling_data = json.load(levels_file)
+
+                for level in leveling_data:
+                    for level_name, level_stats in level.items():
+                        if level_stats['min_xp'] <= user_xp_points <= level_stats['max_xp']:
+                            current_user.level = level_stats['level']
+                            current_user.rank = level_name
+                            break
+
+            db.session.commit()
+                        
+
+        
+        # Return the results of the tests and the final message to the frontend
         return jsonify({
             'successful_tests': successful_tests,
             'unsuccessful_tests': unsuccessful_tests,
@@ -348,7 +432,7 @@ def submit_solution():
             'zero_test_result': zero_tests_outputs[0],
             'zero_test_error': zero_tests_outputs[1]
         })
-        
+    
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':
         print(f'Current Languange is: {current_quest_language}')

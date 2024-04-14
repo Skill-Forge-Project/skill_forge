@@ -24,3 +24,6 @@ js-backend-server/server/node_modules/
 
 # Ignore node modules
 /node_modules/
+
+# Ignore workspace files
+make_json.py
