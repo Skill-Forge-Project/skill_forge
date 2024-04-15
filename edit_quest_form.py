@@ -97,6 +97,7 @@ def open_edit_reported_quest(quest_id):
 @login_required
 @app.route('/report_quest/<curr_quest_id>')
 def report_quest(curr_quest_id):
+    print(request.form)
     quest = Quest.query.get(curr_quest_id)
     
     # Generate random suffix
