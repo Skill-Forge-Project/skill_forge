@@ -65,7 +65,7 @@
                 <button type="button" id="submitSolution" class="submit-button">Submit Quest</button>
                 <textarea class="input-row" name="report-reason" id="report-reason" style="display: none;">Report reason...</textarea>
                 <button type="button" id="reportQuestWithTextarea" class="report-button">Report Quest</button>
-                <button type="button" id="reportQuest" class="report-button" style="display: none;" onclick=location.href="{{ url_for('report_quest', curr_quest_id=quest.quest_id) }}">Report Quest</button>
+                <button type="button" id="reportQuest" class="report-button" style="display: none;">Report Quest</button>
             </div>
             <div id="test_results" class="output-row">
                 <h2 class="test-results-label">Test Results</h2>
@@ -99,12 +99,18 @@
             firstReportButton.addEventListener('click', reportQuestEvent)
 
             let secondReportButton = document.getElementById('reportQuest')
+            secondReportButton.addEventListener('click', redirectToReportQuestRoute)
             let reportReasonTextarea = document.getElementById('report-reason')
 
             function reportQuestEvent(event) {
                 reportReasonTextarea.style.display = 'block'
                 firstReportButton.style.display = 'none'
                 secondReportButton.style.display = 'block'
+            }
+
+            function redirectToReportQuestRoute(event) {
+                let reportReason = reportReasonTextarea.value
+                location.href = "{{ url_for('report_quest', curr_quest_id=quest.quest_id, report_reason='') }}" + encodeURIComponent(reportReason);
             }
         }
 

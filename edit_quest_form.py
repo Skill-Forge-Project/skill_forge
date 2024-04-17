@@ -96,8 +96,9 @@ def open_edit_reported_quest(quest_id):
 # Route to handle `Report Quest` Button
 @login_required
 @app.route('/report_quest/<curr_quest_id>')
-def report_quest(curr_quest_id):
-    print(request.form)
+def report_quest(curr_quest_id, report_reason='no reason'):
+    print(dict(request.args))
+    request_arguments = dict(request.args)  # This prints {'report_reason': 'some_value'}
     quest = Quest.query.get(curr_quest_id)
     
     # Generate random suffix
@@ -120,7 +121,7 @@ def report_quest(curr_quest_id):
         report_id=report_id,
         report_status = 'Not Resolved',
         report_user_id = current_user.user_id,
-        report_reason = 'nothing for now',  # This needs to be changed
+        report_reason = request_arguments['report_reason'],  # This needs to be changed
         admin_assigned = 'USR-751694'  # This needs to be changed
     )
 
