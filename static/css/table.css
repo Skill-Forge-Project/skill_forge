@@ -101,3 +101,17 @@ th {
   font-size: 16px;
   color: #03e9f4 !important;
 }
+
+td {
+  color: #d2d0d0 !important;
+}
+
+label {
+  font-family: 'JetBrainsMonoRegular', sans-serif;
+  color: #03e9f4 !important;
+}
+
+.dataTables_info {
+  font-family: 'JetBrainsMonoRegular', sans-serif;
+  color: #d2d0d0 !important;
+}

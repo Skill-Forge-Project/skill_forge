@@ -16,3 +16,9 @@ $(function () {
       $('#example-2').DataTable();
   });
 });
+
+$(function () {
+  $(document).ready(function () {
+      $('#example-4').DataTable();
+  });
+});
