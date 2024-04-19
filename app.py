@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 # Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # The specific server ip address. Should be included in the .env file
@@ -33,7 +33,7 @@ bcrypt = Bcrypt(app)
 # Init the database connection
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
+conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_PROD'))
 
 # Init the login manager
 login_manager = LoginManager(app)
@@ -64,15 +64,15 @@ class User(UserMixin, db.Model):
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
-    total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_python_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_java_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_javascript_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_csharp_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_submited_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_approved_submited_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_rejected_submited_quests = db.Column(db.Integer, default=0, nullable=False)
-    total_pending_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_solved_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_python_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_java_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_javascript_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_csharp_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_submited_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_approved_submited_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0, nullable=True)
+    total_pending_submited_quests = db.Column(db.Integer, default=0, nullable=True)
     
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
