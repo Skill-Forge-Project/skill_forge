@@ -220,7 +220,6 @@ def open_user_profile():
     user_id = session['user_id']
     
     # Get the user's solved quests from the database
-   # Query SubmitedSolution objects and eager load the related CodingQuests
     user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
 
     # Get the user info from the database

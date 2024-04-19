@@ -149,22 +149,22 @@
                         <div class="table-responsive">
                             <table id="user_solved_quests" class="table table-striped table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr style="font-size: 10px">
                                         <th>Sumbission ID</th>
                                         <th>Quest ID</th>
                                         <th>Quest Name</th>
                                         <th>Language</th>
                                         <th>Difficulty</th>
                                         <th>Submited On</th>
-                                        <th>Succesful Tests</th>
-                                        <th>Unsuccesful Tests</th>
-                                        <th>Quest Passed</th>
+                                        <th style="width: 20px">Succesful Tests</th>
+                                        <th style="width: 20px">Unsuccesful Tests</th>
+                                        <th style="width: 20px">Quest Passed</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for solved_quest in user_solved_quests %}
-                                    <tr>
-                                        <td>{{ solved_quest.submission_id }}</td>
+                                    <tr style="font-size: 12px">
+                                        <td><a href="{{ url_for('open_view_solution', solution_id=solved_quest.submission_id) }}">{{ solved_quest.submission_id }}</a></td>
                                         <td>{{ solved_quest.quest_id }}</td>
                                         <td><a href="{{ url_for('open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{ solved_quest.coding_quest.quest_name }}</a></td>
                                         <td>{{ solved_quest.coding_quest.language }}</td>
