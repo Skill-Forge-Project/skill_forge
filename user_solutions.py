@@ -10,6 +10,10 @@ No matter which language is the quest OR if the solution is correct, partially c
 from __main__ import app, db
 # from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
+from flask import session
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import joinedload
+from admin_submit_quest import Quest
 
 
 class SubmitedSolution(db.Model):
@@ -22,3 +26,8 @@ class SubmitedSolution(db.Model):
     successful_tests = db.Column(db.Integer, default=0, nullable=True)
     unsuccessful_tests = db.Column(db.Integer, default=0, nullable=True)
     quest_passed = db.Column(db.Boolean, nullable=True)
+    
+    # Define the relationship between the user_submited_solutions and coding_quests table.
+    coding_quest = db.relationship('Quest')
+
+

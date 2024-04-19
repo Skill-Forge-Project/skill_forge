@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
 </head>
 
 <body>
@@ -138,10 +139,71 @@
 
         </div>
     </div>
+
+    <!-- User's Solved Quests tables -->
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card rounded shadow border-0">
+                    <div class="card-body p-5 bg-white rounded">
+                        <div class="table-responsive">
+                            <table id="user_solved_quests" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Sumbission ID</th>
+                                        <th>Quest ID</th>
+                                        <th>Quest Name</th>
+                                        <th>Language</th>
+                                        <th>Difficulty</th>
+                                        <th>Submited On</th>
+                                        <th>Succesful Tests</th>
+                                        <th>Unsuccesful Tests</th>
+                                        <th>Quest Passed</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for solved_quest in user_solved_quests %}
+                                    <tr>
+                                        <td>{{ solved_quest.submission_id }}</td>
+                                        <td>{{ solved_quest.quest_id }}</td>
+                                        <td><a href="{{ url_for('open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{ solved_quest.coding_quest.quest_name }}</a></td>
+                                        <td>{{ solved_quest.coding_quest.language }}</td>
+                                        <td>{{ solved_quest.coding_quest.difficulty }}</td>
+                                        <td>{{ solved_quest.submission_date }}</td>
+                                        <td>{{ solved_quest.successful_tests }}</td>
+                                        <td>{{ solved_quest.unsuccessful_tests }}</td>
+                                        <td>
+                                            {% if solved_quest.quest_passed %}
+                                                <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Passed" width="20" height="20">
+                                            {% else %}
+                                                <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="20" height="20">
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+          $(document).ready(function () {
+            $('#user_solved_quests').DataTable();
+          });
+        });
+      </script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 </body>
 
 <footer>
