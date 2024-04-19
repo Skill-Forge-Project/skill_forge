@@ -31,6 +31,11 @@ class ReportedQuest(db.Model):
     last_updated = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
     report_reason = db.Column(db.Text, nullable=True)
     admin_assigned = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=True)
+    
+    # Specify the foreign keys explicitly
+    reported_quest = db.relationship("Quest", foreign_keys=[quest_id], backref="reported_quests")
+    user_reporter = db.relationship("User", foreign_keys=[report_user_id], backref="reported_quests")
+    admin = db.relationship("User", foreign_keys=[admin_assigned], backref="assigned_reports")
 
 # Handle quest edit from the Admin Panel
 @app.route('/edit_quest_db', methods=['GET', 'POST'])

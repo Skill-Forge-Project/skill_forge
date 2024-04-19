@@ -206,39 +206,29 @@
                                                         <th>Author</th>
                                                         <th>Date Reported</th>
                                                         <th>Report User</th>
-                                                        <th>Report Reason</th>
                                                         <th>Report Status</th>
                                                         <th>Admin Assigned</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {% for reported_quest in reported_quests %}
-                                                        {% for quest in all_quests %}
-                                                            {% if quest.quest_id == reported_quest.quest_id %}
-                                                                <tr>
-                                                                    <td>{{ reported_quest.report_id}}</td>
-                                                                    <td>{{ quest.quest_id }}</td>
-                                                                    <td><a href="{{ url_for('open_edit_reported_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
-                                                                    <td>{{ quest.language }}</td>
-                                                                    <td>{{ quest.quest_author }}</td>
-                                                                    <td>{{ reported_quest.report_date}}</td>
-                                                                    {% for user in all_users %}
-                                                                        {% if user.user_id == reported_quest.report_user_id %}
-                                                                            <td>{{ user.username }}</td>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                    <td>{{ reported_quest.report_reason }}</td>
-                                                                    <td>{{ reported_quest.report_status }}</td>
-                                                                    <td>
-                                                                        <select name="admins" id="admins">
-                                                                            {% for admin in all_admins %}
-                                                                                <option value="{{ admin.username }}">{{ admin.username }}</option>
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                    </td>
-                                                                </tr>
-                                                            {% endif %}
-                                                        {% endfor%}
+                                                    {% for report in reported_quests %}
+                                                    <tr>
+                                                        <td>{{ report.report_id }}</td>
+                                                        <td>{{ report.reported_quest.quest_id }}</td>
+                                                        <td><a href="{{ url_for('open_edit_reported_quest', quest_id=report.reported_quest.quest_id) }}">{{ report.reported_quest.quest_name }}</a></td>
+                                                        <td>{{ report.reported_quest.language }}</td>
+                                                        <td>{{ report.reported_quest.quest_author }}</td>
+                                                        <td>{{ report.report_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                                        <td>{{ report.report_user_id }}</td>
+                                                        <td>{{ report.report_status }}</td>
+                                                        <td>
+                                                            <select name="admins" id="admins">
+                                                                {% for admin in all_admins %}
+                                                                    <option value="{{ admin.username }}">{{ admin.username }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </td>
+                                                    </tr>
                                                     {% endfor %}
                                                 </tbody>
                                             </table>
