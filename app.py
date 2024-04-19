@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum, ARRAY
+from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
@@ -218,6 +219,9 @@ def open_user_profile():
     # Get the User ID for the session
     user_id = session['user_id']
     
+    # Get the user's solved quests from the database
+    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
+
     # Get the user info from the database
     user = User.query.get(user_id)
     user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
@@ -225,7 +229,10 @@ def open_user_profile():
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
 
-    return render_template('user_profile.html', user=user, formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), avatar=avatar_base64)
+    return render_template('user_profile.html', user=user, 
+                           formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
+                           avatar=avatar_base64, 
+                           user_solved_quests=user_solved_quests)
 
 # Route to handle the user profile (self-open)
 @login_required
@@ -234,6 +241,8 @@ def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
     user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+
+    
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     if user:
