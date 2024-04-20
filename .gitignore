@@ -17,6 +17,7 @@ js-backend-server/server/node_modules/
 
 # Ignore Flask db migrations
 /migrations/
+manage.py
 
 # Ignore the exection files on the server
 */java-files/
@@ -24,6 +25,3 @@ js-backend-server/server/node_modules/
 
 # Ignore node modules
 /node_modules/
-
-# Ignore workspace files
-make_json.py
