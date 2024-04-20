@@ -78,7 +78,7 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default=" ")
     discord_id = db.Column(db.String(120), default=" ")
     linked_in = db.Column(db.String(120), default=" ")
-    
+
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
         self.username = username
