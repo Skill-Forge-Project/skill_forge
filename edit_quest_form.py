@@ -127,7 +127,7 @@ def report_quest(curr_quest_id, report_reason='no reason'):
         report_status = 'Not Resolved',
         report_user_id = current_user.user_id,
         report_reason = request_arguments['report_reason'],  # This needs to be changed
-        admin_assigned = 'USR-751694'  # This needs to be changed
+        admin_assigned = None  # This needs to be changed
     )
 
     # Add the new submission to the database session
