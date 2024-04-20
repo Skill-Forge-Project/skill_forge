@@ -3,9 +3,9 @@ FROM python:latest
 
 # Image Labels. Update values for each build
 LABEL Name="skill-forge"
-LABEL Version=1.2.7
+LABEL Version=1.2.8
 LABEL Release="pre-release"
-LABEL ReleaseDate="20-04-2024"
+LABEL ReleaseDate="21-04-2024"
 LABEL Description="Skill Forge is a open-source platform for learning and practicing programming languages."
 LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GPL-3.0 license"
