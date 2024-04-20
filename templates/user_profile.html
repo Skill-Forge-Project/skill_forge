@@ -27,6 +27,36 @@
             </div>
             <p class="user_name">{{ user.username }}</p>
 
+            <div class="social_links">
+                <p class="social_links title">Social Links</p>
+                <div class="social_links icons">
+                    {% if user.facebook_profile %}
+                    <a href="{{ user.facebook_profile }}" target="_blank">
+                        <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile" style="margin-right: 10px;">
+                    </a>
+                    {% endif %}
+                    {% if user.instagram_profile %}
+                    <a href="{{ user.instagram_profile }}" target="_blank">
+                        <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram" style="margin-right: 10px;">
+                    </a>
+                    {% endif %}
+                    {% if user.github_profile %}
+                    <a href="{{ user.github_profile }}" target="_blank">
+                        <img src="../static/images/github.png" width="22" height="22" alt="GitHub" style="margin-right: 10px;">
+                    </a>
+                    {% endif %}
+                    {% if user.discord_id %}
+                    <a href="https://discord.com/users/{{ user.discord_id }}" target="_blank">
+                        <img src="../static/images/discord.svg" width="20" height="20" alt="Discord" style="margin-right: 10px;">
+                    </a>
+                    {% endif %}
+                    {% if user.linked_in %}
+                    <a href="{{ user.linked_in }}" target="_blank">
+                        <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn" style="margin-right: 10px;">
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
 
         <div style="display:flex; flex-direction:column;width:100%">
@@ -61,6 +91,32 @@
                                 <p class="left_stats">Email:</p>
                                 <textarea cols="50" class="right_stats_edit" contenteditable="true"
                                     name="change_email">{{ user.email }}</textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Social Links section -->
+                        <div class="user_stats">
+                            <div style="display:flex; flex-direction: column;">
+                                <div style="display:flex; flex-direction: row; margin-top: 5px">
+                                    <p class="left_stats">Facebook Profile:</p>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_facebook">{{ user.facebook_profile }}</textarea>
+                                </div>
+                                <div style="display:flex; flex-direction: row;">
+                                    <p class="left_stats">Instagram:</p>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_instagram">{{ user.instagram_profile }}</textarea>
+                                </div>
+                                <div style="display:flex; flex-direction: row;">
+                                    <p class="left_stats">GitHub:</p>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_github">{{ user.github_profile }}</textarea>
+                                </div>
+                                <div style="display:flex; flex-direction: row;">
+                                    <p class="left_stats">Discord ID:</p>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_discord">{{ user.discord_id }}</textarea>
+                                </div>
+                                <div style="display:flex; flex-direction: row;">
+                                    <p class="left_stats">LinkedIn:</p>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_linkedin">{{ user.linked_in }}</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -139,8 +195,8 @@
         </div>
     </div>
 
-    <!-- User's Solved Quests tables -->
-    <div class="container-fluid">
+    <!-- User's Solved Quests table -->
+    <div class="container-fluid" style="margin-bottom: 20px">
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="card rounded shadow border-0">

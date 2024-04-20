@@ -76,6 +76,38 @@ body {
     display: block; /* Remove any default spacing */
 }
 
+.social_links {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    vertical-align: middle;
+    color: #03e9f4;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    border: 0px;
+    align-items: center;
+    justify-content: center;
+}
+
+.social_links.title {
+    margin-top: 10px;
+}
+
+.social_links.icons {
+    display: flex;
+    flex-direction: row;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 .user_name.ch_av_btn {
     position: relative;
     font-family: 'JetBrainsMonoRegular', sans-serif;
