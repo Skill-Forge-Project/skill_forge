@@ -185,3 +185,27 @@ body {
 textarea {
     height: min-content;
 }
+
+
+/* Edit Reported Quest */
+.radio-buttons input, .radio-buttons label {
+    accent-color: #03e9f4;
+}
+
+.btn-row {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    width: 20%;
+}
+
+.btn-row .radio-buttons {
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+}
+
+.btn-row .radio-buttons label {
+    margin: 0;
+    margin-right: 1em;
+}
