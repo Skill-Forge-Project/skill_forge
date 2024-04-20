@@ -7,7 +7,7 @@ LABEL Version=1.2.7
 LABEL Release="pre-release"
 LABEL ReleaseDate="20-04-2024"
 LABEL Description="Skill Forge is a open-source platform for learning and practicing programming languages."
-LABEL Maintainers=`{[{"name": "Aleksandar Karastoyanov", "GitHub": "karastoyanov"},{"name": "Raya Petkova", "GitHub": "rayapetkova"}]}'
+LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GPL-3.0 license"
 LABEL GitHub SourceCode="https://github.com/SoftUni-Discord-Community/skill_forge"
 
