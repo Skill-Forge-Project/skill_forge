@@ -102,14 +102,14 @@
                         <div class="radio-buttons">
                             {% if reported_quest.report_status in ("In Progress", "Not Resolved") %}
                                 <input type="radio" id="in_progress_option" name="progress_option" value="In Progress" checked>
-                                <label for="html">In Progress</label><br>
+                                <label for="html" id="in_progress_label" style="color: #03e9f4;">In Progress</label><br>
                                 <input type="radio" id="resolved_option" name="progress_option" value="Resolved">
-                                <label for="css">Resolved</label><br>
+                                <label for="css" id="resolved_label">Resolved</label><br>
                             {% else %}
                                 <input type="radio" id="in_progress_option" name="progress_option" value="In Progress">
-                                <label for="html">In Progress</label><br>
+                                <label for="html" id="in_progress_label" style="color: #03e9f4;">In Progress</label><br>
                                 <input type="radio" id="resolved_option" name="progress_option" value="Resolved" checked>
-                                <label for="css">Resolved</label><br>
+                                <label for="css" id="resolved_label">Resolved</label><br>
                             {% endif %}
                             
                             
@@ -122,6 +122,30 @@
             This script should be loaded after the initialization of the fields above! 
         -->
         <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+
+        <script>
+            function changeRadioButtonColors() {
+                let inProgressRadioButton = document.getElementById('in_progress_option')
+                let inProgressLabel = document.getElementById('in_progress_label')
+                inProgressRadioButton.addEventListener('click', changeColorInProgressButtonEvent)
+
+                let resolvedRadioButton = document.getElementById('resolved_option')
+                let resolvedLabel = document.getElementById('resolved_label')
+                resolvedRadioButton.addEventListener('click', changeColorResolvedButtonEvent)
+
+                function changeColorInProgressButtonEvent(event) {
+                    inProgressLabel.style.color = '#03e9f4'
+                    resolvedLabel.style.color = ''
+                }
+
+                function changeColorResolvedButtonEvent(event) {
+                    resolvedLabel.style.color = '#03e9f4'
+                    inProgressLabel.style.color = ''
+                }
+            }
+
+            changeRadioButtonColors()
+        </script>
         
     </body>
 </html>
