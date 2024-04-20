@@ -44,6 +44,10 @@
                         <input type="hidden" name="quest_id" value="{{ quest.quest_id }}">
                     </div>
                     <div class="input-row">
+                        <h4><strong class="row-label">Report Reason:</strong></h4>
+                        {{ reported_quest.report_reason }}
+                    </div>
+                    <div class="input-row">
                         <h4><strong class="row-label">Quest Name: </strong></h4>
                         <input type="text" name="quest_name" id="quest_name_input" class="text_input" value="{{ quest.quest_name }}">
                     </div>
