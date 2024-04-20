@@ -31,6 +31,11 @@ class ReportedQuest(db.Model):
     last_updated = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
     report_reason = db.Column(db.Text, nullable=True)
     admin_assigned = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=True)
+    
+    # Specify the foreign keys explicitly
+    reported_quest = db.relationship("Quest", foreign_keys=[quest_id], backref="reported_quests")
+    user_reporter = db.relationship("User", foreign_keys=[report_user_id], backref="reported_quests")
+    admin = db.relationship("User", foreign_keys=[admin_assigned], backref="assigned_reports")
 
 # Handle quest edit from the Admin Panel
 @app.route('/edit_quest_db', methods=['GET', 'POST'])
@@ -46,9 +51,9 @@ def edit_quest_db():
     output_tests = request.form['quest_test_outputs']
     
     quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.get(quest_id)
+    reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
     print(quest)
-    print(reported_quest.report_status)
+    print(reported_quest)
     if quest:
         quest.quest_name = quest_name
         quest.language = quest_language
@@ -89,14 +94,16 @@ def open_edit_quest(quest_id):
 @app.route('/edit_reported_quest/<quest_id>')
 def open_edit_reported_quest(quest_id):
     quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.get(quest_id)
+    reported_quest = ReportedQuest.query.filter_by(quest_id=quest.quest_id).first()
     return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)
 
 
 # Route to handle `Report Quest` Button
 @login_required
 @app.route('/report_quest/<curr_quest_id>')
-def report_quest(curr_quest_id):
+def report_quest(curr_quest_id, report_reason='no reason'):
+    print(dict(request.args))
+    request_arguments = dict(request.args)  # This prints {'report_reason': 'some_value'}
     quest = Quest.query.get(curr_quest_id)
     
     # Generate random suffix
@@ -119,7 +126,7 @@ def report_quest(curr_quest_id):
         report_id=report_id,
         report_status = 'Not Resolved',
         report_user_id = current_user.user_id,
-        report_reason = 'nothing for now',  # This needs to be changed
+        report_reason = request_arguments['report_reason'],  # This needs to be changed
         admin_assigned = 'USR-751694'  # This needs to be changed
     )
 

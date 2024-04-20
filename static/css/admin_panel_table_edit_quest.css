@@ -111,13 +111,7 @@ th {
 }
 
 td {
-  font-family: 'JetBrainsMonoRegular', sans-serif;
-  font-size: 14px;
-  color: #03e9f4 !important;
-  width: auto !important;
-}
-
-td {
   color: #d2d0d0 !important;
   width: auto !important;
+  font-size: 12px;
 }
