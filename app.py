@@ -64,16 +64,21 @@ class User(UserMixin, db.Model):
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
     password = db.Column(db.String(120), nullable=False)
-    total_solved_quests = db.Column(db.Integer, default=0)
-    total_python_quests = db.Column(db.Integer, default=0)
-    total_java_quests = db.Column(db.Integer, default=0)
-    total_javascript_quests = db.Column(db.Integer, default=0)
-    total_csharp_quests = db.Column(db.Integer, default=0)
-    total_submited_quests = db.Column(db.Integer, default=0)
-    total_approved_submited_quests = db.Column(db.Integer, default=0)
-    total_rejected_submited_quests = db.Column(db.Integer, default=0)
-    total_pending_submited_quests = db.Column(db.Integer, default=0)
-    
+    total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_python_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_java_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_javascript_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_csharp_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_approved_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_rejected_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    total_pending_submited_quests = db.Column(db.Integer, default=0, nullable=False)
+    facebook_profile = db.Column(db.String(120), default=" ")
+    instagram_profile = db.Column(db.String(120), default=" ")
+    github_profile = db.Column(db.String(120), default=" ")
+    discord_id = db.Column(db.String(120), default=" ")
+    linked_in = db.Column(db.String(120), default=" ")
+
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email):
         self.username = username
@@ -103,11 +108,11 @@ class User(UserMixin, db.Model):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
 
-# Update user information form
-@login_required
-@app.route('/update_user_info', methods=['POST'])
-def update_user_info():
-    user_first_name = request.form['first_name']
+# # Update user information form
+# @login_required
+# @app.route('/update_user_info', methods=['POST'])
+# def update_user_info():
+#     user_first_name = request.form['first_name']
 
 
 
@@ -237,13 +242,25 @@ def open_user_profile():
     user = User.query.get(user_id)
     user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
     
+    # Get the user social media links
+    user_facebook = User.query.get(user_id).facebook_profile
+    user_instagram = User.query.get(user_id).instagram_profile
+    user_github = User.query.get(user_id).github_profile
+    user_discord = User.query.get(user_id).discord_id
+    user_linked_in = User.query.get(user_id).linked_in
+    
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
 
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
                            avatar=avatar_base64, 
-                           user_solved_quests=user_solved_quests)
+                           user_solved_quests=user_solved_quests,
+                           user_facebook=user_facebook,
+                           user_instagram=user_instagram,
+                           user_github=user_github,
+                           user_discord=user_discord,
+                           user_linked_in=user_linked_in)
 
 # Route to handle the user profile (self-open)
 @login_required
@@ -303,10 +320,20 @@ def user_self_update():
     new_first_name = request.form.get('change_first_name')
     new_last_name = request.form.get('change_last_name')
     new_email_address = request.form.get('change_email')
+    fb_link = request.form.get('change_facebook')
+    instagram_link = request.form.get('change_instagram')
+    gh_link = request.form.get('change_github')
+    discord_id = request.form.get('change_discord')
+    linked_in_link = request.form.get('change_linkedin')
     user = User.query.get(current_user_id)
     user.first_name = new_first_name
     user.last_name = new_last_name
     user.email = new_email_address
+    user.facebook_profile = fb_link
+    user.instagram_profile = instagram_link
+    user.github_profile = gh_link
+    user.discord_id = discord_id
+    user.linked_in = linked_in_link
     db.session.commit()
     return redirect(url_for('open_user_profile'))
 
