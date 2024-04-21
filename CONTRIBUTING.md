@@ -9,10 +9,10 @@ Before contributing, please familiarize yourself with our Code of Conduct. We ex
 
 ### **How to Contribute**
 
-#### Fork the Repository: 
+#### :one: Fork the Repository: 
 Start by forking the main repository to your GitHub account. 
 
-#### Clone the Repository: 
+#### :two: Clone the Repository: 
 Clone the forked repository to your local machine.
 
 ```bash
@@ -47,34 +47,33 @@ pip install -r requirements.txt --no-cache
 apt install python3 nodejs mono-complete openjdk-17-jdk-headless -y
 ```
 
-Create a Branch: Before making any changes, create a new branch to work on.
+#### :three: Create a Branch:
+Before making any changes, create a new branch to work on. Ensure your branch name is descriptive of the feature or fix you're implementing.
 
 ```bash
 git checkout -b feature-name
 ```
 
-Ensure your branch name is descriptive of the feature or fix you're implementing.
-
-#### Make Changes:
+#### :four: Make Changes:
 Make your desired changes to the codebase. Ensure that your changes adhere to our coding standards and naming conventions.
 
-#### Test Your Changes: 
+#### :five: Test Your Changes: 
 Before submitting a pull request, test your changes thoroughly to ensure they function as intended and don't introduce any regressions.
 
-#### Commit Your Changes: 
+#### :six: Commit Your Changes: 
 Once you're satisfied with your changes, commit them with a clear and descriptive commit message.
 
 ```bash
 git commit -m "Brief summary of changes"
 ```
 
-#### Push Changes: 
+#### :seven: Push Changes: 
 Push your changes to your forked repository.
 ```bash
 git push origin feature-name
 ```
 
-#### Submit a Pull Request: 
+#### :eight: Submit a Pull Request: 
 Finally, submit a pull request from your forked repository to the `development` branch in the origin repository. Be sure to provide a detailed description of your changes in the pull request.
 
 ### Coding Standards
