@@ -12,7 +12,8 @@ Before contributing, please familiarize yourself with our Code of Conduct. We ex
 #### Fork the Repository: 
 Start by forking the main repository to your GitHub account.
 
-Clone the Repository: Clone the forked repository to your local machine.
+#### Clone the Repository: 
+Clone the forked repository to your local machine.
 
 ```bash
 git clone https://github.com/your-username/repository.git
@@ -26,23 +27,27 @@ git checkout -b feature-name
 
 Ensure your branch name is descriptive of the feature or fix you're implementing.
 
-Make Changes: Make your desired changes to the codebase. Ensure that your changes adhere to our coding standards and naming conventions.
+#### Make Changes:
+Make your desired changes to the codebase. Ensure that your changes adhere to our coding standards and naming conventions.
 
-Test Your Changes: Before submitting a pull request, test your changes thoroughly to ensure they function as intended and don't introduce any regressions.
+#### Test Your Changes: 
+Before submitting a pull request, test your changes thoroughly to ensure they function as intended and don't introduce any regressions.
 
-Commit Your Changes: Once you're satisfied with your changes, commit them with a clear and descriptive commit message.
+#### Commit Your Changes: 
+Once you're satisfied with your changes, commit them with a clear and descriptive commit message.
 
 ```bash
 git commit -m "Brief summary of changes"
 ```
 
-Push Changes: 
+#### Push Changes: 
 Push your changes to your forked repository.
 ```bash
 git push origin feature-name
 ```
 
-Submit a Pull Request: Finally, submit a pull request from your forked repository to the `development` repository. Be sure to provide a detailed description of your changes in the pull request.
+#### Submit a Pull Request: 
+Finally, submit a pull request from your forked repository to the `development` branch in the origin repository. Be sure to provide a detailed description of your changes in the pull request.
 
 ### Coding Standards
 
