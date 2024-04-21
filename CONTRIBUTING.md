@@ -10,13 +10,41 @@ Before contributing, please familiarize yourself with our Code of Conduct. We ex
 ### **How to Contribute**
 
 #### Fork the Repository: 
-Start by forking the main repository to your GitHub account.
+Start by forking the main repository to your GitHub account. 
 
 #### Clone the Repository: 
 Clone the forked repository to your local machine.
 
 ```bash
 git clone https://github.com/your-username/repository.git
+```
+
+In order to be able to start development instance of the application you will need few prerequisites:
+
+* Postgres database running on your local machnine. Setup PostgreSQL server or deploy Docker container locally. Check official [DockerHub](https://hub.docker.com/_/postgres) image instructions for more details.
+
+* Create your own environment file with the application properties:
+
+```text
+# Server Settings
+SERVER_IP_ADDR = 'your-local-ip-address'
+DEBUG_PORT = 'flask-debug-port' #You can set 5000 as default Flask settings
+
+# Database Settings (change the values with your own)
+DB_NAME_PROD='postgres-db-name'
+DB_USER_PROD='postgres-root-user'
+DB_PASSWORD_PROD='postgres-root-password'
+SQLALCHEMY_DATABASE_URI_DEV='postgresql://<root-username>:<root-password>@<db-host-ip>:<db-host-port>/<db-name>'
+```
+
+* Install Python requirements. It is recommended to crate Python virtual env
+```bash
+pip install -r requirements.txt --no-cache
+```
+
+* In order to run succesfully the code runners, micro applications which execute the user code in the backend, you need to install the folloiwng packages on your dev server
+```bash
+apt install python3 nodejs mono-complete openjdk-17-jdk-headless -y
 ```
 
 Create a Branch: Before making any changes, create a new branch to work on.
