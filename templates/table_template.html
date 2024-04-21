@@ -5,11 +5,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-  <title>Python Tasks</title>
+  {% if language == "Python" %}
+  <title>Python Quests</title>
+  {% endif %}
+  {% if language == "Java" %}
+  <title>Java Quests</title>
+  {% endif %}
+  {% if language == "JavaScript" %}
+  <title>JavaScript Quests</title>
+  {% endif %}
+  {% if language == "C#" %}
+  <title>C# Quests</title>
+  {% endif %}
   <!-- Import Navigation bar styles -->
   <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='tasks_template.css') }}"> -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/task_page.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.2/dist/bootstrap-table.min.css" rel="stylesheet">
@@ -31,7 +43,39 @@
   {% include 'navbar.html' %}
 
   <div class="top_label">
-    <h2>All Quests</h2>
+    {% if language == "Python" %}
+    <h2>Python Quests</h2>
+      <p class="top_label description">Python is a high-level, versatile programming language renowned for 
+        its simplicity and readability. Its elegant syntax and dynamic typing make it an excellent 
+        choice for beginners and experienced developers alike. Whether you're embarking on Novice Quests to hone your skills, 
+        tackling Adventurous Challenges to push your limits, or venturing into Epic Campaigns to conquer complex problems, 
+        Python offers the flexibility and power to bring your ideas to life. As you code, gain XP, climb ranks let Python be 
+        your gateway to unlocking new levels of mastery and creativity.</p>
+    {% endif %}
+    {% if language == "Java" %}
+    <h2>Java Quests</h2>
+      <p class="top_label description">Java is a versatile and widely-used programming language
+        known for its platform independence and robustness. Whether you're delving into Novice Quests to grasp the fundamentals, 
+        taking on Adventurous Challenges to sharpen your skills, or immersing yourself in Epic Campaigns to conquer complex problems, 
+        Java empowers you to achieve your goals. As you code, earn XP, progress through ranks let Java be your companion on the journey
+         to mastering this powerful language and unlocking your full potential.</p>
+    {% endif %}
+    {% if language == "JavaScript" %}
+    <h2>JavaScript Quests</h2>
+      <p class="top_label description">JavaScript is the language of the web, 
+        empowering developers to create interactive and dynamic experiences across browsers and platforms. Whether you're venturing 
+        into Novice Quests to grasp the basics, taking on Adventurous Challenges to refine your skills, or delving into Epic Campaigns to 
+        test your skills, JavaScript offers boundless opportunities for innovation. As you code, earn XP, ascend ranks, let JavaScript be 
+        your guide to unlocking new realms of possibility and achievement.</p>
+    {% endif %}
+    {% if language == "C#" %}
+    <h2>C# Quests</h2>
+    <p class="top_label description">C# is a robust and versatile programming language 
+      developed by Microsoft, designed for building a wide range of applications on the .NET framework. 
+      Whether you're embarking on Novice Quests to solidify your understanding, tackling Adventurous Challenges to expand your horizons, 
+      or diving into Epic Campaigns to tackle ambitious and complex problems, C# equips you with the tools to succeed. As you write code, accumulate XP, 
+      advance through ranks and let C# be your conduit to reaching new heights of proficiency and accomplishment.</p>
+    {% endif %}
   </div>
 
   <div class="container-fluid">
@@ -83,5 +127,8 @@
 
 
 </body>
-
+<footer>
+  <!-- Include Footer template -->
+  {% include 'footer.html' %}
+</footer>
 </html>

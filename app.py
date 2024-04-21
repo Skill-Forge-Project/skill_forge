@@ -1,12 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify, abort
+from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from sqlalchemy import Enum, ARRAY
+from sqlalchemy import Enum
 from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, unittest, random, string, requests, json
+import os, psycopg2, base64, subprocess, random, string, requests, json
 from datetime import datetime
 from login_forms import LoginForm, RegistrationForm
 # Import test runner
@@ -186,8 +186,12 @@ def hello():
 @login_required
 @app.route('/main')
 def main_page():
+    with open('main_page_title', 'r') as file:
+        title_content = file.read()
+    with open('main_page_info', 'r') as file:
+        content = file.read()  
     server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    return render_template('main.html', server_time=server_time)
+    return render_template('main.html', server_time=server_time, title_content=title_content, content=content)
 
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)

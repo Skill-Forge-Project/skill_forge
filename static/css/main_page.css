@@ -38,10 +38,26 @@ body {
 .main_title_container {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
     margin-bottom: 20px;
     color: #d2d0d0;
+    text-align: center;
+}
+
+.main_title_container.description {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+    padding-left: 20px;
+    text-align: center;
+    justify-content: center;
+    text-align: center;
+
 }
 
 .main_title {
