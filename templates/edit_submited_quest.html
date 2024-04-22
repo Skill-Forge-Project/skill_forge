@@ -141,9 +141,8 @@
                                     <div class="p-3">
                                         <h6>Comments</h6>
                                     </div>
-                                    <div class="mt-3 d-flex flex-row align-items-center p-3 form-color"> <img
-                                            src="https://i.imgur.com/zQZSWrt.jpg" width="50"
-                                            class="rounded-circle mr-2">
+                                    <div class="mt-3 d-flex flex-row align-items-center p-3 form-color"> 
+                                        <img src="data:image/jpeg;base64,{{ user_avatar }}" width="50" class="rounded-circle mr-2">
                                         <textarea class="form-control" placeholder="Enter your comment..." name="submited_quest_comment"></textarea>
                                     </div>
                                     <div class="submit-comment-btn-area">
@@ -155,13 +154,15 @@
                                     {% if comment|length > 1 %}
                                         <div class="mt-2">
                                             <div class="d-flex flex-row p-3">
-                                                <img src="https://i.imgur.com/zQZSWrt.jpg" width="40" height="40"
+                                                <img src="data:image/jpeg;base64,{{ comment['user_avatar'] }}" width="40" height="40"
                                                     class="rounded-circle mr-3">
                                                 <div class="w-100">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <div class="d-flex flex-row align-items-center">
                                                             <span class="mr-2">{{comment["username"]}}</span>
-                                                            <small class="c-badge">Top Comment</small>
+                                                            {% if comment["user_role"] == "Admin" %}
+                                                            <small class="c-badge">Admin</small>
+                                                            {% endif %}
                                                         </div>
                                                         <small>{{comment["posted_at"]}}</small>
                                                     </div>
