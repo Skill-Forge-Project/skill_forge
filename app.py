@@ -45,6 +45,7 @@ from edit_quest_form import edit_quest_form_bp, ReportedQuest
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
+from admin_submit_quest import quest_post_comment_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 from user_solutions import SubmitedSolution # handle as Blueprint!!!
@@ -359,7 +360,9 @@ def open_quests_table(language):
 def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
-    return render_template('curr_task_template.html', quest=quest)
+    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    
+    return render_template('curr_task_template.html', quest=quest, user_avatar=user_avatar)
 
 # Route to handle solution submission
 @login_required
