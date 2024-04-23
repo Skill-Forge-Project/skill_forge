@@ -358,7 +358,6 @@ def user_self_update():
 def open_quests_table(language):
     # Retrieve all quests from the database
     all_quests = Quest.query.filter(Quest.language == language).all()
-    
     # Retrieve all users from the database
     all_users = User.query.all()
     return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
@@ -370,8 +369,6 @@ def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
-
-    
     return render_template('curr_task_template.html', quest=quest, user_avatar=user_avatar)
 
 # Route to handle solution submission
@@ -385,13 +382,11 @@ def submit_solution():
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
     current_quest_difficulty = request.form.get('quest_difficulty')
-    
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
         quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)

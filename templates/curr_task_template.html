@@ -112,7 +112,7 @@
                                 <button type="submit" id="submitComment" class="submit-button submit-comment-btn">
                                     <a href="{{ url_for('quest_post_comment') }}"></a>Comment</button>
                             </div>
-                            {% for comment in quest.quest_comments %}
+                            {% for comment in quest.quest_comments|reverse %}
                             {% if comment|length > 1 %}
                             <div class="mt-2">
                                 <div class="d-flex flex-row p-3">

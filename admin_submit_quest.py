@@ -133,7 +133,7 @@ def quest_post_comment():
 
     # Get the quest from the database
     quest = Quest.query.filter_by(quest_id=quest_id).first()
-    
+
     # Append the new comment to the quest's comments list
     data = {
         'username': current_username,
@@ -143,7 +143,7 @@ def quest_post_comment():
         'comment': comment
         }
     all_quest_comments.append(data)
-    quest.quest_comments = all_quest_comments
+
     
     # Commit the changes to the database
     db.session.commit()
