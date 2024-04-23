@@ -9,7 +9,7 @@ This file handles the functionality for submiting a quest from the Admin Panel.
 from __main__ import app, db
 # from app import app, db # Use this instead of the above line for db migrations
 from datetime import datetime
-from flask import Blueprint, request, redirect, url_for, send_file, models
+from flask import Blueprint, request, redirect, url_for
 from sqlalchemy.dialects.postgresql import JSON
 from flask_login import current_user, login_required
 import random, string, base64
@@ -129,6 +129,7 @@ def quest_post_comment():
     user_role = current_user.user_role
     current_username = current_user.username
     current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
 
     # Get the quest from the database
     quest = Quest.query.filter_by(quest_id=quest_id).first()
@@ -153,12 +154,5 @@ def quest_post_comment():
                             user_role=user_role,
                             user_id=user_id))
 
-# @login_required
-# @app.route('/get_avatar/<user_id>', methods=['GET'])
-# def get_avatar(user_id):
-#     user = User.query.get(user_id)
-#     print(user)
-#     avatar = user.avatar
-#     return send_file(base64.b64decode(avatar), mimetype='image/png')
     
     

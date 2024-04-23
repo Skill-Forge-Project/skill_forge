@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -117,6 +117,14 @@ class User(UserMixin, db.Model):
 #     user_first_name = request.form['first_name']
 
 
+#  Get the user's avatar, used in the comments section
+@login_required
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    user = User.query.filter_by(user_id=user_id).first()
+    print(user.username)
+    avatar = user.avatar
+    return avatar
 
 @login_manager.user_loader
 def load_user(user_id):
