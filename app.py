@@ -81,12 +81,13 @@ class User(UserMixin, db.Model):
     linked_in = db.Column(db.String(120), default=" ")
 
     # Class constuctor
-    def __init__(self, username, first_name, last_name, password, email):
+    def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
         self.email = email
+        self.avatar = avatar
         self.generate_user_id()
         
     # Generate random UserID
@@ -361,6 +362,7 @@ def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+
     
     return render_template('curr_task_template.html', quest=quest, user_avatar=user_avatar)
 
