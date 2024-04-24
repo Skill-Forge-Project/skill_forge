@@ -161,18 +161,23 @@ def quest_post_comment():
 
 # Delete comment from the comments section (Admin role is required)
 @app.route('/delete_comment', methods=['POST'])
-def delete_comment(quest_id, comment_index):
-    quest_id = request.form['quest_id']
-    
-    # Get the quest from the database
-    quest = Quest.query.filter_by(quest_id=quest_id).first()
-    print(quest)
+def delete_comment():
+
+    quest_id = request.form.get('quest_id')
+    comment_index = int(request.form.get('comment_index'))
     print(comment_index)
 
-    deleted_comment = quest.quest_comments.pop(comment_index)
-    db.session.commit()
-    print("Comment deleted successfully.", "success")
-
-    
-    return redirect(url_for('open_curr_quest', quest_id=quest_id))
-    
+    # Get the quest from the database
+    quest = Quest.query.filter_by(quest_id=quest_id).first()
+    quest_comment = quest.quest_comments[comment_index]
+    reversed_comments = list(reversed(quest.quest_comments))
+    if quest:
+        if 0 <= comment_index < len(quest.quest_comments):
+            reversed_comments.pop(comment_index)
+            reversed_comments = list(reversed(reversed_comments))
+            quest.quest_comments = reversed_comments
+            db.session.commit()
+            print("Comment deleted successfully.")
+            return redirect(url_for('open_curr_quest', quest_id=quest_id))
+    else:
+        print("Error: Comment could not be deleted.")

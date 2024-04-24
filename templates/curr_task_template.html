@@ -117,7 +117,8 @@
                             {% if comment|length > 1 %}
                             <div class="mt-2">
                                 <div class="d-flex flex-row p-3">
-                                    <img src="{{ url_for('get_avatar', user_id=comment['user_id']) }}" width="40" height="40" class="rounded-circle mr-3">                                    <div class="w-100">
+                                    <img src="{{ url_for('get_avatar', user_id=comment['user_id']) }}" width="40" height="40" class="rounded-circle mr-3">                                    
+                                    <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex flex-row align-items-center">
                                                 <span class="mr-2">{{comment["username"]}}</span>
@@ -127,7 +128,8 @@
                                             </div>
                                             <small>{{comment["posted_at"]}}
                                                 {% if user_role == "Admin" %}
-                                                <button type="button" class="btn btn-danger btn-sm delete-comment" data-comment-id="{{ loop.index0 }}">Delete</button>                                                {% endif %}
+                                                <button type="button" class="btn btn-danger btn-sm delete-comment" data-comment-id="{{ loop.index0 }}">Delete</button>                                                
+                                                {% endif %}
                                             </small>
                                             
                                         </div>
@@ -173,6 +175,39 @@
         }
 
         reportReasonHandle()
+    </script>
+    <script>
+        // Add event listener to handle delete comment button click
+        document.querySelectorAll('.delete-comment').forEach(button => {
+            button.addEventListener('click', function() {
+                const commentIndex = this.getAttribute('data-comment-id');
+                deleteComment(commentIndex);
+            });
+        });
+    
+        // Function to send AJAX request to delete comment
+        function deleteComment(commentIndex) {
+            const questId = "{{ quest.quest_id }}"; // Replace with actual quest ID
+            const formData = new FormData();
+            formData.append('quest_id', questId);
+            formData.append('comment_index', commentIndex);
+
+            fetch('/delete_comment', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Reload the page or update the comments section as needed
+                    window.location.reload(); // Example: Reload the page
+                } else {
+                    console.error('Failed to delete comment');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
     </script>
 </body>
 <footer>
