@@ -95,6 +95,7 @@
     <form action="/quest_post_comment" method="post">
         <input type="hidden" name="quest_id" value="{{ quest.quest_id }}">
         <input type="hidden" name="quest_comments" value="{{ quest.quest_comments }}">
+        <input type="hidden" name="user_role" value="{{ user_role }}">
         <div>
             <div class="container mt-5 mb-5">
                 <div class="row height d-flex justify-content-center align-items-center">
@@ -124,7 +125,12 @@
                                                 <small class="c-badge">Admin</small>
                                                 {% endif %}
                                             </div>
-                                            <small>{{comment["posted_at"]}}</small>
+                                            <small>{{comment["posted_at"]}}
+                                                {% if user_role == "Admin" %}
+                                                    <button type="button" class="btn btn-danger btn-sm" style="margin-left: 2px">Delete</button>
+                                                {% endif %}
+                                            </small>
+                                            
                                         </div>
                                         <p class="text-justify comment-text mb-0" name="submited_quest_comment">
                                             {{comment["comment"]}}</p>

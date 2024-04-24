@@ -130,6 +130,8 @@ def quest_post_comment():
     current_username = current_user.username
     current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    
+    print(comment)
 
     # Get the quest from the database
     quest = Quest.query.filter_by(quest_id=quest_id).first()
@@ -143,6 +145,7 @@ def quest_post_comment():
         'comment': comment
         }
     all_quest_comments.append(data)
+    quest.quest_comments = all_quest_comments
 
     
     # Commit the changes to the database

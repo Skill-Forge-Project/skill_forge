@@ -122,7 +122,6 @@ class User(UserMixin, db.Model):
 @app.route('/get_avatar/<user_id>', methods=['GET'])
 def get_avatar(user_id):
     user = User.query.filter_by(user_id=user_id).first()
-    print(user.username)
     avatar = user.avatar
     return avatar
 
@@ -369,7 +368,11 @@ def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
-    return render_template('curr_task_template.html', quest=quest, user_avatar=user_avatar)
+    user_role = current_user.user_role
+    return render_template('curr_task_template.html', 
+                           quest=quest, 
+                           user_avatar=user_avatar,
+                           user_role=user_role)
 
 # Route to handle solution submission
 @login_required
