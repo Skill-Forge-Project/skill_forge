@@ -127,8 +127,7 @@
                                             </div>
                                             <small>{{comment["posted_at"]}}
                                                 {% if user_role == "Admin" %}
-                                                    <button type="button" class="btn btn-danger btn-sm" style="margin-left: 2px">Delete</button>
-                                                {% endif %}
+                                                <button type="button" class="btn btn-danger btn-sm delete-comment" data-comment-id="{{ loop.index0 }}">Delete</button>                                                {% endif %}
                                             </small>
                                             
                                         </div>
