@@ -228,6 +228,14 @@ def open_admin_panel():
     
     return redirect(url_for('login'))
 
+# Open user for editing from the Admin Panel
+@login_required
+@app.route('/edit_user/<user_id>')
+def open_edit_user(user_id):
+    # Retrieve the specific user from the database, based on the user_id
+    user = User.query.get(user_id)
+    return render_template('edit_user.html', user=user)
+
 # Route to handle the user profile (self-open)
 @login_required
 @app.route('/my_profile', methods=['POST', 'GET'])

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='./images/anvil.png') }}">
+        <title>Python Tasks</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_quest.css') }}">
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Include CodeMirror library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <!-- Include CodeMirror theme (optional) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+        <!-- Include CodeMirror CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+        <!-- Include CodeMirror mode (e.g., Python) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+        <!-- Include bootstrap dataTables libraries -->
+        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+    </head>
+
+    <body>
+        <!-- Include Navbar template -->
+        {% include 'navbar.html' %}
+
+        <div class="content-section">
+            <div id="editUserContent" class="content">
+                <form action="#" method="post">
+                    <div class="input-row">
+                        <h4><strong class="row-label">User ID: </strong></h4>
+                        <input type="text" name="user_id" id="user_id_input" class="text_input" value="{{ user.user_id }}" readonly>
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">User Role</strong></h4>
+                        <select name="user_role" id="user_role_input" class="dropdown_input">
+                            <option value="User" {% if user.user_role == 'User' %} selected {% endif %}>User</option>
+                            <option value="Admin" {% if user.user_role == 'Admin' %} selected {% endif %}>Admin</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">Username: </strong></h4>
+                        <input type="text" name="username" id="username_input" class="text_input" value="{{ user.username }}">
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">Email: </strong></h4>
+                        <input type="text" name="user_email" id="user_email_input" class="text_input" value="{{ user.email }}" readonly>
+                    </div>
+                    <div class="btn-row">
+                        <button type="submit" id="editUser" class="submit-button">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        <!-- JavaScript script to handle the CodeMirror custom fields. 
+            This script should be loaded after the initialization of the fields above! 
+        -->
+        <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+        
+    </body>
+</html>
