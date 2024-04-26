@@ -141,9 +141,17 @@ def register():
             return render_template('register.html', error='Passwords do not match')
 
         # Check if the email or username is already in use
-        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
+        existing_user = User.query.filter(User.username == username).first()
+        existing_email = User.query.filter(User.email == email).first()
+        errors = []
         if existing_user:
-            return render_template('register.html', error='Email or username already in use')
+            errors.append('Username already in use')
+        if existing_email:
+            errors.append('Email already in use')
+            return render_template('error_user_exists.html', errors=errors)
+        
+
+        
 
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
