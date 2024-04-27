@@ -140,7 +140,7 @@ def send_email_token():
     if email and re.match(email_regex, email):
         # Generate a unique token
         token = secrets.token_urlsafe(32)
-        print(f"Token: {token}")
+
         # Calculate expiration time (60 minutes from now)
         expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
         user_mail = request.form.get('email_address')
