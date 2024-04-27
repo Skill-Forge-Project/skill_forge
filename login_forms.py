@@ -36,9 +36,10 @@ def validate_password(form, password):
         flash('Passwords must match', 'error')
         errors.append('Passwords must match')
     
-    if ValidationError:
+    if errors:
         raise ValidationError(errors)
     
+    return password
 
     
 

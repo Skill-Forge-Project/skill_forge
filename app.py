@@ -7,8 +7,12 @@ from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
-from login_forms import LoginForm, RegistrationForm
+from login_forms import LoginForm, RegistrationForm, validate_password
 from email_functionality import send_welcome_mail, send_reset_email
+# Import flask forms and validators
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError
 # Import test runners
 from test_runners import run_python, run_javascript, run_java, run_csharp
 
@@ -114,7 +118,6 @@ class User(UserMixin, db.Model):
 # ----------------- User Functionality ----------------- #
 
 # ----------------- Reset Password Functionality ----------------- #
-
 class ResetToken(db.Model):
     __tablename__ = 'reset_tokens'
     user_id = db.Column(db.String(10), db.ForeignKey('users.user_id'), nullable=False)
@@ -122,7 +125,7 @@ class ResetToken(db.Model):
     user_email = db.Column(db.String(120), nullable=False)
     token = db.Column(db.String(64), primary_key=True)
     expiration_time = db.Column(db.DateTime, nullable=False)
-
+    
 # Route to open the forgot password form
 @app.route('/forgot_password')
 def open_forgot_password():
@@ -135,18 +138,20 @@ def open_reset_password(token, user_id, username, expiration_time):
 @app.route('/send_email_token', methods=['POST'])
 def send_email_token():
     email = request.form.get('email_address')
-    email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    if len(email) == 0:
+        flash('Please provide an email address.', 'error')
+        return redirect(url_for('open_forgot_password'))
     
-    if email and re.match(email_regex, email):
-        # Generate a unique token
-        token = secrets.token_urlsafe(32)
-
-        # Calculate expiration time (60 minutes from now)
-        expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
-        user_mail = request.form.get('email_address')
+    user_mail = request.form.get('email_address')
+    current_user = User.query.filter_by(email=user_mail).first()
+    if current_user:
         user_id = User.query.filter_by(email=email).first().user_id
         username = User.query.filter_by(email=email).first().username
-
+        # Generate a unique token
+        token = secrets.token_urlsafe(32)
+        print(f'Token: {token}')
+        # Calculate expiration time (60 minutes from now)
+        expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
         new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
         db.session.add(new_token)
         db.session.commit()
@@ -154,9 +159,8 @@ def send_email_token():
         # Send email with reset link containing the token
         send_reset_email(token, username, email, expiration_time)
         return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    else:
-        flash('Please provide an email address.')
-        return redirect(url_for('open_forgot_password'))
+    flash('User with this email does not exist.', 'error')
+    return redirect(url_for('open_forgot_password'))
 
 @app.route('/save_new_password', methods=['POST'])
 def update_new_password():
@@ -166,15 +170,24 @@ def update_new_password():
     user_token = request.form.get('user_token')
     new_password = request.form.get('new_password')
     confirm_password = request.form.get('confirm_password')
-    
+    expiration_time = request.form.get('expiration_time')
+
+    # TO BE FIXED:
+        # Implement the password validation
+        # Implement the token validation
+        # Implement the expiration time validation
     if new_password != confirm_password:
-        flash('Passwords do not match.')
+        flash('Passwords do not match.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
     if user_token is None or user_token != token:
-        flash('Invalid token.')
+        flash('Invalid token.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
     if not new_password or not confirm_password:
-        flash('Please provide a password.')
+        flash('Please provide a password.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+
     
-    if new_password == confirm_password and user_token == token:
+    if new_password:
         user = User.query.get(user_id)
         user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
         used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
@@ -220,6 +233,7 @@ def register():
                         password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+        send_welcome_mail(form.email.data, form.username.data)
         flash('Your account has been created! You are now able to log in.', 'success')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)

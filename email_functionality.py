@@ -41,4 +41,4 @@ def send_reset_email(token, username, email, expiration_time):
     )
 
     client = mt.MailtrapClient(token=os.getenv("MAILTRAP_API_TOKEN"))
-    client.send(mail)
+    # client.send(mail)
