@@ -2,14 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
 @font-face {
     font-family: 'JetBrainsMonoRegular';
-    src: url('../fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    src: url('../fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
     font-family: 'JetBrainsMonoBold';
     src: url('../fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
 
 html {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
     background-size: cover;
     background-position: right bottom;
     background-color: #243b55;
@@ -51,18 +51,29 @@ body {
 }
 
 .login-box p {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
     margin-top: 20px;
     padding: 0px;
     color: #fff;
     text-align: center;
 }
 
-.login-box .user-box {
+.user-box {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
+    position: relative;
+}
+
+.user-box.input {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
+}
+
+.login-box.user-box {
     font-family: 'JetBrainsMonoRegular', sans-serif !important;
     position: relative;
 }
 
 .login-box .user-box input {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
     width: 100%;
     padding: 10px 0;
     font-size: 16px;
@@ -76,6 +87,7 @@ body {
 
 
 .login-box .user-box label {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
     position: absolute;
     top: 0;
     left: 0;

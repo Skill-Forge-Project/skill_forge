@@ -49,6 +49,8 @@ from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 from user_solutions import SubmitedSolution # handle as Blueprint!!!
 
+# ----------------- User Functionality ----------------- #
+
 # Define User model
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -108,6 +110,9 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
+
+# ----------------- User Functionality ----------------- #
+
 # ----------------- Reset Password Functionality ----------------- #
 
 class ResetToken(db.Model):
@@ -161,9 +166,6 @@ def update_new_password():
     user_token = request.form.get('user_token')
     new_password = request.form.get('new_password')
     confirm_password = request.form.get('confirm_password')
-
-    
-    print(user_id, username, token, user_token, new_password, confirm_password)
     
     if new_password != confirm_password:
         flash('Passwords do not match.')
@@ -183,6 +185,48 @@ def update_new_password():
 
 # ----------------- Reset Password Functionality ----------------- #
 
+
+# ----------------- Login and Register Functionality ----------------- #
+
+# Define routes for login and register pages
+@app.route('/', methods=['GET', 'POST'])
+def login():    
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            # Log in the user
+            login_user(user, force=True)
+            flash('Login successful!', 'success')
+            return redirect(url_for('main_page'))  # Redirect to the main page after login
+        else:
+            flash('Login unsuccessful. Please check your username and password.', 'danger')
+    return render_template('index.html', form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # Check if the email or username is already in use
+        existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
+        if existing_user:
+            flash('Email or username already in use', 'danger')
+            return redirect(url_for('register'))
+        
+        # Create a new user
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        new_user = User(email=form.email.data, username=form.username.data, 
+                        first_name=form.first_name.data, last_name=form.last_name.data, 
+                        password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in.', 'success')
+        return redirect(url_for('login'))  # Redirect to the login page after successful registration
+    return render_template('register.html', form=form)
+
+# ----------------- Login and Register Functionality ----------------- #
+
+
 #  Get the user's avatar, used in the comments section
 @login_required
 @app.route('/get_avatar/<user_id>', methods=['GET'])
@@ -199,59 +243,6 @@ with app.app_context():
     # Create the database tables
     db.create_all()
 
-# App route for Register
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if request.method == 'POST':
-        email = request.form['email']
-        username = request.form['username']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        password = request.form['password']
-        repeat_password = request.form['confirm']
-
-        # Check if passwords match
-        if password != repeat_password:
-            return render_template('register.html', error='Passwords do not match')
-
-        # Check if the email or username is already in use
-        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
-        if existing_user:
-            return render_template('register.html', error='Email or username already in use')
-
-        # Create a new user
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(email=email, username=username, first_name=first_name, last_name=last_name, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in.')
-        
-        send_welcome_mail(email, username)
-
-    return render_template('register.html', form=form)
-
-
-# App route for Login
-@app.route('/', methods=['GET', 'POST'])
-def login():    
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
-        if user:
-            # Create session for the user. This is needed for the login manager and for reading the data from the database
-            session['user_id'] = user.user_id
-        else:
-            # Return some error!!!!!!
-            pass
-        
-        # Log in the user
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, force = True)
-            return redirect(url_for('main_page'))
-        else:
-            flash('Login unsuccessful. Please check your username and password.', 'danger')
-    return render_template('index.html', form=form)
 
 
 @app.route('/')
