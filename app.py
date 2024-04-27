@@ -270,7 +270,7 @@ def open_admin_panel():
     all_submited_quests = SubmitedQuest.query.all()
 
     # Get the User ID for the session
-    logged_user_id = session['user_id']
+    logged_user_id = current_user.user_id
 
     # Get the user object with the User ID from the session
     currently_logged_user = User.query.get(logged_user_id)
@@ -297,13 +297,9 @@ def open_admin_panel():
 # Route to handle the user profile (self-open)
 @login_required
 @app.route('/my_profile', methods=['POST', 'GET'])
-def open_user_profile():
-    # If user is not logged in, redirect to login page
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
+def open_user_profile():    
     # Get the User ID for the session
-    user_id = session['user_id']
+    user_id = current_user.user_id
     
     # Get the user's solved quests from the database
     user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
@@ -353,10 +349,11 @@ def open_user_profile_view(username):
 
 
 # Change the User avatar route
+@login_required
 @app.route('/upload_avatar', methods=['POST'])
 def upload_avatar():
     # Get user ID from session or request parameters
-    user_id = session.get('user_id') or request.form.get('user_id')
+    user_id = current_user.user_id
     if user_id is None:
         # Handle case where user is not logged in
         return redirect(url_for('login'))
