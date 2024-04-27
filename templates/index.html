@@ -24,6 +24,9 @@
                 <div>
                     {{ form.password(class="user-box input", placeholder="Password", id="inputPassword") }}
                 </div>
+                <div class="frg-pass">
+                    <div style="cursor: pointer" onclick=location.href="{{ url_for('open_forgot_password') }}">Forgot Password</div>
+                </div>
                 <button type="submit" class="user-box btn">Login</button>
                 <button type="button" class="user-box btn" onclick=location.href="{{ url_for('register') }}">Register</button>
             </form>

@@ -6,12 +6,11 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json
-from datetime import datetime
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
 from login_forms import LoginForm, RegistrationForm
-# Import test runner
+from email_functionality import send_welcome_mail, send_reset_email
+# Import test runners
 from test_runners import run_python, run_javascript, run_java, run_csharp
-
 
 
 # Load the env variables
@@ -109,13 +108,80 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
+# ----------------- Reset Password Functionality ----------------- #
 
-# # Update user information form
-# @login_required
-# @app.route('/update_user_info', methods=['POST'])
-# def update_user_info():
-#     user_first_name = request.form['first_name']
+class ResetToken(db.Model):
+    __tablename__ = 'reset_tokens'
+    user_id = db.Column(db.String(10), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(80), nullable=False)
+    user_email = db.Column(db.String(120), nullable=False)
+    token = db.Column(db.String(64), primary_key=True)
+    expiration_time = db.Column(db.DateTime, nullable=False)
 
+# Route to open the forgot password form
+@app.route('/forgot_password')
+def open_forgot_password():
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def open_reset_password(token):
+    return render_template('reset_password.html')
+
+@app.route('/send_email_token', methods=['POST'])
+def send_email_token():
+    email = request.form.get('email_address')
+    email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    
+    if email and re.match(email_regex, email):
+        # Generate a unique token
+        token = secrets.token_urlsafe(32)
+        print(f"Token: {token}")
+        # Calculate expiration time (60 minutes from now)
+        expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
+        user_mail = request.form.get('email_address')
+        user_id = User.query.filter_by(email=email).first().user_id
+        username = User.query.filter_by(email=email).first().username
+
+        new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
+        db.session.add(new_token)
+        db.session.commit()
+
+        # Send email with reset link containing the token
+        send_reset_email(token, username, email, expiration_time)
+        return redirect(url_for('open_reset_password', token=token))
+    else:
+        flash('Please provide an email address.')
+        return redirect(url_for('open_forgot_password'))
+
+@app.route('/save_new_password', methods=['POST'])
+def update_new_password():
+    user_id = request.form.get('user_id')
+    username = request.form.get('username')
+    token = request.form.get('token')
+    user_token = request.form.get('user_token')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+
+    
+    print(user_id, username, token, new_password, confirm_password, user_token)
+    
+    if new_password != confirm_password:
+        flash('Passwords do not match.')
+    if user_token is None or user_token != token:
+        flash('Invalid token.')
+    if not new_password or not confirm_password:
+        flash('Please provide a password.')
+    
+    if new_password == confirm_password and user_token == token:
+        user = User.query.get(user_id)
+        user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        used_token = ResetToken.query.filter_by(token=token).first()
+        db.session.delete(used_token)
+        db.session.commit()
+        flash(f'Password for {username} successfully changed. Now you can log in with your new password.')
+    return redirect(url_for('hello'))
+
+# ----------------- Reset Password Functionality ----------------- #
 
 #  Get the user's avatar, used in the comments section
 @login_required
@@ -160,6 +226,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in.')
+        
+        send_welcome_mail(email, username)
 
     return render_template('register.html', form=form)
 
@@ -169,9 +237,7 @@ def register():
 def login():    
     form = LoginForm()
     if form.validate_on_submit():
-        print("Validation succesful!")
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
-        
         if user:
             # Create session for the user. This is needed for the login manager and for reading the data from the database
             session['user_id'] = user.user_id
@@ -199,7 +265,7 @@ def main_page():
         title_content = file.read()
     with open('main_page_info', 'r') as file:
         content = file.read()  
-    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    server_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('main.html', server_time=server_time, title_content=title_content, content=content)
 
 
@@ -423,7 +489,7 @@ def submit_solution():
             submission_id = f"{prefix}{suffix}"
         
         # Get the current time
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
         solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
