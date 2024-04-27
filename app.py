@@ -123,9 +123,9 @@ class ResetToken(db.Model):
 def open_forgot_password():
     return render_template('forgot_password.html')
 
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def open_reset_password(token):
-    return render_template('reset_password.html')
+@app.route('/reset_password/<user_id>/<username>/<token>/<expiration_time>', methods=['GET', 'POST'])
+def open_reset_password(token, user_id, username, expiration_time):
+    return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time)
 
 @app.route('/send_email_token', methods=['POST'])
 def send_email_token():
@@ -148,7 +148,7 @@ def send_email_token():
 
         # Send email with reset link containing the token
         send_reset_email(token, username, email, expiration_time)
-        return redirect(url_for('open_reset_password', token=token))
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
     else:
         flash('Please provide an email address.')
         return redirect(url_for('open_forgot_password'))
@@ -163,7 +163,7 @@ def update_new_password():
     confirm_password = request.form.get('confirm_password')
 
     
-    print(user_id, username, token, new_password, confirm_password, user_token)
+    print(user_id, username, token, user_token, new_password, confirm_password)
     
     if new_password != confirm_password:
         flash('Passwords do not match.')
@@ -175,10 +175,10 @@ def update_new_password():
     if new_password == confirm_password and user_token == token:
         user = User.query.get(user_id)
         user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        used_token = ResetToken.query.filter_by(token=token).first()
+        used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
         db.session.delete(used_token)
         db.session.commit()
-        flash(f'Password for {username} successfully changed. Now you can log in with your new password.')
+        print(f'Password for {username} successfully changed. Now you can log in with your new password.')
     return redirect(url_for('hello'))
 
 # ----------------- Reset Password Functionality ----------------- #
