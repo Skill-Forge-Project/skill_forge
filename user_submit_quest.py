@@ -13,7 +13,7 @@ from flask import Blueprint, request, redirect, url_for, render_template, sessio
 from flask_login import login_required, current_user
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.exc import IntegrityError
-import random, string, json
+import random, string, base64
 from admin_submit_quest import Quest
 
 
@@ -139,7 +139,11 @@ def user_submit_quest():
 @app.route('/open_submited_quest/<quest_id>')
 def open_submited_quest(quest_id):
     submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
-    return render_template('edit_submited_quest.html', submited_quest=submited_quest)
+    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    
+    return render_template('edit_submited_quest.html', 
+                           submited_quest=submited_quest,
+                           user_avatar=user_avatar)
 
 # Route to Approve the Submited Quest to the database class Quests
 @login_required
@@ -235,20 +239,22 @@ def post_comment():
     all_comments = eval(request.form['submited_quest_comments'])
     comment = request.form['submited_quest_comment']
     user_id = current_user.user_id
+    user_role = current_user.user_role
     username = current_user.username
-    
-    print(all_comments)
-    
+    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
     # Get the current time
     current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
     created_at = current_time
     
     current_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
-    data = {'username': username, 'user_id': user_id, 'posted_at': created_at, 'comment': comment}
+    data = {'username': username, 'user_id': user_id, 'user_role': user_role, 'user_avatar': user_avatar, 'posted_at': created_at, 'comment': comment}
     all_comments.append(data)
     current_quest.comments = all_comments
-    print(current_quest.comments)
     
     db.session.commit()
     
-    return render_template('edit_submited_quest.html', submited_quest=current_quest)
+    return redirect(url_for('open_submited_quest', 
+                            quest_id=submited_quest_id,
+                           submited_quest=current_quest, 
+                           user_role=user_role, 
+                           user_id=user_id))
