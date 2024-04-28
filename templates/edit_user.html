@@ -36,7 +36,7 @@
 
         <div class="content-section">
             <div id="editUserContent" class="content">
-                <form action="#" method="post">
+                <form action="{{ url_for('edit_user_db') }}" method="post">
                     <div class="input-row">
                         <h4><strong class="row-label">User ID: </strong></h4>
                         <input type="text" name="user_id" id="user_id_input" class="text_input" value="{{ user.user_id }}" readonly>

@@ -228,6 +228,23 @@ def open_admin_panel():
     
     return redirect(url_for('login'))
 
+# Handle user edit from the Admin Panel
+@app.route('/edit_user_db', methods=['GET', 'POST'])
+def edit_user_db():
+    user_id = request.form['user_id']
+    user_role = request.form['user_role']
+    username = request.form['username']
+
+    user = User.query.get(user_id)
+
+    # Updating information about the user
+    user.user_role = user_role
+    user.username = username
+
+    db.session.commit()
+
+    return redirect(url_for('open_admin_panel'))
+
 # Open user for editing from the Admin Panel
 @login_required
 @app.route('/edit_user/<user_id>')
