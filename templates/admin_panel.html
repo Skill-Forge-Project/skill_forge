@@ -213,7 +213,7 @@
                                                         <td>{{ user.date_registered }}</td>
                                                         <td>{{ user.rank }}</td>
                                                         <form action="{{ url_for('open_edit_user', user_id=user.user_id) }}">
-                                                            <td><button>Edit</button></td>
+                                                            <td class="edit-button-td"><button class="submit-button edit-button">Edit</button></td>
                                                         </form>
                                                     </tr>
                                                     {% endfor %}
