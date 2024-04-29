@@ -168,14 +168,10 @@ def update_new_password():
     username = request.form.get('username')
     token = request.form.get('token')
     user_token = request.form.get('user_token')
-    new_password = request.form.get('new_password')
-    confirm_password = request.form.get('confirm_password')
+    new_password = request.form.get('password')
+    confirm_password = request.form.get('confirm')
     expiration_time = request.form.get('expiration_time')
 
-    # TO BE FIXED:
-        # Implement the password validation
-        # Implement the token validation
-        # Implement the expiration time validation
     if new_password != confirm_password:
         flash('Passwords do not match.', 'error')
         return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
@@ -185,15 +181,30 @@ def update_new_password():
     if not new_password or not confirm_password:
         flash('Please provide a password.', 'error')
         return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if len(new_password) < 10:
+        flash('Password must be at least 10 characters long.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not re.search(r'[A-Z]', new_password):
+        flash('Password must contain at least one uppercase letter.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not re.search(r'\d', new_password):
+        flash('Password must contain at least one digit.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', new_password):
+        flash('Password must contain at least one special character.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if str(datetime.datetime.now()) > expiration_time:
+        flash('Token has expired.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
 
     
-    if new_password:
-        user = User.query.get(user_id)
-        user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
-        db.session.delete(used_token)
-        db.session.commit()
-        print(f'Password for {username} successfully changed. Now you can log in with your new password.')
+
+    user = User.query.get(user_id)
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
+    db.session.delete(used_token)
+    db.session.commit()
+    flash(f'Password for {username} successfully changed. Now you can log in with your new password.')
     return redirect(url_for('hello'))
 
 # ----------------- Reset Password Functionality ----------------- #
@@ -210,7 +221,6 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             # Log in the user
             login_user(user, force=True)
-            flash('Login successful!', 'success')
             return redirect(url_for('main_page'))  # Redirect to the main page after login
         else:
             flash('Login unsuccessful. Please check your username and password.', 'danger')
