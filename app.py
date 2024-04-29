@@ -111,6 +111,118 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
+#  Get the user's avatar, used in the comments section
+@login_required
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    user = User.query.filter_by(user_id=user_id).first()
+    avatar = user.avatar
+    return avatar
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+# Route to handle the user profile (self-open)
+@login_required
+@app.route('/my_profile', methods=['POST', 'GET'])
+def open_user_profile():    
+    # Get the User ID for the session
+    user_id = current_user.user_id
+    # Get the user's solved quests from the database
+    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
+    # Get the user info from the database
+    user = User.query.get(user_id)
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+    # Get the user social media links
+    user_facebook = User.query.get(user_id).facebook_profile
+    user_instagram = User.query.get(user_id).instagram_profile
+    user_github = User.query.get(user_id).github_profile
+    user_discord = User.query.get(user_id).discord_id
+    user_linked_in = User.query.get(user_id).linked_in
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    return render_template('user_profile.html', user=user, 
+                           formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
+                           avatar=avatar_base64, 
+                           user_solved_quests=user_solved_quests,
+                           user_facebook=user_facebook,
+                           user_instagram=user_instagram,
+                           user_github=user_github,
+                           user_discord=user_discord,
+                           user_linked_in=user_linked_in)
+
+# Route to handle the user profile (self-open)
+@login_required
+@app.route('/user_profile/<username>', methods=['POST', 'GET'])
+def open_user_profile_view(username):
+    # Get the user info from the database
+    user = User.query.filter_by(username=username).first()
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    if user:
+        # Render the user profile template with the user data
+        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
+    else:
+        # Handle the case where the user is not found
+        return "User not found", 404
+
+# Change the User avatar route
+@login_required
+@app.route('/upload_avatar', methods=['POST'])
+def upload_avatar():
+    # Get user ID from session or request parameters
+    user_id = current_user.user_id
+    if user_id is None:
+        # Handle case where user is not logged in
+        return redirect(url_for('login'))
+    
+    # Check if the avatar file is provided in the request
+    if 'avatar' not in request.files:
+        # Handle case where no file is uploaded
+        flash('No avatar file uploaded', 'error')
+        return redirect(request.url)
+    
+    # Get the uploaded file data
+    avatar_file = request.files['avatar']
+    
+    # Read the file data as bytes
+    avatar_data = avatar_file.read()
+    
+    # Update the user's avatar in the database
+    user = User.query.get(user_id)
+    user.avatar = avatar_data
+    db.session.commit()
+    
+    # Redirect to the user profile page or any other page
+    return redirect(url_for('open_user_profile'))
+
+
+# Update User info route (Self-Update)
+@login_required
+@app.route('/self_update', methods=['GET', 'POST'])
+def user_self_update():
+    current_user_id = current_user.user_id
+    new_first_name = request.form.get('change_first_name')
+    new_last_name = request.form.get('change_last_name')
+    new_email_address = request.form.get('change_email')
+    fb_link = request.form.get('change_facebook')
+    instagram_link = request.form.get('change_instagram')
+    gh_link = request.form.get('change_github')
+    discord_id = request.form.get('change_discord')
+    linked_in_link = request.form.get('change_linkedin')
+    user = User.query.get(current_user_id)
+    user.first_name = new_first_name
+    user.last_name = new_last_name
+    user.email = new_email_address
+    user.facebook_profile = fb_link
+    user.instagram_profile = instagram_link
+    user.github_profile = gh_link
+    user.discord_id = discord_id
+    user.linked_in = linked_in_link
+    db.session.commit()
+    return redirect(url_for('open_user_profile'))
 
 # ----------------- User Functionality ----------------- #
 
@@ -247,19 +359,6 @@ def register():
 
 # ----------------- Login and Register Functionality ----------------- #
 
-
-#  Get the user's avatar, used in the comments section
-@login_required
-@app.route('/get_avatar/<user_id>', methods=['GET'])
-def get_avatar(user_id):
-    user = User.query.filter_by(user_id=user_id).first()
-    avatar = user.avatar
-    return avatar
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
-
 with app.app_context():
     # Create the database tables
     db.create_all()
@@ -313,117 +412,6 @@ def open_admin_panel():
         all_admins=all_admins)
     
     return redirect(url_for('login'))
-
-# Route to handle the user profile (self-open)
-@login_required
-@app.route('/my_profile', methods=['POST', 'GET'])
-def open_user_profile():    
-    # Get the User ID for the session
-    user_id = current_user.user_id
-    
-    # Get the user's solved quests from the database
-    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
-
-    # Get the user info from the database
-    user = User.query.get(user_id)
-    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
-    
-    # Get the user social media links
-    user_facebook = User.query.get(user_id).facebook_profile
-    user_instagram = User.query.get(user_id).instagram_profile
-    user_github = User.query.get(user_id).github_profile
-    user_discord = User.query.get(user_id).discord_id
-    user_linked_in = User.query.get(user_id).linked_in
-    
-    # Convert avatar binary data to Base64-encoded string
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-
-    return render_template('user_profile.html', user=user, 
-                           formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
-                           avatar=avatar_base64, 
-                           user_solved_quests=user_solved_quests,
-                           user_facebook=user_facebook,
-                           user_instagram=user_instagram,
-                           user_github=user_github,
-                           user_discord=user_discord,
-                           user_linked_in=user_linked_in)
-
-# Route to handle the user profile (self-open)
-@login_required
-@app.route('/user_profile/<username>', methods=['POST', 'GET'])
-def open_user_profile_view(username):
-    # Get the user info from the database
-    user = User.query.filter_by(username=username).first()
-    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
-
-    
-    # Convert avatar binary data to Base64-encoded string
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    if user:
-        # Render the user profile template with the user data
-        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
-    else:
-        # Handle the case where the user is not found
-        return "User not found", 404
-
-
-
-# Change the User avatar route
-@login_required
-@app.route('/upload_avatar', methods=['POST'])
-def upload_avatar():
-    # Get user ID from session or request parameters
-    user_id = current_user.user_id
-    if user_id is None:
-        # Handle case where user is not logged in
-        return redirect(url_for('login'))
-    
-    # Check if the avatar file is provided in the request
-    if 'avatar' not in request.files:
-        # Handle case where no file is uploaded
-        flash('No avatar file uploaded', 'error')
-        return redirect(request.url)
-    
-    # Get the uploaded file data
-    avatar_file = request.files['avatar']
-    
-    # Read the file data as bytes
-    avatar_data = avatar_file.read()
-    
-    # Update the user's avatar in the database
-    user = User.query.get(user_id)
-    user.avatar = avatar_data
-    db.session.commit()
-    
-    # Redirect to the user profile page or any other page
-    return redirect(url_for('open_user_profile'))
-
-
-# Update User info route (Self-Update)
-@login_required
-@app.route('/self_update', methods=['GET', 'POST'])
-def user_self_update():
-    current_user_id = current_user.user_id
-    new_first_name = request.form.get('change_first_name')
-    new_last_name = request.form.get('change_last_name')
-    new_email_address = request.form.get('change_email')
-    fb_link = request.form.get('change_facebook')
-    instagram_link = request.form.get('change_instagram')
-    gh_link = request.form.get('change_github')
-    discord_id = request.form.get('change_discord')
-    linked_in_link = request.form.get('change_linkedin')
-    user = User.query.get(current_user_id)
-    user.first_name = new_first_name
-    user.last_name = new_last_name
-    user.email = new_email_address
-    user.facebook_profile = fb_link
-    user.instagram_profile = instagram_link
-    user.github_profile = gh_link
-    user.discord_id = discord_id
-    user.linked_in = linked_in_link
-    db.session.commit()
-    return redirect(url_for('open_user_profile'))
-
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
 @login_required
