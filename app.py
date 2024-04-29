@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify, send_file
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -7,12 +7,9 @@ from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
-from login_forms import LoginForm, RegistrationForm, validate_password
+from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
 # Import flask forms and validators
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError
 # Import test runners
 from test_runners import run_python, run_javascript, run_java, run_csharp
 
