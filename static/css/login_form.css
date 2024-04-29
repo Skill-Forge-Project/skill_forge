@@ -2,7 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
 @font-face {
     font-family: 'JetBrainsMonoRegular';
-    src: url('../fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+    src: url('../fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+
     font-family: 'JetBrainsMonoBold';
     src: url('../fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
@@ -84,7 +85,7 @@ body {
     font-family: 'JetBrainsMonoRegular', sans-serif !important;
 }
 
-.login-box.user-box {
+.login-box .user-box {
     font-family: 'JetBrainsMonoRegular', sans-serif !important;
     position: relative;
 }
