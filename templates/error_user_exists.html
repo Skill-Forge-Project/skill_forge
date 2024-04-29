@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Sign-Up error</title>
+    <!-- Import generic error page styling -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/error_page.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+</head>
+<body>
+    <div class="sup-err-00">
+        <h1 class="sup-err-01">Ooops! It looks like your account has not been created.</h1>
+        {% for error in errors %}
+            <div style="display:flex; flex-direction: row; align-items: center">
+                <img src="../static/images/complain.png" alt="SignUp Error" style="width:20px;height:20px;">
+                <p class="sup-err-02">{{ error }}</p>
+                <img src="../static/images/complain.png" alt="SignUp Error" style="width:20px;height:20px;">
+            </div>
+        {% endfor %}
+    </div>
+    <div style="display: flex; flex-direction: row; justify-content: center">
+        <div class="btn" onclick=location.href="{{ url_for('register') }}">Go back</div>
+    </div>
+
+</body>

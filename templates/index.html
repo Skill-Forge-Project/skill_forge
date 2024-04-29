@@ -15,6 +15,15 @@
             <div class="sign-in-label">
                 <h2 class="sign-in-label">Sign In</h2>
             </div>
+            <div class="alert-msg" style="font-family: 'JetBrainsMonoBold', sans-serif; font-size: 16px">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
             <form class="user-box input" method="post" action="{{ url_for('login') }}">
                 {{ form.csrf_token }}
                 <div>
@@ -23,6 +32,9 @@
 
                 <div>
                     {{ form.password(class="user-box input", placeholder="Password", id="inputPassword") }}
+                </div>
+                <div class="frg-pass">
+                    <div style="cursor: pointer" onclick=location.href="{{ url_for('open_forgot_password') }}">Forgot Password</div>
                 </div>
                 <button type="submit" class="user-box btn">Login</button>
                 <button type="button" class="user-box btn" onclick=location.href="{{ url_for('register') }}">Register</button>

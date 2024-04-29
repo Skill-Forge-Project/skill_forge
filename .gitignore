@@ -25,3 +25,6 @@ manage.py
 
 # Ignore node modules
 /node_modules/
+
+# Ignore mailtrap test-run
+basic_email.py

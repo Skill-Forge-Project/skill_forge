@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -6,12 +6,12 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json
-from datetime import datetime
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
 from login_forms import LoginForm, RegistrationForm
-# Import test runner
+from email_functionality import send_welcome_mail, send_reset_email
+# Import flask forms and validators
+# Import test runners
 from test_runners import run_python, run_javascript, run_java, run_csharp
-
 
 
 # Load the env variables
@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 # Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # The specific server ip address. Should be included in the .env file
@@ -33,7 +33,7 @@ bcrypt = Bcrypt(app)
 # Init the database connection
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_PROD'))
+conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
 
 # Init the login manager
 login_manager = LoginManager(app)
@@ -45,9 +45,12 @@ from edit_quest_form import edit_quest_form_bp, ReportedQuest
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
+from admin_submit_quest import quest_post_comment_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 from user_solutions import SubmitedSolution # handle as Blueprint!!!
+
+# ----------------- User Functionality ----------------- #
 
 # Define User model
 class User(UserMixin, db.Model):
@@ -80,12 +83,13 @@ class User(UserMixin, db.Model):
     linked_in = db.Column(db.String(120), default=" ")
 
     # Class constuctor
-    def __init__(self, username, first_name, last_name, password, email):
+    def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
         self.email = email
+        self.avatar = avatar
         self.generate_user_id()
         
     # Generate random UserID
@@ -108,13 +112,149 @@ class User(UserMixin, db.Model):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
 
-# # Update user information form
-# @login_required
-# @app.route('/update_user_info', methods=['POST'])
-# def update_user_info():
-#     user_first_name = request.form['first_name']
+# ----------------- User Functionality ----------------- #
+
+# ----------------- Reset Password Functionality ----------------- #
+class ResetToken(db.Model):
+    __tablename__ = 'reset_tokens'
+    user_id = db.Column(db.String(10), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(80), nullable=False)
+    user_email = db.Column(db.String(120), nullable=False)
+    token = db.Column(db.String(64), primary_key=True)
+    expiration_time = db.Column(db.DateTime, nullable=False)
+    
+# Route to open the forgot password form
+@app.route('/forgot_password')
+def open_forgot_password():
+    return render_template('forgot_password.html')
+
+@app.route('/reset_password/<user_id>/<username>/<token>/<expiration_time>', methods=['GET', 'POST'])
+def open_reset_password(token, user_id, username, expiration_time):
+    return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time)
+
+@app.route('/send_email_token', methods=['POST'])
+def send_email_token():
+    email = request.form.get('email_address')
+    if len(email) == 0:
+        flash('Please provide an email address.', 'error')
+        return redirect(url_for('open_forgot_password'))
+    
+    user_mail = request.form.get('email_address')
+    current_user = User.query.filter_by(email=user_mail).first()
+    if current_user:
+        user_id = User.query.filter_by(email=email).first().user_id
+        username = User.query.filter_by(email=email).first().username
+        # Generate a unique token
+        token = secrets.token_urlsafe(32)
+        print(f'Token: {token}')
+        # Calculate expiration time (60 minutes from now)
+        expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
+        new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
+        db.session.add(new_token)
+        db.session.commit()
+
+        # Send email with reset link containing the token
+        send_reset_email(token, username, email, expiration_time)
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    flash('User with this email does not exist.', 'error')
+    return redirect(url_for('open_forgot_password'))
+
+@app.route('/save_new_password', methods=['POST'])
+def update_new_password():
+    user_id = request.form.get('user_id')
+    username = request.form.get('username')
+    token = request.form.get('token')
+    user_token = request.form.get('user_token')
+    new_password = request.form.get('password')
+    confirm_password = request.form.get('confirm')
+    expiration_time = request.form.get('expiration_time')
+
+    if new_password != confirm_password:
+        flash('Passwords do not match.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if user_token is None or user_token != token:
+        flash('Invalid token.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not new_password or not confirm_password:
+        flash('Please provide a password.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if len(new_password) < 10:
+        flash('Password must be at least 10 characters long.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not re.search(r'[A-Z]', new_password):
+        flash('Password must contain at least one uppercase letter.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not re.search(r'\d', new_password):
+        flash('Password must contain at least one digit.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', new_password):
+        flash('Password must contain at least one special character.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if str(datetime.datetime.now()) > expiration_time:
+        flash('Token has expired.', 'error')
+        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+
+    
+
+    user = User.query.get(user_id)
+    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
+    db.session.delete(used_token)
+    db.session.commit()
+    flash(f'Password for {username} successfully changed. Now you can log in with your new password.')
+    return redirect(url_for('hello'))
+
+# ----------------- Reset Password Functionality ----------------- #
 
 
+# ----------------- Login and Register Functionality ----------------- #
+
+# Define routes for login and register pages
+@app.route('/', methods=['GET', 'POST'])
+def login():    
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            # Log in the user
+            login_user(user, force=True)
+            return redirect(url_for('main_page'))  # Redirect to the main page after login
+        else:
+            flash('Login unsuccessful. Please check your username and password.', 'danger')
+    return render_template('index.html', form=form)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # Check if the email or username is already in use
+        existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
+        if existing_user:
+            flash('Email or username already in use', 'danger')
+            return redirect(url_for('register'))
+        
+        # Create a new user
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        new_user = User(email=form.email.data, username=form.username.data, 
+                        first_name=form.first_name.data, last_name=form.last_name.data, 
+                        password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        send_welcome_mail(form.email.data, form.username.data)
+        flash('Your account has been created! You are now able to log in.', 'success')
+        return redirect(url_for('login'))  # Redirect to the login page after successful registration
+    return render_template('register.html', form=form)
+
+# ----------------- Login and Register Functionality ----------------- #
+
+
+#  Get the user's avatar, used in the comments section
+@login_required
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    user = User.query.filter_by(user_id=user_id).first()
+    avatar = user.avatar
+    return avatar
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -123,60 +263,6 @@ def load_user(user_id):
 with app.app_context():
     # Create the database tables
     db.create_all()
-
-# App route for Register
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if request.method == 'POST':
-        email = request.form['email']
-        username = request.form['username']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        password = request.form['password']
-        repeat_password = request.form['confirm']
-
-        # Check if passwords match
-        if password != repeat_password:
-            return render_template('register.html', error='Passwords do not match')
-
-        # Check if the email or username is already in use
-        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
-        if existing_user:
-            return render_template('register.html', error='Email or username already in use')
-
-        # Create a new user
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(email=email, username=username, first_name=first_name, last_name=last_name, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in.')
-
-    return render_template('register.html', form=form)
-
-
-# App route for Login
-@app.route('/', methods=['GET', 'POST'])
-def login():    
-    form = LoginForm()
-    if form.validate_on_submit():
-        print("Validation succesful!")
-        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
-        
-        if user:
-            # Create session for the user. This is needed for the login manager and for reading the data from the database
-            session['user_id'] = user.user_id
-        else:
-            # Return some error!!!!!!
-            pass
-        
-        # Log in the user
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, force = True)
-            return redirect(url_for('main_page'))
-        else:
-            flash('Login unsuccessful. Please check your username and password.', 'danger')
-    return render_template('index.html', form=form)
 
 
 @app.route('/')
@@ -190,7 +276,7 @@ def main_page():
         title_content = file.read()
     with open('main_page_info', 'r') as file:
         content = file.read()  
-    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    server_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('main.html', server_time=server_time, title_content=title_content, content=content)
 
 
@@ -204,7 +290,7 @@ def open_admin_panel():
     all_submited_quests = SubmitedQuest.query.all()
 
     # Get the User ID for the session
-    logged_user_id = session['user_id']
+    logged_user_id = current_user.user_id
 
     # Get the user object with the User ID from the session
     currently_logged_user = User.query.get(logged_user_id)
@@ -231,13 +317,9 @@ def open_admin_panel():
 # Route to handle the user profile (self-open)
 @login_required
 @app.route('/my_profile', methods=['POST', 'GET'])
-def open_user_profile():
-    # If user is not logged in, redirect to login page
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    
+def open_user_profile():    
     # Get the User ID for the session
-    user_id = session['user_id']
+    user_id = current_user.user_id
     
     # Get the user's solved quests from the database
     user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
@@ -287,10 +369,11 @@ def open_user_profile_view(username):
 
 
 # Change the User avatar route
+@login_required
 @app.route('/upload_avatar', methods=['POST'])
 def upload_avatar():
     # Get user ID from session or request parameters
-    user_id = session.get('user_id') or request.form.get('user_id')
+    user_id = current_user.user_id
     if user_id is None:
         # Handle case where user is not logged in
         return redirect(url_for('login'))
@@ -348,7 +431,6 @@ def user_self_update():
 def open_quests_table(language):
     # Retrieve all quests from the database
     all_quests = Quest.query.filter(Quest.language == language).all()
-    
     # Retrieve all users from the database
     all_users = User.query.all()
     return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
@@ -359,7 +441,12 @@ def open_quests_table(language):
 def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
-    return render_template('curr_task_template.html', quest=quest)
+    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    user_role = current_user.user_role
+    return render_template('curr_task_template.html', 
+                           quest=quest, 
+                           user_avatar=user_avatar,
+                           user_role=user_role)
 
 # Route to handle solution submission
 @login_required
@@ -372,13 +459,11 @@ def submit_solution():
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
     current_quest_difficulty = request.form.get('quest_difficulty')
-    
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
         quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
@@ -412,7 +497,7 @@ def submit_solution():
             submission_id = f"{prefix}{suffix}"
         
         # Get the current time
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
         solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
