@@ -191,6 +191,13 @@ body {
     align-items: left;
 }
 
+.user_stats.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
+    gap: 10px; /* Adjust gap between items as needed */
+
+}
+
 .user_stats.sub_status {
     position: relative;
     background: rgba(0, 0, 0, .5);
@@ -374,14 +381,19 @@ body {
 
 
 /* Achievments Styling */
+.achv-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Adjust alignment as needed */
+    padding: 10px;
+    gap: 20px; /* Adjust gap between items as needed */
+}
+
 .achv {
     position: relative;
     width: 130px;
     height: 130px;
     font-size: 30px;
-    margin: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
     color: #fff;
     background: none;
     border: 10px solid;
@@ -450,9 +462,6 @@ body {
     place-content: center;
     grid-auto-flow: column;
     background-color: #111;
-    margin: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
 }
 
 .achv>img {
