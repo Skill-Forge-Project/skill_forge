@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -45,6 +45,7 @@ from edit_quest_form import edit_quest_form_bp, ReportedQuest
 from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
+from admin_submit_quest import quest_post_comment_bp
 from admin_submit_quest import Quest # handle as Blueprint!!!
 from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
 from user_solutions import SubmitedSolution # handle as Blueprint!!!
@@ -80,12 +81,13 @@ class User(UserMixin, db.Model):
     linked_in = db.Column(db.String(120), default=" ")
 
     # Class constuctor
-    def __init__(self, username, first_name, last_name, password, email):
+    def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
         self.email = email
+        self.avatar = avatar
         self.generate_user_id()
         
     # Generate random UserID
@@ -115,6 +117,13 @@ class User(UserMixin, db.Model):
 #     user_first_name = request.form['first_name']
 
 
+#  Get the user's avatar, used in the comments section
+@login_required
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    user = User.query.filter_by(user_id=user_id).first()
+    avatar = user.avatar
+    return avatar
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -356,7 +365,6 @@ def user_self_update():
 def open_quests_table(language):
     # Retrieve all quests from the database
     all_quests = Quest.query.filter(Quest.language == language).all()
-    
     # Retrieve all users from the database
     all_users = User.query.all()
     return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
@@ -367,7 +375,12 @@ def open_quests_table(language):
 def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
-    return render_template('curr_task_template.html', quest=quest)
+    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    user_role = current_user.user_role
+    return render_template('curr_task_template.html', 
+                           quest=quest, 
+                           user_avatar=user_avatar,
+                           user_role=user_role)
 
 # Route to handle solution submission
 @login_required
@@ -380,13 +393,11 @@ def submit_solution():
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
     current_quest_difficulty = request.form.get('quest_difficulty')
-    
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
         quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
-
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
