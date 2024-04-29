@@ -12,7 +12,7 @@
 
         <div class="login-box">
             <div class="user-box">
-                <h2>Create new account</h2>
+                <h2 style="font-family: 'JetBrainsMonoBold', sans-serif">Create new account</h2>
             </div>
             
             <div>
@@ -25,20 +25,19 @@
                 {% endwith %}
                 <form method="POST" class="user-box input", action="{{ url_for('register') }}">
                     {{ form.hidden_tag() }}
-                    <!-- <label class="special-label">{{ form.username.label }}</label> {{ form.username(size=20) }} -->
-                    <div class="user-box">{{ form.username.label }} {{ form.username(size=20) }}</div>
-                    <div class="user-box">{{ form.first_name.label}} {{ form.first_name(size=20) }}</div>
-                    <div class="user-box">{{ form.last_name.label}} {{ form.last_name(size=20) }}</div>
-                    <div class="user-box">{{ form.email.label }} {{ form.email(size=20) }}</div>
-                    <div class="user-box">{{ form.password.label }} {{ form.password(size=20) }}</div>
-                    <div class="user-box">{{ form.confirm.label }} {{ form.confirm(size=20) }}</div>
-                    <div class="user-box">
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.username.label }} {{ form.username(size=20) }}</div>
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.first_name.label}} {{ form.first_name(size=20) }}</div>
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.last_name.label}} {{ form.last_name(size=20) }}</div>
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.email.label }} {{ form.email(size=20) }}</div>
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.password.label }} {{ form.password(size=20) }}</div>
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.confirm.label }} {{ form.confirm(size=20) }}</div>
+                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">
                         <button type="submit" class="btn">Submit</button>
                     </div>
                 </form>
             </div>
             <div class="user-box">
-                <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+                <p style="font-family: 'JetBrainsMonoBold', sans-serif">Already have an account?<br><a href="{{ url_for('login') }}" style="color: #03e9f4; font-family: 'JetBrainsMonoBold', sans-serif">Login here</a></p>
             </div>
         </div>
     </body>
