@@ -46,9 +46,10 @@ from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import quest_post_comment_bp
-from admin_submit_quest import Quest # handle as Blueprint!!!
-from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
-from user_solutions import SubmitedSolution # handle as Blueprint!!!
+from admin_submit_quest import Quest
+from user_submit_quest import SubmitedQuest
+from user_solutions import SubmitedSolution
+from user_achievements import Achievement, UserAchievement
 
 # ----------------- User Functionality ----------------- #
 

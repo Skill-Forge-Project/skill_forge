@@ -23,7 +23,7 @@ class Achievement(db.Model):
 class UserAchievement(db.Model):
     __tablename__ = 'user_achievements'
     user_achievement_id = db.Column(db.String(100), primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
-    username = db.Column(db.String(100),db.ForeignKey('user.username'),nullable=False)
-    achievement_id = db.Column(db.Integer, db.ForeignKey('achievement.achievement_id'), nullable=False)
+    user_id = db.Column(db.String(100), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(100),db.ForeignKey('users.username'),nullable=False)
+    achievement_id = db.Column(db.String(100), db.ForeignKey('achievements.achievement_id'), nullable=False)
     earned_on = db.Column(db.DateTime, nullable=False, default=datetime.now)

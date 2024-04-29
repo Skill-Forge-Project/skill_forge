@@ -391,9 +391,10 @@ body {
 
 .achv {
     position: relative;
+    display: inline-block;
     width: 130px;
     height: 130px;
-    font-size: 30px;
+    font-size: 14px;
     color: #fff;
     background: none;
     border: 10px solid;
@@ -402,6 +403,26 @@ body {
     position: relative;
     transition: .3s;
     cursor: pointer;
+}
+
+.achv-descr {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    position: absolute;
+    padding: 5px;
+    top: 105%; /* Position below the achievement */
+    width: 100%;
+    background-color: rgba(0, 0, 0, 1.7);
+    border-radius: 10px;
+    color: #03e9f4;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease;
+}
+
+.achv:hover .achv-descr {
+    opacity: 1; /* Show on hover */
 }
 
 .achv:before {
