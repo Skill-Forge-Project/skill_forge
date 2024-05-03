@@ -49,12 +49,20 @@
                         </select>
                     </div>
                     <div class="input-row">
-                        <h4><strong class="row-label">Username: </strong></h4>
-                        <input type="text" name="username" id="username_input" class="text_input" value="{{ user.username }}">
+                        <h4><strong class="row-label">First Name: </strong></h4>
+                        <input type="text" name="first_name" id="first_name_input" class="text_input" value="{{ user.first_name }}">
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">Last Name: </strong></h4>
+                        <input type="text" name="last_name" id="last_name_input" class="text_input" value="{{ user.last_name }}">
                     </div>
                     <div class="input-row">
                         <h4><strong class="row-label">Email: </strong></h4>
-                        <input type="text" name="user_email" id="user_email_input" class="text_input" value="{{ user.email }}" readonly>
+                        <input type="text" name="user_email" id="user_email_input" class="text_input" value="{{ user.email }}">
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">Password: </strong></h4>
+                        <input type="text" name="password" id="password_input" class="text_input" value="{{ user.password }}">
                     </div>
                     <div class="btn-row">
                         <button type="submit" id="editUser" class="submit-button">Save Changes</button>

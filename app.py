@@ -233,13 +233,19 @@ def open_admin_panel():
 def edit_user_db():
     user_id = request.form['user_id']
     user_role = request.form['user_role']
-    username = request.form['username']
+    first_name = request.form['first_name']
+    last_name = request.form['last_name']
+    email = request.form['user_email']
+    password = request.form['password']
 
     user = User.query.get(user_id)
 
     # Updating information about the user
     user.user_role = user_role
-    user.username = username
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    user.password = password
 
     db.session.commit()
 
