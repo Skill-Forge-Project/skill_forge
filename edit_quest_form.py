@@ -72,6 +72,8 @@ def edit_quest_db():
 
             if report_progress == 'Resolved':
                 db.session.delete(reported_quest)
+
+                db.session.commit()
         
         db.session.commit()
         
@@ -91,10 +93,10 @@ def open_edit_quest(quest_id):
 
 # Open Reported Quest for editing from the Admin Panel
 @login_required
-@app.route('/edit_reported_quest/<quest_id>')
-def open_edit_reported_quest(quest_id):
-    quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.filter_by(quest_id=quest.quest_id).first()
+@app.route('/edit_reported_quest/<report_id>')
+def open_edit_reported_quest(report_id):
+    reported_quest = ReportedQuest.query.get(report_id)
+    quest = Quest.query.get(reported_quest.quest_id)
     return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)
 
 
@@ -129,6 +131,9 @@ def report_quest(curr_quest_id, report_reason='no reason'):
         report_reason = request_arguments['report_reason'],  # This needs to be changed
         admin_assigned = None  # This needs to be changed
     )
+
+    # Set quest to inactive (so it doesn't appear in the front-end)
+    quest.is_active = False
 
     # Add the new submission to the database session
     db.session.add(new_reported_quest)
