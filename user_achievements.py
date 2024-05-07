@@ -12,7 +12,7 @@ import random, string, base64
 
 
 # BLueprint to handle the generate achievement functionality
-generate_achievemnt_bp = Blueprint('generate_achievemnt', __name__)
+generate_achievemnt_bp = Blueprint('generate_achievement', __name__)
 
 # Define the Achievement model
 class Achievement(db.Model):
@@ -35,18 +35,12 @@ class UserAchievement(db.Model):
 
 
 # Generate achievements for the user
-def generate_achievemnt(user_id, language, quest_nr):
-
-    # Get the user's username
-    username = current_user.username
-
-    # Check if the achievement already exists
-    achievement = Achievement.query.filter_by(Achievement.language==language, quest_nr==Achievement.points, ).all()
-    
-    db.session.add(achievement)
-    db.session.commit()
+def generate_achievement(user_id, username, language, solved_quests):
+    # Get the achievements for the language
+    achievement = Achievement.query.filter_by(Achievement.language==language, solved_quests==Achievement.points).all()
     # Check if the user already has the achievement
     user_achievement = UserAchievement.query.filter_by(user_id=user_id, achievement_id=achievement.achievement_id).first()
+    print(user_achievement)
 
     if not user_achievement:
         # Create the user achievement

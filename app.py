@@ -46,7 +46,6 @@ from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import quest_post_comment_bp
-from user_achievements import generate_achievemnt_bp
 from admin_submit_quest import Quest
 from user_submit_quest import SubmitedQuest
 from user_solutions import SubmitedSolution
@@ -496,7 +495,7 @@ def submit_solution():
             submission_id=submission_id,
             user_id=user_id,
             quest_id=quest_id,
-            submission_date=current_time,
+            submission_date=datetime.datetime.now(),
             user_code=user_code,
             successful_tests=successful_tests,
             unsuccessful_tests=unsuccessful_tests,
@@ -525,6 +524,7 @@ def submit_solution():
                 elif current_quest_language == "C#":
                     current_user.total_csharp_quests += 1
                     current_quest_number = current_user.total_python_quests
+
                 
                 # Update the user XP
                 if current_quest_difficulty == "Novice Quests":
@@ -543,14 +543,37 @@ def submit_solution():
                         if level_stats['min_xp'] <= user_xp_points <= level_stats['max_xp']:
                             current_user.level = level_stats['level']
                             current_user.rank = level_name
-                            break
+                            break            
+
             
-            
-            # Check and generate achievemnt for the user
-            generate_achievemnt_bp(user_id, current_quest_language, current_quest_number)
+            # Generate achievement for the user   
+            print(current_quest_number)       
+            achievement = Achievement.query.filter(
+                Achievement.language == current_quest_language,
+                Achievement.quests_number_required == current_quest_number).all()
+            achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
+            print(achievement)
+            print(achievement_id)
+            if achievement:
+                # Generate random suffix
+                suffix_length = 16
+                suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                prefix = 'USR-ACHV-'
+                user_achievement_id = f"{prefix}{suffix}"
+                while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                    # If it exists, generate a new submission_id
+                    suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                    user_achievement_id = f"{prefix}{suffix}"
+                    
+                user_achievement = UserAchievement(
+                                    user_achievement_id=user_achievement_id,
+                                    user_id=user_id,
+                                    username=username,
+                                    achievement_id=achievement_id,
+                                    earned_on=datetime.datetime.now())
+                db.session.add(user_achievement)
 
             db.session.commit()
-                        
 
         
         # Return the results of the tests and the final message to the frontend
