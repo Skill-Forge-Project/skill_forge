@@ -392,6 +392,7 @@ body {
 .achv {
     position: relative;
     display: inline-block;
+    align-items: center;
     width: 130px;
     height: 130px;
     font-size: 14px;
@@ -413,7 +414,7 @@ body {
     position: absolute;
     padding: 5px;
     top: 105%; /* Position below the achievement */
-    width: 100%;
+    width: 200px;
     background-color: rgba(0, 0, 0, 1.7);
     border-radius: 10px;
     color: #03e9f4;
@@ -477,7 +478,7 @@ body {
 }
 
 .achv {
-    margin: 0;
+    margin: 0px;
     min-height: 10vh;
     display: grid;
     place-content: center;

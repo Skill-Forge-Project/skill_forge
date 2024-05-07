@@ -46,6 +46,7 @@ from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import quest_post_comment_bp
+from user_achievements import generate_achievemnt_bp
 from admin_submit_quest import Quest
 from user_submit_quest import SubmitedQuest
 from user_solutions import SubmitedSolution
@@ -82,6 +83,7 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default=" ")
     discord_id = db.Column(db.String(120), default=" ")
     linked_in = db.Column(db.String(120), default=" ")
+    achievements = db.relationship('UserAchievement')
 
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
@@ -113,8 +115,8 @@ class User(UserMixin, db.Model):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
 #  Get the user's avatar, used in the comments section
-@login_required
 @app.route('/get_avatar/<user_id>', methods=['GET'])
+@login_required
 def get_avatar(user_id):
     user = User.query.filter_by(user_id=user_id).first()
     avatar = user.avatar
@@ -125,8 +127,8 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 # Route to handle the user profile (self-open)
-@login_required
 @app.route('/my_profile', methods=['POST', 'GET'])
+@login_required
 def open_user_profile():    
     # Get the User ID for the session
     user_id = current_user.user_id
@@ -170,8 +172,8 @@ def open_user_profile_view(username):
         return "User not found", 404
 
 # Change the User avatar route
-@login_required
 @app.route('/upload_avatar', methods=['POST'])
+@login_required
 def upload_avatar():
     # Get user ID from session or request parameters
     user_id = current_user.user_id
@@ -201,8 +203,8 @@ def upload_avatar():
 
 
 # Update User info route (Self-Update)
-@login_required
 @app.route('/self_update', methods=['GET', 'POST'])
+@login_required
 def user_self_update():
     current_user_id = current_user.user_id
     new_first_name = request.form.get('change_first_name')
@@ -238,6 +240,7 @@ class ResetToken(db.Model):
     
 # Route to open the forgot password form
 @app.route('/forgot_password')
+@login_required
 def open_forgot_password():
     return render_template('forgot_password.html')
 
@@ -246,6 +249,7 @@ def open_reset_password(token, user_id, username, expiration_time):
     return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time)
 
 @app.route('/send_email_token', methods=['POST'])
+@login_required
 def send_email_token():
     email = request.form.get('email_address')
     if len(email) == 0:
@@ -259,7 +263,6 @@ def send_email_token():
         username = User.query.filter_by(email=email).first().username
         # Generate a unique token
         token = secrets.token_urlsafe(32)
-        print(f'Token: {token}')
         # Calculate expiration time (60 minutes from now)
         expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
         new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
@@ -273,6 +276,7 @@ def send_email_token():
     return redirect(url_for('open_forgot_password'))
 
 @app.route('/save_new_password', methods=['POST'])
+@login_required
 def update_new_password():
     user_id = request.form.get('user_id')
     username = request.form.get('username')
@@ -369,8 +373,8 @@ with app.app_context():
 def hello():
     return render_template('index.html')
 
-@login_required
 @app.route('/main')
+@login_required
 def main_page():
     with open('main_page_title', 'r') as file:
         title_content = file.read()
@@ -384,26 +388,19 @@ def main_page():
 @app.route('/admin_panel')
 @login_required
 def open_admin_panel():
-    
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
     all_submited_quests = SubmitedQuest.query.all()
-
     # Get the User ID for the session
     logged_user_id = current_user.user_id
-
     # Get the user object with the User ID from the session
     currently_logged_user = User.query.get(logged_user_id)
-
     # Get all reported quests
     all_reported_quests = ReportedQuest.query.all()
-
     # Get all users (this is needed so we can extract the name of the user who has reported a quest)
     all_users = User.query.all()
-
     # Get all admins (this is needed so we can create a dropdown menu in the `Check Reports` table)
     all_admins = User.query.filter_by(user_role='Admin').all()
-
     if currently_logged_user.user_role == "Admin":
         return render_template('admin_panel.html', 
         all_quests=all_quests, 
@@ -415,8 +412,8 @@ def open_admin_panel():
     return redirect(url_for('login'))
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
+@app.route('/quests_table/<language>', methods=['GET'])
 @login_required
-@app.route('/quests_table/<language>')
 def open_quests_table(language):
     # Retrieve all quests from the database
     all_quests = Quest.query.filter(Quest.language == language).all()
@@ -425,8 +422,8 @@ def open_quests_table(language):
     return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
 
 # Open Quest for submitting. Change from template to real page!!!!
+@app.route('/quest/<quest_id>', methods=['GET'])
 @login_required
-@app.route('/quest/<quest_id>')
 def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
@@ -438,8 +435,8 @@ def open_curr_quest(quest_id):
                            user_role=user_role)
 
 # Route to handle solution submission
-@login_required
 @app.route('/submit-solution', methods=['POST'])
+@login_required
 def submit_solution():
     user_id = current_user.user_id
     username = current_user.username
@@ -505,7 +502,7 @@ def submit_solution():
             unsuccessful_tests=unsuccessful_tests,
             quest_passed=quest_passed
         )
-
+        
         # Add the new submission to the database session
         db.session.add(new_submission)
         db.session.commit()
@@ -513,16 +510,21 @@ def submit_solution():
         # Handle the leveling of the user
         # Update succesfully solved quests
         if update_user_stats:
+            current_quest_number = 0
             if unsuccessful_tests == 0:
                 current_user.total_solved_quests += 1
                 if current_quest_language == "Python":
                     current_user.total_python_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "JavaScript":
                     current_user.total_javascript_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "Java":
                     current_user.total_java_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "C#":
                     current_user.total_csharp_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 
                 # Update the user XP
                 if current_quest_difficulty == "Novice Quests":
@@ -542,6 +544,10 @@ def submit_solution():
                             current_user.level = level_stats['level']
                             current_user.rank = level_name
                             break
+            
+            
+            # Check and generate achievemnt for the user
+            generate_achievemnt_bp(user_id, current_quest_language, current_quest_number)
 
             db.session.commit()
                         
