@@ -240,6 +240,22 @@ def edit_user_db():
 
     user = User.query.get(user_id)
 
+    if not password:
+        flash('Please provide a password.', 'error')
+        return redirect(url_for('open_edit_user', user_id=user_id))
+    if len(new_password) < 10:
+        flash('Password must be at least 10 characters long.', 'error')
+        return redirect(url_for('open_edit_user', user_id=user_id))
+    if not re.search(r'[A-Z]', new_password):
+        flash('Password must contain at least one uppercase letter.', 'error')
+        return redirect(url_for('open_edit_user', user_id=user_id))
+    if not re.search(r'\d', new_password):
+        flash('Password must contain at least one digit.', 'error')
+        return redirect(url_for('open_edit_user', user_id=user_id))
+    if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', new_password):
+        flash('Password must contain at least one special character.', 'error')
+        return redirect(url_for('open_edit_user', user_id=user_id))
+
     # Updating information about the user
     user.user_role = user_role
     user.first_name = first_name
