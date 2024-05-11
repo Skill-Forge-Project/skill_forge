@@ -142,6 +142,10 @@ def open_user_profile():
     user_github = User.query.get(user_id).github_profile
     user_discord = User.query.get(user_id).discord_id
     user_linked_in = User.query.get(user_id).linked_in
+    # Get the user achievements
+    user_achievements = UserAchievement.query.filter(UserAchievement.user_id==user_id).all()
+    for user_achievement in user_achievements:
+        print(user_achievement.achievement.achievement_picture)
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     return render_template('user_profile.html', user=user, 
@@ -152,7 +156,8 @@ def open_user_profile():
                            user_instagram=user_instagram,
                            user_github=user_github,
                            user_discord=user_discord,
-                           user_linked_in=user_linked_in)
+                           user_linked_in=user_linked_in,
+                           user_achievements=user_achievements)
 
 # Route to handle the user profile (self-open)
 @login_required

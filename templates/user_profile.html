@@ -142,18 +142,14 @@
                     <h3 class="left_status h3">Achievements</h3>
                     <div class="user_stats">
                         <div class="achv-container">
+                            {% for user_achievement in user_achievements %}
                             <div class="achv">
-                                <img src="../static/images/achievements-icons/Python/python-1.png">
+                                <img src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
                                 <div class="achv-descr">
-                                    <p style="margin-bottom: 0px">Python Apprentice<br>Solve 20 Python quests</p>
+                                    <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name }}<br>{{ user_achievement.achievement.achievement_description }}</p>
                                 </div>
                             </div>
-                            <div class="achv">
-                                <img src="../static/images/achievements-icons/Python/python-2.png">
-                                <div class="achv-descr">
-                                    <p style="margin-bottom: 0px">Python Apprentice<br>Solve 40 Python quests</p>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div> 
                     </div>
 

@@ -1,0 +1,146 @@
+[1mdiff --git a/app.py b/app.py[m
+[1mindex a50af65..1f5183a 100644[m
+[1m--- a/app.py[m
+[1m+++ b/app.py[m
+[36m@@ -142,6 +142,10 @@[m [mdef open_user_profile():[m
+     user_github = User.query.get(user_id).github_profile[m
+     user_discord = User.query.get(user_id).discord_id[m
+     user_linked_in = User.query.get(user_id).linked_in[m
+[32m+[m[32m    # Get the user achievements[m
+[32m+[m[32m    user_achievements = UserAchievement.query.filter(UserAchievement.user_id==user_id).all()[m
+[32m+[m[32m    for user_achievement in user_achievements:[m
+[32m+[m[32m        print(user_achievement.achievement.achievement_picture)[m
+     # Convert avatar binary data to Base64-encoded string[m
+     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None[m
+     return render_template('user_profile.html', user=user, [m
+[36m@@ -152,7 +156,8 @@[m [mdef open_user_profile():[m
+                            user_instagram=user_instagram,[m
+                            user_github=user_github,[m
+                            user_discord=user_discord,[m
+[31m-                           user_linked_in=user_linked_in)[m
+[32m+[m[32m                           user_linked_in=user_linked_in,[m
+[32m+[m[32m                           user_achievements=user_achievements)[m
+ [m
+ # Route to handle the user profile (self-open)[m
+ @login_required[m
+[1mdiff --git a/static/images/achievements-icons/JavaScript/javascript-1.png b/static/images/achievements-icons/JavaScript/javascript-1.png[m
+[1mindex 52ff4f8..17d705e 100644[m
+Binary files a/static/images/achievements-icons/JavaScript/javascript-1.png and b/static/images/achievements-icons/JavaScript/javascript-1.png differ
+[1mdiff --git a/static/images/achievements-icons/JavaScript/javascript-6.png b/static/images/achievements-icons/JavaScript/javascript-6.png[m
+[1mindex 17d705e..52ff4f8 100644[m
+Binary files a/static/images/achievements-icons/JavaScript/javascript-6.png and b/static/images/achievements-icons/JavaScript/javascript-6.png differ
+[1mdiff --git a/static/images/achievements-icons/Python/python-10.png b/static/images/achievements-icons/Python/python-10.png[m
+[1mindex 8cbf838..78d083c 100644[m
+Binary files a/static/images/achievements-icons/Python/python-10.png and b/static/images/achievements-icons/Python/python-10.png differ
+[1mdiff --git a/static/images/achievements-icons/Python/python-11.png b/static/images/achievements-icons/Python/python-11.png[m
+[1mindex 8c77a7a..dec22ff 100644[m
+Binary files a/static/images/achievements-icons/Python/python-11.png and b/static/images/achievements-icons/Python/python-11.png differ
+[1mdiff --git a/static/images/achievements-icons/Python/python-2.png b/static/images/achievements-icons/Python/python-2.png[m
+[1mindex dec22ff..8c77a7a 100644[m
+Binary files a/static/images/achievements-icons/Python/python-2.png and b/static/images/achievements-icons/Python/python-2.png differ
+[1mdiff --git a/static/images/achievements-icons/Python/python-3.png b/static/images/achievements-icons/Python/python-3.png[m
+[1mindex 78d083c..8cbf838 100644[m
+Binary files a/static/images/achievements-icons/Python/python-3.png and b/static/images/achievements-icons/Python/python-3.png differ
+[1mdiff --git a/static/images/achievements-icons/Python/python-6.png b/static/images/achievements-icons/Python/python-6.png[m
+[1mindex 2860c33..b4a10f9 100644[m
+Binary files a/static/images/achievements-icons/Python/python-6.png and b/static/images/achievements-icons/Python/python-6.png differ
+[1mdiff --git a/static/images/achievements-icons/Python/python-9.png b/static/images/achievements-icons/Python/python-9.png[m
+[1mindex b4a10f9..2860c33 100644[m
+Binary files a/static/images/achievements-icons/Python/python-9.png and b/static/images/achievements-icons/Python/python-9.png differ
+[1mdiff --git a/templates/user_profile.html b/templates/user_profile.html[m
+[1mindex 6094747..943c0a4 100644[m
+[1m--- a/templates/user_profile.html[m
+[1m+++ b/templates/user_profile.html[m
+[36m@@ -142,18 +142,14 @@[m
+                     <h3 class="left_status h3">Achievements</h3>[m
+                     <div class="user_stats">[m
+                         <div class="achv-container">[m
+[32m+[m[32m                            {% for user_achievement in user_achievements %}[m
+                             <div class="achv">[m
+[31m-                                <img src="../static/images/achievements-icons/Python/python-1.png">[m
+[32m+[m[32m                                <img src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">[m
+                                 <div class="achv-descr">[m
+[31m-                                    <p style="margin-bottom: 0px">Python Apprentice<br>Solve 20 Python quests</p>[m
+[31m-                                </div>[m
+[31m-                            </div>[m
+[31m-                            <div class="achv">[m
+[31m-                                <img src="../static/images/achievements-icons/Python/python-2.png">[m
+[31m-                                <div class="achv-descr">[m
+[31m-                                    <p style="margin-bottom: 0px">Python Apprentice<br>Solve 40 Python quests</p>[m
+[32m+[m[32m                                    <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name }}<br>{{ user_achievement.achievement.achievement_description }}</p>[m
+                                 </div>[m
+                             </div>[m
+[32m+[m[32m                            {% endfor %}[m
+                         </div> [m
+                     </div>[m
+ [m
+[1mdiff --git a/user_achievements.py b/user_achievements.py[m
+[1mindex c4815b4..cbc6871 100644[m
+[1m--- a/user_achievements.py[m
+[1m+++ b/user_achievements.py[m
+[36m@@ -1,28 +1,27 @@[m
+ '''[m
+[31m-This file handles the User achievemnts functionality.[m
+[32m+[m[32m - This file handles the User achievemnts functionality.[m
+[32m+[m[32m - class:Achievement - This class is used to define the Achievement model.[m
+[32m+[m[32m - class:UserAchievement - This class is used to define the UserAchievement model to track achievements earned by users.[m
+ '''[m
+ [m
+ from __main__ import app, db[m
+ # from app import db # Use this instead of the above line for db migrations[m
+ from datetime import datetime[m
+[31m-from flask import Blueprint, request, redirect, url_for[m
+[31m-from sqlalchemy.dialects.postgresql import JSON[m
+[31m-from flask_login import current_user, login_required[m
+[31m-import random, string, base64[m
+[32m+[m[32mfrom sqlalchemy.orm import relationship[m
+ [m
+ [m
+[31m-# BLueprint to handle the generate achievement functionality[m
+[31m-generate_achievemnt_bp = Blueprint('generate_achievement', __name__)[m
+[31m-[m
+ # Define the Achievement model[m
+ class Achievement(db.Model):[m
+     __tablename__ = 'achievements'[m
+     achievement_id = db.Column(db.String(100), primary_key=True)[m
+     achievement_name = db.Column(db.String(100), unique=True, nullable=False)[m
+     achievement_description = db.Column(db.String(255), nullable=False)[m
+[31m-    achievement_picture = db.Column(db.String(20), nullable=False)[m
+[32m+[m[32m    achievement_picture = db.Column(db.String(40), nullable=False)[m
+     language = db.Column(db.String(100), nullable=True)[m
+     quests_number_required = db.Column(db.Integer, nullable=True)[m
+[32m+[m[41m    [m
+[32m+[m[32m    # Define the relationship with the UserAchievement model[m
+[32m+[m[32m    user_achievements = relationship("UserAchievement", back_populates="achievement")[m
+ [m
+ # Define the UserAchievement model to track achievements earned by users[m
+ class UserAchievement(db.Model):[m
+[36m@@ -32,23 +31,6 @@[m [mclass UserAchievement(db.Model):[m
+     username = db.Column(db.String(100),nullable=False)[m
+     achievement_id = db.Column(db.String(100), db.ForeignKey('achievements.achievement_id'), nullable=False)[m
+     earned_on = db.Column(db.DateTime, nullable=False, default=datetime.now)[m
+[31m-[m
+[31m-[m
+[31m-# Generate achievements for the user[m
+[31m-def generate_achievement(user_id, username, language, solved_quests):[m
+[31m-    # Get the achievements for the language[m
+[31m-    achievement = Achievement.query.filter_by(Achievement.language==language, solved_quests==Achievement.points).all()[m
+[31m-    # Check if the user already has the achievement[m
+[31m-    user_achievement = UserAchievement.query.filter_by(user_id=user_id, achievement_id=achievement.achievement_id).first()[m
+[31m-    print(user_achievement)[m
+[31m-[m
+[31m-    if not user_achievement:[m
+[31m-        # Create the user achievement[m
+[31m-        user_achievement = UserAchievement(user_achievement_id=base64.urlsafe_b64encode(f'{user_id}{achievement.achievement_id}'.encode()).decode().rstrip('='),[m
+[31m-                                            user_id=user_id,[m
+[31m-                                            username=username,[m
+[31m-                                            achievement_id=achievement.achievement_id)[m
+[31m-        db.session.add(user_achievement)[m
+[31m-        db.session.commit()[m
+[31m-[m
+[31m-    return user_achievement[m
+\ No newline at end of file[m
+[32m+[m[41m    [m
+[32m+[m[32m    # Define the relationship with the Achievement model[m
+[32m+[m[32m    achievement = relationship("Achievement", back_populates="user_achievements")[m
+\ No newline at end of file[m
