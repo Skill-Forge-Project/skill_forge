@@ -244,7 +244,6 @@ class ResetToken(db.Model):
     
 # Route to open the forgot password form
 @app.route('/forgot_password')
-@login_required
 def open_forgot_password():
     return render_template('forgot_password.html')
 
@@ -253,7 +252,6 @@ def open_reset_password(token, user_id, username, expiration_time):
     return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time)
 
 @app.route('/send_email_token', methods=['POST'])
-@login_required
 def send_email_token():
     email = request.form.get('email_address')
     if len(email) == 0:
