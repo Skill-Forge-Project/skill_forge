@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('../fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background:  #243b55 !important;
+    background-size: cover;
+    background-position: no-repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+.sup-err-00 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 300px;
+
+}
+
+.sup-err-01 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #f44703;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sup-err-02 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 20px;
+    color: #f44703;
+    display: flex;
+    flex-direction: column;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.sup-err-03 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border-radius: 5px;
+    width: 100px;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #03e9f4; /* Unique color for Python button hover */
+    color: #4584b6;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #141e30,
+                0 0 50px #03e9f4,
+                0 0 100px #141e30;
+}
