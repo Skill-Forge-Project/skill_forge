@@ -14,6 +14,7 @@ from email_functionality import send_welcome_mail, send_reset_email
 from test_runners import run_python, run_javascript, run_java, run_csharp
 
 import re
+import datetime
 
 
 # Load the env variables
@@ -366,6 +367,22 @@ def open_edit_user(user_id):
     user = User.query.get(user_id)
     return render_template('edit_user.html', user=user)
 
+
+@login_required
+@app.route('/ban_user/<user_id>')
+def ban_user(user_id, ban_reason='no reason'):
+    # Retrieve the specific user from the database, based on the user_id
+    user = User.query.get(user_id)
+    request_arguments = dict(request.args) # This prints {'ban_reason': 'some_value'}
+
+    user.is_banned = True
+    user.ban_date = datetime.datetime.now()
+    user.ban_reason = request_arguments['ban_reason']
+
+    db.session.commit()
+    return redirect(url_for('open_admin_panel'))
+
+
 # Route to handle the user profile (self-open)
 @login_required
 @app.route('/my_profile', methods=['POST', 'GET'])
@@ -677,4 +694,3 @@ def submit_solution():
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
-

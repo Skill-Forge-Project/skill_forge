@@ -186,7 +186,6 @@
                     </div>             
                 </div>
 
-                <!-- User Administration Panel -->
                 <div id="manageUsersContent" class="content" style="display: none;">
                     <div class="container-fluid">
                         <div class="row justify-content-center">
@@ -202,6 +201,7 @@
                                                         <th>Email</th>
                                                         <th>Date Registered</th>
                                                         <th>Rank</th>
+                                                        <th>Status</th>
                                                         <th>Edit Profile</th>
                                                     </tr>
                                                 </thead>
@@ -211,8 +211,13 @@
                                                         <td>{{ user.user_id }}</td>
                                                         <td><a href="{{ url_for('open_user_profile_view', username=user.username) }}">{{ user.username }}</a></td>
                                                         <td>{{ user.email }}</td>
-                                                        <td>{{ user.date_registered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                                        <td>{{ user.date_registered }}</td>
                                                         <td>{{ user.rank }}</td>
+                                                        {% if user.is_banned %}
+                                                            <td>Banned</td>
+                                                        {% else %}
+                                                            <td>Not Banned</td>
+                                                        {% endif %}
                                                         <form action="{{ url_for('open_edit_user', user_id=user.user_id) }}">
                                                             <td class="edit-button-td"><button class="submit-button edit-button">Edit</button></td>
                                                         </form>

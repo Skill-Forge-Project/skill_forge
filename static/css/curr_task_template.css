@@ -160,6 +160,7 @@ body {
     border: 0px;
     width: 250px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .submit-button:hover {
@@ -172,7 +173,7 @@ body {
         0 0 20px #03e9f4;
 }
 
-.report-button {
+.report-button, .ban-button {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     position: relative;
     display: inline-block;
@@ -187,11 +188,12 @@ body {
     letter-spacing: 4px;
     margin: 10px;
     border: 0px;
+    border-radius: 5px;
     width: 250px;
     cursor: pointer;
 }
 
-.report-button:hover {
+.report-button:hover, .ban-button:hover {
     background: #900303ba;
     color: #fff;
     border-radius: 5px;
@@ -255,7 +257,7 @@ body {
     color: #f73333bd;
 }
 
-.report-reason {
+.report-reason, .ban-reason {
     display: flex;
     flex-direction: column;
     background: #282a36;

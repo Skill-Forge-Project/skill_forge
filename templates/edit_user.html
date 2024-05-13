@@ -18,6 +18,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
         <!-- Include CodeMirror CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}">
+
         <!-- Include CodeMirror mode (e.g., Python) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
@@ -28,6 +31,7 @@
         <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
         <!-- JavaScript to toggle visibility of content sections -->
         <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+        
     </head>
 
     <body>
@@ -72,8 +76,13 @@
                         <h4><strong class="row-label">Password: </strong></h4>
                         <input type="text" name="password" id="password_input" class="text_input" value="{{ user.password }}">
                     </div>
+                    <div class="input-row" id="banDiv" style="display: none;">
+                        <textarea class="ban-reason text_input" name="ban-reason" id="ban-reason" placeholder="Ban reason..."></textarea>
+                    </div>
                     <div class="btn-row">
                         <button type="submit" id="editUser" class="submit-button">Save Changes</button>
+                        <button type="button" id="banUserWithTextarea" class="ban-button">Ban User</button>
+                        <button type="button" id="banUser" class="ban-button" style="display: none;">Ban User</button>
                     </div>
                 </form>
             </div>
@@ -81,6 +90,34 @@
             This script should be loaded after the initialization of the fields above! 
         -->
         <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+
+        <script>
+            function banUserHandle() {
+                let firstBanButton = document.getElementById('banUserWithTextarea')
+                firstBanButton.addEventListener('click', banUserEvent)
+
+                let secondBanButton = document.getElementById('banUser')
+                secondBanButton.addEventListener('click', redirectToBanUserRoute)
+
+                let banUserTextareaInputRow = document.getElementById('banDiv')
+                let banUserTextarea = document.getElementById('ban-reason')
+
+                function banUserEvent(event) {
+                    event.preventDefault()
+                    banUserTextareaInputRow.style.display = 'block'
+                    firstBanButton.style.display = 'none'
+                    secondBanButton.style.display = 'block'
+                }
+
+                function redirectToBanUserRoute(event) {
+                    event.preventDefault()
+                    let banReason = banUserTextarea.value
+                    location.href = "{{ url_for('ban_user', user_id=user.user_id, ban_reason='') }}" + encodeURIComponent(banReason)
+                }
+            }
+
+            banUserHandle()
+        </script>
         
     </body>
 </html>
