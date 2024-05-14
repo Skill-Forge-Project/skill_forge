@@ -552,14 +552,11 @@ def submit_solution():
                             break            
 
             
-            # Generate achievement for the user   
-            print(current_quest_number)       
+            # Generate achievement for the user    
             achievement = Achievement.query.filter(
                 Achievement.language == current_quest_language,
                 Achievement.quests_number_required == current_quest_number).all()
             achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
-            print(achievement)
-            print(achievement_id)
             if achievement:
                 # Generate random suffix
                 suffix_length = 16
@@ -578,7 +575,6 @@ def submit_solution():
                                     achievement_id=achievement_id,
                                     earned_on=datetime.datetime.now())
                 db.session.add(user_achievement)
-
             db.session.commit()
 
         
