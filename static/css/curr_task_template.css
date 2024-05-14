@@ -172,6 +172,27 @@ body {
         0 0 20px #03e9f4;
 }
 
+/* That class is valid only when the submit buton is inactive for 30 seconds */
+.inactive-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-color: #f44703;
+    color: #000000;
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    /* letter-spacing: 4px; */
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+    cursor: not-allowed;
+}
+
+
 .report-button {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     position: relative;

@@ -153,6 +153,31 @@
     <!-- Include CodeMirror handling script -->
     <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
 
+    <!-- Make the Submit Quest Inactive for 30 seconds after being pressed -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var button = document.getElementById('submitSolution');
+            
+            // Add event listener to handle button click
+            button.addEventListener('click', function() {
+                // Disable the button
+                button.disabled = true;
+                button.classList.remove('submit-button');
+                button.classList.add('inactive-button');
+                button.textContent = 'Button disabled for 30 seconds.';
+                
+                // Set a timeout to restore the button's previous state after 30 seconds
+                setTimeout(function() {
+                    // Enable the button
+                    button.disabled = false;
+                    button.textContent = 'Submit Quest';
+                    button.classList.remove('inactive-button');
+                    button.classList.add('submit-button');
+                }, 30000); // 30 seconds in milliseconds
+            });
+        });
+    </script>
+
     <script>
         function reportReasonHandle() {
             let firstReportButton = document.getElementById('reportQuestWithTextarea')
