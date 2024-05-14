@@ -83,6 +83,9 @@ class User(UserMixin, db.Model):
     discord_id = db.Column(db.String(120), default=" ")
     linked_in = db.Column(db.String(120), default=" ")
     achievements = db.relationship('UserAchievement')
+    is_banned = db.Column(db.Boolean, default=lambda: False)
+    ban_date = db.Column(db.DateTime, nullable=True)
+    ban_reason = db.Column(db.String(120), default=" ", nullable=True)
 
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
