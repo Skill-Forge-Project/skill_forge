@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+
 @font-face {
     font-family: 'JetBrainsMonoRegular';
     src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
@@ -42,7 +43,7 @@ body {
 }
 
 .left_pane {
-    position: relative; 
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-left: 20px;
@@ -50,8 +51,8 @@ body {
     margin-bottom: 20px;
     align-items: center;
     width: 20%
-    
 }
+
 .user_avatar {
     position: relative;
     display: flex;
@@ -71,9 +72,12 @@ body {
 }
 
 .user_avatar img {
-    width: 100%; /* Make the image fill the circular div */
-    height: auto; /* Maintain aspect ratio */
-    display: block; /* Remove any default spacing */
+    width: 100%;
+    /* Make the image fill the circular div */
+    height: auto;
+    /* Maintain aspect ratio */
+    display: block;
+    /* Remove any default spacing */
 }
 
 .social_links {
@@ -185,6 +189,13 @@ body {
     height: auto;
     vertical-align: middle;
     align-items: left;
+}
+
+.user_stats.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
+    gap: 10px; /* Adjust gap between items as needed */
+
 }
 
 .user_stats.sub_status {
@@ -306,9 +317,9 @@ body {
     background: #03e9f4;
     border-radius: 5px;
     box-shadow: 0 0 2px #03e9f4,
-                0 0 5px #03e9f4,
-                0 0 10px #03e9f4,
-                0 0 15px #03e9f4;
+        0 0 5px #03e9f4,
+        0 0 10px #03e9f4,
+        0 0 15px #03e9f4;
 }
 
 .change-avatar-section {
@@ -363,7 +374,122 @@ body {
     background: #03e9f4;
     border-radius: 5px;
     box-shadow: 0 0 2px #03e9f4,
-                0 0 5px #03e9f4,
-                0 0 10px #03e9f4,
-                0 0 15px #03e9f4;
+        0 0 5px #03e9f4,
+        0 0 10px #03e9f4,
+        0 0 15px #03e9f4;
+}
+
+
+/* Achievments Styling */
+.achv-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Adjust alignment as needed */
+    padding: 10px;
+    gap: 20px; /* Adjust gap between items as needed */
+}
+
+.achv {
+    position: relative;
+    display: inline-block;
+    align-items: center;
+    width: 130px;
+    height: 130px;
+    font-size: 14px;
+    color: #fff;
+    background: none;
+    border: 10px solid;
+    border-radius: 100%;
+    /* Adjusted border-radius for square effect */
+    position: relative;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.achv-descr {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    position: absolute;
+    padding: 5px;
+    top: 105%; /* Position below the achievement */
+    width: 200px;
+    background-color: rgba(0, 0, 0, 1.7);
+    border-radius: 10px;
+    color: #03e9f4;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease;
+}
+
+.achv:hover .achv-descr {
+    opacity: 1; /* Show on hover */
+}
+
+.achv:before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    padding: 10px;
+    border-radius: 50%;
+    background: conic-gradient(#03e9f4,
+            #243b55 30deg 120deg,
+            #03e9f4 150deg 180deg,
+            #243b55 210deg 300deg,
+            #03e9f4 330deg);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: intersect
+}
+
+
+/* .achv:after {
+    content: "";
+    position: absolute;
+    inset: -100px;
+    background:
+        radial-gradient(200px at left 400px top 10px, #ff53bb 100%, #0000),
+        radial-gradient(200px at right 400px bottom 10px, #00f8d3 100%, #0000);
+    filter: blur(120px);
+    opacity: .5;
+} */
+
+.achv:before,
+.achv:after {
+    transition: .5s, 99999s 99999s transform;
+}
+
+.achv:hover {
+    box-shadow: 0 0 0 1px #666;
+    
+}
+
+.achv:hover:before,
+.achv:hover:after {
+    transform: rotate(36000deg);
+    transition: .5s, 600s linear transform;
+}
+
+.achv:before {
+    background-color: #222;
+    border: 2px solid #333;
+}
+
+.achv {
+    margin: 0px;
+    min-height: 10vh;
+    display: grid;
+    place-content: center;
+    grid-auto-flow: column;
+    background-color: #111;
+}
+
+.achv>img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    border-radius: 100%;
 }

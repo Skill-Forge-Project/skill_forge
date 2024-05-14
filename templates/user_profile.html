@@ -137,6 +137,25 @@
                     </form>
                 </div>
 
+                <!-- User Achievemnts section -->
+                <div class="center_pane_form">
+                    <h3 class="left_status h3">Achievements</h3>
+                    <div class="user_stats">
+                        <div class="achv-container">
+                            {% for user_achievement in user_achievements %}
+                            <div class="achv">
+                                <img src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
+                                <div class="achv-descr">
+                                    <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name }}<br>{{ user_achievement.achievement.achievement_description }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div> 
+                    </div>
+                    </div>
+                </div>
+
+
                 <div class="center_pane_form">
                     <!-- User stats section -->
                     <h3 class="left_status h3">User Stats</h3>
