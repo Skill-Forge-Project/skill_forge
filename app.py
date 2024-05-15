@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
+from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -6,7 +7,7 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet
 from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
 # Import flask forms and validators
@@ -22,7 +23,8 @@ app = Flask(__name__)
 # Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # The specific server ip address. Should be included in the .env file
 srv_address = os.getenv("SERVER_IP_ADDR")
@@ -34,6 +36,8 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
+
+socket = SocketIO(app)
 
 # Init the login manager
 login_manager = LoginManager(app)
@@ -367,6 +371,52 @@ def register():
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
 
+
+
+# Update user status in PostgreSQL
+def update_user_status(user_id, status):
+    with conn.cursor() as cur:
+        current_time = datetime.datetime.now()
+        cur.execute(f"""
+            INSERT INTO user_status (user_id, status, last_updated)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (user_id)
+            DO UPDATE SET status = EXCLUDED.status, last_updated = EXCLUDED.last_updated;
+        """, (user_id, status, current_time))
+        print(f"User {user_id} is now {status}.")
+        conn.commit()
+
+
+@socket.on('connect')
+def online():
+    user_id = current_user.user_id
+    update_user_status(user_id, 'online')
+    emit('status_change', {'user_id': user_id, 'status': 'online'}, broadcast=True)
+
+
+@socket.on('disconnect')
+def online():
+    user_id = current_user.user_id
+    update_user_status(user_id, 'offline')
+    emit('status_change', {'user_id': user_id, 'status': 'offline'}, broadcast=True)
+    
+    
+# Flask-SocketIO events
+# @socketio.on('connect')
+# def handle_connect():
+#     user_id = current_user.user_id
+#     if user_id:
+#         update_user_status(user_id, 'online')
+#         socketio.emit('status_update', {'user_id': user_id, 'status': 'online'}, broadcast=True)
+
+
+# @socketio.on('disconnect')
+# def handle_disconnect():
+#     user_id = current_user.user_id
+#     if user_id:
+#         update_user_status(user_id, 'offline')
+#         socketio.emit('status_update', {'user_id': user_id, 'status': 'offline'}, broadcast=True)
+
 # ----------------- Login and Register Functionality ----------------- #
 
 with app.app_context():
@@ -644,5 +694,6 @@ def submit_solution():
         
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
+    socket.run(app, debug=True, host = '0.0.0.0', port=os.getenv("DEBUG_PORT"))
+    # app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
 

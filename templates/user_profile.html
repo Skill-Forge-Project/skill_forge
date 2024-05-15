@@ -57,6 +57,9 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="online_status" id="onlineStatusDiv">
+                <p class="online_status title">Online status: ${status}</p>
+            </div>
         </div>
 
         <div style="display:flex; flex-direction:column;width:100%">
@@ -278,6 +281,44 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
       <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const userId = "{{ current_user.user_id }}";  // Get the user ID dynamically
+            const socket = io('http://192.168.0.169:5000/', {
+                query: {
+                    user_id: userId
+                }
+            });
+
+            socket.on('connect', () => {
+                updateOnlineStatus('Online')
+                console.log('Connected to server');
+            });
+
+            socket.on('disconnect', () => {
+                updateOnlineStatus('Offline')
+                console.log('Disconnected from server');
+            });
+
+            socket.on('status_update', (data) => {
+                console.log('Status update:', data);
+                updateOnlineStatus(data.status);
+            });
+
+            function updateOnlineStatus(status) {
+                console.log('Updating online status:', status);
+                const onlineStatusDiv = document.getElementById('onlineStatusDiv');
+                if (onlineStatusDiv) {
+                    onlineStatusDiv.innerHTML = `<p class="online_status title">Online Status: ${status}</p>`;
+                    console.log('Online status updated successfully.');
+                } else {
+                    console.error('OnlineStatusDiv not found.');
+                }
+            }
+        });
+    </script>
 </body>
 
 <footer>
