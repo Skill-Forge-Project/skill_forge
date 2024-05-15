@@ -57,6 +57,14 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="online_status" id="onlineStatusDiv">
+                {% if user_status == "Offline" %}
+                    <p class="online_status title offline">Last seen</p>
+                    <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                {% else %}
+                    <p class="online_status title">{{ user_status }}</p>
+                {% endif %}
+            </div>
         </div>
 
         <div style="display:flex; flex-direction:column;width:100%">
@@ -278,6 +286,10 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
       <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
       <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+      <!-- Track the user status -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+      <script src="{{ url_for('static', filename='js/userStatus.js') }}"></script>
 </body>
 
 <footer>
