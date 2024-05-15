@@ -56,11 +56,11 @@
                 </div>
             </div>
             <div class="online_status" id="onlineStatusDiv">
-                {% if last_logged_date == "Offline" %}
-                    <p class="online_status title">${status}</p>
-                    <p class="online_status title">Last seen: {{ last_logged_date }}</p>
+                {% if user_status == "Offline" %}
+                    <p class="online_status title offline">Last seen</p>
+                    <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
                 {% else %}
-                    <p class="online_status title">${status}</p>
+                    <p class="online_status title">{{ user_status }}</p>
                 {% endif %}
             </div>
 
@@ -160,7 +160,7 @@
 
         <!-- Track the user status -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-        <script src="{{ url_for('static', filename='js/userStatus.js') }}"></script>
+        <!-- <script src="{{ url_for('static', filename='js/userStatus.js') }}"></script> -->
 </body>
 
 <footer>

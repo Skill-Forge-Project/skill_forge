@@ -151,12 +151,14 @@ def open_user_profile():
     user_linked_in = User.query.get(user_id).linked_in
     # Get the user achievements
     user_achievements = UserAchievement.query.filter(UserAchievement.user_id==user_id).all()
-    for user_achievement in user_achievements:
-        print(user_achievement.achievement.achievement_picture)
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
-    last_logged_date = f"""SELECT last_updated from user_status WHERE user_id = '{user_id}'"""
+    with conn.cursor() as cur:
+        user_status = cur.execute(f"""SELECT status FROM user_status WHERE user_id = '{user_id}';""")
+        user_status_res = cur.fetchone()[0]
+        last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
+        last_logged_date_res = cur.fetchone()[0]
     
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
@@ -168,7 +170,8 @@ def open_user_profile():
                            user_discord=user_discord,
                            user_linked_in=user_linked_in,
                            user_achievements=user_achievements,
-                           last_logged_date=last_logged_date)
+                           user_status=user_status_res,
+                           last_logged_date=last_logged_date_res)
 
 # Route to handle the user profile (self-open)
 @login_required
@@ -177,25 +180,25 @@ def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
     user_id = user.user_id
-    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    # Get the last logged date
     with conn.cursor() as cur:
-        last_logged_date = cur.execute(f"""SELECT from user_status WHERE user_id = '{user_id}';""")
-        if last_logged_date != None:
-            last_logged_date = last_logged_date
-        else:
-            last_logged_date = "Offline"
-        print(last_logged_date)
+        user_status = cur.execute(f"""SELECT status FROM user_status WHERE user_id = '{user_id}';""")
+        user_status_res = cur.fetchone()[0]
+        last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
+        last_logged_date_res = cur.fetchone()[0]
     if user:
         # Render the user profile template with the user data
         return render_template('user_profile_view.html', 
                                user=user, 
                                avatar=avatar_base64,
-                               last_logged_date=last_logged_date)
+                               user_status=user_status_res,
+                               last_logged_date=last_logged_date_res)
     else:
         # Handle the case where the user is not found
         return "User not found", 404
+
 
 # Change the User avatar route
 @app.route('/upload_avatar', methods=['POST'])
@@ -398,22 +401,21 @@ def update_user_status(user_id, status):
             ON CONFLICT (user_id)
             DO UPDATE SET status = EXCLUDED.status, last_updated = EXCLUDED.last_updated;
         """, (user_id, status, current_time))
-        print(f"User {user_id} is now {status}.")
         conn.commit()
 
 
 @socket.on('connect')
 def online():
     user_id = current_user.user_id
-    update_user_status(user_id, 'online')
-    emit('status_change', {'user_id': user_id, 'status': 'online'}, broadcast=True)
+    update_user_status(user_id, 'Online')
+    emit('status_change', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
 
 
 @socket.on('disconnect')
 def online():
     user_id = current_user.user_id
-    update_user_status(user_id, 'offline')
-    emit('status_change', {'user_id': user_id, 'status': 'offline'}, broadcast=True)
+    update_user_status(user_id, 'Offline')
+    emit('status_change', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
     
     
 # Flask-SocketIO events

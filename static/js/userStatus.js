@@ -25,8 +25,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
         console.log('Updating online status:', status);
         const onlineStatusDiv = document.getElementById('onlineStatusDiv');
         if (onlineStatusDiv) {
-            onlineStatusDiv.innerHTML = `<p class="online_status title">${status}</p>`;
-            console.log('Online status updated successfully.');
+            if (status === 'Online') {
+                onlineStatusDiv.innerHTML = `<p class="online_status title">${status}</p>`;
+            } else {
+                // Make AJAX request to fetch last logged date
+                fetch('/get_last_logged_date')
+                    .then(response => response.json())
+                    .then(data => {
+                        const lastLoggedDate = data.last_logged_date;
+                        onlineStatusDiv.innerHTML = `<p class="online_status title">${status}</p>
+                            <p class="online_status title">Last seen: ${lastLoggedDate}</p>`;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching last logged date:', error);
+                        onlineStatusDiv.innerHTML = `<p class="offline_status title">${status}</p>`;
+                    });
+            }
         } else {
             console.error('OnlineStatusDiv not found.');
         }
