@@ -155,6 +155,9 @@ def open_user_profile():
         print(user_achievement.achievement.achievement_picture)
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    # Get the last logged date
+    last_logged_date = f"""SELECT last_updated from user_status WHERE user_id = '{user_id}'"""
+    
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
                            avatar=avatar_base64, 
@@ -164,7 +167,8 @@ def open_user_profile():
                            user_github=user_github,
                            user_discord=user_discord,
                            user_linked_in=user_linked_in,
-                           user_achievements=user_achievements)
+                           user_achievements=user_achievements,
+                           last_logged_date=last_logged_date)
 
 # Route to handle the user profile (self-open)
 @login_required
@@ -172,12 +176,23 @@ def open_user_profile():
 def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
+    user_id = user.user_id
     user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    with conn.cursor() as cur:
+        last_logged_date = cur.execute(f"""SELECT from user_status WHERE user_id = '{user_id}';""")
+        if last_logged_date != None:
+            last_logged_date = last_logged_date
+        else:
+            last_logged_date = "Offline"
+        print(last_logged_date)
     if user:
         # Render the user profile template with the user data
-        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
+        return render_template('user_profile_view.html', 
+                               user=user, 
+                               avatar=avatar_base64,
+                               last_logged_date=last_logged_date)
     else:
         # Handle the case where the user is not found
         return "User not found", 404
