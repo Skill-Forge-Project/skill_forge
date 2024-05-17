@@ -399,7 +399,6 @@ def register():
 
 # Update user status in PostgreSQL
 def update_user_status(user_id, status):
-    print(f'Updating user status: {user_id} - {status}')
     with conn.cursor() as cur:
         current_time = datetime.datetime.now()
         cur.execute(f"""
@@ -665,7 +664,6 @@ def submit_solution():
     
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':
-        print(f'Current Languange is: {current_quest_language}')
         if current_quest_language == 'Python':
             # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
             user_code = request.form.get('user_code')
@@ -675,7 +673,6 @@ def submit_solution():
                 user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
             except subprocess.CalledProcessError as e:
                 user_output = e.output
-            print(f'The output of the user code is: {user_output}')
             return user_output
         
         elif current_quest_language == 'JavaScript':
