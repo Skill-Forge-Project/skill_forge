@@ -8,21 +8,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     socket.on('connect', () => {
         updateOnlineStatus('Online')
-        console.log('Connected to server');
     });
 
     socket.on('disconnect', () => {
         updateOnlineStatus('Offline')
-        console.log('Disconnected from server');
     });
 
     socket.on('status_update', (data) => {
-        console.log('Status update:', data);
         updateOnlineStatus(data.status);
     });
-
     function updateOnlineStatus(status) {
-        console.log('Updating online status:', status);
         const onlineStatusDiv = document.getElementById('onlineStatusDiv');
         if (onlineStatusDiv) {
             if (status === 'Online') {
@@ -37,12 +32,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             <p class="online_status title">Last seen: ${lastLoggedDate}</p>`;
                     })
                     .catch(error => {
-                        console.error('Error fetching last logged date:', error);
                         onlineStatusDiv.innerHTML = `<p class="offline_status title">${status}</p>`;
                     });
             }
         } else {
-            console.error('OnlineStatusDiv not found.');
+            return;
         }
     }
 });

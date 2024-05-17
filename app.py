@@ -159,7 +159,7 @@ def open_user_profile():
         user_status_res = cur.fetchone()[0]
         last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
         last_logged_date_res = cur.fetchone()[0]
-    
+
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
                            avatar=avatar_base64, 
@@ -174,8 +174,8 @@ def open_user_profile():
                            last_logged_date=last_logged_date_res)
 
 # Route to handle the user profile (self-open)
-@login_required
 @app.route('/user_profile/<username>', methods=['POST', 'GET'])
+@login_required
 def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
@@ -184,12 +184,18 @@ def open_user_profile_view(username):
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
     with conn.cursor() as cur:
-        user_status = cur.execute(f"""SELECT status FROM user_status WHERE user_id = '{user_id}';""")
-        user_status_res = cur.fetchone()[0]
-        last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
-        last_logged_date_res = cur.fetchone()[0]
+        cur.execute("SELECT status, last_updated FROM user_status WHERE user_id = %s;", (user_id,))
+        result = cur.fetchone()
+        if result:
+            user_status_res, last_logged_date_res = result
+            if last_logged_date_res is None:
+                user_status_res = "Offline"
+                last_logged_date_res = user.date_registered
+        else:
+            user_status_res = "Offline"
+            last_logged_date_res = user.date_registered
+        
     if user:
-        # Render the user profile template with the user data
         return render_template('user_profile_view.html', 
                                user=user, 
                                avatar=avatar_base64,
@@ -374,7 +380,7 @@ def register():
         # Check if the email or username is already in use
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
-            flash('Email or username already in use', 'danger')
+            flash('Email or username already in use', 'alert-error')
             return redirect(url_for('register'))
         
         # Create a new user
@@ -385,7 +391,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        flash('Your account has been created! You are now able to log in.', 'success')
+        flash('Your account has been created! You are now able to log in.', 'alert-success ')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
 
@@ -393,6 +399,7 @@ def register():
 
 # Update user status in PostgreSQL
 def update_user_status(user_id, status):
+    print(f'Updating user status: {user_id} - {status}')
     with conn.cursor() as cur:
         current_time = datetime.datetime.now()
         cur.execute(f"""
@@ -405,17 +412,17 @@ def update_user_status(user_id, status):
 
 
 @socket.on('connect')
-def online():
+def connect():
     user_id = current_user.user_id
     update_user_status(user_id, 'Online')
-    emit('status_change', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+    emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
 
 
 @socket.on('disconnect')
-def online():
+def disconnect():
     user_id = current_user.user_id
     update_user_status(user_id, 'Offline')
-    emit('status_change', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
+    emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
     
     
 # Flask-SocketIO events
