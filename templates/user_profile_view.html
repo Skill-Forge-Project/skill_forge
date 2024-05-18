@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
-    <!-- Include Navbar template -->
-    {% include 'navbar.html' %}
 </head>
 
 <body>
+    <!-- Include Navbar template -->
+    {% include 'navbar.html' %}
     <div class="user_info">
         <div class="left_pane">
             <div>
@@ -55,7 +55,18 @@
                     {% endif %}
                 </div>
             </div>
-
+            <div class="online_status" id="onlineStatusDiv">
+                {% if user_status == "Offline" %}
+                    <p class="online_status title offline">Last seen</p>
+                    {% if last_logged_date == "Never" %}
+                        <p class="online_status title offline">Never</p>
+                    {% else %}
+                        <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                    {% endif %}
+                {% else %}
+                    <p class="online_status title">{{ user_status }}</p>
+                {% endif %}
+            </div>
         </div>
 
         <div style="display:flex; flex-direction:column;width:100%">

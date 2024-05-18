@@ -1,12 +1,13 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
+from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
 from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
-from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet
 from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
 # Import flask forms and validators
@@ -22,7 +23,8 @@ app = Flask(__name__)
 # Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # The specific server ip address. Should be included in the .env file
 srv_address = os.getenv("SERVER_IP_ADDR")
@@ -35,6 +37,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
 
+socket = SocketIO(app)
+
 # Init the login manager
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -46,9 +50,10 @@ from user_submit_quest import user_submit_quest_bp
 from user_submit_quest import user_submit_dbsubmit_quest_bp
 from user_submit_quest import approve_submited_quest_bp
 from admin_submit_quest import quest_post_comment_bp
-from admin_submit_quest import Quest # handle as Blueprint!!!
-from user_submit_quest import SubmitedQuest # handle as Blueprint!!!
-from user_solutions import SubmitedSolution # handle as Blueprint!!!
+from admin_submit_quest import Quest
+from user_submit_quest import SubmitedQuest
+from user_solutions import SubmitedSolution
+from user_achievements import Achievement, UserAchievement
 
 # ----------------- User Functionality ----------------- #
 
@@ -81,6 +86,10 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default=" ")
     discord_id = db.Column(db.String(120), default=" ")
     linked_in = db.Column(db.String(120), default=" ")
+    achievements = db.relationship('UserAchievement')
+    is_banned = db.Column(db.Boolean, default=lambda: False)
+    ban_date = db.Column(db.DateTime, nullable=True)
+    ban_reason = db.Column(db.String(120), default=" ", nullable=True)
 
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
@@ -111,6 +120,147 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
+#  Get the user's avatar, used in the comments section
+@app.route('/get_avatar/<user_id>', methods=['GET'])
+@login_required
+def get_avatar(user_id):
+    user = User.query.filter_by(user_id=user_id).first()
+    avatar = user.avatar
+    return avatar
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+# Route to handle the user profile (self-open)
+@app.route('/my_profile', methods=['POST', 'GET'])
+@login_required
+def open_user_profile():    
+    # Get the User ID for the session
+    user_id = current_user.user_id
+    # Get the user's solved quests from the database
+    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
+    # Get the user info from the database
+    user = User.query.get(user_id)
+    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
+    # Get the user social media links
+    user_facebook = User.query.get(user_id).facebook_profile
+    user_instagram = User.query.get(user_id).instagram_profile
+    user_github = User.query.get(user_id).github_profile
+    user_discord = User.query.get(user_id).discord_id
+    user_linked_in = User.query.get(user_id).linked_in
+    # Get the user achievements
+    user_achievements = UserAchievement.query.filter(UserAchievement.user_id==user_id).all()
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    # Get the last logged date
+    with conn.cursor() as cur:
+        user_status = cur.execute(f"""SELECT status FROM user_status WHERE user_id = '{user_id}';""")
+        user_status_res = cur.fetchone()[0]
+        last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
+        last_logged_date_res = cur.fetchone()[0]
+
+    return render_template('user_profile.html', user=user, 
+                           formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
+                           avatar=avatar_base64, 
+                           user_solved_quests=user_solved_quests,
+                           user_facebook=user_facebook,
+                           user_instagram=user_instagram,
+                           user_github=user_github,
+                           user_discord=user_discord,
+                           user_linked_in=user_linked_in,
+                           user_achievements=user_achievements,
+                           user_status=user_status_res,
+                           last_logged_date=last_logged_date_res)
+
+# Route to handle the user profile (self-open)
+@app.route('/user_profile/<username>', methods=['POST', 'GET'])
+@login_required
+def open_user_profile_view(username):
+    # Get the user info from the database
+    user = User.query.filter_by(username=username).first()
+    user_id = user.user_id
+    # Convert avatar binary data to Base64-encoded string
+    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    # Get the last logged date
+    with conn.cursor() as cur:
+        cur.execute("SELECT status, last_updated FROM user_status WHERE user_id = %s;", (user_id,))
+        result = cur.fetchone()
+        if result:
+            user_status_res, last_logged_date_res = result
+            if last_logged_date_res is None:
+                user_status_res = "Offline"
+                last_logged_date_res = user.date_registered
+        else:
+            user_status_res = "Offline"
+            last_logged_date_res = user.date_registered
+        
+    if user:
+        return render_template('user_profile_view.html', 
+                               user=user, 
+                               avatar=avatar_base64,
+                               user_status=user_status_res,
+                               last_logged_date=last_logged_date_res)
+    else:
+        # Handle the case where the user is not found
+        return "User not found", 404
+
+
+# Change the User avatar route
+@app.route('/upload_avatar', methods=['POST'])
+@login_required
+def upload_avatar():
+    # Get user ID from session or request parameters
+    user_id = current_user.user_id
+    if user_id is None:
+        # Handle case where user is not logged in
+        return redirect(url_for('login'))
+    
+    # Check if the avatar file is provided in the request
+    if 'avatar' not in request.files:
+        # Handle case where no file is uploaded
+        flash('No avatar file uploaded', 'error')
+        return redirect(request.url)
+    
+    # Get the uploaded file data
+    avatar_file = request.files['avatar']
+    
+    # Read the file data as bytes
+    avatar_data = avatar_file.read()
+    
+    # Update the user's avatar in the database
+    user = User.query.get(user_id)
+    user.avatar = avatar_data
+    db.session.commit()
+    
+    # Redirect to the user profile page or any other page
+    return redirect(url_for('open_user_profile'))
+
+
+# Update User info route (Self-Update)
+@app.route('/self_update', methods=['GET', 'POST'])
+@login_required
+def user_self_update():
+    current_user_id = current_user.user_id
+    new_first_name = request.form.get('change_first_name')
+    new_last_name = request.form.get('change_last_name')
+    new_email_address = request.form.get('change_email')
+    fb_link = request.form.get('change_facebook')
+    instagram_link = request.form.get('change_instagram')
+    gh_link = request.form.get('change_github')
+    discord_id = request.form.get('change_discord')
+    linked_in_link = request.form.get('change_linkedin')
+    user = User.query.get(current_user_id)
+    user.first_name = new_first_name
+    user.last_name = new_last_name
+    user.email = new_email_address
+    user.facebook_profile = fb_link
+    user.instagram_profile = instagram_link
+    user.github_profile = gh_link
+    user.discord_id = discord_id
+    user.linked_in = linked_in_link
+    db.session.commit()
+    return redirect(url_for('open_user_profile'))
 
 # ----------------- User Functionality ----------------- #
 
@@ -146,7 +296,6 @@ def send_email_token():
         username = User.query.filter_by(email=email).first().username
         # Generate a unique token
         token = secrets.token_urlsafe(32)
-        print(f'Token: {token}')
         # Calculate expiration time (60 minutes from now)
         expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
         new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
@@ -160,6 +309,7 @@ def send_email_token():
     return redirect(url_for('open_forgot_password'))
 
 @app.route('/save_new_password', methods=['POST'])
+@login_required
 def update_new_password():
     user_id = request.form.get('user_id')
     username = request.form.get('username')
@@ -201,7 +351,7 @@ def update_new_password():
     used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
     db.session.delete(used_token)
     db.session.commit()
-    flash(f'Password for {username} successfully changed. Now you can log in with your new password.')
+    flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
     return redirect(url_for('hello'))
 
 # ----------------- Reset Password Functionality ----------------- #
@@ -220,8 +370,16 @@ def login():
             login_user(user, force=True)
             return redirect(url_for('main_page'))  # Redirect to the main page after login
         else:
-            flash('Login unsuccessful. Please check your username and password.', 'danger')
+            flash('Login unsuccessful. Please check your username and password.', 'error')
     return render_template('index.html', form=form)
+
+# Route to handle the logout functionality
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -230,7 +388,7 @@ def register():
         # Check if the email or username is already in use
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
-            flash('Email or username already in use', 'danger')
+            flash('Email or username already in use', 'error')
             return redirect(url_for('register'))
         
         # Create a new user
@@ -241,24 +399,56 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        flash('Your account has been created! You are now able to log in.', 'success')
+        flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
 
+
+
+# Update user status in PostgreSQL
+def update_user_status(user_id, status):
+    with conn.cursor() as cur:
+        current_time = datetime.datetime.now()
+        cur.execute(f"""
+            INSERT INTO user_status (user_id, status, last_updated)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (user_id)
+            DO UPDATE SET status = EXCLUDED.status, last_updated = EXCLUDED.last_updated;
+        """, (user_id, status, current_time))
+        conn.commit()
+
+
+@socket.on('connect')
+def connect():
+    user_id = current_user.user_id
+    update_user_status(user_id, 'Online')
+    emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+
+
+@socket.on('disconnect')
+def disconnect():
+    user_id = current_user.user_id
+    update_user_status(user_id, 'Offline')
+    emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
+    
+    
+# Flask-SocketIO events
+# @socketio.on('connect')
+# def handle_connect():
+#     user_id = current_user.user_id
+#     if user_id:
+#         update_user_status(user_id, 'online')
+#         socketio.emit('status_update', {'user_id': user_id, 'status': 'online'}, broadcast=True)
+
+
+# @socketio.on('disconnect')
+# def handle_disconnect():
+#     user_id = current_user.user_id
+#     if user_id:
+#         update_user_status(user_id, 'offline')
+#         socketio.emit('status_update', {'user_id': user_id, 'status': 'offline'}, broadcast=True)
+
 # ----------------- Login and Register Functionality ----------------- #
-
-
-#  Get the user's avatar, used in the comments section
-@login_required
-@app.route('/get_avatar/<user_id>', methods=['GET'])
-def get_avatar(user_id):
-    user = User.query.filter_by(user_id=user_id).first()
-    avatar = user.avatar
-    return avatar
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
 
 with app.app_context():
     # Create the database tables
@@ -269,8 +459,8 @@ with app.app_context():
 def hello():
     return render_template('index.html')
 
-@login_required
 @app.route('/main')
+@login_required
 def main_page():
     with open('main_page_title', 'r') as file:
         title_content = file.read()
@@ -284,26 +474,19 @@ def main_page():
 @app.route('/admin_panel')
 @login_required
 def open_admin_panel():
-    
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
     all_submited_quests = SubmitedQuest.query.all()
-
     # Get the User ID for the session
     logged_user_id = current_user.user_id
-
     # Get the user object with the User ID from the session
     currently_logged_user = User.query.get(logged_user_id)
-
     # Get all reported quests
     all_reported_quests = ReportedQuest.query.all()
-
     # Get all users (this is needed so we can extract the name of the user who has reported a quest)
     all_users = User.query.all()
-
     # Get all admins (this is needed so we can create a dropdown menu in the `Check Reports` table)
     all_admins = User.query.filter_by(user_role='Admin').all()
-
     if currently_logged_user.user_role == "Admin":
         return render_template('admin_panel.html', 
         all_quests=all_quests, 
@@ -314,120 +497,9 @@ def open_admin_panel():
     
     return redirect(url_for('login'))
 
-# Route to handle the user profile (self-open)
-@login_required
-@app.route('/my_profile', methods=['POST', 'GET'])
-def open_user_profile():    
-    # Get the User ID for the session
-    user_id = current_user.user_id
-    
-    # Get the user's solved quests from the database
-    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
-
-    # Get the user info from the database
-    user = User.query.get(user_id)
-    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
-    
-    # Get the user social media links
-    user_facebook = User.query.get(user_id).facebook_profile
-    user_instagram = User.query.get(user_id).instagram_profile
-    user_github = User.query.get(user_id).github_profile
-    user_discord = User.query.get(user_id).discord_id
-    user_linked_in = User.query.get(user_id).linked_in
-    
-    # Convert avatar binary data to Base64-encoded string
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-
-    return render_template('user_profile.html', user=user, 
-                           formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
-                           avatar=avatar_base64, 
-                           user_solved_quests=user_solved_quests,
-                           user_facebook=user_facebook,
-                           user_instagram=user_instagram,
-                           user_github=user_github,
-                           user_discord=user_discord,
-                           user_linked_in=user_linked_in)
-
-# Route to handle the user profile (self-open)
-@login_required
-@app.route('/user_profile/<username>', methods=['POST', 'GET'])
-def open_user_profile_view(username):
-    # Get the user info from the database
-    user = User.query.filter_by(username=username).first()
-    user.date_registered.strftime('%d-%m-%Y %H:%M:%S')
-
-    
-    # Convert avatar binary data to Base64-encoded string
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    if user:
-        # Render the user profile template with the user data
-        return render_template('user_profile_view.html', user=user, avatar=avatar_base64)
-    else:
-        # Handle the case where the user is not found
-        return "User not found", 404
-
-
-
-# Change the User avatar route
-@login_required
-@app.route('/upload_avatar', methods=['POST'])
-def upload_avatar():
-    # Get user ID from session or request parameters
-    user_id = current_user.user_id
-    if user_id is None:
-        # Handle case where user is not logged in
-        return redirect(url_for('login'))
-    
-    # Check if the avatar file is provided in the request
-    if 'avatar' not in request.files:
-        # Handle case where no file is uploaded
-        flash('No avatar file uploaded', 'error')
-        return redirect(request.url)
-    
-    # Get the uploaded file data
-    avatar_file = request.files['avatar']
-    
-    # Read the file data as bytes
-    avatar_data = avatar_file.read()
-    
-    # Update the user's avatar in the database
-    user = User.query.get(user_id)
-    user.avatar = avatar_data
-    db.session.commit()
-    
-    # Redirect to the user profile page or any other page
-    return redirect(url_for('open_user_profile'))
-
-
-# Update User info route (Self-Update)
-@login_required
-@app.route('/self_update', methods=['GET', 'POST'])
-def user_self_update():
-    current_user_id = current_user.user_id
-    new_first_name = request.form.get('change_first_name')
-    new_last_name = request.form.get('change_last_name')
-    new_email_address = request.form.get('change_email')
-    fb_link = request.form.get('change_facebook')
-    instagram_link = request.form.get('change_instagram')
-    gh_link = request.form.get('change_github')
-    discord_id = request.form.get('change_discord')
-    linked_in_link = request.form.get('change_linkedin')
-    user = User.query.get(current_user_id)
-    user.first_name = new_first_name
-    user.last_name = new_last_name
-    user.email = new_email_address
-    user.facebook_profile = fb_link
-    user.instagram_profile = instagram_link
-    user.github_profile = gh_link
-    user.discord_id = discord_id
-    user.linked_in = linked_in_link
-    db.session.commit()
-    return redirect(url_for('open_user_profile'))
-
-
 # Redirect to the table with all tasks. Change from template to real page!!!! 
+@app.route('/quests_table/<language>', methods=['GET'])
 @login_required
-@app.route('/quests_table/<language>')
 def open_quests_table(language):
     # Retrieve all quests from the database
     all_quests = Quest.query.filter(Quest.language == language).all()
@@ -436,8 +508,8 @@ def open_quests_table(language):
     return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
 
 # Open Quest for submitting. Change from template to real page!!!!
+@app.route('/quest/<quest_id>', methods=['GET'])
 @login_required
-@app.route('/quest/<quest_id>')
 def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
@@ -449,8 +521,8 @@ def open_curr_quest(quest_id):
                            user_role=user_role)
 
 # Route to handle solution submission
-@login_required
 @app.route('/submit-solution', methods=['POST'])
+@login_required
 def submit_solution():
     user_id = current_user.user_id
     username = current_user.username
@@ -495,10 +567,7 @@ def submit_solution():
             # If it exists, generate a new submission_id
             suffix = ''.join(random.choices(string.digits, k=suffix_length))
             submission_id = f"{prefix}{suffix}"
-        
-        # Get the current time
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+                
         # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
         solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
         update_user_stats = False
@@ -510,13 +579,13 @@ def submit_solution():
             submission_id=submission_id,
             user_id=user_id,
             quest_id=quest_id,
-            submission_date=current_time,
+            submission_date=datetime.datetime.now(),
             user_code=user_code,
             successful_tests=successful_tests,
             unsuccessful_tests=unsuccessful_tests,
             quest_passed=quest_passed
         )
-
+        
         # Add the new submission to the database session
         db.session.add(new_submission)
         db.session.commit()
@@ -524,16 +593,22 @@ def submit_solution():
         # Handle the leveling of the user
         # Update succesfully solved quests
         if update_user_stats:
+            current_quest_number = 0
             if unsuccessful_tests == 0:
                 current_user.total_solved_quests += 1
                 if current_quest_language == "Python":
                     current_user.total_python_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "JavaScript":
                     current_user.total_javascript_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "Java":
                     current_user.total_java_quests += 1
+                    current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "C#":
                     current_user.total_csharp_quests += 1
+                    current_quest_number = current_user.total_python_quests
+
                 
                 # Update the user XP
                 if current_quest_difficulty == "Novice Quests":
@@ -552,10 +627,33 @@ def submit_solution():
                         if level_stats['min_xp'] <= user_xp_points <= level_stats['max_xp']:
                             current_user.level = level_stats['level']
                             current_user.rank = level_name
-                            break
+                            break            
 
+            
+            # Generate achievement for the user    
+            achievement = Achievement.query.filter(
+                Achievement.language == current_quest_language,
+                Achievement.quests_number_required == current_quest_number).all()
+            achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
+            if achievement:
+                # Generate random suffix
+                suffix_length = 16
+                suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                prefix = 'USR-ACHV-'
+                user_achievement_id = f"{prefix}{suffix}"
+                while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                    # If it exists, generate a new submission_id
+                    suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                    user_achievement_id = f"{prefix}{suffix}"
+                    
+                user_achievement = UserAchievement(
+                                    user_achievement_id=user_achievement_id,
+                                    user_id=user_id,
+                                    username=username,
+                                    achievement_id=achievement_id,
+                                    earned_on=datetime.datetime.now())
+                db.session.add(user_achievement)
             db.session.commit()
-                        
 
         
         # Return the results of the tests and the final message to the frontend
@@ -571,7 +669,6 @@ def submit_solution():
     
     # Handle the advanced quests testing (requires unit tests)
     elif current_quest_type == 'Advanced':
-        print(f'Current Languange is: {current_quest_language}')
         if current_quest_language == 'Python':
             # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
             user_code = request.form.get('user_code')
@@ -581,7 +678,6 @@ def submit_solution():
                 user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
             except subprocess.CalledProcessError as e:
                 user_output = e.output
-            print(f'The output of the user code is: {user_output}')
             return user_output
         
         elif current_quest_language == 'JavaScript':
@@ -624,5 +720,6 @@ def submit_solution():
         
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
+    socket.run(app, debug=True, host = '0.0.0.0', port=os.getenv("DEBUG_PORT"))
+    # app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
 
