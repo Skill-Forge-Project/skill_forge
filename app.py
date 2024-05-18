@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, disconnect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -7,7 +7,7 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet, pytz
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
 from datetime import timedelta
 from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
@@ -25,22 +25,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
 
-    
-# Make sessions permanent
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
-    now = datetime.datetime.now()
-    session['last_activity'] = now  # Update session last activity on each request
-    print(f'Session last activity: {session["last_activity"]}')  # Debug print statement
-    if 'last_activity' in session:
-        last_activity = session['last_activity']
-        if now - last_activity > timedelta(minutes=1):  # Change session lifetime to 1 minute
-            logout_user()
-            flash('You have been logged out due to inactivity.', 'warning')
-            return redirect(url_for('login'))
 
 # The specific server ip address. Should be included in the .env file
 srv_address = os.getenv("SERVER_IP_ADDR")
@@ -53,7 +38,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
 
-socket = SocketIO(app)
+socketio = SocketIO(app)
 
 # Init the login manager
 login_manager = LoginManager(app)
@@ -373,9 +358,6 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             # Log in the user
             login_user(user, force=True)
-            user.user_online_status = 'Online'
-            user.last_status_update = datetime.datetime.now()
-            db.session.commit()
             return redirect(url_for('main_page'))  # Redirect to the main page after login
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
@@ -385,22 +367,46 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    user = User.query.filter(User.user_id == current_user.user_id).first()
-    user.user_online_status = 'Offline'
-    user.last_status_update = datetime.datetime.now()
-    db.session.commit()
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-# Route to handle the logout functionality when the browser is closed
-@app.route('/logout-on-close', methods=['POST'])
-def logout_on_close():
-    user = User.query.filter(User.user_id == current_user.user_id).first()
-    user.user_online_status = 'Offline'
+# Update user status in PostgreSQL
+def update_user_status(user_id, status):
+    user = User.query.filter(User.user_id == user_id).first()
+    print(f'User: {user}')
+    user.user_online_status = status
     user.last_status_update = datetime.datetime.now()
     db.session.commit()
-    return ('', 204)
+
+
+# Update user status when they connect
+@socketio.on('connect')
+def handle_connect():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        update_user_status(user_id, 'Online')
+        emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+
+
+# Update user status when they disconnect
+@socketio.on('disconnect')
+def handle_disconnect():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        update_user_status(user_id, 'Offline')
+        emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
+        
+# Heartbeat mechanism to check if the user is still online
+@socketio.on('heartbeat')
+def handle_heartbeat(data):
+    user_id = data.get('user_id')
+    print(data)
+    if user_id:
+        update_user_status(user_id, 'Online')
+        emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+    else:
+        print("Heartbeat received without user ID")
 
 # Handle the registration route
 @app.route('/register', methods=['GET', 'POST'])
@@ -698,6 +704,6 @@ def submit_solution():
         
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    socket.run(app, debug=True, host = '0.0.0.0', port=os.getenv("DEBUG_PORT"))
+    socketio.run(app, debug=True, host = '0.0.0.0', port=os.getenv("DEBUG_PORT"))
     # app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
 
