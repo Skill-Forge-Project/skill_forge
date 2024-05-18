@@ -21,7 +21,7 @@ class SubmitedSolution(db.Model):
     submission_id = db.Column(db.String(20), primary_key=True) # Unique ID for each submission.
     quest_id = db.Column(db.String(20), db.ForeignKey('coding_quests.quest_id'), nullable=False)
     user_id = db.Column(db.String(20), db.ForeignKey('users.user_id'), nullable=False)
-    submission_date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    submission_date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     user_code = db.Column(db.Text, nullable=True)
     successful_tests = db.Column(db.Integer, default=0, nullable=True)
     unsuccessful_tests = db.Column(db.Integer, default=0, nullable=True)

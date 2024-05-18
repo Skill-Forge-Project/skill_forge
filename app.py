@@ -570,13 +570,15 @@ def submit_solution():
         update_user_stats = False
         if not solution:
             update_user_stats = True
-            
+        
+        current_datetime = datetime.datetime.now()
+        
         # Save the submission to the database
         new_submission = SubmitedSolution(
             submission_id=submission_id,
             user_id=user_id,
             quest_id=quest_id,
-            submission_date=datetime.datetime.now(),
+            submission_date=current_datetime.strftime('%d-%m-%Y %H:%M:%S'),
             user_code=user_code,
             successful_tests=successful_tests,
             unsuccessful_tests=unsuccessful_tests,
