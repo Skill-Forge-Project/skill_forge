@@ -21,7 +21,7 @@ class SubmitedSolution(db.Model):
     submission_id = db.Column(db.String(20), primary_key=True) # Unique ID for each submission.
     quest_id = db.Column(db.String(20), db.ForeignKey('coding_quests.quest_id'), nullable=False)
     user_id = db.Column(db.String(20), db.ForeignKey('users.user_id'), nullable=False)
-    submission_date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    submission_date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     user_code = db.Column(db.Text, nullable=True)
     successful_tests = db.Column(db.Integer, default=0, nullable=True)
     unsuccessful_tests = db.Column(db.Integer, default=0, nullable=True)
@@ -37,6 +37,7 @@ class SubmitedSolution(db.Model):
 def open_view_solution(solution_id):
     
     # Get the user's desired solution based on the solution_id
-    user_solved_quest = SubmitedSolution.query.filter_by(submission_id=solution_id).options(joinedload(SubmitedSolution.coding_quest)).first()
+    user_solved_quest = SubmitedSolution.query.filter_by(submission_id=solution_id).first()
+
 
     return render_template('view_solution.html', user_solved_quest=user_solved_quest)

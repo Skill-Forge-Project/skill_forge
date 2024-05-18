@@ -1,5 +1,5 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from flask_socketio import SocketIO, emit
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
+from flask_socketio import SocketIO, emit, disconnect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import Enum
@@ -7,7 +7,8 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
+from datetime import timedelta
 from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
 # Import flask forms and validators
@@ -24,7 +25,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
 
 # The specific server ip address. Should be included in the .env file
 srv_address = os.getenv("SERVER_IP_ADDR")
@@ -37,7 +38,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_PROD'))
 
-socket = SocketIO(app)
+socketio = SocketIO(app)
 
 # Init the login manager
 login_manager = LoginManager(app)
@@ -90,6 +91,8 @@ class User(UserMixin, db.Model):
     is_banned = db.Column(db.Boolean, default=lambda: False)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
+    user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
+    last_status_update = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=True)
 
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
@@ -154,11 +157,8 @@ def open_user_profile():
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
-    with conn.cursor() as cur:
-        user_status = cur.execute(f"""SELECT status FROM user_status WHERE user_id = '{user_id}';""")
-        user_status_res = cur.fetchone()[0]
-        last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
-        last_logged_date_res = cur.fetchone()[0]
+    user_status = User.query.filter(User.user_id == user_id).first().user_online_status
+    last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
 
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
@@ -170,8 +170,8 @@ def open_user_profile():
                            user_discord=user_discord,
                            user_linked_in=user_linked_in,
                            user_achievements=user_achievements,
-                           user_status=user_status_res,
-                           last_logged_date=last_logged_date_res)
+                           user_status=user_status,
+                           last_logged_date=last_logged_date)
 
 # Route to handle the user profile (self-open)
 @app.route('/user_profile/<username>', methods=['POST', 'GET'])
@@ -180,30 +180,23 @@ def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
     user_id = user.user_id
-    # Convert avatar binary data to Base64-encoded string
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    # Get the last logged date
-    with conn.cursor() as cur:
-        cur.execute("SELECT status, last_updated FROM user_status WHERE user_id = %s;", (user_id,))
-        result = cur.fetchone()
-        if result:
-            user_status_res, last_logged_date_res = result
-            if last_logged_date_res is None:
-                user_status_res = "Offline"
-                last_logged_date_res = user.date_registered
-        else:
-            user_status_res = "Offline"
-            last_logged_date_res = user.date_registered
-        
-    if user:
-        return render_template('user_profile_view.html', 
-                               user=user, 
-                               avatar=avatar_base64,
-                               user_status=user_status_res,
-                               last_logged_date=last_logged_date_res)
+    if user_id == current_user.user_id:
+        return redirect(url_for('open_user_profile'))
     else:
-        # Handle the case where the user is not found
-        return "User not found", 404
+        # Convert avatar binary data to Base64-encoded string
+        avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+        # Get the last logged date
+        user_status = User.query.filter(User.user_id == user_id).first().user_online_status
+        last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
+        if user:
+            return render_template('user_profile_view.html', 
+                                user=user, 
+                                avatar=avatar_base64,
+                                user_status=user_status,
+                                last_logged_date=last_logged_date)
+        else:
+            # Handle the case where the user is not found
+            return "User not found", 404
 
 
 # Change the User avatar route
@@ -381,6 +374,42 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
+# Update user status in PostgreSQL
+def update_user_status(user_id, status):
+    user = User.query.filter(User.user_id == user_id).first()
+    user.user_online_status = status
+    user.last_status_update = datetime.datetime.now()
+    db.session.commit()
+
+
+# Update user status when they connect
+@socketio.on('connect')
+def handle_connect():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        update_user_status(user_id, 'Online')
+        emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+
+
+# Update user status when they disconnect
+@socketio.on('disconnect')
+def handle_disconnect():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        update_user_status(user_id, 'Offline')
+        emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
+        
+# Heartbeat mechanism to check if the user is still online
+@socketio.on('heartbeat')
+def handle_heartbeat(data):
+    user_id = data.get('user_id')
+    if user_id:
+        update_user_status(user_id, 'Online')
+        emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+    else:
+        print("Heartbeat received without user ID")
+
+# Handle the registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -402,51 +431,6 @@ def register():
         flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
-
-
-
-# Update user status in PostgreSQL
-def update_user_status(user_id, status):
-    with conn.cursor() as cur:
-        current_time = datetime.datetime.now()
-        cur.execute(f"""
-            INSERT INTO user_status (user_id, status, last_updated)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (user_id)
-            DO UPDATE SET status = EXCLUDED.status, last_updated = EXCLUDED.last_updated;
-        """, (user_id, status, current_time))
-        conn.commit()
-
-
-@socket.on('connect')
-def connect():
-    user_id = current_user.user_id
-    update_user_status(user_id, 'Online')
-    emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
-
-
-@socket.on('disconnect')
-def disconnect():
-    user_id = current_user.user_id
-    update_user_status(user_id, 'Offline')
-    emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
-    
-    
-# Flask-SocketIO events
-# @socketio.on('connect')
-# def handle_connect():
-#     user_id = current_user.user_id
-#     if user_id:
-#         update_user_status(user_id, 'online')
-#         socketio.emit('status_update', {'user_id': user_id, 'status': 'online'}, broadcast=True)
-
-
-# @socketio.on('disconnect')
-# def handle_disconnect():
-#     user_id = current_user.user_id
-#     if user_id:
-#         update_user_status(user_id, 'offline')
-#         socketio.emit('status_update', {'user_id': user_id, 'status': 'offline'}, broadcast=True)
 
 # ----------------- Login and Register Functionality ----------------- #
 
@@ -571,15 +555,16 @@ def submit_solution():
         # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
         solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
         update_user_stats = False
-        if not solution:
+        if not solution or solution == None:
             update_user_stats = True
-            
+        current_datetime = datetime.datetime.now()
+        
         # Save the submission to the database
         new_submission = SubmitedSolution(
             submission_id=submission_id,
             user_id=user_id,
             quest_id=quest_id,
-            submission_date=datetime.datetime.now(),
+            submission_date=current_datetime,
             user_code=user_code,
             successful_tests=successful_tests,
             unsuccessful_tests=unsuccessful_tests,
@@ -720,6 +705,6 @@ def submit_solution():
         
 if __name__ == '__main__':
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    socket.run(app, debug=True, host = '0.0.0.0', port=os.getenv("DEBUG_PORT"))
+    socketio.run(app, debug=True, host = '0.0.0.0', port=os.getenv("DEBUG_PORT"))
     # app.run(debug=True, host = '0.0.0.0', port = os.getenv("DEBUG_PORT"))
 

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    const userId = "{{ current_user.user_id }}";  // Get the user ID dynamically
-    const socket = io('http://192.168.0.169:5000/', {
+    const userId = "{{ user.user_id }}";  // Get the user ID dynamically
+    const socket = io('http://192.168.0.169:5000', {
         query: {
             user_id: userId
         }
