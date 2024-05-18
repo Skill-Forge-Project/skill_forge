@@ -377,7 +377,6 @@ def logout():
 # Update user status in PostgreSQL
 def update_user_status(user_id, status):
     user = User.query.filter(User.user_id == user_id).first()
-    print(f'User: {user}')
     user.user_online_status = status
     user.last_status_update = datetime.datetime.now()
     db.session.commit()
@@ -404,7 +403,6 @@ def handle_disconnect():
 @socketio.on('heartbeat')
 def handle_heartbeat(data):
     user_id = data.get('user_id')
-    print(data)
     if user_id:
         update_user_status(user_id, 'Online')
         emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
