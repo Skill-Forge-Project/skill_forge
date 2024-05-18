@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from sqlalchemy import Enum
 from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
-from flask_login import LoginManager, UserMixin, login_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
 import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet
 from login_forms import LoginForm, RegistrationForm
@@ -351,7 +351,7 @@ def update_new_password():
     used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
     db.session.delete(used_token)
     db.session.commit()
-    flash(f'Password for {username} successfully changed. Now you can log in with your new password.')
+    flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
     return redirect(url_for('hello'))
 
 # ----------------- Reset Password Functionality ----------------- #
@@ -370,8 +370,16 @@ def login():
             login_user(user, force=True)
             return redirect(url_for('main_page'))  # Redirect to the main page after login
         else:
-            flash('Login unsuccessful. Please check your username and password.', 'danger')
+            flash('Login unsuccessful. Please check your username and password.', 'error')
     return render_template('index.html', form=form)
+
+# Route to handle the logout functionality
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('login'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -380,7 +388,7 @@ def register():
         # Check if the email or username is already in use
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
-            flash('Email or username already in use', 'alert-error')
+            flash('Email or username already in use', 'error')
             return redirect(url_for('register'))
         
         # Create a new user
@@ -391,7 +399,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        flash('Your account has been created! You are now able to log in.', 'alert-success ')
+        flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
 
