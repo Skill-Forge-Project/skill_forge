@@ -22,7 +22,7 @@ app = Flask(__name__)
 
 # Database authentication
 app.config['SECRET_KEY'] = os.urandom(24).hex()
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
@@ -35,7 +35,7 @@ bcrypt = Bcrypt(app)
 # Init the database connection
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_DEV'))
+conn = psycopg2.connect(os.getenv('SQLALCHEMY_DATABASE_URI_PROD'))
 
 socket = SocketIO(app)
 
