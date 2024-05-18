@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, session
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -7,7 +7,8 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime, eventlet, pytz
+from datetime import timedelta
 from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
 # Import flask forms and validators
@@ -24,7 +25,22 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=1)
+
+    
+# Make sessions permanent
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    now = datetime.datetime.now()
+    session['last_activity'] = now  # Update session last activity on each request
+    print(f'Session last activity: {session["last_activity"]}')  # Debug print statement
+    if 'last_activity' in session:
+        last_activity = session['last_activity']
+        if now - last_activity > timedelta(minutes=1):  # Change session lifetime to 1 minute
+            logout_user()
+            flash('You have been logged out due to inactivity.', 'warning')
+            return redirect(url_for('login'))
 
 # The specific server ip address. Should be included in the .env file
 srv_address = os.getenv("SERVER_IP_ADDR")
@@ -156,8 +172,8 @@ def open_user_profile():
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
-    user_status = User.query.get(user_id).user_online_status
-    last_logged_date = User.query.get(user_id).last_status_update
+    user_status = User.query.filter(User.user_id == user_id).first().user_online_status
+    last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
 
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
@@ -182,9 +198,8 @@ def open_user_profile_view(username):
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
-    user_status = User.query.get(user_id).user_online_status
-    last_logged_date = User.query.get(user_id).last_status_update
-        
+    user_status = User.query.filter(User.user_id == user_id).first().user_online_status
+    last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
     if user:
         return render_template('user_profile_view.html', 
                                user=user, 
@@ -370,7 +385,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
-    user = User.query.get(current_user.user_id)
+    user = User.query.filter(User.user_id == current_user.user_id).first()
     user.user_online_status = 'Offline'
     user.last_status_update = datetime.datetime.now()
     db.session.commit()
@@ -378,6 +393,16 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
+# Route to handle the logout functionality when the browser is closed
+@app.route('/logout-on-close', methods=['POST'])
+def logout_on_close():
+    user = User.query.filter(User.user_id == current_user.user_id).first()
+    user.user_online_status = 'Offline'
+    user.last_status_update = datetime.datetime.now()
+    db.session.commit()
+    return ('', 204)
+
+# Handle the registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -399,51 +424,6 @@ def register():
         flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
-
-
-
-# Update user status in PostgreSQL
-# def update_user_status(user_id, status):
-#     current_time = datetime.datetime.now()
-#     current_status = UserStatus.filter_by(user_id=user_id).first()
-#     if current_status:
-#         update_status = UserStatus(user_id=user_id, status=status, last_updated=current_time)
-#         db.session.add(update_status)
-#         db.session.commit()
-#     else:
-#         new_status = UserStatus(user_id=user_id, status=status, last_updated=current_time)
-#         db.session.add(new_status)
-#         db.session.commit()
-
-# @socket.on('connect')
-# def connect():
-#     user_id = current_user.user_id
-#     update_user_status(user_id, 'Online')
-#     emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
-
-
-# @socket.on('disconnect')
-# def disconnect():
-#     user_id = current_user.user_id
-#     update_user_status(user_id, 'Offline')
-#     emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
-    
-    
-# Flask-SocketIO events
-# @socketio.on('connect')
-# def handle_connect():
-#     user_id = current_user.user_id
-#     if user_id:
-#         update_user_status(user_id, 'online')
-#         socketio.emit('status_update', {'user_id': user_id, 'status': 'online'}, broadcast=True)
-
-
-# @socketio.on('disconnect')
-# def handle_disconnect():
-#     user_id = current_user.user_id
-#     if user_id:
-#         update_user_status(user_id, 'offline')
-#         socketio.emit('status_update', {'user_id': user_id, 'status': 'offline'}, broadcast=True)
 
 # ----------------- Login and Register Functionality ----------------- #
 
