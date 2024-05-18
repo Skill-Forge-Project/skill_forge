@@ -567,10 +567,7 @@ def submit_solution():
             # If it exists, generate a new submission_id
             suffix = ''.join(random.choices(string.digits, k=suffix_length))
             submission_id = f"{prefix}{suffix}"
-        
-        # Get the current time
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
+                
         # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
         solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
         update_user_stats = False
