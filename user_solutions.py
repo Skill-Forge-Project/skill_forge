@@ -37,6 +37,7 @@ class SubmitedSolution(db.Model):
 def open_view_solution(solution_id):
     
     # Get the user's desired solution based on the solution_id
-    user_solved_quest = SubmitedSolution.query.filter_by(submission_id=solution_id).options(joinedload(SubmitedSolution.coding_quest)).first()
+    user_solved_quest = SubmitedSolution.query.filter_by(submission_id=solution_id).first()
+
 
     return render_template('view_solution.html', user_solved_quest=user_solved_quest)

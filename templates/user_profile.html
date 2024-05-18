@@ -254,7 +254,7 @@
                                         <td><a href="{{ url_for('open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{ solved_quest.coding_quest.quest_name }}</a></td>
                                         <td>{{ solved_quest.coding_quest.language }}</td>
                                         <td>{{ solved_quest.coding_quest.difficulty }}</td>
-                                        <td>{{ solved_quest.submission_date }}</td>
+                                        <td>{{ solved_quest.submission_date.strftime('%d-%m-%Y %H:%M') }}</td>
                                         <td>{{ solved_quest.successful_tests }}</td>
                                         <td>{{ solved_quest.unsuccessful_tests }}</td>
                                         <td>

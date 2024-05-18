@@ -568,9 +568,8 @@ def submit_solution():
         # Check if the user already solved the particular quest and IF NOT add XP points, count the quest and update users stats
         solution = SubmitedSolution.query.filter_by(user_id=user_id, quest_id=quest_id, quest_passed=True).first()
         update_user_stats = False
-        if not solution:
+        if not solution or solution == None:
             update_user_stats = True
-        
         current_datetime = datetime.datetime.now()
         
         # Save the submission to the database
@@ -578,7 +577,7 @@ def submit_solution():
             submission_id=submission_id,
             user_id=user_id,
             quest_id=quest_id,
-            submission_date=current_datetime.strftime('%d-%m-%Y %H:%M:%S'),
+            submission_date=current_datetime,
             user_code=user_code,
             successful_tests=successful_tests,
             unsuccessful_tests=unsuccessful_tests,
