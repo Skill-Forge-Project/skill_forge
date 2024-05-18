@@ -90,6 +90,8 @@ class User(UserMixin, db.Model):
     is_banned = db.Column(db.Boolean, default=lambda: False)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
+    user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
+    last_status_update = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=True)
 
     # Class constuctor
     def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
@@ -154,11 +156,8 @@ def open_user_profile():
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
-    with conn.cursor() as cur:
-        user_status = cur.execute(f"""SELECT status FROM user_status WHERE user_id = '{user_id}';""")
-        user_status_res = cur.fetchone()[0]
-        last_logged_date = cur.execute(f"""SELECT last_updated FROM user_status WHERE user_id = '{user_id}';""")
-        last_logged_date_res = cur.fetchone()[0]
+    user_status = User.query.get(user_id).user_online_status
+    last_logged_date = User.query.get(user_id).last_status_update
 
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
@@ -170,8 +169,8 @@ def open_user_profile():
                            user_discord=user_discord,
                            user_linked_in=user_linked_in,
                            user_achievements=user_achievements,
-                           user_status=user_status_res,
-                           last_logged_date=last_logged_date_res)
+                           user_status=user_status,
+                           last_logged_date=last_logged_date)
 
 # Route to handle the user profile (self-open)
 @app.route('/user_profile/<username>', methods=['POST', 'GET'])
@@ -183,24 +182,15 @@ def open_user_profile_view(username):
     # Convert avatar binary data to Base64-encoded string
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     # Get the last logged date
-    with conn.cursor() as cur:
-        cur.execute("SELECT status, last_updated FROM user_status WHERE user_id = %s;", (user_id,))
-        result = cur.fetchone()
-        if result:
-            user_status_res, last_logged_date_res = result
-            if last_logged_date_res is None:
-                user_status_res = "Offline"
-                last_logged_date_res = user.date_registered
-        else:
-            user_status_res = "Offline"
-            last_logged_date_res = user.date_registered
+    user_status = User.query.get(user_id).user_online_status
+    last_logged_date = User.query.get(user_id).last_status_update
         
     if user:
         return render_template('user_profile_view.html', 
                                user=user, 
                                avatar=avatar_base64,
-                               user_status=user_status_res,
-                               last_logged_date=last_logged_date_res)
+                               user_status=user_status,
+                               last_logged_date=last_logged_date)
     else:
         # Handle the case where the user is not found
         return "User not found", 404
@@ -368,6 +358,9 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             # Log in the user
             login_user(user, force=True)
+            user.user_online_status = 'Online'
+            user.last_status_update = datetime.datetime.now()
+            db.session.commit()
             return redirect(url_for('main_page'))  # Redirect to the main page after login
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
@@ -377,6 +370,10 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    user = User.query.get(current_user.user_id)
+    user.user_online_status = 'Offline'
+    user.last_status_update = datetime.datetime.now()
+    db.session.commit()
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
@@ -406,30 +403,30 @@ def register():
 
 
 # Update user status in PostgreSQL
-def update_user_status(user_id, status):
-    with conn.cursor() as cur:
-        current_time = datetime.datetime.now()
-        cur.execute(f"""
-            INSERT INTO user_status (user_id, status, last_updated)
-            VALUES (%s, %s, %s)
-            ON CONFLICT (user_id)
-            DO UPDATE SET status = EXCLUDED.status, last_updated = EXCLUDED.last_updated;
-        """, (user_id, status, current_time))
-        conn.commit()
+# def update_user_status(user_id, status):
+#     current_time = datetime.datetime.now()
+#     current_status = UserStatus.filter_by(user_id=user_id).first()
+#     if current_status:
+#         update_status = UserStatus(user_id=user_id, status=status, last_updated=current_time)
+#         db.session.add(update_status)
+#         db.session.commit()
+#     else:
+#         new_status = UserStatus(user_id=user_id, status=status, last_updated=current_time)
+#         db.session.add(new_status)
+#         db.session.commit()
+
+# @socket.on('connect')
+# def connect():
+#     user_id = current_user.user_id
+#     update_user_status(user_id, 'Online')
+#     emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
 
 
-@socket.on('connect')
-def connect():
-    user_id = current_user.user_id
-    update_user_status(user_id, 'Online')
-    emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
-
-
-@socket.on('disconnect')
-def disconnect():
-    user_id = current_user.user_id
-    update_user_status(user_id, 'Offline')
-    emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
+# @socket.on('disconnect')
+# def disconnect():
+#     user_id = current_user.user_id
+#     update_user_status(user_id, 'Offline')
+#     emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
     
     
 # Flask-SocketIO events

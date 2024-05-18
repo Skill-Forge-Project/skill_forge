@@ -56,15 +56,13 @@
                 </div>
             </div>
             <div class="online_status" id="onlineStatusDiv">
-                {% if user_status == "Offline" %}
+                {% if not user_status %}
+                    <p class="online_status title offline">Offline</p>
+                {% elif user_status == "Offline" %}
                     <p class="online_status title offline">Last seen</p>
-                    {% if last_logged_date == "Never" %}
-                        <p class="online_status title offline">Never</p>
-                    {% else %}
-                        <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
-                    {% endif %}
-                {% else %}
-                    <p class="online_status title">{{ user_status }}</p>
+                    <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                {% elif user_stats == "Online" %}
+                    <p class="online_status title online">Online</p>
                 {% endif %}
             </div>
         </div>
