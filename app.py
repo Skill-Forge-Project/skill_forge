@@ -180,20 +180,23 @@ def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
     user_id = user.user_id
-    # Convert avatar binary data to Base64-encoded string
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
-    # Get the last logged date
-    user_status = User.query.filter(User.user_id == user_id).first().user_online_status
-    last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
-    if user:
-        return render_template('user_profile_view.html', 
-                               user=user, 
-                               avatar=avatar_base64,
-                               user_status=user_status,
-                               last_logged_date=last_logged_date)
+    if user_id == current_user.user_id:
+        return redirect(url_for('open_user_profile'))
     else:
-        # Handle the case where the user is not found
-        return "User not found", 404
+        # Convert avatar binary data to Base64-encoded string
+        avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+        # Get the last logged date
+        user_status = User.query.filter(User.user_id == user_id).first().user_online_status
+        last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
+        if user:
+            return render_template('user_profile_view.html', 
+                                user=user, 
+                                avatar=avatar_base64,
+                                user_status=user_status,
+                                last_logged_date=last_logged_date)
+        else:
+            # Handle the case where the user is not found
+            return "User not found", 404
 
 
 # Change the User avatar route
