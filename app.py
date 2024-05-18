@@ -403,11 +403,12 @@ def handle_disconnect():
 @socketio.on('heartbeat')
 def handle_heartbeat(data):
     user_id = data.get('user_id')
-    if user_id:
+    if user_id and current_user.is_authenticated:
         update_user_status(user_id, 'Online')
         emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
     else:
-        print("Heartbeat received without user ID")
+        print("Heartbeat received without user ID or user not authenticated")
+
 
 # Handle the registration route
 @app.route('/register', methods=['GET', 'POST'])
