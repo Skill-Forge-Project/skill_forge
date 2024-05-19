@@ -12,7 +12,6 @@ from datetime import datetime
 from flask import Blueprint, request, redirect, url_for, render_template
 from flask_login import login_required, current_user
 from sqlalchemy.dialects.postgresql import JSON
-from sqlalchemy.ext.mutable import MutableDict
 import random, string, base64
 from admin_submit_quest import Quest
 
@@ -43,7 +42,7 @@ class SubmitedQuest(db.Model):
     test_outputs = db.Column(db.Text, nullable=True)
     xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
     type = db.Column(db.Enum('Basic', 'Advanced', name='quest_type'), nullable=True)
-    comments=db.Column(MutableDict.as_mutable(JSON), default=list, nullable=True) # Store comments for the submited quests
+    comments=db.Column(JSON, default = [], nullable=True) # Store comments for the submited quests
 
 
 # Redirect to the user submit quest page
@@ -247,7 +246,14 @@ def post_comment():
     created_at = current_time
     
     current_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
-    data = {'username': username, 'user_id': user_id, 'user_role': user_role, 'user_avatar': user_avatar, 'posted_at': created_at, 'comment': comment}
+    data = {
+        'username': username, 
+        'user_id': user_id, 
+        'user_role': user_role, 
+        'user_avatar': user_avatar, 
+        'posted_at': created_at, 
+        'comment': comment}
+    
     all_comments.append(data)
     current_quest.comments = all_comments
     
@@ -258,3 +264,4 @@ def post_comment():
                            submited_quest=current_quest, 
                            user_role=user_role, 
                            user_id=user_id))
+
