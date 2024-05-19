@@ -1,0 +1,504 @@
+[
+    {
+      "Novice Adventurer": {
+        "level": 1,
+        "min_xp": 0,
+        "max_xp": 179
+      },
+      "Rookie Explorer": {
+        "level": 2,
+        "min_xp": 180,
+        "max_xp": 359
+      },
+      "Beginner Trailblazer": {
+        "level": 3,
+        "min_xp": 360,
+        "max_xp": 599
+      },
+      "Junior Pathfinder": {
+        "level": 4,
+        "min_xp": 600,
+        "max_xp": 899
+      },
+      "Emerging Wanderer": {
+        "level": 5,
+        "min_xp": 900,
+        "max_xp": 1259
+      },
+      "Greenhorn Voyager": {
+        "level": 6,
+        "min_xp": 1260,
+        "max_xp": 1679
+      },
+      "Neophyte Discoverer": {
+        "level": 7,
+        "min_xp": 1680,
+        "max_xp": 2159
+      },
+      "Apprentice Wayfarer": {
+        "level": 8,
+        "min_xp": 2160,
+        "max_xp": 2699
+      },
+      "Tenderfoot Nomad": {
+        "level": 9,
+        "min_xp": 2700,
+        "max_xp": 3299
+      },
+      "Initiate Seeker": {
+        "level": 10,
+        "min_xp": 3300,
+        "max_xp": 3959
+      },
+      "Rookie Scout": {
+        "level": 11,
+        "min_xp": 3960,
+        "max_xp": 4679
+      },
+      "Novitiate Pioneer": {
+        "level": 12,
+        "min_xp": 4680,
+        "max_xp": 5459
+      },
+      "Trainee Wayfinder": {
+        "level": 13,
+        "min_xp": 5460,
+        "max_xp": 6299
+      },
+      "Aspiring Nomad": {
+        "level": 14,
+        "min_xp": 6300,
+        "max_xp": 7199
+      },
+      "Young Journeyer": {
+        "level": 15,
+        "min_xp": 7200,
+        "max_xp": 8159
+      },
+      "Apprentice Voyager": {
+        "level": 16,
+        "min_xp": 8160,
+        "max_xp": 9179
+      },
+      "Fresh Explorer": {
+        "level": 17,
+        "min_xp": 9180,
+        "max_xp": 10259
+      },
+      "Junior Trailseeker": {
+        "level": 18,
+        "min_xp": 10260,
+        "max_xp": 11399
+      },
+      "Promising Pathfinder": {
+        "level": 19,
+        "min_xp": 11400,
+        "max_xp": 12699
+      },
+      "Novice Expeditionist": {
+        "level": 20,
+        "min_xp": 12700,
+        "max_xp": 13859
+      },
+      "Intermediate Adventurer": {
+        "level": 21,
+        "min_xp": 13860,
+        "max_xp": 15179
+      },
+      "Journeyman Explorer": {
+        "level": 22,
+        "min_xp": 15180,
+        "max_xp": 16559
+      },
+      "Skilled Trailblazer": {
+        "level": 23,
+        "min_xp": 16560,
+        "max_xp": 17999
+      },
+      "Adept Pathfinder": {
+        "level": 24,
+        "min_xp": 18000,
+        "max_xp": 19499
+      },
+      "Expert Wanderer": {
+        "level": 25,
+        "min_xp": 19500,
+        "max_xp": 21059
+      },
+      "Veteran Voyager": {
+        "level": 26,
+        "min_xp": 21060,
+        "max_xp": 22679
+      },
+      "Seasoned Discoverer": {
+        "level": 27,
+        "min_xp": 22680,
+        "max_xp": 24359
+      },
+      "Accomplished Wayfarer": {
+        "level": 28,
+        "min_xp": 24360,
+        "max_xp": 26099
+      },
+      "Master Nomad": {
+        "level": 29,
+        "min_xp": 26100,
+        "max_xp": 27999
+      },
+      "Proven Seeker": {
+        "level": 30,
+        "min_xp": 28000,
+        "max_xp": 29999
+      },
+      "Elite Scout": {
+        "level": 31,
+        "min_xp": 30000,
+        "max_xp": 32079
+      },
+      "Grandmaster Pioneer": {
+        "level": 32,
+        "min_xp": 32080,
+        "max_xp": 34259
+      },
+      "Maestro Wayfinder": {
+        "level": 33,
+        "min_xp": 34260,
+        "max_xp": 36599
+      },
+      "Virtuoso Nomad": {
+        "level": 34,
+        "min_xp": 36600,
+        "max_xp": 39059
+      },
+      "Supreme Journeyer": {
+        "level": 35,
+        "min_xp": 39060,
+        "max_xp": 41659
+      },
+      "Apex Explorer": {
+        "level": 36,
+        "min_xp": 41660,
+        "max_xp": 44399
+      },
+      "Legendary Trailblazer": {
+        "level": 37,
+        "min_xp": 44400,
+        "max_xp": 47279
+      },
+      "Mythic Pathfinder": {
+        "level": 38,
+        "min_xp": 47280,
+        "max_xp": 50359
+      },
+      "Divine Wanderer": {
+        "level": 39,
+        "min_xp": 50360,
+        "max_xp": 53659
+      },
+      "Celestial Discoverer": {
+        "level": 40,
+        "min_xp": 53660,
+        "max_xp": 57259
+      },
+      "Eminent Wayfarer": {
+        "level": 41,
+        "min_xp": 57260,
+        "max_xp": 61159
+      },
+      "Ascendant Nomad": {
+        "level": 42,
+        "min_xp": 61160,
+        "max_xp": 65359
+      },
+      "Sovereign Seeker": {
+        "level": 43,
+        "min_xp": 65360,
+        "max_xp": 69859
+      },
+      "Paramount Scout": {
+        "level": 44,
+        "min_xp": 69860,
+        "max_xp": 74659
+      },
+      "Imposing Pioneer": {
+        "level": 45,
+        "min_xp": 74660,
+        "max_xp": 79759
+      },
+      "Noble Wayfinder": {
+        "level": 46,
+        "min_xp": 79760,
+        "max_xp": 85159
+      },
+      "Majestic Nomad": {
+        "level": 47,
+        "min_xp": 85160,
+        "max_xp": 90959
+      },
+      "Royal Journeyer": {
+        "level": 48,
+        "min_xp": 90960,
+        "max_xp": 97159
+      },
+      "Regal Explorer": {
+        "level": 49,
+        "min_xp": 97160,
+        "max_xp": 103559
+      },
+      "Grand Adventurer": {
+        "level": 50,
+        "min_xp": 103560,
+        "max_xp": 110159
+      },
+      "Illustrious Trailblazer": {
+        "level": 51,
+        "min_xp": 110160,
+        "max_xp": 117059
+      },
+      "Prestigious Pathfinder": {
+        "level": 52,
+        "min_xp": 117060,
+        "max_xp": 124259
+      },
+      "Distinguished Wanderer": {
+        "level": 53,
+        "min_xp": 124260,
+        "max_xp": 131759
+      },
+      "Renowned Voyager": {
+        "level": 54,
+        "min_xp": 131760,
+        "max_xp": 139559
+      },
+      "Exalted Discoverer": {
+        "level": 55,
+        "min_xp": 139560,
+        "max_xp": 147659
+      },
+      "Supreme Wayfarer": {
+        "level": 56,
+        "min_xp": 147660,
+        "max_xp": 156059
+      },
+      "Infinite Nomad": {
+        "level": 57,
+        "min_xp": 156060,
+        "max_xp": 164759
+      },
+      "Eternal Seeker": {
+        "level": 58,
+        "min_xp": 164760,
+        "max_xp": 173759
+      },
+      "Timeless Scout": {
+        "level": 59,
+        "min_xp": 173760,
+        "max_xp": 183059
+      },
+      "Dimensional Pioneer": {
+        "level": 60,
+        "min_xp": 183060,
+        "max_xp": 192659
+      },
+      "Cosmic Wayfinder": {
+        "level": 61,
+        "min_xp": 192660,
+        "max_xp": 202559
+      },
+      "Ethereal Adventurer": {
+        "level": 62,
+        "min_xp": 202560,
+        "max_xp": 212759
+      },
+      "Astral Trailblazer": {
+        "level": 63,
+        "min_xp": 212760,
+        "max_xp": 223259
+      },
+      "Divine Pathfinder": {
+        "level": 64,
+        "min_xp": 223260,
+        "max_xp": 234059
+      },
+      "Celestial Wanderer": {
+        "level": 65,
+        "min_xp": 234060,
+        "max_xp": 245159
+      },
+      "Transcendent Voyager": {
+        "level": 66,
+        "min_xp": 245160,
+        "max_xp": 256559
+      },
+      "Mythical Discoverer": {
+        "level": 67,
+        "min_xp": 256560,
+        "max_xp": 268259
+      },
+      "Legendary Wayfarer": {
+        "level": 68,
+        "min_xp": 268260,
+        "max_xp": 280259
+      },
+      "Immortal Sorcerer": {
+        "level": 69,
+        "min_xp": 280260,
+        "max_xp": 292559
+      },
+      "Divine Seeker": {
+        "level": 70,
+        "min_xp": 292560,
+        "max_xp": 305159
+      },
+      "Celestial Adventurer": {
+        "level": 71,
+        "min_xp": 305160,
+        "max_xp": 318059
+      },
+      "Divine Wayfinder": {
+        "level": 72,
+        "min_xp": 318060,
+        "max_xp": 331259
+      },
+      "Eternal Wanderer": {
+        "level": 73,
+        "min_xp": 331260,
+        "max_xp": 344759
+      },
+      "Ascended Voyager": {
+        "level": 74,
+        "min_xp": 344760,
+        "max_xp": 358559
+      },
+      "Mythic Discoverer": {
+        "level": 75,
+        "min_xp": 358560,
+        "max_xp": 372659
+      },
+      "Algoritmic Hunter": {
+        "level": 76,
+        "min_xp": 372660,
+        "max_xp": 387059
+      },
+      "Master Pathfinder": {
+        "level": 77,
+        "min_xp": 387060,
+        "max_xp": 401759
+      },
+      "Infinite Debuger": {
+        "level": 78,
+        "min_xp": 401760,
+        "max_xp": 416759
+      },
+      "Divine Nomad": {
+        "level": 79,
+        "min_xp": 416760,
+        "max_xp": 432059
+      },
+      "Ethereal Sovereign": {
+        "level": 80,
+        "min_xp": 432060,
+        "max_xp": 447659
+      },
+      "Ascended Wizard": {
+        "level": 81,
+        "min_xp": 447660,
+        "max_xp": 463559
+      },
+      "Celestial Arhitect": {
+        "level": 82,
+        "min_xp": 463560,
+        "max_xp": 479759
+      },
+      "Distinguished Wayfinder": {
+        "level": 83,
+        "min_xp": 479760,
+        "max_xp": 496259
+      },
+      "Prestigious Nomad": {
+        "level": 84,
+        "min_xp": 496260,
+        "max_xp": 513059
+      },
+      "Legendary Seeker": {
+        "level": 85,
+        "min_xp": 513060,
+        "max_xp": 530159
+      },
+      "Immortal Scout": {
+        "level": 86,
+        "min_xp": 530160,
+        "max_xp": 547559
+      },
+      "Legendary Pioneer": {
+        "level": 87,
+        "min_xp": 547560,
+        "max_xp": 565259
+      },
+      "Code Wayfinder": {
+        "level": 88,
+        "min_xp": 565260,
+        "max_xp": 583259
+      },
+      "Eternal Code Wizard": {
+        "level": 89,
+        "min_xp": 583260,
+        "max_xp": 601559
+      },
+      "Mythical Voyager": {
+        "level": 90,
+        "min_xp": 601560,
+        "max_xp": 620159
+      },
+      "Distinguished Discoverer": {
+        "level": 91,
+        "min_xp": 620160,
+        "max_xp": 639059
+      },
+      "Celestial Trailblazer": {
+        "level": 92,
+        "min_xp": 639060,
+        "max_xp": 658259
+      },
+      "Transcendent Pathfinder": {
+        "level": 93,
+        "min_xp": 658260,
+        "max_xp": 677759
+      },
+      "Infinite Wayfarer": {
+        "level": 94,
+        "min_xp": 677760,
+        "max_xp": 697559
+      },
+      "Immortal Nomad": {
+        "level": 95,
+        "min_xp": 697560,
+        "max_xp": 717659
+      },
+      "Ethereal Seeker": {
+        "level": 96,
+        "min_xp": 717660,
+        "max_xp": 738059
+      },
+      "Ascended Scout": {
+        "level": 97,
+        "min_xp": 738060,
+        "max_xp": 758759
+      },
+      "Celestial Pioneer": {
+        "level": 98,
+        "min_xp": 758760,
+        "max_xp": 779759
+      },
+      "Mythic Wayfinder": {
+        "level": 99,
+        "min_xp": 779760,
+        "max_xp": 801059
+      },
+      "Eternal Nomad": {
+        "level": 100,
+        "min_xp": 801060,
+        "max_xp": 822659
+      }
+    }
+  ]

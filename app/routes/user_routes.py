@@ -163,5 +163,5 @@ def open_admin_panel():
         reported_quests=all_reported_quests,
         all_users=all_users,
         all_admins=all_admins)
-    
+    flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))

@@ -381,7 +381,7 @@ def submit_solution():
                     current_user.xp += 100
             
                 # Update the user XP level and rank
-                with open('levels.json', 'r') as levels_file:
+                with open('../static/configs/levels.json', 'r') as levels_file:
                     leveling_data = json.load(levels_file)
 
                 for level in leveling_data:

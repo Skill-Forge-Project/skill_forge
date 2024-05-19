@@ -2,6 +2,7 @@ import re, secrets, os
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required
+from werkzeug.exceptions import Unauthorized
 # Import the mail functions
 from app.mailtrap import send_reset_email, send_welcome_mail
 # Import the database instance
@@ -64,6 +65,13 @@ def register():
         flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
+
+# Custom error handler for Unauthorized (401) error
+@bp.errorhandler(Unauthorized)
+def handle_unauthorized_error(error):
+    # Redirect users to a specific page and flash a error message
+    flash('You must be logged in to access this page.', 'error')
+    return redirect(url_for('main.login'))
 
 ########### Routes handling password reset functionality ###########
 # Route to open the forgot password form
