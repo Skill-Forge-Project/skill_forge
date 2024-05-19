@@ -4,10 +4,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required
 # Import the mail functions
 from app.mailtrap import send_reset_email, send_welcome_mail
-# Import the bcrypt instance
-from app import bcrypt
 # Import the database instance
-from app import db
+from app.database.db_init import db
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, ResetToken
@@ -21,6 +19,8 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 # Define routes for login and register pages
 @bp.route('/', methods=['GET', 'POST'])
 def login():
+    # Import the bcrypt instance
+    from app import bcrypt
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
@@ -38,7 +38,7 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.', 'success')
-    return redirect(url_for('login'))
+    return redirect(url_for('main.login'))
 
 # Handle the registration route
 @bp.route('/register', methods=['GET', 'POST'])
@@ -52,6 +52,8 @@ def register():
             return redirect(url_for('register'))
         
         # Create a new user
+        # Import the bcrypt instance
+        from app import bcrypt
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(email=form.email.data, username=form.username.data, 
                         first_name=form.first_name.data, last_name=form.last_name.data, 
@@ -137,6 +139,8 @@ def update_new_password():
     
 
     user = User.query.get(user_id)
+    # Import the bcrypt instance
+    from app import bcrypt
     user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
     used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
     db.session.delete(used_token)
@@ -149,8 +153,8 @@ def update_new_password():
 @bp.route('/home')
 @login_required
 def main_page():
-    title_path = os.path.join(base_dir, 'main_page_title')
-    info_path = os.path.join(base_dir, 'main_page_info')
+    title_path = os.path.join(base_dir, '../main_page_title')
+    info_path = os.path.join(base_dir, '../main_page_info')
     try:
         with open(title_path, 'r') as file:
             title_content = file.read().strip()

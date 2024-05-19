@@ -1,13 +1,11 @@
-import random, string, base64
+import random, string, base64, json
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, render_template
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify
 from flask_login import login_required, current_user
-# Import the database instance
-from app import db
 # Import the forms and models
-from app.models import Quest, ReportedQuest, User
+from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
 # Import code runners
-from code_runners import run_python, run_javascript, run_java, run_csharp
+from app.code_runners import run_python, run_javascript, run_java, run_csharp
 
 bp_qst = Blueprint('quests', __name__)
 
@@ -79,6 +77,8 @@ def submit_quest():
     )
 
     # Add the new quest to the database session
+    # Import the database instance
+    from app import db
     db.session.add(new_quest)
     db.session.commit()
 
@@ -116,10 +116,12 @@ def quest_post_comment():
 
     
     # Commit the changes to the database
+    # Import the database instance
+    from app import db
     db.session.commit()
     
     # Redirect to the quest page
-    return redirect(url_for('quest.open_curr_quest', 
+    return redirect(url_for('quests.open_curr_quest', 
                             quest_id=quest.quest_id,
                             user_role=user_role,
                             user_id=user_id))
@@ -144,9 +146,11 @@ def delete_comment():
             reversed_comments.pop(comment_index)
             reversed_comments = list(reversed(reversed_comments))
             quest.quest_comments = reversed_comments
+            # Import the database instance
+            from app import db
             db.session.commit()
             print("Comment deleted successfully.")
-            return redirect(url_for('quest.open_curr_quest', quest_id=quest_id))
+            return redirect(url_for('quests.open_curr_quest', quest_id=quest_id))
     else:
         print("Error: Comment could not be deleted.")
 
@@ -245,6 +249,8 @@ def report_quest(curr_quest_id, report_reason='no reason'):
     )
 
     # Add the new submission to the database session
+    # Import the database instance
+    from app import db
     db.session.add(new_reported_quest)
     db.session.commit()
     
@@ -259,7 +265,7 @@ def open_quests_table(language):
     all_quests = Quest.query.filter(Quest.language == language).all()
     # Retrieve all users from the database
     all_users = User.query.all()
-    return render_template('table_template.html', quests=all_quests, users=all_users, language=language)
+    return render_template('quest_table.html', quests=all_quests, users=all_users, language=language)
 
 # Open Quest for submitting. Change from template to real page!!!!
 @bp_qst.route('/quest/<quest_id>', methods=['GET'])
@@ -269,7 +275,7 @@ def open_curr_quest(quest_id):
     quest = Quest.query.get(quest_id)
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
     user_role = current_user.user_role
-    return render_template('curr_task_template.html', 
+    return render_template('open_quest.html', 
                            quest=quest, 
                            user_avatar=user_avatar,
                            user_role=user_role)
@@ -341,6 +347,8 @@ def submit_solution():
         )
         
         # Add the new submission to the database session
+        # Import the database instance
+        from app import db
         db.session.add(new_submission)
         db.session.commit()
         
@@ -422,51 +430,51 @@ def submit_solution():
         })
     
     # Handle the advanced quests testing (requires unit tests)
-    elif current_quest_type == 'Advanced':
-        if current_quest_language == 'Python':
-            # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
-            user_code = request.form.get('user_code')
-            unit_tests = request.form.get('unit_tests')
-            total_code = user_code + '\n\n' + unit_tests
-            try:
-                user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
-            except subprocess.CalledProcessError as e:
-                user_output = e.output
-            return user_output
+    # elif current_quest_type == 'Advanced':
+    #     if current_quest_language == 'Python':
+    #         # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
+    #         user_code = request.form.get('user_code')
+    #         unit_tests = request.form.get('unit_tests')
+    #         total_code = user_code + '\n\n' + unit_tests
+    #         try:
+    #             user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
+    #         except subprocess.CalledProcessError as e:
+    #             user_output = e.output
+    #         return user_output
         
-        elif current_quest_language == 'JavaScript':
-        # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-            try:
-                user_code = request.form.get('user_code')
-                unit_tests = request.form.get('unit_tests')
+    #     elif current_quest_language == 'JavaScript':
+    #     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+    #         try:
+    #             user_code = request.form.get('user_code')
+    #             unit_tests = request.form.get('unit_tests')
                 
-                ############# KEEP THIS CODE JUST IN CASE. IT'S WORKING BUT NEEDS TO BE JSON-FIED ##########################
-                # print(user_code)
-                # command = [
-                #     'curl', 
-                #     '-X', 'POST', 
-                #     '-H', 'Content-Type: application/json', 
-                #     # '-d', f'{{"code": "{user_code}", "unit_tests": "{unit_tests}"}}', 
-                #     '-d', f'{{"code": "{user_code}"}}',
-                #     'http://192.168.0.169:3000/execute'
-                # ]
-                # result = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=True)
-                # print(result.stdout)
-                # print(result.stderr)
-                # return result.stdout
-                #############################################################################################################
+    #             ############# KEEP THIS CODE JUST IN CASE. IT'S WORKING BUT NEEDS TO BE JSON-FIED ##########################
+    #             # print(user_code)
+    #             # command = [
+    #             #     'curl', 
+    #             #     '-X', 'POST', 
+    #             #     '-H', 'Content-Type: application/json', 
+    #             #     # '-d', f'{{"code": "{user_code}", "unit_tests": "{unit_tests}"}}', 
+    #             #     '-d', f'{{"code": "{user_code}"}}',
+    #             #     'http://192.168.0.169:3000/execute'
+    #             # ]
+    #             # result = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=True)
+    #             # print(result.stdout)
+    #             # print(result.stderr)
+    #             # return result.stdout
+    #             #############################################################################################################
                 
-                server_url = f"http://{srv_address}:3000/execute"
-                response = requests.post(server_url, json={'code': user_code})
-                result = response.json()['result']
-                return jsonify({'result': result})
-            except Exception as e:
-                print(f'An unexpected error occurred: {e}')
-                return e
+    #             server_url = f"http://{srv_address}:3000/execute"
+    #             response = requests.post(server_url, json={'code': user_code})
+    #             result = response.json()['result']
+    #             return jsonify({'result': result})
+    #         except Exception as e:
+    #             print(f'An unexpected error occurred: {e}')
+    #             return e
                 
-        elif current_quest_language == 'Java':
-        # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-            pass
-        elif current_quest_language == 'C#':
-        # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-            pass
+    #     elif current_quest_language == 'Java':
+    #     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+    #         pass
+    #     elif current_quest_language == 'C#':
+    #     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
+    #         pass

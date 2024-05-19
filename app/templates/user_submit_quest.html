@@ -3,7 +3,7 @@
 
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-    <title>Skill Forge</title>
+    <title>Submit New Quest</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_submit_quest.css') }}">
@@ -83,7 +83,7 @@
             </div>
             <div class="btn-row">
                 <button type="submit" id="submitQuest" class="submit-button"
-                    onclick=location.href="{{ url_for('main.user_submit_quest') }}">Submit Quest</button>
+                    onclick=location.href="{{ url_for('usq.user_submit_quest') }}">Submit Quest</button>
             </div>
         </div>
     </form>

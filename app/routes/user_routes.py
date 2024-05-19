@@ -4,9 +4,9 @@ from flask import Blueprint, redirect, url_for, request, flash, render_template
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 # Import the database instance
-from app import db
+from app.database.db_init import db
 # Import the forms and models
-from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest
+from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest
 
 bp_usr = Blueprint('usr', __name__)
 
@@ -136,11 +136,11 @@ def user_self_update():
     user.discord_id = discord_id
     user.linked_in = linked_in_link
     db.session.commit()
-    return redirect(url_for('usr..open_user_profile'))
+    return redirect(url_for('usr.open_user_profile'))
 
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
-@app.route('/admin_panel')
+@bp_usr.route('/admin_panel')
 @login_required
 def open_admin_panel():
     # Retrieve all quests from the database

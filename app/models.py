@@ -6,12 +6,13 @@ from flask_login import UserMixin
 from sqlalchemy.orm import relationship
 from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
-from app import db
+from app.database.db_init import db
+
 
 
 ########### Define the User model ###########
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'users'        
     user_id = db.Column(db.String(10), primary_key=True)
     user_role = db.Column(Enum('User', 'Admin', name='user_role_enum'), default='User', nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -196,5 +197,5 @@ class SubmitedSolution(db.Model):
     unsuccessful_tests = db.Column(db.Integer, default=0, nullable=True)
     quest_passed = db.Column(db.Boolean, nullable=True)
 
-# Define the relationship between the user_submited_solutions and coding_quests table.
-coding_quest = db.relationship('Quest')
+    # Define the relationship between the user_submited_solutions and coding_quests table.
+    coding_quest = db.relationship('Quest')

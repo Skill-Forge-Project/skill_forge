@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_required, current_user
 # Import the database instance
-from app import db
+from app.database.db_init import db
 # Import the forms and models
 from app.models import SubmitedQuest, Quest
 
