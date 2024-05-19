@@ -10,7 +10,7 @@
 # Ignore pycache dir
 /__pycache__/
 */__pycache__/
-**/__pycache__/
+**/__pycache__/**
 
 
 # Ignore node modules files on the node js server
