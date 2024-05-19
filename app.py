@@ -7,8 +7,8 @@ from sqlalchemy.orm import joinedload
 from flask_bcrypt import Bcrypt  # Password hashing
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from dotenv import load_dotenv
-import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, datetime
-from datetime import timedelta
+import os, psycopg2, base64, subprocess, random, string, requests, json, re, secrets, pytz
+from datetime import timedelta, datetime
 from login_forms import LoginForm, RegistrationForm
 from email_functionality import send_welcome_mail, send_reset_email
 # Import flask forms and validators
@@ -25,6 +25,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24).hex()
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['TIMEZONE'] = 'Europe/Sofia'  # Set your desired timezone here
 
 
 # The specific server ip address. Should be included in the .env file
@@ -290,7 +291,7 @@ def send_email_token():
         # Generate a unique token
         token = secrets.token_urlsafe(32)
         # Calculate expiration time (60 minutes from now)
-        expiration_time = datetime.datetime.now() + datetime.timedelta(minutes=60)
+        expiration_time = datetime.now() + timedelta(minutes=60)
         new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
         db.session.add(new_token)
         db.session.commit()
@@ -333,7 +334,7 @@ def update_new_password():
     if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', new_password):
         flash('Password must contain at least one special character.', 'error')
         return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if str(datetime.datetime.now()) > expiration_time:
+    if str(datetime.now()) > expiration_time:
         flash('Token has expired.', 'error')
         return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
 
@@ -354,7 +355,7 @@ def update_new_password():
 
 # Define routes for login and register pages
 @app.route('/', methods=['GET', 'POST'])
-def login():    
+def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
@@ -378,7 +379,7 @@ def logout():
 def update_user_status(user_id, status):
     user = User.query.filter(User.user_id == user_id).first()
     user.user_online_status = status
-    user.last_status_update = datetime.datetime.now()
+    user.last_status_update = datetime.now()
     db.session.commit()
 
 
@@ -403,11 +404,12 @@ def handle_disconnect():
 @socketio.on('heartbeat')
 def handle_heartbeat(data):
     user_id = data.get('user_id')
-    if user_id:
+    if user_id and current_user.is_authenticated:
         update_user_status(user_id, 'Online')
         emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
     else:
-        print("Heartbeat received without user ID")
+        print("Heartbeat received without user ID or user not authenticated")
+
 
 # Handle the registration route
 @app.route('/register', methods=['GET', 'POST'])
@@ -450,7 +452,7 @@ def main_page():
         title_content = file.read()
     with open('main_page_info', 'r') as file:
         content = file.read()  
-    server_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('main.html', server_time=server_time, title_content=title_content, content=content)
 
 
@@ -557,14 +559,13 @@ def submit_solution():
         update_user_stats = False
         if not solution or solution == None:
             update_user_stats = True
-        current_datetime = datetime.datetime.now()
-        
+
         # Save the submission to the database
         new_submission = SubmitedSolution(
             submission_id=submission_id,
             user_id=user_id,
             quest_id=quest_id,
-            submission_date=current_datetime,
+            submission_date=datetime.now(),
             user_code=user_code,
             successful_tests=successful_tests,
             unsuccessful_tests=unsuccessful_tests,
@@ -615,29 +616,29 @@ def submit_solution():
                             break            
 
             
-            # Generate achievement for the user    
-            achievement = Achievement.query.filter(
-                Achievement.language == current_quest_language,
-                Achievement.quests_number_required == current_quest_number).all()
-            achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
-            if achievement:
-                # Generate random suffix
-                suffix_length = 16
-                suffix = ''.join(random.choices(string.digits, k=suffix_length))
-                prefix = 'USR-ACHV-'
-                user_achievement_id = f"{prefix}{suffix}"
-                while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
-                    # If it exists, generate a new submission_id
+                # Generate achievement for the user    
+                achievement = Achievement.query.filter(
+                    Achievement.language == current_quest_language,
+                    Achievement.quests_number_required == current_quest_number).all()
+                achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
+                if achievement:
+                    # Generate random suffix
+                    suffix_length = 16
                     suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                    prefix = 'USR-ACHV-'
                     user_achievement_id = f"{prefix}{suffix}"
-                    
-                user_achievement = UserAchievement(
-                                    user_achievement_id=user_achievement_id,
-                                    user_id=user_id,
-                                    username=username,
-                                    achievement_id=achievement_id,
-                                    earned_on=datetime.datetime.now())
-                db.session.add(user_achievement)
+                    while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                        # If it exists, generate a new submission_id
+                        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                        user_achievement_id = f"{prefix}{suffix}"
+                        
+                    user_achievement = UserAchievement(
+                                        user_achievement_id=user_achievement_id,
+                                        user_id=user_id,
+                                        username=username,
+                                        achievement_id=achievement_id,
+                                        earned_on=datetime.now())
+                    db.session.add(user_achievement)
             db.session.commit()
 
         
