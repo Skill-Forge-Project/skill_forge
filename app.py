@@ -571,7 +571,6 @@ def submit_solution():
             unsuccessful_tests=unsuccessful_tests,
             quest_passed=quest_passed
         )
-        print(new_submission)
         
         # Add the new submission to the database session
         db.session.add(new_submission)
