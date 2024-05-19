@@ -12,6 +12,14 @@ LABEL License="GPL-3.0 license"
 LABEL GitHub SourceCode="https://github.com/SoftUni-Discord-Community/skill_forge"
 
 
+# Set the environment variable for the timezone
+ENV TZ=Europe/Sofia
+
+# Install tzdata for timezone setting
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 # Copy the Python app requirements file into the container at /app
 COPY ./requirements.txt /app/requirements.txt
