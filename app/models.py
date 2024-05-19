@@ -44,14 +44,17 @@ class User(UserMixin, db.Model):
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
     last_status_update = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=True)
 
-    # Class constuctor
-    def __init__(self, username, first_name, last_name, password, email, avatar=base64.b64encode(open('static/images/anvil.png', 'rb').read())):
+    def __init__(self, username, first_name, last_name, password, email, avatar=None):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
-        self.password = password
         self.email = email
-        self.avatar = avatar
+        self.set_password(password)
+        if avatar is None:
+            with open('./static/images/anvil.png', 'rb') as f:
+                self.avatar = base64.b64encode(f.read())
+        else:
+            self.avatar = avatar
         self.generate_user_id()
         
     # Generate random UserID
@@ -72,3 +75,15 @@ class User(UserMixin, db.Model):
     # Print the User info
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
+
+
+
+
+########### Define the model for reset password tokens ###########
+class ResetToken(db.Model):
+    __tablename__ = 'reset_tokens'
+    user_id = db.Column(db.String(10), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(80), nullable=False)
+    user_email = db.Column(db.String(120), nullable=False)
+    token = db.Column(db.String(64), primary_key=True)
+    expiration_time = db.Column(db.DateTime, nullable=False)
