@@ -11,32 +11,32 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-    def validate_password(form, password):
-        errors = []
-        if not re.search(r'[A-Z]', password.data):
-            flash('Password must contain at least one uppercase letter', 'error')
-            errors.append('Password must contain at least one uppercase letter')
-        
-        if len(password.data) < 10:
-            flash('Password must be at least 10 characters long', 'error')
-            errors.append('Password must be at least 10 characters long')
+def validate_password(form, password):
+    errors = []
+    if not re.search(r'[A-Z]', password.data):
+        flash('Password must contain at least one uppercase letter', 'error')
+        errors.append('Password must contain at least one uppercase letter')
+    
+    if len(password.data) < 10:
+        flash('Password must be at least 10 characters long', 'error')
+        errors.append('Password must be at least 10 characters long')
 
-        if not re.search(r'\d', password.data):
-            flash('Password must contain at least one digit', 'error')
-            errors.append('Password must contain at least one digit')
+    if not re.search(r'\d', password.data):
+        flash('Password must contain at least one digit', 'error')
+        errors.append('Password must contain at least one digit')
 
-        if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', password.data):
-            flash('Password must contain at least one special character', 'error')
-            errors.append('Password must contain at least one special character')
-        
-        if form.confirm.data != password.data:
-            flash('Passwords must match', 'error')
-            errors.append('Passwords must match')
-        
-        if errors:
-            raise ValidationError(errors)
-        
-        return password
+    if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', password.data):
+        flash('Password must contain at least one special character', 'error')
+        errors.append('Password must contain at least one special character')
+    
+    if form.confirm.data != password.data:
+        flash('Passwords must match', 'error')
+        errors.append('Passwords must match')
+    
+    if errors:
+        raise ValidationError(errors)
+    
+    return password
 
     
 ########### Register Form ###########
@@ -49,7 +49,7 @@ class RegistrationForm(FlaskForm):
                              [
                                 DataRequired(),
                                 EqualTo('confirm', message='Passwords must match'),
-                                LoginForm.validate_password
+                                validate_password
                             ], 
                                 render_kw={'placeholder': 'Password'})
     confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'})

@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+.main_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-section {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    padding: 10px;
+    width: auto;
+    margin-top: 70px;
+    margin-left: 20px;
+    margin-right: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: #ae0303cf;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(244, 120, 120, 0.2);
+    border-radius: 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    margin: 10px;
+    border: 0px;
+    width: auto;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+.section-btn:hover {
+    background: #6d0101; /* Unique color for Python button hover */
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ff6868,
+                0 0 25px #ff6868,
+                0 0 50px #ff6868,
+                0 0 70px #ff6868;
+}
+
+.content-section {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    box-sizing: border-box;
+    /* box-shadow: 0 15px 25px rgba(0, 0, 0, .6); */
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%  ;
+    height: auto;
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.content {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    width: 100%;
+}
+

@@ -4,6 +4,7 @@ import base64
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.orm import relationship
 from sqlalchemy import Enum
 from app import db
 
@@ -77,8 +78,6 @@ class User(UserMixin, db.Model):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
 
-
-
 ########### Define the model for reset password tokens ###########
 class ResetToken(db.Model):
     __tablename__ = 'reset_tokens'
@@ -87,3 +86,30 @@ class ResetToken(db.Model):
     user_email = db.Column(db.String(120), nullable=False)
     token = db.Column(db.String(64), primary_key=True)
     expiration_time = db.Column(db.DateTime, nullable=False)
+    
+    
+
+########### Define the Achievement model ###########
+class Achievement(db.Model):
+    __tablename__ = 'achievements'
+    achievement_id = db.Column(db.String(100), primary_key=True)
+    achievement_name = db.Column(db.String(100), unique=True, nullable=False)
+    achievement_description = db.Column(db.String(255), nullable=False)
+    achievement_picture = db.Column(db.String(40), nullable=False)
+    language = db.Column(db.String(100), nullable=True)
+    quests_number_required = db.Column(db.Integer, nullable=True)
+    
+    # Define the relationship with the UserAchievement model
+    user_achievements = relationship("UserAchievement", back_populates="achievement")
+
+########### Define the UserAchievement model to track achievements earned by users ###########
+class UserAchievement(db.Model):
+    __tablename__ = 'user_achievements'
+    user_achievement_id = db.Column(db.String(100), primary_key=True)
+    user_id = db.Column(db.String(100), db.ForeignKey('users.user_id'), nullable=False)
+    username = db.Column(db.String(100),nullable=False)
+    achievement_id = db.Column(db.String(100), db.ForeignKey('achievements.achievement_id'), nullable=False)
+    earned_on = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    
+    # Define the relationship with the Achievement model
+    achievement = relationship("Achievement", back_populates="user_achievements")

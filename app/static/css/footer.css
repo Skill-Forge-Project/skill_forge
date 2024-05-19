@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+.footer-section {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 9999; /* Stays on top on other elements */
+}
+
+.footer-info {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #d2d0d0;
+    font-size: 14px;
+    text-align: center;
+    margin: 2px;
+    padding: 0px;
+}

@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
+
+.button-container {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    /* margin-bottom: 150px; */
+}
+
+.button-container .button-box {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-box {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    top: 50%;
+    left: 50%;
+    width: 900px;
+    height: 50px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, .5);
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+
+}
+
+.button-box .btn {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 300px;
+}
+
+
+/* Python button styles */
+.button-box .btn.python-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+}
+
+.button-box .btn.python-btn:hover {
+    background: #ffde57; /* Unique color for Python button hover */
+    color: #4584b6;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ffde57,
+                0 0 25px #4584b6,
+                0 0 50px #ffde57,
+                0 0 100px #4584b6;
+}
+
+
+/* Java button styles */
+.button-box .btn.java-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+}
+
+.button-box .btn.java-btn:hover {
+    background: #f89820; /* Unique color for Java button hover */
+    color: #5382a1;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #5382a1,
+                0 0 25px #f89820,
+                0 0 50px #5382a1,
+                0 0 100px #f89820;
+}
+
+.user-box .btn .java-btn span:nth-child(1) {
+    background: linear-gradient(90deg, transparent, #4caf50); /* Unique color for Java button animation */
+}
+
+/* JavaScript button styles */
+.button-box .btn.js-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+}
+
+.button-box .btn.js-btn:hover {
+    background: #f0db4f; /* Unique color for JavaScript button hover */
+    color: #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #323330,
+                0 0 25px #f0db4f,
+                0 0 50px #323330,
+                0 0 100px #323330;
+}
+
+.js-btn span:nth-child(1) {
+    background: linear-gradient(90deg, transparent, #2196f3); /* Unique color for JavaScript button animation */
+}
+
+/* C# button styles */
+.button-box .btn.csharp-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+}
+
+.button-box .btn.csharp-btn:hover {
+    background: #9b4993; /* Unique color for C# button hover */
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #682876,
+                0 0 25px #682876,
+                0 0 50px #682876,
+                0 0 100px #9b4993;
+}
+
+.button-box .btn span {
+    position: absolute;
+    display: block;
+}
+
+.button-box .btn span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #03e9f4);
+    animation: btn-anim1 1s linear infinite;
+}
+
+
+@keyframes btn-anim1 {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+.button-box .btn span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #03e9f4);
+    animation: btn-anim2 1s linear infinite;
+    animation-delay: .25s
+}
+
+@keyframes btn-anim2 {
+    0% {
+        top: -100%;
+    }
+
+    50%,
+    100% {
+        top: 100%;
+    }
+}
+
+.button-box .btn span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #03e9f4);
+    animation: btn-anim3 1s linear infinite;
+    animation-delay: .5s
+}
+
+@keyframes btn-anim3 {
+    0% {
+        right: -100%;
+    }
+
+    50%,
+    100% {
+        right: 100%;
+    }
+}
+
+.button-box .btn span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #03e9f4);
+    animation: btn-anim4 1s linear infinite;
+    animation-delay: .75s
+}
+
+@keyframes btn-anim4 {
+    0% {
+        bottom: -100%;
+    }
+
+    50%,
+    100% {
+        bottom: 100%;
+    }
+}

@@ -1,11 +1,11 @@
-import re, secrets
+import re, secrets, os
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required
 # Import the mail functions
 from app.mailtrap import send_reset_email, send_welcome_mail
-# Import the bcrypt
-import bcrypt
+# Import the bcrypt instance
+from app import bcrypt
 # Import the database instance
 from app import db
 # Import the forms and models
@@ -13,6 +13,9 @@ from app.forms import LoginForm, RegistrationForm
 from app.models import User, ResetToken
 
 bp = Blueprint('main', __name__)
+
+# Get the directory of the current script
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
 ########### Routes handling user login/logout and registration ###########
 # Define routes for login and register pages
@@ -24,7 +27,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             # Log in the user
             login_user(user, force=True)
-            return redirect(url_for('main_page'))  # Redirect to the main page after login
+            return redirect(url_for('main.main_page'))  # Redirect to the main page after login
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
     return render_template('index.html', form=form)
@@ -141,3 +144,25 @@ def update_new_password():
     db.session.commit()
     flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
     return redirect(url_for('hello'))
+
+########### Routes handling main apge ###########
+# Open the main page
+@bp.route('/home')
+@login_required
+def main_page():
+    title_path = os.path.join(base_dir, 'main_page_title')
+    info_path = os.path.join(base_dir, 'main_page_info')
+    try:
+        with open(title_path, 'r') as file:
+            title_content = file.read().strip()
+    except FileNotFoundError:
+        title_content = "Default Title"
+
+    try:
+        with open(info_path, 'r') as file:
+            content = file.read().strip()
+    except FileNotFoundError:
+        content = "Default Content"
+        
+    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    return render_template('homepage.html', server_time=server_time, title_content=title_content, content=content)

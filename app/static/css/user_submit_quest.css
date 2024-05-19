@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+.content {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+    margin-top: 50px;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.task-container {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #d2d0d0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    align-content: center !important;
+    width: 100%;
+    left: 5%;
+    right: 5%;
+    position: relative;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+
+}
+
+.input-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 10px;
+    width: 80%;
+
+}
+
+
+.row-label {
+    font-size: 16px;
+    margin-right: 15px;
+    color: #03e9f4;
+    vertical-align: middle;
+}
+
+.text_input {
+    font-family: inherit;
+    font-size: 16px;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #03e9f4;
+    outline: 0;
+    color: white;
+    padding: 7px 0;
+    background: transparent;
+}
+
+.dropdown_input {
+    font-family: inherit;
+    font-size: 16px;
+    border: 0;
+    border-bottom: 1px solid #03e9f4;
+    outline: 0;
+    color: white;
+    padding: 7px 0;
+    background: transparent;
+}
+
+.quest_language_input {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    margin-top: 5px;
+    vertical-align: middle;
+
+}
+
+.buttons-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.output-row {
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.input-row .CodeMirror {
+    border: 5px solid #eee;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    padding: 0px;
+}
+
+.CodeMirror-scroll {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.CodeMirror.cm-s-dracula {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+
+.btn-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+.submit-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    position: relative;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .6s;
+    letter-spacing: 4px;
+    margin: 10px;
+    border: 0px;
+    width: 250px;
+}
+
+.submit-button:hover {
+    background: #03e9f4;
+    color: #000;
+    border-radius: 5px;
+    box-shadow: 0 0 2px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4,
+        0 0 20px #03e9f4;
+}
