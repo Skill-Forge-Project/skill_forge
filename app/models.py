@@ -3,9 +3,9 @@ import string
 import base64
 from datetime import datetime
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
-from sqlalchemy import Enum
+from sqlalchemy import Enum, ForeignKey
+from sqlalchemy.dialects.postgresql import JSON
 from app import db
 
 
@@ -113,3 +113,88 @@ class UserAchievement(db.Model):
     
     # Define the relationship with the Achievement model
     achievement = relationship("Achievement", back_populates="user_achievements")
+
+
+
+########### Define the Quest model ###########
+# Class for storing the quests(exercises)
+class Quest(db.Model):
+    __tablename__ = 'coding_quests'
+    quest_id = db.Column(db.String(10), primary_key=True)
+    language = db.Column(db.String(50), nullable=False)
+    difficulty = db.Column(db.String(50), nullable=False)
+    quest_name = db.Column(db.String(255), nullable=False)
+    solved_times = db.Column(db.Integer, default=0, nullable=True)
+    quest_author = db.Column(db.String(255), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    last_modified = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
+    condition = db.Column(db.Text, nullable=False)
+    function_template = db.Column(db.Text, nullable=False)
+    unit_tests = db.Column(db.Text, nullable=False)
+    test_inputs = db.Column(db.Text, nullable=True)
+    test_outputs = db.Column(db.Text, nullable=True)
+    xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
+    type = db.Column(db.String(20), nullable=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=True)
+    quest_comments = db.Column(JSON, default = [], nullable=True) # Store comments for the submited quests
+
+    def __repr__(self):
+        return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
+
+########### Define the SubmitedQuest model - Quest submited by the user ###########
+# Define the database table for the submitted quests
+class SubmitedQuest(db.Model):
+    __tablename__ = 'user_submited_quests'
+    quest_id = db.Column(db.String(10), primary_key=True)
+    language = db.Column(db.String(50), nullable=False)
+    difficulty = db.Column(db.String(50), nullable=False)
+    quest_name = db.Column(db.String(255), nullable=False)
+    quest_author = db.Column(db.String(255), nullable=False)
+    quest_author_id = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.Enum('Pending', 'Approved', 'Rejected', name='quest_submit_status'), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    last_modified = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
+    condition = db.Column(db.Text, nullable=False)
+    function_template = db.Column(db.Text, nullable=False)
+    unit_tests = db.Column(db.Text, nullable=True)
+    test_inputs = db.Column(db.Text, nullable=True)
+    test_outputs = db.Column(db.Text, nullable=True)
+    xp = db.Column(db.Enum('30', '60', '100', name='xp_points'), nullable=False)
+    type = db.Column(db.Enum('Basic', 'Advanced', name='quest_type'), nullable=True)
+    comments=db.Column(JSON, default = [], nullable=True) # Store comments for the submited quests
+    
+
+########### Define the ReportedQuest model - Quest reported by the user ###########
+# The class which will store the reported quests from the users
+class ReportedQuest(db.Model):
+    __tablename__ = 'reported_quests'
+    report_id = db.Column(db.String(20), primary_key=True)
+    quest_id = db.Column(db.String(10), ForeignKey('coding_quests.quest_id'), nullable=False)
+    report_status = db.Column(db.Enum('In Progress', 'Resolved', 'Not Resolved', name='repost_status'), nullable=False)
+    report_user_id = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=False)
+    report_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    last_updated = db.Column(db.DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+    report_reason = db.Column(db.Text, nullable=True)
+    admin_assigned = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=True)
+    
+    # Specify the foreign keys explicitly
+    reported_quest = db.relationship("Quest", foreign_keys=[quest_id], backref="reported_quests")
+    user_reporter = db.relationship("User", foreign_keys=[report_user_id], backref="reported_quests")
+    admin = db.relationship("User", foreign_keys=[admin_assigned], backref="assigned_reports")
+
+
+########### Define the SubmitedSolution model - the submited quest solutions by the users ###########
+# Define the structure of the user_submited_solutions table.
+class SubmitedSolution(db.Model):
+    __tablename__ = 'user_submited_solutions'
+    submission_id = db.Column(db.String(20), primary_key=True) # Unique ID for each submission.
+    quest_id = db.Column(db.String(20), db.ForeignKey('coding_quests.quest_id'), nullable=False)
+    user_id = db.Column(db.String(20), db.ForeignKey('users.user_id'), nullable=False)
+    submission_date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    user_code = db.Column(db.Text, nullable=True)
+    successful_tests = db.Column(db.Integer, default=0, nullable=True)
+    unsuccessful_tests = db.Column(db.Integer, default=0, nullable=True)
+    quest_passed = db.Column(db.Boolean, nullable=True)
+
+# Define the relationship between the user_submited_solutions and coding_quests table.
+coding_quest = db.relationship('Quest')

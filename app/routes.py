@@ -100,7 +100,6 @@ def send_email_token():
     return redirect(url_for('open_forgot_password'))
 
 @bp.route('/save_new_password', methods=['POST'])
-@login_required
 def update_new_password():
     user_id = request.form.get('user_id')
     username = request.form.get('username')
@@ -157,7 +156,6 @@ def main_page():
             title_content = file.read().strip()
     except FileNotFoundError:
         title_content = "Default Title"
-
     try:
         with open(info_path, 'r') as file:
             content = file.read().strip()
