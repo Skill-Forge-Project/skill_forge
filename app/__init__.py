@@ -3,13 +3,14 @@ from config import Config
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from flask_socketio import SocketIO
 from app.database.db_init import db
 
 
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-
+socketio = SocketIO()
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +20,7 @@ def create_app():
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+    socketio.init_app(app)
 
     from app.routes import routes, user_routes, user_submited_solutions, quests_routes, user_submit_quest_routes
     app.register_blueprint(routes.bp)

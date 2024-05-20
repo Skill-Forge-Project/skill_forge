@@ -8,14 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('connect', () => {
         // When the Socket.IO connection is established, request the user's current status
+        console.log('Connected to the server');
         socket.emit('request_user_status', { user_id: userId });
     });
 
     socket.on('disconnect', () => {
+        console.log('Disconnected from the server');
         updateOnlineStatus('Offline');
     });
 
     socket.on('status_update', (data) => {
+        console.log('Status update received');
+        // Update the user's status when the status is received from the server
         updateOnlineStatus(data.status);
     });
 
