@@ -221,10 +221,12 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
+        if user and bcrypt.check_password_hash(user.password, form.password.data) and not user.is_banned:
             # Log in the user
             login_user(user, force=True)
             return redirect(url_for('main_page'))  # Redirect to the main page after login
+        elif user.is_banned:
+            flash('Login unsuccessful. Your account has been banned. For more information, please contact support.')
         else:
             flash('Login unsuccessful. Please check your username and password.', 'danger')
     return render_template('index.html', form=form)
