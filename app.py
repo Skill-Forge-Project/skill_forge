@@ -377,9 +377,25 @@ def ban_user(user_id, ban_reason='no reason'):
     user = User.query.get(user_id)
     request_arguments = dict(request.args) # This prints {'ban_reason': 'some_value'}
 
+    # Set new values to these three fields in the database
     user.is_banned = True
     user.ban_date = datetime.datetime.now()
     user.ban_reason = request_arguments['ban_reason']
+
+    db.session.commit()
+    return redirect(url_for('open_admin_panel'))
+
+
+@login_required
+@app.route('/unban_user/<user_id>')
+def unban_user(user_id):
+    # Retrieve the specific user from the database, based on the user_id
+    user = User.query.get(user_id)
+
+    # Set new values to these three fields in the database
+    user.is_banned = False
+    user.ban_date = None
+    user.ban_reason = ''
 
     db.session.commit()
     return redirect(url_for('open_admin_panel'))

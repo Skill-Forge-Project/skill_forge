@@ -79,10 +79,20 @@
                     <div class="input-row" id="banDiv" style="display: none;">
                         <textarea class="ban-reason text_input" name="ban-reason" id="ban-reason" placeholder="Ban reason..."></textarea>
                     </div>
+                    {% if user.is_banned %}
+                        <div class="input-row">
+                            <h4><strong class="row-label">Ban Reason:</strong></h4>
+                            {{ user.ban_reason }}
+                        </div>
+                    {% endif %}
                     <div class="btn-row">
                         <button type="submit" id="editUser" class="submit-button">Save Changes</button>
-                        <button type="button" id="banUserWithTextarea" class="ban-button">Ban User</button>
-                        <button type="button" id="banUser" class="ban-button" style="display: none;">Ban User</button>
+                        {% if not user.is_banned %}
+                            <button type="button" id="banUserWithTextarea" class="ban-button">Ban User</button>
+                            <button type="button" id="banUser" class="ban-button" style="display: none;">Ban User</button>
+                        {% else %}
+                            <button type="button" id="unbanUser" class="submit-button unban-button" onclick=location.href="{{ url_for('unban_user', user_id=user.user_id) }}">Unban</button>
+                        {% endif %}
                     </div>
                 </form>
             </div>
