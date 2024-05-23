@@ -83,7 +83,7 @@ def submit_quest():
     db.session.commit()
 
     # Redirect to a success page or main page
-    return redirect(url_for('open_admin_panel'))
+    return redirect(url_for('usr.open_admin_panel'))
 
 
 
