@@ -158,6 +158,10 @@ def delete_comment():
 # Handle quest edit from the Admin Panel
 @bp_qst.route('/edit_quest_db', methods=['GET', 'POST'])
 def edit_quest_db():
+    
+    # Import the database instance
+    from app import db
+    
     quest_id = request.form['quest_id']
     quest_name = request.form['quest_name']
     quest_language = request.form['quest_language']
@@ -170,8 +174,6 @@ def edit_quest_db():
     
     quest = Quest.query.get(quest_id)
     reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
-    print(quest)
-    print(reported_quest)
     if quest:
         quest.quest_name = quest_name
         quest.language = quest_language
@@ -179,8 +181,8 @@ def edit_quest_db():
         quest.condition = quest_condition
         quest.function_template = function_template
         quest.unit_tests = unit_tests
-        quest.input_tests = input_tests
-        quest.output_tests = output_tests
+        quest.test_inputs = input_tests
+        quest.test_outputs = output_tests
 
         # If this is True it means that the user is editing a reported quest (there is a chosen radion button)
         if request.form.get('progress_option'):
@@ -220,7 +222,6 @@ def open_edit_reported_quest(quest_id):
 @login_required
 @bp_qst.route('/report_quest/<curr_quest_id>')
 def report_quest(curr_quest_id, report_reason='no reason'):
-    print(dict(request.args))
     request_arguments = dict(request.args)  # This prints {'report_reason': 'some_value'}
     quest = Quest.query.get(curr_quest_id)
     
