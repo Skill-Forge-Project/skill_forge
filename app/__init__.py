@@ -6,7 +6,6 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from app.database.db_init import db
 
-
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -21,7 +20,10 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
     socketio.init_app(app)
-
+    
+    # Import sockets
+    from app.sockets import handle_connect, handle_disconnect, handle_heartbeat, handle_request_user_status
+    # Import routes
     from app.routes import routes, user_routes, user_submited_solutions, quests_routes, user_submit_quest_routes
     app.register_blueprint(routes.bp)
     app.register_blueprint(user_routes.bp_usr)
@@ -34,7 +36,7 @@ def create_app():
     
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models import User  # Import inside the function
+        from app.models import User
         return User.query.get(user_id)
     
     return app

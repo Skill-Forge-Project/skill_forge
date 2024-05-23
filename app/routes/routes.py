@@ -144,8 +144,6 @@ def update_new_password():
         flash('Token has expired.', 'error')
         return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
 
-    
-
     user = User.query.get(user_id)
     # Import the bcrypt instance
     from app import bcrypt
