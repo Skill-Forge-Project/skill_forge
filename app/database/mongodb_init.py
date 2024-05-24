@@ -31,4 +31,5 @@ mongo2_db = mongo2_client[MONGO_DATABASE]
 
 # Get collections from database
 user_logins_collection = mongo1_db['userLogins']
-
+user_logout_collection = mongo1_db['userLogouts']
+user_password_reset_collection = mongo1_db['userPasswordReset']

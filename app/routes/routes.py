@@ -1,7 +1,7 @@
 import re, secrets, os
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.exceptions import Unauthorized
 # Import the mail functions
 from app.mailtrap import send_reset_email, send_welcome_mail
@@ -10,8 +10,8 @@ from app.database.db_init import db
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, ResetToken
-# Import MongoDB database
-from app.database.mongodb_init import user_logins_collection
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import session_transaction
 
 bp = Blueprint('main', __name__)
 
@@ -30,8 +30,8 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             # Log in the user
             login_user(user, force=True)
-            # Create MongoDB log entry for user login
-            user_logins_collection.insert_one({'user_id': user.user_id, 'username': user.username, 'login_time': datetime.now()})
+            # Create record in userLogin collection
+            session_transaction('userLogins', user.user_id, user.username, datetime.now())
             return redirect(url_for('main.main_page'))  # Redirect to the main page after login
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
@@ -41,6 +41,8 @@ def login():
 @bp.route('/logout')
 @login_required
 def logout():
+    # Create record in userLogout collection
+    session_transaction('userLogouts', current_user.user_id, current_user.username, datetime.now())
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
