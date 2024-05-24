@@ -1,6 +1,9 @@
 import mailtrap as mt
 import os
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+reset_pass_template_path = os.path.join(script_dir, 'templates', 'email-reset-password-template.html')
+
 
 # Read welcome mail template from file
 def read_file_content(file_path):
@@ -9,7 +12,7 @@ def read_file_content(file_path):
 
 # Send welcome mail to new users
 def send_welcome_mail(recipient, username):
-    html_content = read_file_content("templates/email-welcome-template.html")
+    html_content = read_file_content("./templates/email-welcome-template.html")
     html_content = html_content.replace("{{ username }}", username)
     
     mail = mt.Mail(
@@ -27,7 +30,7 @@ def send_welcome_mail(recipient, username):
 
 # Send password reset email with a generated token valid for 60 minutes
 def send_reset_email(token, username, email, expiration_time):
-    html_content = read_file_content("templates/email-reset-password-template.html")
+    html_content = read_file_content(reset_pass_template_path)
     html_content = html_content.replace("{{ username }}", username)
     html_content = html_content.replace("{{ token }}", token)
     html_content = html_content.replace("{{ expiration_time }}", expiration_time.strftime("%d-%m-%Y %H:%M:%S"))

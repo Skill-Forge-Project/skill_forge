@@ -21,7 +21,6 @@ def handle_connect(auth):
         update_user_status(user_id, 'Online')
         emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
 
-
 @socketio.on('disconnect')
 def handle_disconnect():
     if current_user.is_authenticated:

@@ -8,7 +8,7 @@ from app.mailtrap import send_reset_email, send_welcome_mail
 # Import the database instance
 from app.database.db_init import db
 # Import the forms and models
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, PasswordResetForm
 from app.models import User, ResetToken
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import session_transaction, user_register_transaction
@@ -90,14 +90,20 @@ def open_forgot_password():
 
 @bp.route('/reset_password/<user_id>/<username>/<token>/<expiration_time>', methods=['GET', 'POST'])
 def open_reset_password(token, user_id, username, expiration_time):
-    return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time)
+    form = PasswordResetForm(
+        user_id=user_id,
+        username=username,
+        token=token,
+        expiration_time=expiration_time
+    )
+    return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time, form=form)
 
 @bp.route('/send_email_token', methods=['POST'])
 def send_email_token():
     email = request.form.get('email_address')
     if len(email) == 0:
         flash('Please provide an email address.', 'error')
-        return redirect(url_for('open_forgot_password'))
+        return redirect(url_for('main.open_forgot_password'))
     
     user_mail = request.form.get('email_address')
     current_user = User.query.filter_by(email=user_mail).first()
@@ -114,54 +120,49 @@ def send_email_token():
 
         # Send email with reset link containing the token
         send_reset_email(token, username, email, expiration_time)
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+        return redirect(url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
     flash('User with this email does not exist.', 'error')
-    return redirect(url_for('open_forgot_password'))
+    return redirect(url_for('main.open_forgot_password'))
 
 @bp.route('/save_new_password', methods=['POST'])
 def update_new_password():
-    user_id = request.form.get('user_id')
-    username = request.form.get('username')
-    token = request.form.get('token')
-    user_token = request.form.get('user_token')
-    new_password = request.form.get('password')
-    confirm_password = request.form.get('confirm')
-    expiration_time = request.form.get('expiration_time')
+    form = PasswordResetForm()
 
-    if new_password != confirm_password:
-        flash('Passwords do not match.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if user_token is None or user_token != token:
-        flash('Invalid token.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if not new_password or not confirm_password:
-        flash('Please provide a password.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if len(new_password) < 10:
-        flash('Password must be at least 10 characters long.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if not re.search(r'[A-Z]', new_password):
-        flash('Password must contain at least one uppercase letter.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if not re.search(r'\d', new_password):
-        flash('Password must contain at least one digit.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if not re.search(r'[!@#$%^&*()_+=\-{}\[\]:;,<.>?]', new_password):
-        flash('Password must contain at least one special character.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
-    if str(datetime.now()) > expiration_time:
-        flash('Token has expired.', 'error')
-        return redirect(url_for('open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+    if form.validate_on_submit():
+        user_id = form.user_id.data
+        username = form.username.data
+        token = form.token.data
+        user_token = form.user_token.data
+        new_password = form.new_password.data
+        expiration_time = form.expiration_time.data
 
-    user = User.query.get(user_id)
-    # Import the bcrypt instance
-    from app import bcrypt
-    user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-    used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
-    db.session.delete(used_token)
-    db.session.commit()
-    flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
-    return redirect(url_for('hello'))
+        if user_token is None or user_token != token:
+            flash('Invalid token.', 'error')
+            return redirect(url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+
+        if datetime.now().strftime("%Y-%m-%d %H:%M:%S") > expiration_time:
+            flash('Token has expired.', 'error')
+            return redirect(url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+
+        user = User.query.get(user_id)
+        from app import bcrypt
+        user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
+        db.session.delete(used_token)
+        db.session.commit()
+        flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
+        return redirect(url_for('main.login'))  # Redirect to the login page after successful password reset
+
+    # Print and Flash errors if form validation fails
+    if form.errors:
+        print("Form Errors:", form.errors)
+
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f"{getattr(form, field).label.text} - {error}", 'error')
+
+    # Pass necessary parameters to the template in case of errors
+    return render_template('reset_password.html', form=form, token=form.token.data, user_id=form.user_id.data, username=form.username.data, expiration_time=form.expiration_time.data)
 
 ########### Routes handling main apge ###########
 # Open the main page

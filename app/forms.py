@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask import flash
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, HiddenField
+from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError, Regexp
 import re
 
 ########### Login Form ###########
@@ -54,3 +54,24 @@ class RegistrationForm(FlaskForm):
                                 render_kw={'placeholder': 'Password'})
     confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'})
     submit = SubmitField('Register')
+    
+    
+########### Password Reset Form ###########
+class PasswordResetForm(FlaskForm):
+    user_id = HiddenField('User ID')
+    username = HiddenField('Username')
+    token = HiddenField('Token')
+    user_token = StringField('Token', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[
+        DataRequired(),
+        Length(min=10, message='Password must be at least 10 characters long.'),
+        Regexp(re.compile(r'.*[A-Z].*'), message='Password must contain at least one uppercase letter.'),
+        Regexp(re.compile(r'.*[0-9].*'), message='Password must contain at least one digit.'),
+        Regexp(re.compile(r'.*[!@#$%^&*()_+=\-{}\[\]:;,<.>?].*'), message='Password must contain at least one special character.')
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(),
+        EqualTo('new_password', message='Passwords must match.')
+    ])
+    expiration_time = HiddenField('Expiration Time')
+    submit = SubmitField('Reset Password')
