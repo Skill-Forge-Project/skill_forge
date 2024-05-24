@@ -175,7 +175,7 @@ def approve_submited_quest():
         db.session.add(new_quest)
         db.session.commit()
         
-        return redirect(url_for('open_admin_panel'))
+        return redirect(url_for('usr.open_admin_panel'))
     
     # IF the action is 'reject', then change the status of the submited quest to 'Rejected'
         # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
@@ -184,7 +184,7 @@ def approve_submited_quest():
         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
         submited_quest.status = 'Rejected'
         db.session.commit()
-        return redirect(url_for('open_admin_panel'))
+        return redirect(url_for('usr.open_admin_panel'))
     
     # IF the action is 'request-changes', then change the status of the submited quest to 'Pending'
         # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
@@ -193,7 +193,7 @@ def approve_submited_quest():
         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
         submited_quest.status = 'Pending'
         db.session.commit()
-        return redirect(url_for('open_admin_panel'))
+        return redirect(url_for('usr.open_admin_panel'))
 
 # Post new comment in comments sections
 @bp_usq.route('/post_comment', methods=['POST'])
@@ -224,7 +224,7 @@ def post_comment():
     
     db.session.commit()
     
-    return redirect(url_for('open_submited_quest', 
+    return redirect(url_for('usq.open_submited_quest', 
                             quest_id=submited_quest_id,
                            submited_quest=current_quest, 
                            user_role=user_role, 
