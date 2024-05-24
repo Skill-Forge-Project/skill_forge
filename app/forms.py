@@ -45,13 +45,14 @@ class RegistrationForm(FlaskForm):
     first_name = StringField('', [Length(min=4, max=25)], render_kw={'placeholder': 'First name'})
     last_name = StringField('', [Length(min=4, max=25)], render_kw={'placeholder': 'Last name'})
     email = StringField('', [Email(), DataRequired()], render_kw={'placeholder': 'Email address'})    
-    password = PasswordField('', 
-                             [
-                                DataRequired(),
-                                EqualTo('confirm', message='Passwords must match'),
-                                validate_password
-                            ], 
-                                render_kw={'placeholder': 'Password'})
+    password = PasswordField('', validators=[
+        DataRequired(),
+        Length(min=10, message='Password must be at least 10 characters long.'),
+        Regexp(re.compile(r'.*[A-Z].*'), message='Password must contain at least one uppercase letter.'),
+        Regexp(re.compile(r'.*[0-9].*'), message='Password must contain at least one digit.'),
+        Regexp(re.compile(r'.*[!@#$%^&*()_+=\-{}\[\]:;,<.>?].*'), message='Password must contain at least one special character.')
+    ],
+        render_kw={'placeholder': 'Password'})
     confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'})
     submit = SubmitField('Register')
     

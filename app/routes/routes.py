@@ -57,7 +57,7 @@ def register():
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
             flash('Email or username already in use', 'error')
-            return redirect(url_for('register'))
+            return redirect(url_for('main.register'))
         # Create a new user
         # Import the bcrypt instance
         from app import bcrypt
@@ -72,7 +72,7 @@ def register():
         # Create record in userRegister collection
         user_register_transaction('userRegister', new_user.user_id, new_user.username, datetime.now())
         flash('Your account has been created! You are now able to log in.', 'success ')
-        return redirect(url_for('login'))  # Redirect to the login page after successful registration
+        return redirect(url_for('main.login'))  # Redirect to the login page after successful registration
     return render_template('register.html', form=form)
 
 # Custom error handler for Unauthorized (401) error

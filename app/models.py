@@ -1,6 +1,7 @@
 import random
 import string
 import base64
+import os
 from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship
@@ -8,7 +9,8 @@ from sqlalchemy import Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import JSON
 from app.database.db_init import db
 
-
+script_dir = os.path.dirname(os.path.abspath(__file__))
+default_avatar_path = os.path.join(script_dir, 'static', 'images', 'anvil.png')
 
 ########### Define the User model ###########
 class User(UserMixin, db.Model):
@@ -53,11 +55,16 @@ class User(UserMixin, db.Model):
         self.email = email
         self.set_password(password)
         if avatar is None:
-            with open('./static/images/anvil.png', 'rb') as f:
+            with open(default_avatar_path, 'rb') as f:
                 self.avatar = base64.b64encode(f.read())
         else:
             self.avatar = avatar
         self.generate_user_id()
+        
+    # Set the user password
+    def set_password(self, password):
+        from app import bcrypt
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
         
     # Generate random UserID
     def generate_user_id(self):
