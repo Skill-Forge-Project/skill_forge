@@ -10,6 +10,8 @@ from app.database.db_init import db
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, ResetToken
+# Import MongoDB database
+from app.database.mongodb_init import user_logins_collection
 
 bp = Blueprint('main', __name__)
 
@@ -28,6 +30,8 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             # Log in the user
             login_user(user, force=True)
+            # Create MongoDB log entry for user login
+            user_logins_collection.insert_one({'user_id': user.user_id, 'username': user.username, 'login_time': datetime.now()})
             return redirect(url_for('main.main_page'))  # Redirect to the main page after login
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
