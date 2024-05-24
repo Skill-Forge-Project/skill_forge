@@ -6,11 +6,23 @@ from app.database.mongodb_init import mongo2_db, mongo2_client
 # Create a transaction for inserting a log entry in the userLogins or userLoggouts collection
 def session_transaction(collection, user_id, username, timestamp):
     user_logins_collection = mongo1_db[f'{collection}']
+    if collection == 'userLogouts':
+        action = 'User Logout'
+    else:
+        action = 'User Login'
     session = mongo1_client.start_session()
     with session.start_transaction():
         try:
-            user_logins_collection.insert_one({'user_id': user_id, 'username': username, 'timestamp': timestamp}, session=session)
+            user_logins_collection.insert_one(
+                {
+                    'action': action,
+                    'user_id': user_id, 
+                    'username': username, 
+                    'timestamp': timestamp
+                }, 
+                session=session)
             session.commit_transaction()
+            session.end_session()
         except Exception as e:
             print(f'Error while inserting log entry in userLogin collection for user: {username}, Error: {e}')
             session.abort_transaction()
@@ -23,8 +35,16 @@ def user_register_transaction(collection, user_id, username, timestamp):
     session = mongo2_client.start_session()
     with session.start_transaction():
         try:
-            user_register_collection.insert_one({'user_id': user_id, 'username': username, 'timestamp': timestamp}, session=session)
+            user_register_collection.insert_one(
+                {
+                    'action': 'User Register',
+                    'user_id': user_id, 
+                    'username': username, 
+                    'timestamp': timestamp
+                }, 
+                session=session)
             session.commit_transaction()
+            session.end_session()
         except Exception as e:
             print(f'Error while inserting log entry in userRegister collection for user: {username}, Error: {e}')
             session.abort_transaction()
@@ -37,14 +57,19 @@ def new_quest_transaction(collection, user_id, username, quest_id, quest_name, q
     session = mongo1_client.start_session()
     with session.start_transaction():
         try:
-            new_quest_collection.insert_one({'user_id': user_id, 
-                                             'username': username, 
-                                             'quest_id': quest_id, 
-                                             'quest_name': quest_name,
-                                             'quest_author': quest_author,
-                                             'timestamp': timestamp}, 
-                                            session=session)
+            new_quest_collection.insert_one(
+                {
+                    'action': 'New Quest Created',
+                    'user_id': user_id, 
+                    'username': username, 
+                    'quest_id': quest_id, 
+                    'quest_name': quest_name,
+                    'quest_author': quest_author,
+                    'timestamp': timestamp
+                }, 
+                session=session)
             session.commit_transaction()
+            session.end_session()
         except Exception as e:
             print(f'Error while inserting log entry in newQuest collection for quest: {quest_id}-{quest_name}, Error: {e}')
             session.abort_transaction()

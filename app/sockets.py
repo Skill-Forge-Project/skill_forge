@@ -24,7 +24,6 @@ def handle_connect(auth):
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    print('User disconnected')
     if current_user.is_authenticated:
         user_id = current_user.user_id
         update_user_status(user_id, 'Offline')

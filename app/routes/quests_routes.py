@@ -142,11 +142,8 @@ def quest_post_comment():
 @bp_qst.route('/delete_comment', methods=['POST'])
 @login_required
 def delete_comment():
-
     quest_id = request.form.get('quest_id')
     comment_index = int(request.form.get('comment_index'))
-    print(comment_index)
-
     # Get the quest from the database
     quest = Quest.query.filter_by(quest_id=quest_id).first()
     quest_comment = quest.quest_comments[comment_index]
@@ -159,7 +156,6 @@ def delete_comment():
             # Import the database instance
             from app import db
             db.session.commit()
-            print("Comment deleted successfully.")
             return redirect(url_for('quests.open_curr_quest', quest_id=quest_id))
     else:
         print("Error: Comment could not be deleted.")
@@ -196,13 +192,10 @@ def edit_quest_db():
 
         # If this is True it means that the user is editing a reported quest (there is a chosen radion button)
         if request.form.get('progress_option'):
-            print(request.form.get('progress_option'))
             report_progress = request.form.get('progress_option')
             reported_quest.report_status = report_progress
-
             if report_progress == 'Resolved':
                 db.session.delete(reported_quest)
-        
         db.session.commit()
         
         return redirect(url_for('usr.open_admin_panel'))
@@ -356,7 +349,7 @@ def submit_solution():
             unsuccessful_tests=unsuccessful_tests,
             quest_passed=quest_passed
         )
-        
+            
         # Add the new submission to the database session
         # Import the database instance
         from app import db
@@ -366,6 +359,11 @@ def submit_solution():
         # Handle the leveling of the user
         # Update succesfully solved quests
         if update_user_stats:
+            # Update the quest solved counter if the solution is correct
+            current_quest = Quest.query.filter_by(quest_id=quest_id).first()
+            current_quest.solved_times += 1
+        
+            # Update the user stats if the solution is correct
             current_quest_number = 0
             if unsuccessful_tests == 0:
                 current_user.total_solved_quests += 1
@@ -381,7 +379,6 @@ def submit_solution():
                 elif current_quest_language == "C#":
                     current_user.total_csharp_quests += 1
                     current_quest_number = current_user.total_python_quests
-
                 
                 # Update the user XP
                 if current_quest_difficulty == "Novice Quests":
