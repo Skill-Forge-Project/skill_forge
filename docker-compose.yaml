@@ -31,7 +31,63 @@ services:
     volumes: 
       - db-prod:/var/lib/postgresql/data
 
+  # MongoDB database replica cluster
+  mongo1:
+    image: mongo:latest
+    container_name: mongo1
+    command: mongod --replSet rs0 --bind_ip localhost,mongo1
+    ports:
+      - "27017:27017"
+    networks:
+      - mongoCluster
 
+  mongo2:
+    image: mongo:latest
+    container_name: mongo2
+    command: mongod --replSet rs0 --bind_ip localhost,mongo2
+    ports:
+      - "27018:27017"
+    networks:
+      - mongoCluster
+
+  mongo3:
+    image: mongo:latest
+    container_name: mongo3
+    command: mongod --replSet rs0 --bind_ip localhost,mongo3
+    ports:
+      - "27019:27017"
+    networks:
+      - mongoCluster
+
+  # Init the Mongo cluster
+  mongo-init-replica:
+    image: mongo:latest
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    container_name: mongo-init-replica
+    command: >
+      bash -c "
+      until mongo --host mongo1 --eval 'print(\"waited for connection\")'; do
+        sleep 5
+      done;
+      mongo --host mongo1 <<EOF
+      rs.initiate({
+        _id: 'rs0',
+        members: [
+          { _id: 0, host: 'mongo1:27017' },
+          { _id: 1, host: 'mongo2:27017' },
+          { _id: 2, host: 'mongo3:27017' }
+        ]
+      })
+      EOF"
+    networks:
+      - mongoCluster
+
+networks:
+  mongoCluster:
+    driver: bridge
 
 volumes:
   db:
