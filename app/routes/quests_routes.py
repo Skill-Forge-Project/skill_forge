@@ -6,6 +6,8 @@ from flask_login import login_required, current_user
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import new_quest_transaction
 
 bp_qst = Blueprint('quests', __name__)
 
@@ -81,6 +83,14 @@ def submit_quest():
     from app import db
     db.session.add(new_quest)
     db.session.commit()
+    
+    # Create record in questCreate collection
+    new_quest_transaction('questCreate', current_user.user_id, 
+                          current_username, 
+                          quest_id, 
+                          quest_name, 
+                          current_username, 
+                          current_time)
 
     # Redirect to a success page or main page
     return redirect(url_for('usr.open_admin_panel'))
