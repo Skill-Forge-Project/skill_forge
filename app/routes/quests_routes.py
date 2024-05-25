@@ -1,10 +1,10 @@
 import random, string, base64, json
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, session
 from flask_login import login_required, current_user
 # Import the forms and models
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
-from app.forms import QuestForm
+from app.forms import QuestForm, PublishCommentForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import MongoDB transactions functions
@@ -15,8 +15,8 @@ bp_qst = Blueprint('quests', __name__)
 @bp_qst.route('/submit_quest', methods=['GET', 'POST'])
 @login_required
 def submit_quest():
-    form = QuestForm()
-    if form.validate_on_submit():
+    create_quest_post = QuestForm()
+    if create_quest_post.validate_on_submit():
         # Generate random suffix
         suffix_length = 6
         suffix = ''.join(random.choices(string.digits, k=suffix_length))
@@ -27,13 +27,13 @@ def submit_quest():
             'JavaScript': 'JS-',
             'C#': 'CS-'
         }
-        quest_language = form.quest_language.data
+        quest_language = create_quest_post.quest_language.data
         prefix = prefix_mapping.get(quest_language, 'UNK-')
         # Construct quest ID
         quest_id = f"{prefix}{suffix}"
         
         # Assign XP points based on difficulty
-        selected_difficulty = form.quest_difficulty.data
+        selected_difficulty = create_quest_post.quest_difficulty.data
         xp_mapping = {
             'Novice Quests': 30,
             'Adventurous Challenges': 60,
@@ -45,17 +45,17 @@ def submit_quest():
         # Create a new Quest object
         new_quest = Quest(
             quest_id=quest_id,
-            language=form.quest_language.data,
-            difficulty=form.quest_difficulty.data,
-            quest_name=form.quest_name.data,
+            language=create_quest_post.quest_language.data,
+            difficulty=create_quest_post.quest_difficulty.data,
+            quest_name=create_quest_post.quest_name.data,
             quest_author=current_user.username,
             date_added=datetime.now(),
             last_modified=datetime.now(),
-            condition=form.quest_condition.data,
-            function_template=form.quest_condition.data,
-            unit_tests=form.quest_condition.data,
-            test_inputs=form.quest_inputs.data,
-            test_outputs=form.quest_outputs.data,
+            condition=create_quest_post.quest_condition.data,
+            function_template=create_quest_post.quest_condition.data,
+            unit_tests=create_quest_post.quest_condition.data,
+            test_inputs=create_quest_post.quest_inputs.data,
+            test_outputs=create_quest_post.quest_outputs.data,
             type=type,
             xp=str(xp)
         )
@@ -69,7 +69,7 @@ def submit_quest():
         new_quest_transaction('questCreate', current_user.user_id, 
                               current_user.username, 
                               quest_id, 
-                              form.quest_name.data, 
+                              create_quest_post.quest_name.data, 
                               current_user.username, 
                               datetime.now())
 
@@ -81,43 +81,56 @@ def submit_quest():
 
 
 # Post new comment in comments sections
-@bp_qst.route('/quest_post_comment', methods=['POST'])
+@bp_qst.route('/quest_post_comment/<quest_id>', methods=['POST'])
 @login_required
-def quest_post_comment():
-    quest_id = request.form['quest_id']
-    all_quest_comments = eval(request.form['quest_comments'])
-    comment = request.form['quest_comment']
+def quest_post_comment(quest_id):
+    username = current_user.username
     user_id = current_user.user_id
     user_role = current_user.user_role
-    current_username = current_user.username
-    current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
-
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     # Get the quest from the database
-    quest = Quest.query.filter_by(quest_id=quest_id).first()
+    quest_post_form = PublishCommentForm()
+    if quest_post_form.validate_on_submit():
+        comment = quest_post_form.comment.data
 
-    # Append the new comment to the quest's comments list
-    data = {
-        'username': current_username,
-        'user_id': user_id,
-        'user_role': user_role,
-        'posted_at': current_time,
-        'comment': comment
-        }
-    all_quest_comments.append(data)
-    quest.quest_comments = all_quest_comments
+
+        # Append the new comment to the quest's comments list
+        data = {
+            'username': username,
+            'user_id': user_id,
+            'user_role': user_role,
+            'posted_at': current_time,
+            'comment': comment
+            }
+        
+        quest = Quest.query.filter_by(quest_id=quest_id).first()
+        all_quest_comments = list(quest.quest_comments)
+        all_quest_comments.append(data)
+        quest.quest_comments = all_quest_comments
 
     
-    # Commit the changes to the database
-    # Import the database instance
-    from app import db
-    db.session.commit()
+        # Commit the changes to the database
+        # Import the database instance
+        from app import db
+        db.session.commit()
     
-    # Redirect to the quest page
-    return redirect(url_for('quests.open_curr_quest', 
-                            quest_id=quest.quest_id,
-                            user_role=user_role,
-                            user_id=user_id))
+        # Redirect to the quest page
+        flash('Comment posted successfully!', 'success')
+        return redirect(url_for('quests.open_curr_quest', 
+                                quest_id=quest_id,
+                                user_role=user_role,
+                                user_id=user_id,
+                                form=quest_post_form))
+    else:
+        quest_id = quest_post_form.quest_id.data
+        user_role = current_user.user_role
+        user_id = current_user.user_id
+        flash('Comment posting unsuccessful!', 'error')
+        return redirect(url_for('quests.open_curr_quest', 
+                                quest_id=quest_id,
+                                user_role=user_role,
+                                user_id=user_id,
+                                form=quest_post_form))
 
 
 
@@ -252,20 +265,24 @@ def open_quests_table(language):
     all_quests = Quest.query.filter(Quest.language == language).all()
     # Retrieve all users from the database
     all_users = User.query.all()
-    return render_template('quest_table.html', quests=all_quests, users=all_users, language=language)
+    return render_template('quest_table.html', quests=all_quests, users=all_users, language=language) 
 
 # Open Quest for submitting. Change from template to real page!!!!
 @bp_qst.route('/quest/<quest_id>', methods=['GET'])
 @login_required
 def open_curr_quest(quest_id):
+    quest_post_form = PublishCommentForm()
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
+    quest_id = quest.quest_id
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
     user_role = current_user.user_role
     return render_template('open_quest.html', 
-                           quest=quest, 
+                           quest=quest,
+                           quest_id=quest_id,
                            user_avatar=user_avatar,
-                           user_role=user_role)
+                           user_role=user_role,
+                           form=quest_post_form)
 
 # Route to handle solution submission
 @bp_qst.route('/submit-solution', methods=['POST'])

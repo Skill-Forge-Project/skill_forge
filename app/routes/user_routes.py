@@ -144,7 +144,7 @@ def user_self_update():
 @bp_usr.route('/admin_panel')
 @login_required
 def open_admin_panel():
-    form = QuestForm()
+    create_quest_post = QuestForm()
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
     all_submited_quests = SubmitedQuest.query.all()
@@ -165,6 +165,6 @@ def open_admin_panel():
         reported_quests=all_reported_quests,
         all_users=all_users,
         all_admins=all_admins,
-        form=form)
+        form=create_quest_post)
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))

@@ -89,3 +89,8 @@ class QuestForm(FlaskForm):
     function_template = TextAreaField('Quest Template', validators=[DataRequired()])
     quest_unitests = TextAreaField('Quest Unit Tests - Not Obligatory')
     submit = SubmitField('Submit Quest')
+    
+########### Publish New Comment On Quest Form ###########
+class PublishCommentForm(FlaskForm):
+    comment = TextAreaField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Comment')

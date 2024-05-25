@@ -8,7 +8,7 @@ from app.mailtrap import send_reset_email, send_welcome_mail
 # Import the database instance
 from app.database.db_init import db
 # Import the forms and models
-from app.forms import LoginForm, RegistrationForm, PasswordResetForm
+from app.forms import LoginForm, RegistrationForm, PasswordResetForm, PublishCommentForm
 from app.models import User, ResetToken
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import session_transaction, user_register_transaction
