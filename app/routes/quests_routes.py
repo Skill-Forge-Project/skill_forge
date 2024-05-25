@@ -15,14 +15,14 @@ bp_qst = Blueprint('quests', __name__)
 @bp_qst.route('/submit_quest', methods=['GET', 'POST'])
 @login_required
 def submit_quest():
-    language = request.form['quest_language']
-    difficulty = request.form['quest_difficulty']
-    quest_name = request.form['quest_name']
-    quest_condition = request.form['quest_condition']
-    function_template = request.form['function_template']
-    unit_tests = request.form['quest_unitests']
-    quest_inputs = request.form['quest_inputs']
-    quest_outputs = request.form['quest_outputs']
+    language = request.form.get('quest_language')
+    difficulty = request.form.get('quest_difficulty')
+    quest_name = request.form.get('quest_name')
+    quest_condition = request.form.get('quest_condition')
+    function_template = request.form.get('function_template')
+    unit_tests = request.form.get('quest_unitests')
+    quest_inputs = request.form.get('quest_inputs')
+    quest_outputs = request.form.get('quest_outputs')
     
     # Generate random suffix
     suffix_length = 6
