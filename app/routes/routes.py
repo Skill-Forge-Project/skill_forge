@@ -11,7 +11,7 @@ from app.database.db_init import db
 from app.forms import LoginForm, RegistrationForm, PasswordResetForm, PublishCommentForm
 from app.models import User, ResetToken
 # Import MongoDB transactions functions
-from app.database.mongodb_transactions import session_transaction, user_register_transaction
+from app.database.mongodb_transactions import mongo_transaction
 
 bp = Blueprint('main', __name__)
 
@@ -29,7 +29,7 @@ def login():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, force=True)
-            session_transaction('userLogins', user.user_id, user.username, datetime.now())
+            mongo_transaction('user_logins', f'User {user.username} logged in', user.user_id, user.username, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             return redirect(url_for('main.main_page'))
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
@@ -39,7 +39,8 @@ def login():
 @bp.route('/logout')
 @login_required
 def logout():
-    session_transaction('userLogouts', current_user.user_id, current_user.username, datetime.now())
+    user = current_user
+    mongo_transaction('user_logouts', f'User {user.username} logged out', user.user_id, user.username, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
@@ -64,7 +65,6 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        user_register_transaction('userRegister', new_user.user_id, new_user.username, datetime.now())
         flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
@@ -90,6 +90,7 @@ def open_reset_password(token, user_id, username, expiration_time):
         token=token,
         expiration_time=expiration_time
     )
+    mongo_transaction('user_password_reset_requests', f'User {username} requested password change', user_id, username, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time, form=form)
 
 @bp.route('/send_email_token', methods=['POST'])
@@ -144,6 +145,7 @@ def update_new_password():
         used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
         db.session.delete(used_token)
         db.session.commit()
+        mongo_transaction('user_password_reset', f'User {username} restore the password', user_id, username, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
         return redirect(url_for('main.login'))  # Redirect to the login page after successful password reset
 

@@ -8,7 +8,7 @@ from app.forms import QuestForm, PublishCommentForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import MongoDB transactions functions
-from app.database.mongodb_transactions import new_quest_transaction
+from app.database.mongodb_transactions import mongo_transaction
 
 bp_qst = Blueprint('quests', __name__)
 
@@ -64,14 +64,6 @@ def submit_quest():
         from app import db
         db.session.add(new_quest)
         db.session.commit()
-        
-        # Create record in questCreate collection
-        new_quest_transaction('questCreate', current_user.user_id, 
-                              current_user.username, 
-                              quest_id, 
-                              create_quest_post.quest_name.data, 
-                              current_user.username, 
-                              datetime.now())
 
         flash('Quest submitted successfully!', 'success')
         return redirect(url_for('usr.open_admin_panel'))
@@ -155,19 +147,17 @@ def delete_comment():
 # Handle quest edit from the Admin Panel
 @bp_qst.route('/edit_quest_db', methods=['GET', 'POST'])
 def edit_quest_db():
-    
     # Import the database instance
     from app import db
-    
-    quest_id = request.form['quest_id']
-    quest_name = request.form['quest_name']
-    quest_language = request.form['quest_language']
-    quest_difficulty = request.form['quest_difficulty']
-    quest_condition = request.form['quest_condition']
-    function_template = request.form['function_template']
-    unit_tests = request.form['quest_unitests']
-    input_tests = request.form['quest_test_inputs']
-    output_tests = request.form['quest_test_outputs']
+    quest_id = request.form.get('quest_id')
+    quest_name = request.form.get('quest_name')
+    quest_language = request.form.get('quest_language')
+    quest_difficulty = request.form.get('quest_difficulty')
+    quest_condition = request.form.get('quest_condition')
+    function_template = request.form.get('function_template')
+    unit_tests = request.form.get('quest_unitests')
+    input_tests = request.form.get('quest_test_inputs')
+    output_tests = request.form.get('quest_test_outputs')
     
     quest = Quest.query.get(quest_id)
     reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
@@ -309,9 +299,9 @@ def submit_solution():
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
         
         # Submit new solution to the database
-        quest_id = request.form['quest_id']
+        quest_id = request.form.get('quest_id')
         user_id = current_user.user_id
-        user_code = request.form['user_code']
+        user_code = request.form.get('user_code')
         successful_tests = successful_tests
         unsuccessful_tests = unsuccessful_tests
         quest_passed = True if unsuccessful_tests == 0 else False
