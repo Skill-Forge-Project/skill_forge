@@ -88,12 +88,11 @@ def quest_post_comment(quest_id):
     user_id = current_user.user_id
     user_role = current_user.user_role
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
     # Get the quest from the database
     quest_post_form = PublishCommentForm()
     if quest_post_form.validate_on_submit():
         comment = quest_post_form.comment.data
-
-
         # Append the new comment to the quest's comments list
         data = {
             'username': username,
@@ -102,18 +101,14 @@ def quest_post_comment(quest_id):
             'posted_at': current_time,
             'comment': comment
             }
-        
         quest = Quest.query.filter_by(quest_id=quest_id).first()
         all_quest_comments = list(quest.quest_comments)
         all_quest_comments.append(data)
         quest.quest_comments = all_quest_comments
-
-    
         # Commit the changes to the database
         # Import the database instance
         from app import db
         db.session.commit()
-    
         # Redirect to the quest page
         flash('Comment posted successfully!', 'success')
         return redirect(url_for('quests.open_curr_quest', 
