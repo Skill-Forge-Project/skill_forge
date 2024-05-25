@@ -27,6 +27,21 @@ body {
     justify-content: center;
 }
 
+.content-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .task-container {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #d2d0d0;
@@ -44,7 +59,6 @@ body {
     padding: 10px;
     margin-top: 50px !important;
     margin-bottom: 50px !important;
-
 }
 
 
@@ -65,7 +79,7 @@ body {
     margin-top: 10px;
     margin-left: 10px;
     padding: 10px;
-    
+    width: 100%;
 }
 
 

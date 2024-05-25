@@ -1,6 +1,6 @@
 import random, string, base64
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app, request
 from flask_login import login_required, current_user
 # Import the database instance
 from app.database.db_init import db
@@ -10,15 +10,14 @@ from app.models import SubmitedQuest, Quest
 bp_usq = Blueprint('usq', __name__)
 
 # Redirect to the user submit quest page
-@bp_usq.route('/submit_new_quest')
 @login_required
+@bp_usq.route('/user_submit_quest')
 def open_user_submit_quest():
     return render_template('user_submit_quest.html')
 
 # Submit new quest as a regular user
-
-@bp_usq.route('/user_submit_quest', methods=['GET', 'POST'])
 @login_required
+@bp_usq.route('/user_submit_quest', methods=['GET', 'POST'])
 def user_submit_quest():
     language = request.form['quest_language']
     difficulty = request.form['quest_difficulty']
@@ -95,12 +94,12 @@ def user_submit_quest():
     db.session.add(new_user_submitted_quest)
     db.session.commit()
     
-    return redirect(url_for('usq.open_user_submit_quest'))
+    return redirect(url_for('open_user_submit_quest'))
 
 
 # Open User Submited Quest for editing from the Admin Panel
-@bp_usq.route('/open_submited_quest/<quest_id>')
 @login_required
+@bp_usq.route('/open_submited_quest/<quest_id>')
 def open_submited_quest(quest_id):
     submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
@@ -110,8 +109,8 @@ def open_submited_quest(quest_id):
                            user_avatar=user_avatar)
 
 # Route to Approve the Submited Quest to the database class Quests
-@bp_usq.route('/approve_submited_quest', methods=['GET', 'POST'])
 @login_required
+@bp_usq.route('/approve_submited_quest', methods=['GET', 'POST'])
 def approve_submited_quest():
     # Get the desired admin action
     action = request.form['action']
@@ -166,15 +165,12 @@ def approve_submited_quest():
             xp=str(xp),
             type=type
         )
-        
         # Update the quest status in user_submited_quests table
         submited_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
         submited_quest.status = 'Approved'
-        
         # Commit the changes to the database
         db.session.add(new_quest)
         db.session.commit()
-        
         return redirect(url_for('usr.open_admin_panel'))
     
     # IF the action is 'reject', then change the status of the submited quest to 'Rejected'
@@ -196,8 +192,8 @@ def approve_submited_quest():
         return redirect(url_for('usr.open_admin_panel'))
 
 # Post new comment in comments sections
-@bp_usq.route('/post_comment', methods=['POST'])
 @login_required
+@bp_usq.route('/post_comment', methods=['POST'])
 def post_comment():
     submited_quest_id = request.form['submited_quest_id']
     all_comments = eval(request.form['submited_quest_comments'])

@@ -33,57 +33,54 @@
     <!-- Include Navbar template -->
     {% include 'navbar.html' %}
 
-    <form action="/user_submit_quest" method="post">
+    <form method="post" action="{{ url_for('usq.user_submit_quest') }}">
+        {{ form.hidden_tag() }}
         <div id="addQuestContent" class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
             <div class="input-row">
                 <h4><strong class="row-label">Quest Name: </strong></h4>
-                <input type="text" name="quest_name" id="quest_name_input" class="text_input">
+                {{ form.quest_name }}
             </div>
             <div class="input-row">
                 <h4><strong class="row-label">Quest Language: </strong></h4>
-                <select name="quest_language" id="quest_language_input" class="dropdown_input">
-                    <option value="Python">Python</option>
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="Java">Java</option>
-                    <option value="C#">C#</option>
-                </select>
+                {{ form.quest_language }}
             </div>
             <div class="input-row">
                 <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                    <option value="Novice Quests">Novice Quests</option>
-                    <option value="Adventurous Challenges">Adventurous Challenges</option>
-                    <option value="Epic Campaigns">Epic Campaigns</option>
-                </select>
+                {{ form.quest_difficulty }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Quest Condition: </strong></h4>
-                <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
-                    class="text_input"></textarea>
+                {{ form.quest_condition }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Example Solution: </strong></h4>
-                <textarea name="function_template" id="template_input"></textarea>
+                {{ form.function_template }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Inputs Samples: </strong></h4>
                 <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument,
                     second_argument....] [first_argument, second_argument....]</p>
-                <textarea class="text_input" name="quest_inputs" id="quest_inputs_input"></textarea>
+                {{ form.quest_inputs }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Outputs Samples: </strong></h4>
                 <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the
                     inputs in format: [output, output...] [output, output...]</p>
-                <textarea class="text_input" name="quest_outputs" id="quest_outputs_input"></textarea>
+                {{ form.quest_outputs }}
             </div>
             <div class="input-row">
                 <h4><strong class="row-label">Quest Unit Tests (Only for Abyssal Trials difficulty): </strong></h4>
-                <textarea name="quest_unitests" id="unit_tests_input"></textarea>
+                {{ form.quest_unitests }}
             </div>
             <div class="btn-row">
-                <button type="submit" id="submitQuest" class="submit-button"
-                    onclick=location.href="{{ url_for('usq.user_submit_quest') }}">Submit Quest</button>
+                {{ form.submit }}
             </div>
         </div>
     </form>
