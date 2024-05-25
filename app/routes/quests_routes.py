@@ -17,15 +17,6 @@ bp_qst = Blueprint('quests', __name__)
 def submit_quest():
     form = QuestForm()
     if form.validate_on_submit():
-        language = form.quest_language.data
-        difficulty = form.quest_difficulty.data
-        quest_name = form.quest_name.data
-        quest_condition = form.quest_condition.data
-        function_template = form.function_template.data
-        unit_tests = form.quest_unitests.data
-        quest_inputs = form.quest_inputs.data
-        quest_outputs = form.quest_outputs.data
-
         # Generate random suffix
         suffix_length = 6
         suffix = ''.join(random.choices(string.digits, k=suffix_length))
@@ -36,17 +27,19 @@ def submit_quest():
             'JavaScript': 'JS-',
             'C#': 'CS-'
         }
-        prefix = prefix_mapping.get(language, 'UNK-')
+        quest_language = form.quest_language.data
+        prefix = prefix_mapping.get(quest_language, 'UNK-')
         # Construct quest ID
         quest_id = f"{prefix}{suffix}"
         
         # Assign XP points based on difficulty
+        selected_difficulty = form.quest_difficulty.data
         xp_mapping = {
             'Novice Quests': 30,
             'Adventurous Challenges': 60,
             'Epic Campaigns': 100
         }
-        xp = xp_mapping.get(difficulty, 0)
+        xp = xp_mapping.get(selected_difficulty, 0)
         type = 'Basic'
         
         # Create a new Quest object
@@ -76,14 +69,15 @@ def submit_quest():
         new_quest_transaction('questCreate', current_user.user_id, 
                               current_user.username, 
                               quest_id, 
-                              quest_name, 
+                              form.quest_name.data, 
                               current_user.username, 
                               datetime.now())
 
         flash('Quest submitted successfully!', 'success')
         return redirect(url_for('usr.open_admin_panel'))
 
-    return render_template('submit_quest.html', form=form)
+    flash('Quest submission unsuccessful!', 'error')
+    return redirect(url_for('usr.open_admin_panel'))
 
 
 # Post new comment in comments sections

@@ -26,6 +26,22 @@ body {
     justify-content: center;
 }
 
+.alert {
+    margin-top: 5px;
+    padding: 10px;
+}
+
+.alert-success {
+    color: #4CAF50;
+}
+
+.alert-error {
+    color: #f44336;
+}
+
+.alert-info {
+    color: #2196F3;
+}
 
 .task-container {
     font-family: 'JetBrainsMonoRegular', sans-serif;

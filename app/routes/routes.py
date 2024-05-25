@@ -70,8 +70,8 @@ def register():
     return render_template('register.html', form=form)
 
 # Custom error handler for Unauthorized (401) error
-@bp.errorhandler(Unauthorized)
-def handle_unauthorized_error(error):
+@bp.errorhandler(401)
+def unauthorized_error(error):
     # Redirect users to a specific page and flash a error message
     flash('You must be logged in to access this page.', 'error')
     return redirect(url_for('main.login'))
