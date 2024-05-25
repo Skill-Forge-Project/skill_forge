@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
         <!-- Include CodeMirror library -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
         <!-- Include CodeMirror theme (optional) -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
         <!-- Include CodeMirror CSS -->
@@ -51,57 +51,79 @@
             </div>
             <div class="content-section">
                 <!-- Add New Quest Panel -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 <div id="addQuestContent" class="content" style="display: none;">
-                    <form action="/submit_quest" method="post">
-                        <div class="input-row">
-                            <h4><strong class="row-label">Quest Name: </strong></h4>
-                            <input type="text" name="quest_name" id="quest_name_input" class="text_input">
-                        </div>
-                        <div class="input-row">
-                            <h4><strong class="row-label">Quest Language: </strong></h4>
-                            <select name="quest_language" id="quest_language_input" class="dropdown_input">
-                                <option value="Python">Python</option>
-                                <option value="JavaScript">JavaScript</option>
-                                <option value="Java">Java</option>
-                                <option value="C#">C#</option>
-                            </select>
-                        </div>
-                        <div class="input-row">
-                            <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                            <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                                <option value="Novice Quests">Novice Quests</option>
-                                <option value="Adventurous Challenges">Adventurous Challenges</option>
-                                <option value="Epic Campaigns">Epic Campaigns</option>
-                            </select>
-                        </div>
-                        <div class="input-row" style="flex-direction: column;">
-                            <h4><strong class="row-label">Quest Condition: </strong></h4>
-                            <textarea type="text" name="quest_condition" id="editor" data-preview="#preview" rows="10"
-                                class="text_input"></textarea>
-                        </div>
-                        <div class="input-row" style="flex-direction: column;">
-                            <h4><strong class="row-label">Inputs Samples: </strong></h4>
-                            <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument, second_argument....] [first_argument, second_argument....]</p>
-                            <textarea class="text_input" name="quest_inputs" id="quest_inputs_input"></textarea>
-                        </div>
-                        <div class="input-row" style="flex-direction: column;">
-                            <h4><strong class="row-label">Outputs Samples: </strong></h4>
-                            <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the inputs in format: [output, output...] [output, output...]</p>
-                            <textarea class="text_input" name="quest_outputs" id="quest_outputs_input"></textarea>
-                        </div>
-                        <div class="input-row" style="flex-direction: column;">
-                            <h4><strong class="row-label">Quest Template: </strong></h4>
-                            <textarea name="function_template" id="template_input"></textarea>
-                        </div>
-                        <div class="input-row">
-                            <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
-                            <textarea name="quest_unitests" id="unit_tests_input"></textarea>
-                        </div>
-                        <div class="btn-row">
-                            <button type="submit" id="submitQuest" class="submit-button"
-                                onclick=location.href="{{ url_for('quests.submit_quest') }}">Submit Quest</button>
-                        </div>
-                    </form>
+                    <div class="container-fluid">
+                        <h2>Submit a New Quest</h2>
+                        <form action="{{ url_for('main.update_new_password') }}" method="post">
+                            {{ form.hidden_tag() }}
+                            <div class="input-row">
+                                {{ form.quest_name.label(class_='row-label') }}
+                                {{ form.quest_name(class_='text_input') }}
+                                {% for error in form.quest_name.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row">
+                                {{ form.quest_language.label(class_='row-label') }}
+                                {{ form.quest_language(class_='dropdown_input', id='quest_language_input') }}
+                                {% for error in form.quest_language.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row">
+                                {{ form.quest_difficulty.label(class_='row-label') }}
+                                {{ form.quest_difficulty(class_='dropdown_input') }}
+                                {% for error in form.quest_difficulty.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row">
+                                {{ form.quest_condition.label(class_='row-label') }}
+                                {{ form.quest_condition(class_='text_input') }}
+                                {% for error in form.quest_condition.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row">
+                                {{ form.quest_inputs.label(class_='row-label') }}
+                                {{ form.quest_inputs(class_='text_input') }}
+                                {% for error in form.quest_inputs.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row">
+                                {{ form.quest_outputs.label(class_='row-label') }}
+                                {{ form.quest_outputs(class_='text_input') }}
+                                {% for error in form.quest_outputs.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row" style="flex-direction: column;">
+                                {{ form.function_template.label(class_='row-label') }}
+                                <textarea name="function_template" id="template_input"></textarea>
+                                {% for error in form.function_template.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="input-row">
+                                {{ form.quest_unitests.label(class_='row-label') }}
+                                {{ form.quest_unitests(class_='text_input', id='unit_tests_input') }}
+                                {% for error in form.quest_unitests.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="btn-container">
+                                {{ form.submit(class_='submit-button') }}
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Edit Quest Panel -->
@@ -246,6 +268,12 @@
         <!-- JavaScript script to handle the CodeMirror custom fields. 
             This script should be loaded after the initialization of the fields above! 
         -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
         <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
 
         <!-- JavaScript managing the content in the Bootstrap table -->

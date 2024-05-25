@@ -28,11 +28,9 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            # Log in the user
             login_user(user, force=True)
-            # Create record in userLogin collection
             session_transaction('userLogins', user.user_id, user.username, datetime.now())
-            return redirect(url_for('main.main_page'))  # Redirect to the main page after login
+            return redirect(url_for('main.main_page'))
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
     return render_template('index.html', form=form)
@@ -41,9 +39,7 @@ def login():
 @bp.route('/logout')
 @login_required
 def logout():
-    # Create record in userLogout collection
     session_transaction('userLogouts', current_user.user_id, current_user.username, datetime.now())
-    # Log out the user
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
@@ -67,12 +63,10 @@ def register():
                         password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        # Send welocme email
         send_welcome_mail(form.email.data, form.username.data)
-        # Create record in userRegister collection
         user_register_transaction('userRegister', new_user.user_id, new_user.username, datetime.now())
         flash('Your account has been created! You are now able to log in.', 'success ')
-        return redirect(url_for('main.login'))  # Redirect to the login page after successful registration
+        return redirect(url_for('main.login'))
     return render_template('register.html', form=form)
 
 # Custom error handler for Unauthorized (401) error

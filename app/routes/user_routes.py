@@ -7,6 +7,7 @@ from sqlalchemy.orm import joinedload
 from app.database.db_init import db
 # Import the forms and models
 from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest
+from app.forms import QuestForm
 
 bp_usr = Blueprint('usr', __name__)
 
@@ -143,6 +144,7 @@ def user_self_update():
 @bp_usr.route('/admin_panel')
 @login_required
 def open_admin_panel():
+    form = QuestForm()
     # Retrieve all quests from the database
     all_quests = Quest.query.all()
     all_submited_quests = SubmitedQuest.query.all()
@@ -162,6 +164,7 @@ def open_admin_panel():
         all_submited_quests=all_submited_quests, 
         reported_quests=all_reported_quests,
         all_users=all_users,
-        all_admins=all_admins)
+        all_admins=all_admins,
+        form=form)
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))

@@ -1,9 +1,10 @@
 import random, string, base64, json
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash
 from flask_login import login_required, current_user
 # Import the forms and models
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
+from app.forms import QuestForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import MongoDB transactions functions
@@ -11,90 +12,78 @@ from app.database.mongodb_transactions import new_quest_transaction
 
 bp_qst = Blueprint('quests', __name__)
 
-# Submit new quest as admin from the admin panel
 @bp_qst.route('/submit_quest', methods=['GET', 'POST'])
 @login_required
 def submit_quest():
-    language = request.form.get('quest_language')
-    difficulty = request.form.get('quest_difficulty')
-    quest_name = request.form.get('quest_name')
-    quest_condition = request.form.get('quest_condition')
-    function_template = request.form.get('function_template')
-    unit_tests = request.form.get('quest_unitests')
-    quest_inputs = request.form.get('quest_inputs')
-    quest_outputs = request.form.get('quest_outputs')
-    
-    # Generate random suffix
-    suffix_length = 6
-    suffix = ''.join(random.choices(string.digits, k=suffix_length))
-    # Determine prefix based on language
-    if request.form['quest_language'] == 'Python':
-        prefix = 'PY-'
-    elif request.form['quest_language'] == 'Java':
-        prefix = 'JV-'
-    elif request.form['quest_language'] == 'JavaScript':
-        prefix = 'JS-'
-    elif request.form['quest_language'] == 'C#':
-        prefix = 'CS-'
-    else:
-        prefix = 'UNK-'  # Default prefix for unknown languages
-    # Construct quest ID
-    quest_id = f"{prefix}{suffix}"
-    
-    # Assing XP points based on difficulty
-    xp = 0
-    type = ''
-    if request.form['quest_difficulty'] == 'Novice Quests':
-        xp = 30
-        type = 'Basic'
-    elif request.form['quest_difficulty'] == 'Adventurous Challenges':
-        xp = 60
-        type = 'Basic'
-    elif request.form['quest_difficulty'] == 'Epic Campaigns':
-        xp = 100
-        type = 'Basic'
-    
-    # Get the currently logged in user's username
-    current_username = current_user.username
-    
-    # Get the current time
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Create a new Quest object
-    new_quest = Quest(
-        quest_id= quest_id,
-        language=language,
-        difficulty=difficulty,
-        quest_name=quest_name,
-        quest_author=current_username,
-        date_added=current_time,
-        last_modified=current_time,
-        condition=quest_condition,
-        function_template=function_template,
-        unit_tests=unit_tests,
-        test_inputs=quest_inputs,
-        test_outputs=quest_outputs,
-        type=type,
-        xp=str(xp)
-    )
+    form = QuestForm()
+    if form.validate_on_submit():
+        language = form.quest_language.data
+        difficulty = form.quest_difficulty.data
+        quest_name = form.quest_name.data
+        quest_condition = form.quest_condition.data
+        function_template = form.function_template.data
+        unit_tests = form.quest_unitests.data
+        quest_inputs = form.quest_inputs.data
+        quest_outputs = form.quest_outputs.data
 
-    # Add the new quest to the database session
-    # Import the database instance
-    from app import db
-    db.session.add(new_quest)
-    db.session.commit()
-    
-    # Create record in questCreate collection
-    new_quest_transaction('questCreate', current_user.user_id, 
-                          current_username, 
-                          quest_id, 
-                          quest_name, 
-                          current_username, 
-                          current_time)
+        # Generate random suffix
+        suffix_length = 6
+        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+        # Determine prefix based on language
+        prefix_mapping = {
+            'Python': 'PY-',
+            'Java': 'JV-',
+            'JavaScript': 'JS-',
+            'C#': 'CS-'
+        }
+        prefix = prefix_mapping.get(language, 'UNK-')
+        # Construct quest ID
+        quest_id = f"{prefix}{suffix}"
+        
+        # Assign XP points based on difficulty
+        xp_mapping = {
+            'Novice Quests': 30,
+            'Adventurous Challenges': 60,
+            'Epic Campaigns': 100
+        }
+        xp = xp_mapping.get(difficulty, 0)
+        type = 'Basic'
+        
+        # Create a new Quest object
+        new_quest = Quest(
+            quest_id=quest_id,
+            language=form.quest_language.data,
+            difficulty=form.quest_difficulty.data,
+            quest_name=form.quest_name.data,
+            quest_author=current_user.username,
+            date_added=datetime.now(),
+            last_modified=datetime.now(),
+            condition=form.quest_condition.data,
+            function_template=form.quest_condition.data,
+            unit_tests=form.quest_condition.data,
+            test_inputs=form.quest_inputs.data,
+            test_outputs=form.quest_outputs.data,
+            type=type,
+            xp=str(xp)
+        )
 
-    # Redirect to a success page or main page
-    return redirect(url_for('usr.open_admin_panel'))
+        # Add the new quest to the database session
+        from app import db
+        db.session.add(new_quest)
+        db.session.commit()
+        
+        # Create record in questCreate collection
+        new_quest_transaction('questCreate', current_user.user_id, 
+                              current_user.username, 
+                              quest_id, 
+                              quest_name, 
+                              current_user.username, 
+                              datetime.now())
 
+        flash('Quest submitted successfully!', 'success')
+        return redirect(url_for('usr.open_admin_panel'))
+
+    return render_template('submit_quest.html', form=form)
 
 
 # Post new comment in comments sections

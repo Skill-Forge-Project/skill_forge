@@ -76,3 +76,16 @@ class PasswordResetForm(FlaskForm):
     ])
     expiration_time = HiddenField('Expiration Time')
     submit = SubmitField('Reset Password')
+
+
+########### Create New Quest Form - as Admin ###########
+class QuestForm(FlaskForm):
+    quest_name = StringField('Quest Name', validators=[DataRequired(), Length(max=100)])
+    quest_language = SelectField('Quest Language', choices=[('Python', 'Python'), ('JavaScript', 'JavaScript'), ('Java', 'Java'), ('C#', 'C#')], validators=[DataRequired()])
+    quest_difficulty = SelectField('Quest Difficulty', choices=[('Novice Quests', 'Novice Quests'), ('Adventurous Challenges', 'Adventurous Challenges'), ('Epic Campaigns', 'Epic Campaigns')], validators=[DataRequired()])
+    quest_condition = TextAreaField('Quest Condition', validators=[DataRequired()])
+    quest_inputs = TextAreaField('Inputs Samples', validators=[DataRequired()])
+    quest_outputs = TextAreaField('Outputs Samples', validators=[DataRequired()])
+    function_template = TextAreaField('Quest Template', validators=[DataRequired()])
+    quest_unitests = TextAreaField('Quest Unit Tests - Not Obligatory')
+    submit = SubmitField('Submit Quest')

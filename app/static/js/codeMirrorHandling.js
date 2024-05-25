@@ -19,6 +19,7 @@ var unit_tests = CodeMirror.fromTextArea(document.getElementById("unit_tests_inp
     scrollbars: true
 });
 
+
 // Function to update modes of CodeMirror editors
 function updateModes(selectedLanguage) {
     var mode;
