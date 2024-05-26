@@ -4,12 +4,14 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_socketio import SocketIO
+# Import database instance
 from app.database.db_init import db
 
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 socketio = SocketIO()
+
 
 def create_app():
     app = Flask(__name__)

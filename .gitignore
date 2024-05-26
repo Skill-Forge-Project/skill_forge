@@ -21,7 +21,7 @@ js-backend-server/server/node_modules/
 /migrations/
 manage.py
 
-# Ignore the exection files on the server
+# Ignore the execution files on the server
 */java-files/
 */cs-files/
 

@@ -8,7 +8,7 @@ from app.mailtrap import send_reset_email, send_welcome_mail
 # Import the database instance
 from app.database.db_init import db
 # Import the forms and models
-from app.forms import LoginForm, RegistrationForm, PasswordResetForm, PublishCommentForm
+from app.forms import LoginForm, RegistrationForm, PasswordResetForm, ContactForm
 from app.models import User, ResetToken
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
@@ -180,3 +180,19 @@ def main_page():
         
     server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('homepage.html', server_time=server_time, title_content=title_content, content=content)
+
+# Route to open the contact page
+@bp.route('/contact_us')
+def contact():
+    contact_form = ContactForm()
+    username = current_user.username if current_user.is_authenticated else None
+    user_email = current_user.email if current_user.is_authenticated else None
+    return render_template('contact.html', username=username, user_email=user_email, form=contact_form)
+
+@bp.route('/send_message', methods=['POST'])
+def send_message():
+    contact_form = ContactForm()
+    if contact_form.validate_on_submit():
+        flash('Your message has been sent.', 'success')
+        return redirect(url_for('main.contact'))
+    return render_template('contact.html', form=contact_form)

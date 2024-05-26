@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge - Contact us</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/contact.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+</head>
+
+<body>
+    <!-- Include Navbar template -->
+    {% include 'navbar.html' %}
+
+    <div class="container contact-form">
+        <div class="contact-image">
+            <img src="{{ url_for('static', filename='images/dwarf_avatar.png') }}" alt="dwarf" />
+        </div>
+        <form method="post" action="{{ url_for('main.send_message') }}">
+            {{ form.hidden_tag() }}
+            <h3>Drop Us a Message</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <!-- {{ form.name.label(class="control-label") }} -->
+                        {{ form.name(class="form-control", placeholder="Your Name *") }}
+                    </div>
+                    <div class="form-group">
+                        <!-- {{ form.email.label(class="control-label") }} -->
+                        {{ form.email(class="form-control", placeholder="Your Email *") }}
+                    </div>
+                    <div class="form-group">
+                        <!-- {{ form.subject.label(class="control-label") }} -->
+                        {{ form.subject(class="form-control", placeholder="Subject *") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <!-- {{ form.message.label(class="control-label") }} -->
+                        {{ form.message(class="form-control", placeholder="Your Message *", style="width: 100%; height: 150px;") }}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<footer>
+    <!-- Include Footer template -->
+    {% include 'footer.html' %}
+</footer>
+
+</html>

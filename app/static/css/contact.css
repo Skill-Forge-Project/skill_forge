@@ -1,0 +1,85 @@
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-form{
+    align-items: center;
+    background: rgba(0, 0, 0, .5);
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 70%;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px;
+}
+.contact-form .form-control{
+    border-radius:1rem;
+}
+.contact-image{
+    display: inline-block; 
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+
+}
+
+.contact-image img{
+    border-radius: 6rem;
+    width: 200px;
+    height: 250px;
+    margin-bottom: 0px;
+}
+.contact-form form{
+    padding: 14%;
+}
+.contact-form form .row{
+    margin-bottom: -7%;
+}
+.contact-form h3{
+    margin-bottom: 8%;
+    margin-top: -150px;
+    text-align: center;
+    color: #03e9f4;
+}
+.contact-form .btnContact {
+    width: 50%;
+    border: none;
+    border-radius: 1rem;
+    padding: 1.5%;
+    background: #dc3545;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+}
+.btnContactSubmit
+{
+    width: 50%;
+    border-radius: 1rem;
+    padding: 1.5%;
+    color: #fff;
+    background-color: #0062cc;
+    border: none;
+    cursor: pointer;
+}

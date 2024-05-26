@@ -12,6 +12,7 @@ from app.database.mongodb_transactions import mongo_transaction
 
 bp_qst = Blueprint('quests', __name__)
 
+# Create a new quest as admin
 @bp_qst.route('/submit_quest', methods=['GET', 'POST'])
 @login_required
 def submit_quest():
