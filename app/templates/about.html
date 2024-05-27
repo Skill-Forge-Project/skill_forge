@@ -17,25 +17,48 @@
     {% include 'navbar.html' %}
     
     <div class="container">
-        <div class="box left">
-            <h3 class="box title">About Us</h3>
-            <p class="box content">Welcome to Skill-Forge, where you can embark on a journey of learning, creativity, and problem-solving through programming. 
-                Whether you're a novice coder looking to sharpen your skills, an adventurous programmer seeking new challenges, 
-                or an experienced developer ready for epic campaigns, our platform has something for everyone.
-            </p>
+        <div class="box about">
+            <img src="../static/images/magician_avatar.png" alt="About Us Image" class="box-image">
+            <div class="text-content">
+                <h3 class="box title">About Us</h3>
+                <p class="box content">Welcome to Skill-Forge, where you can embark on a journey of learning, creativity, and problem-solving through programming. 
+                    Whether you're a novice coder looking to sharpen your skills, an adventurous programmer seeking new challenges, 
+                    or an experienced developer ready for epic campaigns, our platform has something for everyone.
+                </p>
+            </div>
         </div>
-        <div class="box">
-            <h3 class="box title">Choose Your Difficulty Level</h3>
-            <p class="box content">Select from a variety of difficulty levels to match your expertise and challenge yourself:
-                <li class="box point">Novice Quests: Perfect for beginners, these quests offer a gentle introduction to programming concepts and syntax.</li>
-                <li class="box point">Adventurous Challenges: Test your skills and expand your knowledge with intermediate-level challenges that push your boundaries.</li>
-                <li class="box point">Epic Campaigns: Conquer complex projects and showcase your expertise with advanced-level campaigns designed for seasoned developers.</li>
-            </p>
+        <div class="box levels">
+            <!-- <img src="../static/images/castle.png" alt="Difficulty Levels Image" class="box-image"> -->
+            <div class="text-content">
+                <h3 class="box title">Choose Your Difficulty Level</h3>
+                <p class="box content">Select from a variety of difficulty levels to match your expertise and challenge yourself:
+                    <ul>
+                        <li class="box point">Novice Quests: Perfect for beginners, these quests offer a gentle introduction to programming concepts and syntax.</li>
+                        <li class="box point">Adventurous Challenges: Test your skills and expand your knowledge with intermediate-level challenges that push your boundaries.</li>
+                        <li class="box point">Epic Campaigns: Conquer complex projects and showcase your expertise with advanced-level campaigns designed for seasoned developers.</li>
+                    </ul>
+                </p>
+            </div>
         </div>
-        <div class="box">3</div>
-        <div class="box">4</div>
+        <div class="box achievements">
+            <div class="text-content">
+                <h3 class="box title">Achievements</h3>
+                <p class="box content">Celebrate your milestones and achievements as you progress through our quests and challenges. 
+                    Earn badges that showcase your skills.</p>
+            </div>
+            <img src="../static/images/knight_avatar.png" alt="Achievements Image" class="box-image">
+        </div>
+        <div class="box team">
+            <img src="../static/images/achievement_icon.png" alt="Team Image" class="box-image">
+            <div class="text-content">
+                <h3 class="box title">Earn XP, Climb Ranks and Submit Quests</h3>
+                <p class="box content">As you complete coding challenges, gain experience points (XP), climb through ranks, and submit your own quests to challenge 
+                    the community. Share your knowledge, creativity, and problem-solving skills with others, and contribute to the growth of our platform.</p>
+            </div>
+        </div>
     </div>
 </body>
+
 <footer>
     <!-- Include Footer template -->
     {% include 'footer.html' %}

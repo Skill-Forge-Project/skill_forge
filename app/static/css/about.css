@@ -1,10 +1,12 @@
 @font-face {
     font-family: 'JetBrainsMonoRegular';
     src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
+
+@font-face {
     font-family: 'JetBrainsMonoBold';
     src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
-
 
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
@@ -20,53 +22,120 @@ body {
 }
 
 .container {
-    font-family: 'JetBrainsMonoRegular', 'sans-serif';
-    margin-top: 5%;
-    margin-bottom: 30%;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 25px;
-    width: 100%;
-    height: 50%;
-
+    grid-template-areas: 
+        "about about"
+        "levels achievements"
+        "team team";
+    grid-gap: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 1200px;
 }
 
 .box {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
+    background: rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
-    background: rgba(0, 0, 0, .5);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    justify-content: left;
-    align-items: left;
-    border-radius: 10px;
-    font-size: 2rem;
 }
 
-.box.title {
-    background: none;
-    box-shadow: none;
-    font-size: 24px;
-    color: #03e9f4;
-    margin-top: 2%;
-    margin-left: 2%;
+.box:hover {
+    transform: translateY(-10px);
 }
 
-.box.content {
-    font-size: 16px;
-    text-align: justify;
+.about {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    grid-area: about;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.levels {
+    grid-area: levels;
+}
+
+.achievements {
+    grid-area: achievements;
+}
+
+.team {
+    grid-area: team;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.text-content {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #d2d0d0;
-    margin: 2%;
-    box-shadow: none;
-    background: none;
+    padding: 20px;
+    flex: 1;
 }
 
-.box.point {
+.box-image {
+    width: 100%;
+    max-width: 300px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.title {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-family: 'Merriweather', serif;
+    color: #03e9f4 !important;
     background: none;
     box-shadow: none;
-    font-size: 16px;
-    text-align:justify;
-    color: #d2d0d0;
-    margin: 2%;
+}
 
+.content, .point {
+    font-size: 1rem;
+    line-height: 1.6;
+    background: none;
+    box-shadow: none;
+}
+
+.point {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-top: 20px;
+    font-style: italic;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+@media (max-width: 900px) {
+    .container {
+        grid-template-areas: 
+            "about"
+            "levels"
+            "achievements"
+            "team";
+    }
+
+    .box {
+        flex-direction: column;
+    }
+
+    .box-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .content, .point {
+        font-size: 0.9rem;
+    }
 }
