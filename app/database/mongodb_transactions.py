@@ -6,7 +6,6 @@ from app.database.mongodb_init import mongo2_db, mongo2_client
 # Create a transaction for inserting a log entry in the userLogins or userLoggouts collection
 def mongo_transaction(*args):
     collection = mongo1_db[args[0]]
-    print(collection)
     session = mongo1_client.start_session()
     with session.start_transaction():
         try:
@@ -15,7 +14,7 @@ def mongo_transaction(*args):
                     'action': args[1],
                     'user_id': args[2], 
                     'username': args[3], 
-                    'timestamp': args[4]
+                    'timestamp': args[4],
                 }, 
                 session=session)
             session.commit_transaction()

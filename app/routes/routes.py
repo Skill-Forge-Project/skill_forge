@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.exceptions import Unauthorized
 # Import the mail functions
-from app.mailtrap import send_reset_email, send_welcome_mail
+from app.mailtrap import send_reset_email, send_welcome_mail, send_contact_email
 # Import the database instance
 from app.database.db_init import db
 # Import the forms and models
@@ -181,8 +181,15 @@ def main_page():
     server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return render_template('homepage.html', server_time=server_time, title_content=title_content, content=content)
 
+# Route to open the about page
+@bp.route('/about')
+@login_required
+def about():
+    return render_template('about.html')
+
 # Route to open the contact page
 @bp.route('/contact_us')
+@login_required
 def contact():
     contact_form = ContactForm()
     username = current_user.username if current_user.is_authenticated else None
@@ -190,9 +197,15 @@ def contact():
     return render_template('contact.html', username=username, user_email=user_email, form=contact_form)
 
 @bp.route('/send_message', methods=['POST'])
+@login_required
 def send_message():
     contact_form = ContactForm()
+    email = contact_form.email.data
+    subject = contact_form.subject.data
+    message = contact_form.message.data
+    print(email, subject, message)
     if contact_form.validate_on_submit():
+        send_contact_email(email, subject, message)
         flash('Your message has been sent.', 'success')
         return redirect(url_for('main.contact'))
     return render_template('contact.html', form=contact_form)

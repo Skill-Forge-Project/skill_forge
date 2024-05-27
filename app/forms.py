@@ -119,3 +119,12 @@ class QuestForm(FlaskForm):
 class PublishCommentForm(FlaskForm):
     comment = TextAreaField('Comment', validators=[DataRequired()])
     submit = SubmitField('Comment')
+
+
+########### Publish New Comment On Quest Form ###########
+class ContactForm(FlaskForm):
+    username = StringField('Name', validators=[DataRequired()])
+    email = StringField('Email address', validators=[DataRequired(), Email()])
+    subject = StringField('Subject', validators=[DataRequired()])
+    message = TextAreaField('Message', validators=[DataRequired()])
+    submit = SubmitField('Send Message')

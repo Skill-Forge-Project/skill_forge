@@ -27,7 +27,6 @@ def send_welcome_mail(recipient, username):
     client.send(mail)
 
 
-
 # Send password reset email with a generated token valid for 60 minutes
 def send_reset_email(token, username, email, expiration_time):
     html_content = read_file_content(reset_pass_template_path)
@@ -43,5 +42,19 @@ def send_reset_email(token, username, email, expiration_time):
         category="Password Resets",
     )
 
+    client = mt.MailtrapClient(token=os.getenv("MAILTRAP_API_TOKEN"))
+    client.send(mail)
+
+
+# Send email from the contact form
+def send_contact_email(email, subject, message):
+    support_email = os.getenv("SUPPORT_EMAIL")
+    mail = mt.Mail(
+        sender=mt.Address(email="support@stratios.net", name="Skill-Forge Support"),
+        to=[mt.Address(email=email)],
+        bcc=[mt.Address(email=support_email)],
+        subject=f"Contact Form - {subject}",
+        html = f"<p>{message}</p>",
+        category="SignUps",)
     client = mt.MailtrapClient(token=os.getenv("MAILTRAP_API_TOKEN"))
     client.send(mail)
