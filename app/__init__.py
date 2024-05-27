@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for, flash, render_template
 from config import Config
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -11,6 +11,7 @@ migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 socketio = SocketIO()
+
 
 
 def create_app():
@@ -32,6 +33,22 @@ def create_app():
     app.register_blueprint(user_submit_quest_routes.bp_usq)
     app.register_blueprint(user_submited_solutions.bp_uss)
     app.register_blueprint(quests_routes.bp_qst)
+
+    ########### Routes handling error codes responds ###########
+    # Custom error handler for Unauthorized (401) error
+    @app.errorhandler(401)
+    def unauthorized_error(error):
+        flash('You must be logged in to access this page.', 'error')
+        return redirect(url_for('main.login'))
+
+    # Custom error handler for Not Found (404) error
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return redirect(url_for('not_found'))
+
+    @app.route('/not_found')
+    def not_found():
+        return render_template('404.html')
 
     with app.app_context():
         db.create_all()

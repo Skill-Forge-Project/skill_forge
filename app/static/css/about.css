@@ -8,7 +8,6 @@
 
 html {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    height: 100%;
 }
 
 body {
@@ -18,19 +17,56 @@ body {
     background: linear-gradient(#141e30, #243b55) !important;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
 }
 
-.content {
+.container {
+    font-family: 'JetBrainsMonoRegular', 'sans-serif';
+    margin-top: 5%;
+    margin-bottom: 30%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 25px;
+    width: 100%;
+    height: 50%;
+
+}
+
+.box {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10%;
-    margin-bottom: 10%;
-    padding: 10px;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    justify-content: left;
+    align-items: left;
     border-radius: 10px;
-    background-color: #1a1a1a;
-    color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 2rem;
+}
+
+.box.title {
+    background: none;
+    box-shadow: none;
+    font-size: 24px;
+    color: #03e9f4;
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+.box.content {
+    font-size: 16px;
+    text-align: justify;
+    color: #d2d0d0;
+    margin: 2%;
+    box-shadow: none;
+    background: none;
+}
+
+.box.point {
+    background: none;
+    box-shadow: none;
+    font-size: 16px;
+    text-align:justify;
+    color: #d2d0d0;
+    margin: 2%;
+
 }

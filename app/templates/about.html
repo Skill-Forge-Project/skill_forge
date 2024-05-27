@@ -4,8 +4,11 @@
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - About</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 
@@ -14,25 +17,24 @@
     {% include 'navbar.html' %}
     
     <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <h2>About Us</h2>
-                <p>
-                    Skill Forge is a platform for learning and teaching online. We offer a wide range of courses in various
-                    categories, such as programming, design, and business. Our mission is to provide high-quality education
-                    for everyone, everywhere.
-                </p>
-                <p>
-                    Our courses are created by experts in their respective fields. They are designed to be engaging, interactive,
-                    and easy to follow. Whether you are a beginner or an experienced professional, you will find a course that
-                    suits your needs.
-                </p>
-                <p>
-                    We believe that education is the key to success. That's why we are committed to helping you achieve your
-                    goals. Join us today and start learning new skills!
-                </p>
-            </div>
+        <div class="box left">
+            <h3 class="box title">About Us</h3>
+            <p class="box content">Welcome to Skill-Forge, where you can embark on a journey of learning, creativity, and problem-solving through programming. 
+                Whether you're a novice coder looking to sharpen your skills, an adventurous programmer seeking new challenges, 
+                or an experienced developer ready for epic campaigns, our platform has something for everyone.
+            </p>
         </div>
+        <div class="box">
+            <h3 class="box title">Choose Your Difficulty Level</h3>
+            <p class="box content">Select from a variety of difficulty levels to match your expertise and challenge yourself:
+                <li class="box point">Novice Quests: Perfect for beginners, these quests offer a gentle introduction to programming concepts and syntax.</li>
+                <li class="box point">Adventurous Challenges: Test your skills and expand your knowledge with intermediate-level challenges that push your boundaries.</li>
+                <li class="box point">Epic Campaigns: Conquer complex projects and showcase your expertise with advanced-level campaigns designed for seasoned developers.</li>
+            </p>
+        </div>
+        <div class="box">3</div>
+        <div class="box">4</div>
+    </div>
 </body>
 <footer>
     <!-- Include Footer template -->

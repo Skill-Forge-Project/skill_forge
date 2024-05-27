@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
+
+@font-face {
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+body, html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(#141e30, #243b55) !important;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.avatar {
+    width: 350px;
+    height: 350px;
+    margin-bottom: 2px;
+
+}
+
+.text-container {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    padding: 20px;
+    margin-bottom: 2px;
+}
+
+.error-code {
+    font-size: 120px;
+    color: #ff6347; /* Tomato color for the error code */
+    margin: 0;
+}
+
+.message {
+    font-size: 32px;
+    color: #03e9f4;
+    margin: 10px 0;
+}
+
+.message + .message {
+    margin-top: 0;
+}
+
+.button {
+    font-family: 'JetBrainsMonoBold', sans-serif !important;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: #141e30;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    letter-spacing: 4px;
+    border: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background: #03e9f4;
+    color: #fff;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+}
