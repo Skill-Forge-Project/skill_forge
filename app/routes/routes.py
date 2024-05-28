@@ -26,9 +26,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
         if user:
-            print(f'User found: {user.username}')  # Debug statement
             if bcrypt.check_password_hash(user.password, form.password.data):
-                print(f'Password match for user: {user.username}')  # Debug statement
                 login_user(user, force=True)
                 mongo_transaction('user_logins', f'User {user.username} logged in', user.user_id, user.username, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                 return redirect(url_for('main.main_page'))
@@ -61,7 +59,6 @@ def register():
             return redirect(url_for('main.register'))
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        print(f'Hashed register password: {hashed_password}')
         new_user = User(email=form.email.data, username=form.username.data, 
                         first_name=form.first_name.data, last_name=form.last_name.data, 
                         password=hashed_password)
