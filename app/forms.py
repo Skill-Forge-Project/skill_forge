@@ -88,31 +88,46 @@ class PasswordResetForm(FlaskForm):
 
 ########### Create New Quest Form - as Admin ###########
 class QuestForm(FlaskForm):
-    quest_name = StringField('Quest Name', 
-                             validators=[DataRequired(), 
-                             Length(max=100)], 
-                             render_kw={'id': ""})
-    quest_language = SelectField('Quest Language', 
-                                 choices=[('Python', 'Python'), ('JavaScript', 'JavaScript'), ('Java', 'Java'), ('C#', 'C#')], 
-                                 validators=[DataRequired()], 
-                                 render_kw={"id": ""})
-    quest_difficulty = SelectField('Quest Difficulty', 
-                                   choices=[('Novice Quests', 'Novice Quests'), ('Adventurous Challenges', 'Adventurous Challenges'), ('Epic Campaigns', 'Epic Campaigns')], 
-                                   validators=[DataRequired()],
-                                   render_kw={"id": ""})
-    quest_condition = TextAreaField('Quest Condition', 
-                                    validators=[DataRequired()],
-                                    render_kw={"id": ""})
-    quest_inputs = TextAreaField('Inputs Samples', 
-                                 validators=[DataRequired()],
-                                 render_kw={"id": ""})
-    quest_outputs = TextAreaField('Outputs Samples', 
-                                  validators=[DataRequired()],
-                                  render_kw={"id": ""})
-    function_template = TextAreaField('Quest Template', 
-                                      validators=[DataRequired()],
-                                      render_kw={"id": ""})
-    quest_unitests = TextAreaField('Quest Unit Tests - Not Obligatory')
+    quest_name = StringField(
+        'Quest Name', 
+        validators=[DataRequired(), Length(max=100)], 
+        render_kw={'id': ""}
+    )
+    quest_language = SelectField(
+        'Quest Language', 
+        choices=[('Python', 'Python'), ('JavaScript', 'JavaScript'), ('Java', 'Java'), ('C#', 'C#')], 
+        validators=[DataRequired()], 
+        render_kw={"id": ""}
+    )
+    quest_difficulty = SelectField(
+        'Quest Difficulty', 
+        choices=[('Novice Quests', 'Novice Quests'), ('Adventurous Challenges', 'Adventurous Challenges'), ('Epic Campaigns', 'Epic Campaigns')], 
+        validators=[DataRequired()],
+        render_kw={"id": ""}
+    )
+    quest_condition = TextAreaField(
+        'Quest Condition', 
+        validators=[DataRequired()],
+        render_kw={"id": ""}
+    )
+    quest_inputs = TextAreaField(
+        'Inputs Samples', 
+        validators=[DataRequired()],
+        render_kw={"id": ""}
+    )
+    quest_outputs = TextAreaField(
+        'Outputs Samples', 
+        validators=[DataRequired()],
+        render_kw={"id": ""}
+    )
+    function_template = TextAreaField(
+        'Quest Template', 
+        validators=[DataRequired()],
+        render_kw={"id": ""}
+    )
+    quest_unitests = TextAreaField(
+        'Quest Unit Tests - Not Obligatory'
+    )
     submit = SubmitField('Submit Quest')
     
 ########### Publish New Comment On Quest Form ###########
@@ -121,7 +136,7 @@ class PublishCommentForm(FlaskForm):
     submit = SubmitField('Comment')
 
 
-########### Publish New Comment On Quest Form ###########
+########### Contact Form ###########
 class ContactForm(FlaskForm):
     username = StringField('Name', validators=[DataRequired()])
     email = StringField('Email address', validators=[DataRequired(), Email()])
