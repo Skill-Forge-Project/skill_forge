@@ -123,8 +123,6 @@ def quest_post_comment(quest_id):
                                 user_id=user_id,
                                 form=quest_post_form))
 
-
-
 # Delete comment from the comments section (Admin role is required)
 @bp_qst.route('/delete_comment', methods=['POST'])
 @login_required
@@ -145,7 +143,7 @@ def delete_comment():
             db.session.commit()
             return redirect(url_for('quests.open_curr_quest', quest_id=quest_id))
     else:
-        print("Error: Comment could not be deleted.")
+        print("Error: Comment could not be deleted."), 404
 
 
 # Handle quest edit from the Admin Panel

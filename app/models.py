@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
     level = db.Column(db.Integer, default=1, nullable=False)
     rank = db.Column(db.String(30), default="Novice Adventurer")
     avatar = db.Column(db.LargeBinary, default=None)
-    date_registered = db.Column(db.DateTime, default=db.func.current_timestamp())
+    date_registered = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
     total_python_quests = db.Column(db.Integer, default=0, nullable=False)
@@ -46,25 +46,22 @@ class User(UserMixin, db.Model):
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
-    last_status_update = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=True)
+    last_status_update = db.Column(db.DateTime, default=datetime.now(), nullable=True)
 
     def __init__(self, username, first_name, last_name, password, email, avatar=None):
         self.username = username
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.set_password(password)
-        if avatar is None:
-            with open(default_avatar_path, 'rb') as f:
-                self.avatar = base64.b64encode(f.read())
-        else:
-            self.avatar = avatar
+        self.password = password
+        with open(default_avatar_path, 'rb') as f:
+            self.avatar = base64.b64encode(f.read())
         self.generate_user_id()
         
-    # Set the user password
-    def set_password(self, password):
-        from app import bcrypt
-        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+    # # Set the user password
+    # def set_password(self, password):
+    #     from app import bcrypt
+    #     self.password = bcrypt.generate_password_hash(password).decode('utf-8')
         
     # Generate random UserID
     def generate_user_id(self):

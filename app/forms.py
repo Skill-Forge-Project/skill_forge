@@ -130,6 +130,28 @@ class QuestForm(FlaskForm):
     )
     submit = SubmitField('Submit Quest')
     
+    
+########### Edit Quest Form - as Admin ###########
+class EditQuestForm(FlaskForm):
+    quest_id = HiddenField('Quest ID', validators=[DataRequired()])
+    quest_name = StringField('Quest Name', validators=[DataRequired()])
+    quest_language = SelectField('Quest Language', choices=[
+        ('Python', 'Python'),
+        ('JavaScript', 'JavaScript'),
+        ('Java', 'Java'),
+        ('C#', 'C#')
+    ], validators=[DataRequired()])
+    quest_difficulty = SelectField('Quest Difficulty', choices=[
+        ('Novice Quests', 'Novice Quests'),
+        ('Adventurous Challenges', 'Adventurous Challenges'),
+        ('Epic Campaigns', 'Epic Campaigns')
+    ], validators=[DataRequired()])
+    quest_condition = TextAreaField('Quest Condition', validators=[DataRequired()])
+    function_template = TextAreaField('Quest Template', validators=[DataRequired()])
+    quest_test_inputs = TextAreaField('Quest Tests Inputs', validators=[DataRequired()])
+    quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()])
+    quest_unitests = TextAreaField('Quest Unit Tests', validators=[DataRequired()])
+    
 ########### Publish New Comment On Quest Form ###########
 class PublishCommentForm(FlaskForm):
     comment = TextAreaField('Comment', validators=[DataRequired()])
