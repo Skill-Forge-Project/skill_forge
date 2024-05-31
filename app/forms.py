@@ -160,8 +160,8 @@ class PublishCommentForm(FlaskForm):
 
 ########### Contact Form ###########
 class ContactForm(FlaskForm):
-    username = StringField('Name', validators=[DataRequired()])
+    username = StringField('Name', validators=[DataRequired(), Length(min=4, max=25)],)
     email = StringField('Email address', validators=[DataRequired(), Email()])
-    subject = StringField('Subject', validators=[DataRequired()])
-    message = TextAreaField('Message', validators=[DataRequired()])
+    subject = StringField('Subject', validators=[DataRequired(), Length(min=4, max=25)])
+    message = TextAreaField('Message', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Send Message')

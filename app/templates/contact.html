@@ -26,13 +26,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        {{ form.username(class="form-control", placeholder="Your Name *") }}
+                        {{ form.username(class="form-control", placeholder="Your Name *(min 4, max 25 characters)") }}
                     </div>
                     <div class="form-group">
                         {{ form.email(class="form-control", placeholder="Your Email *") }}
                     </div>
                     <div class="form-group">
-                        {{ form.subject(class="form-control", placeholder="Subject *") }}
+                        {{ form.subject(class="form-control", placeholder="Subject *(min 4, max 25 characters)") }}
                     </div>
                     <div class="form-group">
                         {{ form.submit(class="btn btn-primary") }}
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        {{ form.message(class="form-control", placeholder="Your Message *", style="width: 100%; height: 150px;") }}
+                        {{ form.message(class="form-control", placeholder="Your Message(min 10 characters) *", style="width: 100%; height: 150px;") }}
                     </div>
                 </div>
             </div>

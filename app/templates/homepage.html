@@ -3,7 +3,7 @@
     <head>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
         <title>Skill Forge</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main_page.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/homepage.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/buttons.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -43,16 +43,39 @@
                 </div>
             </div>
 
-            <div class="main_title_container">
-                <div class="main_title_container">
-                    <textarea class="main_title_container description" id="markdown-content" style="display: none;" rows="10" cols="50">{{ content }}</textarea>
-                    <div id="html-content-output"></div>
-                    <!-- <h1 class="main_title">Select a Programming Language</h1> -->
+            <div class="container">
+                <div class="box">
+                    <img src="../static/images/alchemist_avatar.png" alt="Alchemist" class="box-image">
+                    <div class="text-content">
+                        <h3 class="box title">Stats</h3>
+                        <p class="box content">Total Number of users: {{ user_count }}</p>
+                        <p class="box content">Online users: {{ online_users }}</p>
+                        <p class="box content">Total Number of quests: {{ quest_count }}</p>
+                        <p class="box content">Total Number of solved quests: {{ solutions_count }}</p>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="../static/images/construction_worker.png" alt="Alchemist" class="box-image">
+                    <div class="text-content">
+                        <h3 class="box title">Comming Soon</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="../static/images/construction_worker.png" alt="Alchemist" class="box-image">
+                    <div class="text-content">
+                        <h3 class="box title">Comming Soon</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <img src="../static/images/construction_worker.png" alt="Alchemist" class="box-image">
+                    <div class="text-content">
+                        <h3 class="box title">Comming Soon</h3>
+                    </div>
                 </div>
             </div>
         </div>
     </body>
-    <footer>
+    <footer style="bottom: 100%;">
         <!-- Include Footer template -->
         {% include 'footer.html' %}
     </footer>

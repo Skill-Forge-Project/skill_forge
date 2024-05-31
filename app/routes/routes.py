@@ -9,7 +9,7 @@ from app.database.db_init import db
 from app import bcrypt
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm, PasswordResetForm, ContactForm
-from app.models import User, ResetToken
+from app.models import User, ResetToken, Quest, SubmitedSolution
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
 
@@ -159,21 +159,17 @@ def update_new_password():
 @bp.route('/home')
 @login_required
 def main_page():
-    title_path = os.path.join(base_dir, '../main_page_title')
-    info_path = os.path.join(base_dir, '../main_page_info')
-    try:
-        with open(title_path, 'r') as file:
-            title_content = file.read().strip()
-    except FileNotFoundError:
-        title_content = "Default Title"
-    try:
-        with open(info_path, 'r') as file:
-            content = file.read().strip()
-    except FileNotFoundError:
-        content = "Default Content"
-        
+    user_count = User.query.count()
+    online_users = User.query.filter_by(user_online_status="Online").count()
+    quest_count = Quest.query.count()
+    solutions_count = SubmitedSolution.query.filter_by(quest_passed=True).count()
     server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    return render_template('homepage.html', server_time=server_time, title_content=title_content, content=content)
+    return render_template('homepage.html', 
+                           server_time=server_time, 
+                           user_count=user_count,
+                           online_users=online_users,
+                           quest_count=quest_count,
+                           solutions_count=solutions_count)
 
 # Route to open the about page
 @bp.route('/about')
