@@ -21,26 +21,27 @@ RUN apt-get update && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# Copy the Python app requirements file into the container at /app
-COPY ./requirements.txt /app/requirements.txt
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the Python app requirements file into the container at /app
+COPY ./requirements.txt /app/requirements.txt
 
 # Install the Python app requirements
 RUN pip install -r requirements.txt --no-cache
+
+# Install NodeJS interpreter, Mono runtime and OpenJDK 17 compilers
+RUN apt update && apt install nodejs npm mono-complete openjdk-17-jdk-headless -y
+
+# Copy the current directory contents into the container at /app
+COPY . /app
 
 # Install the node modules
 RUN npm install
 
 # Buld the dependencies
-RUN npm build
-
-# Install NodeJS interpreter, Mono runtime and OpenJDK 17 compilers
-RUN apt update && apt install nodejs mono-complete openjdk-17-jdk-headless -y
+RUN npm run build
 
 # Expose port 5000
 EXPOSE 5000
@@ -49,4 +50,4 @@ EXPOSE 5000
 ENTRYPOINT ["python"]
 
 # Run the Python app
-CMD ["python run.py"]
+CMD ["run.py"]
