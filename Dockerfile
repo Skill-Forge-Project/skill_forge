@@ -33,6 +33,12 @@ COPY . /app
 # Install the Python app requirements
 RUN pip install -r requirements.txt --no-cache
 
+# Install the node modules
+RUN npm install
+
+# Buld the dependencies
+RUN npm build
+
 # Install NodeJS interpreter, Mono runtime and OpenJDK 17 compilers
 RUN apt update && apt install nodejs mono-complete openjdk-17-jdk-headless -y
 
@@ -43,4 +49,4 @@ EXPOSE 5000
 ENTRYPOINT ["python"]
 
 # Run the Python app
-CMD ["app.py"]
+CMD ["python run.py"]

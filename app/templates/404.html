@@ -6,6 +6,10 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - About</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/404.css') }}">
+        <!-- Track the user status -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <!-- Webpack build (mostly for tracking the user status on the client side) -->
+    <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
 </head>
 
 <body>

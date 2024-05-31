@@ -1,6 +1,11 @@
+import io from 'socket.io-client';
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Socket.IO connection
+    const socketIp = process.env.SOCKET_IP;
+    const socketPort = process.env.SOCKET_PORT;
     const userId = "{{ user.user_id }}";  // Get the user ID dynamically
-    const socket = io('http://192.168.0.169:5000/', {
+    const socket = io(`http://${socketIp}:${socketPort}/`, {
         query: {
             user_id: userId
         }
@@ -9,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('connect', () => {
         // When the Socket.IO connection is established, request the user's current status
         socket.emit('request_user_status', { user_id: userId });
+        console.log('Connected to the server');
     });
 
     socket.on('disconnect', () => {
