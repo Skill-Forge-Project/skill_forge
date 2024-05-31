@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, flash
 from config import Config
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -35,6 +35,12 @@ def create_app():
     app.register_blueprint(quests_routes.bp_qst)
 
     ########### Routes handling error codes responds ###########
+    # Custom error handler for Unauthorized (404) error
+    @app.errorhandler(401)
+    def unauthorized_error(error):
+        flash('You must be logged in to view this page.', 'error')
+        return redirect(url_for('main.login'))
+    
     # Custom error handler for Not Found (404) error
     @app.errorhandler(404)
     def page_not_found(e):

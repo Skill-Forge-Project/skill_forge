@@ -66,15 +66,15 @@ def submit_quest():
         db.session.add(new_quest)
         db.session.commit()
         mongo_transaction('quest_created', 
-                          f'User {current_user.username} created a new quest {quest_id}-{create_quest_post.quest_name}', 
-                          current_user.user_id, current_user.username, 
-                          datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                          action=f'User {current_user.username} created a new quest {quest_id}-{create_quest_post.quest_name}',                
+                          user_id=current_user.user_id, 
+                          username=current_user.username, 
+                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         flash('Quest submitted successfully!', 'success')
         return redirect(url_for('usr.open_admin_panel'))
 
     flash('Quest submission unsuccessful!', 'error')
     return redirect(url_for('usr.open_admin_panel'))
-
 
 # Post new comment in comments sections
 @bp_qst.route('/quest_post_comment/<quest_id>', methods=['POST'])
