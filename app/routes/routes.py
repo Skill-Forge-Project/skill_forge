@@ -28,7 +28,7 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, force=True)
-                mongo_transaction('user_logins', f'User {user.username} logged in', user.user_id, user.username, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                mongo_transaction('user_logins', action=f"User {user.username} logged in", user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                 return redirect(url_for('main.main_page'))
             else:
                 print('Password does not match')  # Debug statement
