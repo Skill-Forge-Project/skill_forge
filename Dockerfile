@@ -33,6 +33,5 @@ RUN npm run build
 # Expose port 5000
 EXPOSE 5000
 
-
 # Run the Python app
 CMD ["python", "run.py"]
