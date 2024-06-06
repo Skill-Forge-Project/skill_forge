@@ -22,6 +22,7 @@ def run_code(python_code, inputs, outputs):
         
         # Concatenate the Python code with the function call
         current_execute = python_code + '\n\n' + f'print({function_name[0]}({current_input}))'
+
         # Write Python code to file
         with open(os.path.join(workdir, code_filename), 'w') as f:
             f.write(current_execute)
