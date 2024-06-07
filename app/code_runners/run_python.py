@@ -29,7 +29,7 @@ def run_code(python_code, inputs, outputs):
 
         # Execute the Python code
         run_command = ['firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-                       'python3', os.path.join(workdir, code_filename)] + current_input.split()
+                        '--timeout=00:01:00', '--rlimit-cpu=60', 'python3', os.path.join(workdir, code_filename)] + current_input.split()
         run_process = subprocess.Popen(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = run_process.communicate()
         
