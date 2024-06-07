@@ -1,6 +1,4 @@
-import subprocess
-import os
-import re
+import subprocess, os, re, uuid, shutil
 
 def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
@@ -8,65 +6,59 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     unsuccessful_tests = 0
     zero_tests = [] # Hold the first example test input and putput
     zero_tests_outputs = [] # Hold the first example after executing the user code (stdout & stderr)
+    execution_id = str(uuid.uuid4())
+    workdir = f"/tmp/{execution_id}"
+    os.makedirs(workdir, exist_ok=True)
     
     # Generate a unique dir and file name for the Java code
     directory = f"{username}_{user_id}_{quest_id}"
-    os.makedirs(os.path.join(f"test_runners/java-files/{directory}"), exist_ok=True)
-    os.chdir(os.path.join(f"test_runners/java-files/{directory}"))
+    java_file_path = os.path.join(workdir, "Main.java")
+    class_file_path = os.path.join(workdir, "Main.class")
     
-    for i in range(tests_count):        
-        current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
-        current_input = ', '.join(current_input)
-        correct_output = str(outputs[i][0])
-        file_path = os.path.join(os.getcwd(), "Main.java")
-        class_path = os.path.join(os.getcwd(), "Main.class")
-        
-        # Save the Java code to a file
-        with open(file_path, "w") as java_file:
-            java_file.write(java_code)
+    # Save the Java code to a file
+    with open(java_file_path, "w") as java_file:
+        java_file.write(java_code)
 
-        # Compile the Java code
-        compile_process = subprocess.Popen(['javac', file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout_str, stderr_str = compile_process.communicate()
-        stdout_str = stdout_str.decode('utf-8')
-        stderr = stderr_str.decode('utf-8')
+    # Compile the Java code using firejail
+    compile_command = [
+        'firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
+        '--rlimit-cpu=60', 'javac', java_file_path
+    ]        
+    compile_process = subprocess.Popen(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = compile_process.communicate()
+    
+    stdout_str = stdout.decode('utf-8').strip()
+    stderr_str = stderr.decode('utf-8').strip()
+    # If compilation failed
+    if stderr_str:
+        stderr_str = re.findall(r"(?<=java:\d:)\s.*", stderr_str)
+        zero_tests_outputs.append(stdout_str)
+        zero_tests_outputs.append(stderr_str)
+        zero_tests.append(current_input)
+        zero_tests.append(correct_output)
+        unsuccessful_tests = tests_count
+        message = 'Your solution is incorrect! Try again!'
+        return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
 
-        # If Compilation failed
-        if stderr_str:
-            stderr_str = re.findall(r"(?<=java:\d:)\s.*", stderr)
-            zero_tests_outputs.append(stdout_str)
-            zero_tests_outputs.append(stderr_str)
-            current_input = ' '.join([str(element) for element in inputs[i]])
-            correct_output = outputs[i][0]
-            zero_tests.append(current_input)
-            zero_tests.append(correct_output)
-            zero_tests_outputs.append(stdout_str)
-            zero_tests_outputs.append(stderr_str)
-            unsuccessful_tests = tests_count
-            message = 'Your solution is incorrect! Try again!'
-            # Remove the Main.java file
-            os.remove("Main.java")
-            # Remove the directory
-            os.chdir("../")
-            os.rmdir(directory)
-            os.chdir("../../")
-            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
+        # If compilation was successful, run and check the code
+    else:
+        for i in range(tests_count):        
+            current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
+            current_input = ' '.join(current_input)
+            correct_output = str(outputs[i][0])
 
-        # If Compilation was successful run and check the code
-        else:
-            print("I am trying to execute the code")
-            # Execute the CS code
-            current_input = ' '.join([str(element) for element in inputs[i]])
-            correct_output = outputs[i][0]
-            execute_command = ['java', 'Main'] + current_input.split()
+            # Execute the compiled Java code using firejail
+            execute_command = [
+                'firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
+                '--rlimit-cpu=60', 'java', '-cp', workdir, 'Main'
+            ] + current_input.split()
             execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout_str, stderr_str = execute_process.communicate()
-            stdout_str = stdout_str.decode('utf-8').replace('\n', '')
-            stderr_str = stderr_str.decode('utf-8').replace('\n', '')
-            
-                    
+            stdout, stderr = execute_process.communicate()
+            stdout_str = stdout.decode('utf-8').strip()
+            stderr_str = stderr.decode('utf-8').strip()
+
             # Check if output matches expected output
-            if stdout_str == str(correct_output):
+            if stdout_str == correct_output:
                 successful_tests += 1
             else:
                 unsuccessful_tests += 1
@@ -77,27 +69,18 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
                 zero_tests.append(correct_output)
                 zero_tests_outputs.append(stdout_str)
                 zero_tests_outputs.append(stderr_str)
-                
-            # Determine message based on test results
-            if unsuccessful_tests == 0:
-                message = 'Congratulations! Your solution is correct!'
-            elif successful_tests > 0 and unsuccessful_tests > 0:
-                message = 'Your solution is partially correct! Try again!'
-            elif successful_tests == 0 and unsuccessful_tests > 0:
-                message = 'Your solution is incorrect! Try again!'
-        
-            # Remove the files
-            os.remove("Main.java")
-            os.remove("Main.class")
-            
-    # Remove the directory
-    os.chdir("../")
-    os.rmdir(directory)
-    os.chdir("../../")
 
+    # Determine message based on test results
+    if unsuccessful_tests == 0:
+        message = 'Congratulations! Your solution is correct!'
+    elif successful_tests > 0 and unsuccessful_tests > 0:
+        message = 'Your solution is partially correct! Try again!'
+    else:
+        message = 'Your solution is incorrect! Try again!'
+
+    # Cleanup the directory
+    shutil.rmtree(workdir)
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-
-
 
 # Example Java code
 # java_code = """

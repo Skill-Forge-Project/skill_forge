@@ -1,4 +1,4 @@
-import subprocess, os, re, uuid
+import subprocess, os, re, uuid, shutil
 
 def run_code(python_code, inputs, outputs):
     tests_count = len(inputs)
@@ -29,12 +29,14 @@ def run_code(python_code, inputs, outputs):
 
         # Execute the Python code
         run_command = ['firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-                        '--timeout=00:01:00', '--rlimit-cpu=60', 'python3', os.path.join(workdir, code_filename)] + current_input.split()
-        run_process = subprocess.Popen(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = run_process.communicate()
-        
-        stdout_str = stdout.decode('utf-8').strip()
-        stderr_str = stderr.decode('utf-8').strip()
+                       'python3', os.path.join(workdir, code_filename)] + current_input.split()
+        try:
+            run_process = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=5)  # Timeout after 5 seconds
+            stdout_str = run_process.stdout.decode('utf-8').strip()
+            stderr_str = run_process.stderr.decode('utf-8').strip()
+        except subprocess.TimeoutExpired:
+            stdout_str = ''
+            stderr_str = 'Execution timed out.'
         
         if i == 0:
             zero_tests.append(current_input)
@@ -54,6 +56,8 @@ def run_code(python_code, inputs, outputs):
     else:
         message = 'Your solution is incorrect! Try again!'
     
+    # Cleanup the directory
+    shutil.rmtree(workdir)
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
 
 # Example Python code
