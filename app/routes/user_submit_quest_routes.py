@@ -19,14 +19,14 @@ def open_user_submit_quest():
 @login_required
 @bp_usq.route('/user_submit_quest', methods=['GET', 'POST'])
 def user_submit_quest():
-    language = request.form['quest_language']
-    difficulty = request.form['quest_difficulty']
-    quest_name = request.form['quest_name']
-    quest_condition = request.form['quest_condition']
-    function_template = request.form['function_template']
-    unit_tests = request.form['quest_unitests']
-    quest_inputs = request.form['quest_inputs']
-    quest_outputs = request.form['quest_outputs']
+    language = request.form.get('quest_language')
+    difficulty = request.form.get('quest_difficulty')
+    quest_name = request.form.get('quest_name')
+    quest_condition = request.form.get('quest_condition')
+    function_template = request.form.get('function_template')
+    unit_tests = request.form.get('quest_unitests')
+    quest_inputs = request.form.get('quest_inputs')
+    quest_outputs = request.form.get('quest_outputs')
     
     # Generate random suffix
     suffix_length = 6
@@ -113,23 +113,23 @@ def open_submited_quest(quest_id):
 @bp_usq.route('/approve_submited_quest', methods=['GET', 'POST'])
 def approve_submited_quest():
     # Get the desired admin action
-    action = request.form['action']
+    action = request.form.get('action')
     
     # IF the action is 'approve', then add the quest to the database class Quests
         # The original submited quest should remain in the user_submited_quests table and change the status to 'Approved'
     if action == "approve":
         # Read the values from the HTML form to pass to the Class constructor
-        submited_quest_id = request.form['submited_quest_id']
-        submited_quest_name = request.form['submited_quest_name']
-        submited_quest_language = request.form['submited_quest_language']
-        submited_quest_difficulty = request.form['submited_quest_difficulty']
-        submited_quest_author = request.form['submited_quest_author']
-        submited_quest_date_added=request.form['submited_quest_date_added']
-        submited_quest_condition = request.form['submited_quest_condition']
-        submited_function_template = request.form['submited_function_template']
-        submited_quest_unit_tests = request.form['submited_quest_unitests']
-        submited_quest_inputs = request.form['submited_quest_inputs']
-        submited_quest_outputs = request.form['submited_quest_outputs']
+        submited_quest_id = request.form.get('submited_quest_id')
+        submited_quest_name = request.form.get('submited_quest_name')
+        submited_quest_language = request.form.get('submited_quest_language')
+        submited_quest_difficulty = request.form.get('submited_quest_difficulty')
+        submited_quest_author = request.form.get('submited_quest_author')
+        submited_quest_date_added = request.form.get('submited_quest_date_added')
+        submited_quest_condition = request.form.get('submited_quest_condition')
+        submited_function_template = request.form.get('submited_function_template')
+        submited_quest_unit_tests = request.form.get('submited_quest_unitests')
+        submited_quest_inputs = request.form.get('submited_quest_inputs')
+        submited_quest_outputs = request.form.get('submited_quest_outputs')
         
         print(f'Submited Quest Difficulty: {submited_quest_difficulty}')
         # Assing XP points based on difficulty
@@ -176,7 +176,7 @@ def approve_submited_quest():
     # IF the action is 'reject', then change the status of the submited quest to 'Rejected'
         # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
     elif action == "reject":
-        quest_id = request.form['submited_quest_id']
+        quest_id = request.form.get('submited_quest_id')
         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
         submited_quest.status = 'Rejected'
         db.session.commit()
@@ -185,7 +185,7 @@ def approve_submited_quest():
     # IF the action is 'request-changes', then change the status of the submited quest to 'Pending'
         # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
     elif action == 'request-changes':
-        quest_id = request.form['submited_quest_id']
+        quest_id = request.form.get('submited_quest_id')
         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
         submited_quest.status = 'Pending'
         db.session.commit()
@@ -195,9 +195,9 @@ def approve_submited_quest():
 @login_required
 @bp_usq.route('/post_comment', methods=['POST'])
 def post_comment():
-    submited_quest_id = request.form['submited_quest_id']
-    all_comments = eval(request.form['submited_quest_comments'])
-    comment = request.form['submited_quest_comment']
+    submited_quest_id = request.form.get('submited_quest_id')
+    all_comments = eval(request.form.get('submited_quest_comments'))
+    comment = request.form.get('submited_quest_comment')
     user_id = current_user.user_id
     user_role = current_user.user_role
     username = current_user.username
