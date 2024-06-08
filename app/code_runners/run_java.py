@@ -22,7 +22,7 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     # Compile the Java code using firejail
     compile_command = [
         'firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-        '--rlimit-cpu=60', 'javac', java_file_path
+        '--timeout=00:00:01', 'javac', java_file_path
     ]        
     compile_process = subprocess.Popen(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = compile_process.communicate()

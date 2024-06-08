@@ -29,9 +29,9 @@ def run_code(python_code, inputs, outputs):
 
         # Execute the Python code
         run_command = ['firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-                       'python3', os.path.join(workdir, code_filename)] + current_input.split()
+                       '--timeout=00:00:01', 'python3', os.path.join(workdir, code_filename)] + current_input.split()
         try:
-            run_process = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=5)  # Timeout after 5 seconds
+            run_process = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout_str = run_process.stdout.decode('utf-8').strip()
             stderr_str = run_process.stderr.decode('utf-8').strip()
         except subprocess.TimeoutExpired:
