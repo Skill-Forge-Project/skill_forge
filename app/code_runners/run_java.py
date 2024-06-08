@@ -11,7 +11,6 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     os.makedirs(workdir, exist_ok=True)
     
     # Generate a unique dir and file name for the Java code
-    directory = f"{username}_{user_id}_{quest_id}"
     java_file_path = os.path.join(workdir, "Main.java")
     class_file_path = os.path.join(workdir, "Main.class")
     
@@ -20,38 +19,37 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
         java_file.write(java_code)
 
     # Compile the Java code using firejail
-    compile_command = [
-        'firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-        '--timeout=00:00:01', 'javac', java_file_path
-    ]        
+    compile_command = ['firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
+                        '--timeout=00:00:01', 'javac', java_file_path]        
     compile_process = subprocess.Popen(compile_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = compile_process.communicate()
-    
     stdout_str = stdout.decode('utf-8').strip()
     stderr_str = stderr.decode('utf-8').strip()
+    
     # If compilation failed
     if stderr_str:
         stderr_str = re.findall(r"(?<=java:\d:)\s.*", stderr_str)
         zero_tests_outputs.append(stdout_str)
         zero_tests_outputs.append(stderr_str)
+        current_input = inputs[0]
+        correct_output = outputs[0]
         zero_tests.append(current_input)
         zero_tests.append(correct_output)
         unsuccessful_tests = tests_count
         message = 'Your solution is incorrect! Try again!'
         return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
 
-        # If compilation was successful, run and check the code
+    # If compilation was successful, run and check the code
     else:
         for i in range(tests_count):        
             current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
             current_input = ' '.join(current_input)
             correct_output = str(outputs[i][0])
-
+            
             # Execute the compiled Java code using firejail
             execute_command = [
                 'firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-                '--rlimit-cpu=60', 'java', '-cp', workdir, 'Main'
-            ] + current_input.split()
+                '--timeout=00:00:01', 'java', '-cp', workdir, 'Main'] + current_input.split()
             execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = execute_process.communicate()
             stdout_str = stdout.decode('utf-8').strip()
