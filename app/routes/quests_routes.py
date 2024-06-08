@@ -1,4 +1,4 @@
-import random, string, base64, json
+import random, string, base64, json, os
 from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, session
 from flask_login import login_required, current_user
@@ -376,7 +376,8 @@ def submit_solution():
                     current_user.xp += 100
             
                 # Update the user XP level and rank
-                with open('../static/configs/levels.json', 'r') as levels_file:
+                
+                with open(os.path.join('../static/configs/levels.json'), 'r') as levels_file:
                     leveling_data = json.load(levels_file)
 
                 for level in leveling_data:
