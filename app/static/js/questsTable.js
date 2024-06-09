@@ -7,18 +7,34 @@
 
 $(function () {
   $(document).ready(function () {
-      $('#example').DataTable();
+      $('#edit_quest_table').DataTable();
   });
 });
 
 $(function () {
   $(document).ready(function () {
-      $('#example-2').DataTable();
+      $('#submited_quests_table').DataTable();
   });
 });
 
 $(function () {
   $(document).ready(function () {
-      $('#example-4').DataTable();
+      $('#reported_quests_table').DataTable();
+  });
+});
+
+
+// Table for quests
+$(function () {
+  $(document).ready(function () {
+      $('#quests_table').DataTable();
+  });
+});
+
+
+// Table for user solved quests
+$(function () {
+  $(document).ready(function () {
+    $('#user_solved_quests').DataTable();
   });
 });

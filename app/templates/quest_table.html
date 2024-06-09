@@ -98,7 +98,7 @@
         <div class="card rounded shadow border-0">
           <div class="card-body p-5 bg-white rounded">
             <div class="table-responsive">
-              <table id="example" class="table table-striped table-bordered">
+              <table id="quests_table" class="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th>Quest ID</th>
@@ -126,11 +126,11 @@
                     <td>{{ quest.date_added }}</td>
                     <td>
                       {% if quest.solved %}
-                      <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Passed" width="20"
-                        height="20">
+                      <p style="display:none">Solved</p>
+                      <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Passed" width="20" height="20">
                       {% else %}
-                      <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="20"
-                        height="20">
+                      <p style="display:none">Not Passed</p>
+                      <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="20" height="20">
                       {% endif %}
                     </td>
                   </tr>
@@ -143,13 +143,8 @@
       </div>
     </div>
   </div>
-  <script>
-    $(function () {
-      $(document).ready(function () {
-        $('#example').DataTable();
-      });
-    });
-  </script>
+    <!-- JavaScript managing the content in the Bootstrap table -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
 
 
 </body>
