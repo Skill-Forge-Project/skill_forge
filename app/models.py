@@ -58,11 +58,6 @@ class User(UserMixin, db.Model):
             self.avatar = base64.b64encode(f.read())
         self.generate_user_id()
         
-    # # Set the user password
-    # def set_password(self, password):
-    #     from app import bcrypt
-    #     self.password = bcrypt.generate_password_hash(password).decode('utf-8')
-        
     # Generate random UserID
     def generate_user_id(self):
         prefix = 'USR-'

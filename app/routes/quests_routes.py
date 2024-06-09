@@ -248,11 +248,20 @@ def report_quest(curr_quest_id, report_reason='no reason'):
 @bp_qst.route('/quests/<language>', methods=['GET'])
 @login_required
 def open_quests_table(language):
+    user_id = current_user.user_id
     # Retrieve all quests from the database
     all_quests = Quest.query.filter(Quest.language == language).all()
     # Retrieve all users from the database
     all_users = User.query.all()
-    return render_template('quest_table.html', quests=all_quests, users=all_users, language=language) 
+    # Retrieve the submitted solutions from the database
+    solved_quests = SubmitedSolution.query.filter_by(user_id=user_id, quest_passed=True).all()
+    # Create a set of solved quest IDs for quick lookup
+    solved_quest_ids = {solved.quest_id for solved in solved_quests}
+    # Annotate each quest with a 'solved' attribute
+    for quest in all_quests:
+        quest.solved = quest.quest_id in solved_quest_ids
+    
+    return render_template('quest_table.html', quests=all_quests, users=all_users, solved_quests=solved_quests, language=language) 
 
 # Open Quest for submitting. Change from template to real page!!!!
 @bp_qst.route('/quest/<quest_id>', methods=['GET'])
@@ -377,7 +386,7 @@ def submit_solution():
             
                 # Update the user XP level and rank
                 
-                with open(os.path.join('../static/configs/levels.json'), 'r') as levels_file:
+                with open(os.path.join('app/static/configs/levels.json'), 'r') as levels_file:
                     leveling_data = json.load(levels_file)
 
                 for level in leveling_data:

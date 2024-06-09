@@ -36,7 +36,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
   <!-- Track the user status -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <!-- Webpack build (mostly for tracking the user status on the client side) -->
+  <!-- Webpack build (mostly for tracking the user status on the client side) -->
   <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
 
 
@@ -49,35 +49,45 @@
   <div class="top_label">
     {% if language == "Python" %}
     <h2>Python Quests</h2>
-      <p class="top_label description">Python is a high-level, versatile programming language renowned for 
-        its simplicity and readability. Its elegant syntax and dynamic typing make it an excellent 
-        choice for beginners and experienced developers alike. Whether you're embarking on Novice Quests to hone your skills, 
-        tackling Adventurous Challenges to push your limits, or venturing into Epic Campaigns to conquer complex problems, 
-        Python offers the flexibility and power to bring your ideas to life. As you code, gain XP, climb ranks let Python be 
-        your gateway to unlocking new levels of mastery and creativity.</p>
+    <p class="top_label description">Python is a high-level, versatile programming language renowned for
+      its simplicity and readability. Its elegant syntax and dynamic typing make it an excellent
+      choice for beginners and experienced developers alike. Whether you're embarking on Novice Quests to hone your
+      skills,
+      tackling Adventurous Challenges to push your limits, or venturing into Epic Campaigns to conquer complex problems,
+      Python offers the flexibility and power to bring your ideas to life. As you code, gain XP, climb ranks let Python
+      be
+      your gateway to unlocking new levels of mastery and creativity.</p>
     {% endif %}
     {% if language == "Java" %}
     <h2>Java Quests</h2>
-      <p class="top_label description">Java is a versatile and widely-used programming language
-        known for its platform independence and robustness. Whether you're delving into Novice Quests to grasp the fundamentals, 
-        taking on Adventurous Challenges to sharpen your skills, or immersing yourself in Epic Campaigns to conquer complex problems, 
-        Java empowers you to achieve your goals. As you code, earn XP, progress through ranks let Java be your companion on the journey
-         to mastering this powerful language and unlocking your full potential.</p>
+    <p class="top_label description">Java is a versatile and widely-used programming language
+      known for its platform independence and robustness. Whether you're delving into Novice Quests to grasp the
+      fundamentals,
+      taking on Adventurous Challenges to sharpen your skills, or immersing yourself in Epic Campaigns to conquer
+      complex problems,
+      Java empowers you to achieve your goals. As you code, earn XP, progress through ranks let Java be your companion
+      on the journey
+      to mastering this powerful language and unlocking your full potential.</p>
     {% endif %}
     {% if language == "JavaScript" %}
     <h2>JavaScript Quests</h2>
-      <p class="top_label description">JavaScript is the language of the web, 
-        empowering developers to create interactive and dynamic experiences across browsers and platforms. Whether you're venturing 
-        into Novice Quests to grasp the basics, taking on Adventurous Challenges to refine your skills, or delving into Epic Campaigns to 
-        test your skills, JavaScript offers boundless opportunities for innovation. As you code, earn XP, ascend ranks, let JavaScript be 
-        your guide to unlocking new realms of possibility and achievement.</p>
+    <p class="top_label description">JavaScript is the language of the web,
+      empowering developers to create interactive and dynamic experiences across browsers and platforms. Whether you're
+      venturing
+      into Novice Quests to grasp the basics, taking on Adventurous Challenges to refine your skills, or delving into
+      Epic Campaigns to
+      test your skills, JavaScript offers boundless opportunities for innovation. As you code, earn XP, ascend ranks,
+      let JavaScript be
+      your guide to unlocking new realms of possibility and achievement.</p>
     {% endif %}
     {% if language == "C#" %}
     <h2>C# Quests</h2>
-    <p class="top_label description">C# is a robust and versatile programming language 
-      developed by Microsoft, designed for building a wide range of applications on the .NET framework. 
-      Whether you're embarking on Novice Quests to solidify your understanding, tackling Adventurous Challenges to expand your horizons, 
-      or diving into Epic Campaigns to tackle ambitious and complex problems, C# equips you with the tools to succeed. As you write code, accumulate XP, 
+    <p class="top_label description">C# is a robust and versatile programming language
+      developed by Microsoft, designed for building a wide range of applications on the .NET framework.
+      Whether you're embarking on Novice Quests to solidify your understanding, tackling Adventurous Challenges to
+      expand your horizons,
+      or diving into Epic Campaigns to tackle ambitious and complex problems, C# equips you with the tools to succeed.
+      As you write code, accumulate XP,
       advance through ranks and let C# be your conduit to reaching new heights of proficiency and accomplishment.</p>
     {% endif %}
   </div>
@@ -97,6 +107,7 @@
                     <th>Difficulty</th>
                     <th>Author</th>
                     <th>Date Created</th>
+                    <th>Solved</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,13 +115,24 @@
                   {% for quest in quests %}
                   <tr>
                     <td>{{ quest.quest_id }}</td>
-                    <td><a href="{{ url_for('quests.open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name }}</a></td>
+                    <td><a href="{{ url_for('quests.open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name
+                        }}</a></td>
                     <td>{{ quest.language }}</td>
                     <td>{{ quest.difficulty }}</td>
                     <td>
-                      <a href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a>
+                      <a href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{
+                        quest.quest_author }}</a>
                     </td>
                     <td>{{ quest.date_added }}</td>
+                    <td>
+                      {% if quest.solved %}
+                      <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Passed" width="20"
+                        height="20">
+                      {% else %}
+                      <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="20"
+                        height="20">
+                      {% endif %}
+                    </td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -135,4 +157,5 @@
   <!-- Include Footer template -->
   {% include 'footer.html' %}
 </footer>
+
 </html>

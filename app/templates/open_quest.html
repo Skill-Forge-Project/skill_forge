@@ -157,7 +157,7 @@
             var button = document.getElementById('submitSolution');
             var disabledTimestamp = localStorage.getItem('buttonDisabledTimestamp');
             var currentTime = new Date().getTime();
-            var thirtySeconds = 1000; // 30 seconds in milliseconds
+            var thirtySeconds = 30000; // 30 seconds in milliseconds
 
             // Check if the button should still be disabled based on the stored timestamp
             if (disabledTimestamp && currentTime - disabledTimestamp < thirtySeconds) {
