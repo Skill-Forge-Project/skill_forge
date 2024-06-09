@@ -65,11 +65,11 @@ def submit_quest():
         from app import db
         db.session.add(new_quest)
         db.session.commit()
-        # mongo_transaction('quest_created', 
-        #                   action=f'User {current_user.username} created a new quest {quest_id}-{create_quest_post.quest_name}',                
-        #                   user_id=current_user.user_id, 
-        #                   username=current_user.username, 
-        #                   timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        mongo_transaction('quest_created', 
+                          action=f'User {current_user.username} created a new quest {quest_id}-{create_quest_post.quest_name}',                
+                          user_id=current_user.user_id, 
+                          username=current_user.username, 
+                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         flash('Quest submitted successfully!', 'success')
         return redirect(url_for('usr.open_admin_panel'))
 

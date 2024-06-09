@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('connect', () => {
         // When the Socket.IO connection is established, request the user's current status
         socket.emit('request_user_status', { user_id: userId });
-        console.log('Connected to the server');
     });
 
     socket.on('disconnect', () => {

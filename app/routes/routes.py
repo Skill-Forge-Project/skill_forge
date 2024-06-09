@@ -42,7 +42,7 @@ def login():
 @login_required
 def logout():
     user = current_user
-    # mongo_transaction('user_logouts', action=f'User {user.username} logged out', user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    mongo_transaction('user_logouts', action=f'User {user.username} logged out', user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
@@ -84,7 +84,7 @@ def open_reset_password(token, user_id, username, expiration_time):
         token=token,
         expiration_time=expiration_time
     )
-    # mongo_transaction('user_password_reset_requests', action=f'User {username} requested password change', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    mongo_transaction('user_password_reset_requests', action=f'User {username} requested password change', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time, form=form)
 
 @bp.route('/send_email_token', methods=['POST'])
@@ -139,7 +139,7 @@ def update_new_password():
         used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
         db.session.delete(used_token)
         db.session.commit()
-        # mongo_transaction('user_password_reset', action=f'User {username} restore the password', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        mongo_transaction('user_password_reset', action=f'User {username} restore the password', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
         return redirect(url_for('main.login'))  # Redirect to the login page after successful password reset
 
