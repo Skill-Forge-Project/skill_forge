@@ -49,7 +49,7 @@
 
     <div class="content-section">
         <div id="editQuestContent" class="content">
-            <form action="/approve_submited_quest " method="post">
+            <form action="/approve_submited_quest " method="post" style="width: 100%;">
                 <div class="input-row">
                     <div>
                         <p class="quest-data-labels" name="submited_quest_id">Generated Quest ID: {{
@@ -132,7 +132,7 @@
             </form>
 
             <!-- Bootstrap Comments Section -->
-            <form action="/post_comment" method="post">
+            <form action="/post_comment" method="post" style="width: 100%">
                 <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
                 <input type="hidden" name="submited_quest_comments" value="{{ submited_quest.comments }}">
                 <div class="input-row">
