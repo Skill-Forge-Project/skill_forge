@@ -37,38 +37,66 @@
                 <div class="social_links icons">
                     {% if user.facebook_profile and user.facebook_profile|length > 1 %}
                     <a href="{{ user.facebook_profile }}" target="_blank">
-                        <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile" style="margin-right: 10px;">
+                        <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.instagram_profile and user.instagram_profile|length > 1 %}
                     <a href="{{ user.instagram_profile }}" target="_blank">
-                        <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram" style="margin-right: 10px;">
+                        <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.github_profile and user.github_profile|length > 1 %}
                     <a href="{{ user.github_profile }}" target="_blank">
-                        <img src="../static/images/github.png" width="22" height="22" alt="GitHub" style="margin-right: 10px;">
+                        <img src="../static/images/github.png" width="22" height="22" alt="GitHub"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.discord_id and user.discord_id|length > 1 %}
                     <a href="https://discord.com/users/{{ user.discord_id }}" target="_blank">
-                        <img src="../static/images/discord.svg" width="20" height="20" alt="Discord" style="margin-right: 10px;">
+                        <img src="../static/images/discord.svg" width="20" height="20" alt="Discord"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.linked_in and user.linked_in|length > 1 %}
                     <a href="{{ user.linked_in }}" target="_blank">
-                        <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn" style="margin-right: 10px;">
+                        <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                 </div>
             </div>
             <div class="online_status" id="onlineStatusDiv">
                 {% if user_status == "Offline" %}
-                    <p class="online_status title offline">Last seen</p>
-                    <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                <p class="online_status title offline">Last seen</p>
+                <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
                 {% else %}
-                    <p class="online_status title">{{ user_status }}</p>
+                <p class="online_status title">{{ user_status }}</p>
                 {% endif %}
+            </div>
+
+            <!-- User Level section -->
+            <div class="user_level">
+                <div class="level_container">
+                    <div class="level_info">
+                        <p class="left_stats">Level:</p>
+                        <p class="right_stats">{{ user.level }}</p>
+                    </div>
+                    <div class="level_info">
+                        <p class="left_stats">Rank:</p>
+                        <p class="right_stats">{{ user.rank }}</p>
+                    </div>
+                    <div class="xp_points_container">
+                        <p class="left_stats">XP Points</p>
+                        <div class="progress_bar_container">
+                            <div class="progress_bar" style="width: {{ xp_percentage }}%; height: 20px;">
+                                <p style="color: transparent">{{ xp_percentage }}</p>
+                            </div>
+                        </div>
+                        <p class="right_stats" style="margin: 0px">{{ user.xp }} / {{ max_xp }} XP</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -106,40 +134,45 @@
                                     name="change_email">{{ user.email }}</textarea>
                             </div>
                         </div>
-                        
+
                         <!-- Social Links section -->
                         <div class="user_stats">
                             <div style="display:flex; flex-direction: column;">
                                 <div style="display:flex; flex-direction: row; margin-top: 5px">
                                     <p class="left_stats">Facebook Profile:</p>
-                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_facebook">{{ user.facebook_profile }}</textarea>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true"
+                                        name="change_facebook">{{ user.facebook_profile }}</textarea>
                                 </div>
                                 <div style="display:flex; flex-direction: row;">
                                     <p class="left_stats">Instagram:</p>
-                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_instagram">{{ user.instagram_profile }}</textarea>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true"
+                                        name="change_instagram">{{ user.instagram_profile }}</textarea>
                                 </div>
                                 <div style="display:flex; flex-direction: row;">
                                     <p class="left_stats">GitHub:</p>
-                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_github">{{ user.github_profile }}</textarea>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true"
+                                        name="change_github">{{ user.github_profile }}</textarea>
                                 </div>
                                 <div style="display:flex; flex-direction: row;">
                                     <p class="left_stats">Discord ID:</p>
-                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_discord">{{ user.discord_id }}</textarea>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true"
+                                        name="change_discord">{{ user.discord_id }}</textarea>
                                 </div>
                                 <div style="display:flex; flex-direction: row;">
                                     <p class="left_stats">LinkedIn:</p>
-                                    <textarea cols="60" class="right_stats_edit" contenteditable="true" name="change_linkedin">{{ user.linked_in }}</textarea>
+                                    <textarea cols="60" class="right_stats_edit" contenteditable="true"
+                                        name="change_linkedin">{{ user.linked_in }}</textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Buttons section -->
                     <div class="btn-section">
                         <button type="submit" id="saveUserChanges" class="submit-buton"
                             onclick=location.href="{{ url_for('usr.user_self_update') }}">Save Changes</button>
                     </div>
                 </form>
+
 
                 <!-- Change avatar form -->
                 <div class="change-avatar-section">
@@ -157,74 +190,68 @@
                         <div class="achv-container">
                             {% for user_achievement in user_achievements %}
                             <div class="achv">
-                                <img src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
+                                <img
+                                    src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
                                 <div class="achv-descr">
-                                    <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name }}<br>{{ user_achievement.achievement.achievement_description }}</p>
+                                    <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name
+                                        }}<br>{{ user_achievement.achievement.achievement_description }}</p>
                                 </div>
                             </div>
                             {% endfor %}
-                        </div> 
-                    </div>
-                    </div>
-                </div>
-
-
-                <div class="center_pane_form">
-                    <!-- User stats section -->
-                    <h3 class="left_status h3">User Stats</h3>
-                    <div class="user_stats">
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">Date Registration:</p>
-                            <p class="right_stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">Level:</p>
-                            <p class="right_stats">{{ user.level }} - {{user.xp}} XP Points</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">Rank:</p>
-                            <p class="right_stats">{{ user.rank }}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">Total Solved Quests:</p>
-                            <p class="right_stats">{{ user.total_solved_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;Python:</p>
-                            <p class="right_stats">{{ user.total_python_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;Java:</p>
-                            <p class="right_stats">{{ user.total_java_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;JavaScript:</p>
-                            <p class="right_stats">{{ user.total_javascript_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;C# Quests:</p>
-                            <p class="right_stats">{{ user.total_csharp_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">Total Submited Quests:</p>
-                            <p class="right_stats">{{ user.total_submited_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;Approved:</p>
-                            <p class="right_stats">{{ user.total_approved_submited_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;Pending:</p>
-                            <p class="right_stats">{{ user.total_pending_submited_quests}}</p>
-                        </div>
-                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                            <p class="left_stats">&emsp;Rejected:</p>
-                            <p class="right_stats">{{ user.total_rejected_submited_quests}}</p>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+            <div class="center_pane_form">
+                <!-- User stats section -->
+                <h3 class="left_status h3">User Stats</h3>
+                <div class="user_stats">
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">Date Registration:</p>
+                        <p class="right_stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">Total Solved Quests:</p>
+                        <p class="right_stats">{{ user.total_solved_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;Python:</p>
+                        <p class="right_stats">{{ user.total_python_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;Java:</p>
+                        <p class="right_stats">{{ user.total_java_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;JavaScript:</p>
+                        <p class="right_stats">{{ user.total_javascript_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;C# Quests:</p>
+                        <p class="right_stats">{{ user.total_csharp_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">Total Submited Quests:</p>
+                        <p class="right_stats">{{ user.total_submited_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;Approved:</p>
+                        <p class="right_stats">{{ user.total_approved_submited_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;Pending:</p>
+                        <p class="right_stats">{{ user.total_pending_submited_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats">&emsp;Rejected:</p>
+                        <p class="right_stats">{{ user.total_rejected_submited_quests}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
     </div>
 
     <!-- User's Solved Quests table -->
@@ -251,9 +278,13 @@
                                 <tbody>
                                     {% for solved_quest in user_solved_quests %}
                                     <tr style="font-size: 12px">
-                                        <td><a href="{{ url_for('uss.open_view_solution', solution_id=solved_quest.submission_id) }}">{{ solved_quest.submission_id }}</a></td>
+                                        <td><a
+                                                href="{{ url_for('uss.open_view_solution', solution_id=solved_quest.submission_id) }}">{{
+                                                solved_quest.submission_id }}</a></td>
                                         <td>{{ solved_quest.quest_id }}</td>
-                                        <td><a href="{{ url_for('quests.open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{ solved_quest.coding_quest.quest_name }}</a></td>
+                                        <td><a
+                                                href="{{ url_for('quests.open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{
+                                                solved_quest.coding_quest.quest_name }}</a></td>
                                         <td>{{ solved_quest.coding_quest.language }}</td>
                                         <td>{{ solved_quest.coding_quest.difficulty }}</td>
                                         <td>{{ solved_quest.submission_date.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -261,9 +292,11 @@
                                         <td>{{ solved_quest.unsuccessful_tests }}</td>
                                         <td>
                                             {% if solved_quest.quest_passed %}
-                                                <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Passed" width="20" height="20">
+                                            <img src="{{ url_for('static', filename='images/checked.png') }}"
+                                                alt="Passed" width="20" height="20">
                                             {% else %}
-                                                <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="20" height="20">
+                                            <img src="{{ url_for('static', filename='images/unchecked.png') }}"
+                                                alt="Failed" width="20" height="20">
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -292,4 +325,5 @@
     <!-- Include Footer template -->
     {% include 'footer.html' %}
 </footer>
+
 </html>

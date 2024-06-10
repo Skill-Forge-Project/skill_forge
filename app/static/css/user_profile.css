@@ -143,6 +143,48 @@ body {
     margin-right: 0px;
 }
 
+/* User Status Styling */
+.level_container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+}
+
+.level_info {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: left;
+}
+
+.xp_points_container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+.progress_bar_container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+}
+
+.progress_bar {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(90deg, #ff6347, #ffa07a);
+    align-items: center;
+    border-radius: 5px;
+}
+
+
 .user_name.ch_av_btn {
     position: relative;
     font-family: 'JetBrainsMonoRegular', sans-serif;
@@ -474,18 +516,6 @@ body {
     -webkit-mask-composite: xor;
     mask-composite: intersect
 }
-
-
-/* .achv:after {
-    content: "";
-    position: absolute;
-    inset: -100px;
-    background:
-        radial-gradient(200px at left 400px top 10px, #ff53bb 100%, #0000),
-        radial-gradient(200px at right 400px bottom 10px, #00f8d3 100%, #0000);
-    filter: blur(120px);
-    opacity: .5;
-} */
 
 .achv:before,
 .achv:after {

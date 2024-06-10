@@ -31,40 +31,67 @@
                 <div class="social_links icons">
                     {% if user.facebook_profile and user.facebook_profile|length > 1 %}
                     <a href="{{ user.facebook_profile }}" target="_blank">
-                        <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile" style="margin-right: 10px;">
+                        <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.instagram_profile and user.instagram_profile|length > 1 %}
                     <a href="{{ user.instagram_profile }}" target="_blank">
-                        <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram" style="margin-right: 10px;">
+                        <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.github_profile and user.github_profile|length > 1 %}
                     <a href="{{ user.github_profile }}" target="_blank">
-                        <img src="../static/images/github.png" width="22" height="22" alt="GitHub" style="margin-right: 10px;">
+                        <img src="../static/images/github.png" width="22" height="22" alt="GitHub"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.discord_id and user.discord_id|length > 1 %}
                     <a href="https://discord.com/users/{{ user.discord_id }}" target="_blank">
-                        <img src="../static/images/discord.svg" width="20" height="20" alt="Discord" style="margin-right: 10px;">
+                        <img src="../static/images/discord.svg" width="20" height="20" alt="Discord"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                     {% if user.linked_in and user.linked_in|length > 1 %}
                     <a href="{{ user.linked_in }}" target="_blank">
-                        <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn" style="margin-right: 10px;">
+                        <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn"
+                            style="margin-right: 10px;">
                     </a>
                     {% endif %}
                 </div>
             </div>
             <div class="online_status" id="onlineStatusDiv">
                 {% if not user_status %}
-                    <p class="online_status title offline">Offline</p>
+                <p class="online_status title offline">Offline</p>
                 {% elif user_status == "Offline" %}
-                    <p class="online_status title offline">Last seen</p>
-                    <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                <p class="online_status title offline">Last seen</p>
+                <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
                 {% elif user_status == "Online" %}
-                    <p class="online_status title online">Online</p>
+                <p class="online_status title online">Online</p>
                 {% endif %}
+            </div>
+            <!-- User Level section -->
+            <div class="user_level">
+                <div class="level_container">
+                    <div class="level_info">
+                        <p class="left_stats">Level:</p>
+                        <p class="right_stats">{{ user.level }}</p>
+                    </div>
+                    <div class="level_info">
+                        <p class="left_stats">Rank:</p>
+                        <p class="right_stats">{{ user.rank }}</p>
+                    </div>
+                    <div class="xp_points_container">
+                        <p class="left_stats">XP Points</p>
+                        <div class="progress_bar_container">
+                            <div class="progress_bar" style="width: {{ xp_percentage }}%; height: 20px">
+                                <p style="color: transparent">{{ xp_percentage }}</p>
+                            </div>
+                        </div>
+                        <p class="right_stats" style="margin: 0px">{{ user.xp }} / {{ max_xp }} XP</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -155,10 +182,10 @@
 
         </div>
     </div>
-        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
 </body>
 
 <footer>

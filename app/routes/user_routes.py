@@ -1,4 +1,4 @@
-import base64
+import base64, json
 from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, flash, render_template
 from flask_login import login_required, current_user
@@ -45,6 +45,14 @@ def open_user_profile():
     # Get the last logged date
     user_status = User.query.filter(User.user_id == user_id).first().user_online_status
     last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
+    # Get the xp points for the level rank
+    with open('app/static/configs/levels.json', 'r') as file:
+        levels_data = json.load(file)
+    for i in levels_data:
+        for rank, data in i.items():
+            if rank== user.rank:
+                max_xp = data['max_xp']
+    xp_percentage = int((user.xp / max_xp) * 100)
 
     return render_template('user_profile.html', user=user, 
                            formatted_date=user.date_registered.strftime('%d-%m-%Y %H:%M:%S'), 
@@ -57,7 +65,9 @@ def open_user_profile():
                            user_linked_in=user_linked_in,
                            user_achievements=user_achievements,
                            user_status=user_status,
-                           last_logged_date=last_logged_date)
+                           last_logged_date=last_logged_date,
+                           max_xp=max_xp,
+                           xp_percentage=xp_percentage)
 
 # Route to handle the user profile (self-open)
 @bp_usr.route('/user_profile/<username>', methods=['POST', 'GET'])
@@ -74,12 +84,22 @@ def open_user_profile_view(username):
         # Get the last logged date
         user_status = User.query.filter(User.user_id == user_id).first().user_online_status
         last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
+        # Get the xp points for the level rank
+        with open('app/static/configs/levels.json', 'r') as file:
+            levels_data = json.load(file)
+        for i in levels_data:
+            for rank, data in i.items():
+                if rank== user.rank:
+                    max_xp = data['max_xp']
+        xp_percentage = int((user.xp / max_xp) * 100)
         if user:
             return render_template('user_profile_view.html', 
                                 user=user, 
                                 avatar=avatar_base64,
                                 user_status=user_status,
-                                last_logged_date=last_logged_date)
+                                last_logged_date=last_logged_date,
+                                max_xp=max_xp,
+                                xp_percentage=xp_percentage)
         else:
             # Handle the case where the user is not found
             return "User not found", 404
