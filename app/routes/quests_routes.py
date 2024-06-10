@@ -104,6 +104,11 @@ def quest_post_comment(quest_id):
         quest.quest_comments = all_quest_comments
         # Commit the changes to the database
         db.session.commit()
+        mongo_transaction('quest_comments',
+                          action=f'User {username} posted a comment on quest {quest_id}',
+                          user_id=user_id,
+                          username=username,
+                          timestamp=current_time)
         # Redirect to the quest page
         flash('Comment posted successfully!', 'success')
         return redirect(url_for('quests.open_curr_quest', 
@@ -138,6 +143,11 @@ def delete_comment():
             reversed_comments = list(reversed(reversed_comments))
             quest.quest_comments = reversed_comments
             db.session.commit()
+            mongo_transaction('quest_comments',
+                              action=f'User {current_user.username} deleted a comment on quest {quest_id}',
+                              user_id=current_user.user_id,
+                              username=current_user.username,
+                              timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             return redirect(url_for('quests.open_curr_quest', quest_id=quest_id))
     else:
         print("Error: Comment could not be deleted."), 404
@@ -177,6 +187,11 @@ def edit_quest_db():
             if report_progress == 'Resolved':
                 db.session.delete(reported_quest)
         db.session.commit()
+        mongo_transaction('quest_edited',
+                          action=f'User {current_user.username} edited quest {quest_id}',
+                          user_id=current_user.user_id,
+                          username=current_user.username,
+                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         
         return redirect(url_for('usr.open_admin_panel'))
     else:
@@ -235,7 +250,11 @@ def report_quest(curr_quest_id, report_reason='no reason'):
     # Add the new submission to the database session
     db.session.add(new_reported_quest)
     db.session.commit()
-    
+    mongo_transaction('quest_reported',
+                      action=f'User {current_user.username} reported quest {curr_quest_id}',
+                      user_id=current_user.user_id,
+                      username=current_user.username,
+                      timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     return redirect(url_for('quest.open_curr_quest', quest_id=curr_quest_id))
 
 
@@ -344,6 +363,11 @@ def submit_solution():
         # Add the new submission to the database session
         db.session.add(new_submission)
         db.session.commit()
+        mongo_transaction('quest_solutions',
+                          action=f'User {username} submitted a solution for quest {quest_id}',
+                          user_id=user_id,
+                          username=username,
+                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         
         # Handle the leveling of the user
         # Update succesfully solved quests
@@ -413,6 +437,11 @@ def submit_solution():
                                         achievement_id=achievement_id,
                                         earned_on=datetime.now())
                     db.session.add(user_achievement)
+                    mongo_transaction('user_achievements',
+                                      action=f'User {username} earned an achievement {achievement_id}',
+                                      user_id=user_id,
+                                      username=username,
+                                      timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             db.session.commit()
 
         

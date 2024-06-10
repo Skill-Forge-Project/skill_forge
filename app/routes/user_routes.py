@@ -1,13 +1,15 @@
-import random, string, base64
+import base64
 from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, flash, render_template
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
-# Import the database instance
-from app.database.db_init import db
 # Import the forms and models
 from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest
 from app.forms import QuestForm
+# Import the database instance
+from app.database.db_init import db
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import mongo_transaction
 
 bp_usr = Blueprint('usr', __name__)
 
@@ -109,6 +111,10 @@ def upload_avatar():
     user = User.query.get(user_id)
     user.avatar = avatar_data
     db.session.commit()
+    mongo_transaction('user_avatar_change', 
+                      action=f'User {user.username} changed avatar',
+                      user_id=user_id, username=user.username, 
+                      timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     
     # Redirect to the user profile page or any other page
     return redirect(url_for('usr.open_user_profile'))
@@ -137,6 +143,12 @@ def user_self_update():
     user.discord_id = discord_id
     user.linked_in = linked_in_link
     db.session.commit()
+    
+    mongo_transaction('user_info_update',
+                      action=f'User {user.username} updated its info',
+                      user_id=current_user_id, 
+                      username=user.username,
+                      timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     return redirect(url_for('usr.open_user_profile'))
 
 
