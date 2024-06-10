@@ -385,13 +385,13 @@ def submit_solution():
                     current_quest_number = current_user.total_python_quests
                 elif current_quest_language == "JavaScript":
                     current_user.total_javascript_quests += 1
-                    current_quest_number = current_user.total_python_quests
+                    current_quest_number = current_user.total_javascript_quests
                 elif current_quest_language == "Java":
                     current_user.total_java_quests += 1
-                    current_quest_number = current_user.total_python_quests
+                    current_quest_number = current_user.total_java_quests
                 elif current_quest_language == "C#":
                     current_user.total_csharp_quests += 1
-                    current_quest_number = current_user.total_python_quests
+                    current_quest_number = current_user.total_csharp_quests
                 
                 # Update the user XP
                 if current_quest_difficulty == "Novice Quests":
