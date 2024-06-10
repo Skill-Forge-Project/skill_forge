@@ -7,6 +7,8 @@ from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchieve
 from app.forms import QuestForm, PublishCommentForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
+# Import the database instance
+from app.database.db_init import db
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
 
@@ -62,7 +64,6 @@ def submit_quest():
         )
 
         # Add the new quest to the database session
-        from app import db
         db.session.add(new_quest)
         db.session.commit()
         mongo_transaction('quest_created', 
@@ -102,8 +103,6 @@ def quest_post_comment(quest_id):
         all_quest_comments.append(data)
         quest.quest_comments = all_quest_comments
         # Commit the changes to the database
-        # Import the database instance
-        from app import db
         db.session.commit()
         # Redirect to the quest page
         flash('Comment posted successfully!', 'success')
@@ -138,8 +137,6 @@ def delete_comment():
             reversed_comments.pop(comment_index)
             reversed_comments = list(reversed(reversed_comments))
             quest.quest_comments = reversed_comments
-            # Import the database instance
-            from app import db
             db.session.commit()
             return redirect(url_for('quests.open_curr_quest', quest_id=quest_id))
     else:
@@ -236,8 +233,6 @@ def report_quest(curr_quest_id, report_reason='no reason'):
     )
 
     # Add the new submission to the database session
-    # Import the database instance
-    from app import db
     db.session.add(new_reported_quest)
     db.session.commit()
     
@@ -347,8 +342,6 @@ def submit_solution():
         )
             
         # Add the new submission to the database session
-        # Import the database instance
-        from app import db
         db.session.add(new_submission)
         db.session.commit()
         
