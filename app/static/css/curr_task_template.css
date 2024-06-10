@@ -193,7 +193,7 @@ body {
 }
 
 
-.report-button {
+.report-button, .ban-button {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     position: relative;
     display: inline-block;
@@ -210,9 +210,10 @@ body {
     border: 0px;
     width: 250px;
     cursor: pointer;
+    border-radius: 10px;
 }
 
-.report-button:hover {
+.report-button:hover, .ban-button:hover {
     background: #900303ba;
     color: #fff;
     border-radius: 5px;

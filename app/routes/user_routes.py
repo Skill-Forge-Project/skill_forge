@@ -1,4 +1,4 @@
-import base64, json
+import base64, json, re
 from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, flash, render_template
 from flask_login import login_required, current_user
@@ -200,3 +200,60 @@ def open_admin_panel():
         form=create_quest_post)
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))
+
+
+# Open user for editing from the Admin Panel
+@bp_usr.route('/edit_user/<user_id>')
+@login_required
+def open_edit_user(user_id):
+    # Retrieve the specific user from the database, based on the user_id
+    user = User.query.get(user_id)
+    return render_template('edit_user.html', user=user)
+
+# Handle user edit from the Admin Panel
+@bp_usr.route('/edit_user_db', methods=['GET', 'POST'])
+@login_required
+def edit_user_db():
+    user_id = request.form.get('user_id')
+    user_role = request.form.get('user_role')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('user_email')
+
+    user = User.query.get(user_id)
+
+    # Updating information about the user
+    user.user_role = user_role
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    db.session.commit()
+    return redirect(url_for('usr.open_admin_panel'))
+
+
+# Ban user route
+@bp_usr.route('/ban_user/<user_id>')
+@login_required
+def ban_user(user_id, ban_reason='no reason'):
+    # Retrieve the specific user from the database, based on the user_id
+    user = User.query.get(user_id)
+    request_arguments = dict(request.args) # This prints {'ban_reason': 'some_value'}
+    # Set new values to these three fields in the database
+    user.is_banned = True
+    user.ban_date = datetime.now()
+    user.ban_reason = request_arguments['ban_reason']
+    db.session.commit()
+    return redirect(url_for('usr.open_admin_panel'))
+
+# Unban user route
+@bp_usr.route('/unban_user/<user_id>')
+@login_required
+def unban_user(user_id):
+    # Retrieve the specific user from the database, based on the user_id
+    user = User.query.get(user_id)
+    # Set new values to these three fields in the database
+    user.is_banned = False
+    user.ban_date = None
+    user.ban_reason = ''
+    db.session.commit()
+    return redirect(url_for('usr.open_admin_panel'))

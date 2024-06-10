@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='./images/anvil.png') }}">
+        <title>Python Tasks</title>
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_quest.css') }}">
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <!-- Include CodeMirror library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <!-- Include CodeMirror theme (optional) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+        <!-- Include CodeMirror CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/curr_task_template.css') }}">
+
+        <!-- Include CodeMirror mode (e.g., Python) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+        <!-- Include bootstrap dataTables libraries -->
+        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+        
+    </head>
+
+    <body>
+        <!-- Include Navbar template -->
+        {% include 'navbar.html' %}
+
+        <div class="content-section">
+            <div id="editUserContent" class="content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form action="{{ url_for('usr.edit_user_db') }}" method="post">
+                    <div class="input-row">
+                        <h4><strong class="row-label">User ID: </strong></h4>
+                        <input type="text" name="user_id" id="user_id_input" class="text_input" value="{{ user.user_id }}" readonly>
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">User Role</strong></h4>
+                        <select name="user_role" id="user_role_input" class="dropdown_input">
+                            <option value="User" {% if user.user_role == 'User' %} selected {% endif %}>User</option>
+                            <option value="Admin" {% if user.user_role == 'Admin' %} selected {% endif %}>Admin</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">First Name: </strong></h4>
+                        <input type="text" name="first_name" id="first_name_input" class="text_input" value="{{ user.first_name }}">
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">Last Name: </strong></h4>
+                        <input type="text" name="last_name" id="last_name_input" class="text_input" value="{{ user.last_name }}">
+                    </div>
+                    <div class="input-row">
+                        <h4><strong class="row-label">Email: </strong></h4>
+                        <input type="text" name="user_email" id="user_email_input" class="text_input" value="{{ user.email }}">
+                    </div>
+                    <div class="input-row" id="banDiv" style="display: none;">
+                        <textarea class="ban-reason text_input" name="ban-reason" id="ban-reason" placeholder="Ban reason..."></textarea>
+                    </div>
+                    {% if user.is_banned %}
+                        <div class="input-row">
+                            <h4><strong class="row-label">Ban Reason:</strong></h4>
+                            {{ user.ban_reason }}
+                        </div>
+                    {% endif %}
+                    <div class="btn-row">
+                        <button type="submit" id="editUser" class="submit-button">Save Changes</button>
+                        {% if not user.is_banned %}
+                            <button type="button" id="banUserWithTextarea" class="ban-button">Ban User</button>
+                            <button type="button" id="banUser" class="ban-button" style="display: none;">Ban User</button>
+                        {% else %}
+                            <button type="button" id="unbanUser" class="submit-button unban-button" onclick=location.href="{{ url_for('usr.unban_user', user_id=user.user_id) }}">Unban</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        <!-- JavaScript script to handle the CodeMirror custom fields. 
+            This script should be loaded after the initialization of the fields above! 
+        -->
+        <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
+
+        <script>
+            function banUserHandle() {
+                let firstBanButton = document.getElementById('banUserWithTextarea')
+                firstBanButton.addEventListener('click', banUserEvent)
+
+                let secondBanButton = document.getElementById('banUser')
+                secondBanButton.addEventListener('click', redirectToBanUserRoute)
+
+                let banUserTextareaInputRow = document.getElementById('banDiv')
+                let banUserTextarea = document.getElementById('ban-reason')
+
+                function banUserEvent(event) {
+                    event.preventDefault()
+                    banUserTextareaInputRow.style.display = 'block'
+                    firstBanButton.style.display = 'none'
+                    secondBanButton.style.display = 'block'
+                }
+
+                function redirectToBanUserRoute(event) {
+                    event.preventDefault()
+                    let banReason = banUserTextarea.value
+                    location.href = "{{ url_for('usr.ban_user', user_id=user.user_id, ban_reason='') }}" + encodeURIComponent(banReason)
+                }
+            }
+            banUserHandle()
+        </script>
+        
+    </body>
+</html>

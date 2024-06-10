@@ -133,3 +133,16 @@ body {
     width: 100%;
 }
 
+.edit-button-td {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-button {
+    padding: 3px !important;
+    width: 70% !important;
+    margin: 0 !important;
+    font-size: 13px !important;
+    justify-self: center !important;
+}

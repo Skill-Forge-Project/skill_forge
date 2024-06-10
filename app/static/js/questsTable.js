@@ -38,3 +38,10 @@ $(function () {
     $('#user_solved_quests').DataTable();
   });
 });
+
+// Table for editing users from admin panel
+$(function () {
+  $(document).ready(function () {
+    $('#mange_users_table').DataTable();
+  });
+});

@@ -193,7 +193,53 @@
                 </div>
             </div>
 
-            <div id="manageUsersContent" class="content" style="display: none;">Manage Users Content</div>
+            <!-- Manage Users Panel -->
+            <div id="manageUsersContent" class="content" style="display: none;">
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card rounded shadow border-0">
+                                <div class="card-body p-5 bg-white rounded">
+                                    <div class="table-responsive">
+                                        <table id="mange_users_table" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>User ID</th>
+                                                    <th>Username</th>
+                                                    <th>Email</th>
+                                                    <th>Date Registered</th>
+                                                    <th>Rank</th>
+                                                    <th>Status</th>
+                                                    <th>Edit Profile</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for user in all_users %}
+                                                <tr>
+                                                    <td>{{ user.user_id }}</td>
+                                                    <td><a href="{{ url_for('usr.open_user_profile_view', username=user.username) }}">{{ user.username }}</a></td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td>{{ user.date_registered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                                    <td>{{ user.rank }}</td>
+                                                    {% if user.is_banned %}
+                                                        <td>Banned</td>
+                                                    {% else %}
+                                                        <td>Not Banned</td>
+                                                    {% endif %}
+                                                    <form action="{{ url_for('usr.open_edit_user', user_id=user.user_id) }}">
+                                                        <td class="edit-button-td"><button class="submit-button edit-button">Edit</button></td>
+                                                    </form>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Check Reported Quests Panel -->
             <div id="checkReportsContent" class="content" style="display: none;">
