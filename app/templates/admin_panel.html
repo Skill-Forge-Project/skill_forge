@@ -269,7 +269,7 @@
                                                     <td>{{ report.report_id }}</td>
                                                     <td>{{ report.reported_quest.quest_id }}</td>
                                                     <td><a
-                                                            href="{{ url_for('open_edit_reported_quest', quest_id=report.reported_quest.quest_id) }}">{{
+                                                            href="{{ url_for('quests.open_edit_reported_quest', report_id=report.report_id) }}">{{
                                                             report.reported_quest.quest_name }}</a></td>
                                                     <td>{{ report.reported_quest.language }}</td>
                                                     <td>{{ report.reported_quest.quest_author }}</td>

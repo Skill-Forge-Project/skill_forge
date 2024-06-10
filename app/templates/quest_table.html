@@ -113,6 +113,7 @@
                 <tbody>
 
                   {% for quest in quests %}
+                  {% if quest.is_active %}
                   <tr>
                     <td>{{ quest.quest_id }}</td>
                     <td><a href="{{ url_for('quests.open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name
@@ -134,6 +135,7 @@
                       {% endif %}
                     </td>
                   </tr>
+                  {% endif %}
                   {% endfor %}
                 </tbody>
               </table>

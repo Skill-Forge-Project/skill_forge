@@ -209,10 +209,11 @@ def open_edit_quest(quest_id):
 
 # Open Reported Quest for editing from the Admin Panel
 @login_required
-@bp_qst.route('/edit_reported_quest/<quest_id>')
-def open_edit_reported_quest(quest_id):
-    quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.filter_by(quest_id=quest.quest_id).first()
+@bp_qst.route('/edit_reported_quest/<report_id>')
+def open_edit_reported_quest(report_id):
+    reported_quest = ReportedQuest.query.filter_by(report_id=report_id).first()
+    print(reported_quest)
+    quest = Quest.query.get(reported_quest.quest_id)
     return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)
 
 
@@ -255,7 +256,7 @@ def report_quest(curr_quest_id, report_reason='no reason'):
                       user_id=current_user.user_id,
                       username=current_user.username,
                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    return redirect(url_for('quest.open_curr_quest', quest_id=curr_quest_id))
+    return redirect(url_for('quest.quest.open_curr_quest', quest_id=curr_quest_id))
 
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
