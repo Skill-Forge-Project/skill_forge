@@ -90,10 +90,11 @@ def user_submit_quest():
         xp=str(xp)
     )
     
+    # Increase the user's submited quest count
+    current_user.total_submited_quests += 1
     # Add the new quest to the database session
     db.session.add(new_user_submitted_quest)
     db.session.commit()
-    
     return redirect(url_for('open_user_submit_quest'))
 
 
@@ -168,6 +169,8 @@ def approve_submited_quest():
         # Update the quest status in user_submited_quests table
         submited_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
         submited_quest.status = 'Approved'
+        # Increate the total approved quests count
+        current_user.total_approved_submited_quests += 1
         # Commit the changes to the database
         db.session.add(new_quest)
         db.session.commit()
@@ -179,6 +182,8 @@ def approve_submited_quest():
         quest_id = request.form.get('submited_quest_id')
         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
         submited_quest.status = 'Rejected'
+        # Increase the total rejected quests count
+        current_user.total_rejected_submited_quests += 1
         db.session.commit()
         return redirect(url_for('usr.open_admin_panel'))
     
