@@ -41,6 +41,7 @@
         <div class="content-section">
             <div id="editQuestContent" class="content">
                 <form action="/edit_quest_db" method="post">
+                    {{ form.csrf_token() }}
                     <div>
                         <input type="hidden" name="quest_id" value="{{ quest.quest_id }}">
                     </div>

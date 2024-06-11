@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_socketio import SocketIO
+from flask_wtf.csrf import CSRFProtect
 # Import database instance
 from app.database.db_init import db
 
@@ -11,7 +12,7 @@ migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 socketio = SocketIO()
-
+csrf = CSRFProtect()
 
 
 def create_app():
@@ -23,6 +24,7 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
     socketio.init_app(app)
+    csrf.init_app(app)
     
     # Import sockets
     from app.sockets import handle_connect, handle_disconnect, handle_heartbeat, handle_request_user_status

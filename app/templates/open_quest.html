@@ -95,7 +95,7 @@
 
     <!-- Bootstrap Comments Section -->
     <form action="{{ url_for('quests.quest_post_comment', quest_id=quest_id) }}" method="post">
-        {{ form.hidden_tag() }}
+        {{ form.csrf_token() }}
         <div class="container mt-5 mb-5">
             <div class="row height d-flex justify-content-center align-items-center">
                 <div class="col-md-7">
