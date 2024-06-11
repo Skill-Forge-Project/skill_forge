@@ -248,6 +248,8 @@ def report_quest(curr_quest_id, report_reason='no reason'):
         admin_assigned = None  # This needs to be changed
     )
 
+    quest.is_active = False
+
     # Add the new submission to the database session
     db.session.add(new_reported_quest)
     db.session.commit()
@@ -256,7 +258,7 @@ def report_quest(curr_quest_id, report_reason='no reason'):
                       user_id=current_user.user_id,
                       username=current_user.username,
                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    return redirect(url_for('quest.quest.open_curr_quest', quest_id=curr_quest_id))
+    return redirect(url_for('quests.open_curr_quest', quest_id=curr_quest_id))
 
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
