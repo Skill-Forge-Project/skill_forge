@@ -31,3 +31,6 @@ manage.py
 
 # Ignore mailtrap test-run
 basic_email.py
+
+# Ignore DOC.md
+DOC.md

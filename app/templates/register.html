@@ -24,7 +24,7 @@
                 {% endif %}
                 {% endwith %}
                 <form method="POST" class="user-box input", action="{{ url_for('main.register') }}">
-                    {{ form.csrf_token() }}
+                    {{ form.hidden_tag() }}
                     <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.username.label }} {{ form.username(size=20) }}</div>
                     <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.first_name.label}} {{ form.first_name(size=20) }}</div>
                     <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.last_name.label}} {{ form.last_name(size=20) }}</div>

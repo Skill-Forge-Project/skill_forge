@@ -26,7 +26,7 @@
                 {% endwith %}
             </div>
             <form class="user-box input" method="post" action="{{ url_for('main.login') }}">
-                {{ form.csrf_token() }}
+                {{ form.hidden_tag() }}
                 <div>
                     {{ form.username(class="user-box input", placeholder="Username", id="inputUsername") }}
                 </div>

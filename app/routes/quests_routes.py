@@ -156,8 +156,6 @@ def delete_comment():
 # Handle quest edit from the Admin Panel
 @bp_qst.route('/edit_quest_db', methods=['GET', 'POST'])
 def edit_quest_db():
-    # Import the database instance
-    from app import db
     quest_id = request.form.get('quest_id')
     quest_name = request.form.get('quest_name')
     quest_language = request.form.get('quest_language')

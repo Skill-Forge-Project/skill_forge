@@ -97,32 +97,30 @@
 
         <div style="display:flex; flex-direction:column;width:100%">
             <div class="center_pane_form">
-                <form action="/self_update" method="post" enctype="multipart/form-data">
-                    <div class="center_pane">
-                        <!-- User information section -->
-                        <h3 class="left_status h3">User Information</h3>
-                        <div class="user_stats">
-                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">User ID:</p>
-                                <p class="right_stats" name="user_id">{{ user.user_id }}</p>
-                            </div>
-                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">Username:</p>
-                                <p class="right_stats">{{ user.username }}</p>
-                            </div>
+                <div class="center_pane">
+                    <!-- User information section -->
+                    <h3 class="left_status h3">User Information</h3>
+                    <div class="user_stats">
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">User ID:</p>
+                            <p class="right_stats" name="user_id">{{ user.user_id }}</p>
+                        </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Username:</p>
+                            <p class="right_stats">{{ user.username }}</p>
+                        </div>
 
-                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">First Name:</p>
-                                <p class="right_stats">{{ user.first_name }}</p>
-                            </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">First Name:</p>
+                            <p class="right_stats">{{ user.first_name }}</p>
+                        </div>
 
-                            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">Last Name:</p>
-                                <p class="right_stats">{{ user.last_name }}</p>
-                            </div>
+                        <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                            <p class="left_stats">Last Name:</p>
+                            <p class="right_stats">{{ user.last_name }}</p>
                         </div>
                     </div>
-                </form>
+                </div>
 
                 <div class="center_pane_form">
                     <!-- User stats section -->
