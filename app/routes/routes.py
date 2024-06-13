@@ -25,15 +25,16 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
-        if user and not user.is_banned:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user, force=True)
-                mongo_transaction('user_logins', action=f"User {user.username} logged in", user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-                return redirect(url_for('main.main_page'))
+        if user:
+            if not user.is_banned:
+                if bcrypt.check_password_hash(user.password, form.password.data):
+                    login_user(user, force=True)
+                    mongo_transaction('user_logins', action=f"User {user.username} logged in", user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+                    return redirect(url_for('main.main_page'))
+                else:
+                    flash('Login unsuccessful. Please check your username and password.', 'error')
             else:
-                flash('Login unsuccessful. Please check your username and password.', 'error')
-        elif user.is_banned:
-            flash('Your account has been banned. Please contact the administrator.', 'error')
+                flash('Your account has been banned. Please contact the administrator.', 'error')
         else:
             flash('Login unsuccessful. Please check your username and password.', 'error')
     return render_template('index.html', form=form)
