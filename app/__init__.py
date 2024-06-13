@@ -24,7 +24,7 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
     socketio.init_app(app)
-    csrf.init_app(app)
+    # csrf.init_app(app)
     
     # Import sockets
     from app.sockets import handle_connect, handle_disconnect, handle_heartbeat, handle_request_user_status

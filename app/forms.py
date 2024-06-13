@@ -41,10 +41,10 @@ def validate_password(form, password):
     
 ########### Register Form ###########
 class RegistrationForm(FlaskForm):
-    username = StringField('', [Length(min=4, max=25)], render_kw={'placeholder': 'Username'})
-    first_name = StringField('', [Length(min=4, max=25)], render_kw={'placeholder': 'First name'})
-    last_name = StringField('', [Length(min=4, max=25)], render_kw={'placeholder': 'Last name'})
-    email = StringField('', [Email(), DataRequired()], render_kw={'placeholder': 'Email address'})    
+    username = StringField('', render_kw={'placeholder': 'Username'}, validators=[DataRequired(), Length(min=4, max=25)])
+    first_name = StringField('', render_kw={'placeholder': 'First name'}, validators=[DataRequired(), Length(min=1, max=30)])
+    last_name = StringField('', render_kw={'placeholder': 'Last name'}, validators=[DataRequired(), Length(min=1, max=30)])
+    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(), Email()])   
     password = PasswordField('', validators=[
         DataRequired(),
         Length(min=10, message='Password must be at least 10 characters long.'),
@@ -53,7 +53,7 @@ class RegistrationForm(FlaskForm):
         Regexp(re.compile(r'.*[!@#$%^&*()_+=\-{}\[\]:;,<.>?].*'), message='Password must contain at least one special character.')
     ],
         render_kw={'placeholder': 'Password'})
-    confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'})
+    confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'}, validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
     submit = SubmitField('Register')
     
 
@@ -67,22 +67,23 @@ class ContactForm(FlaskForm):
 
 ########### Password Reset Form ###########
 class PasswordResetForm(FlaskForm):
-    user_id = HiddenField('User ID')
-    username = HiddenField('Username')
-    token = HiddenField('Token')
-    user_token = StringField('Token', validators=[DataRequired()])
+    token = HiddenField('Token', validators=[DataRequired()])
+    user_id = HiddenField('User ID', validators=[DataRequired()])
+    username = HiddenField('Username', validators=[DataRequired()])
+    expiration_time = HiddenField('Expiration Time', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[
         DataRequired(),
         Length(min=10, message='Password must be at least 10 characters long.'),
         Regexp(re.compile(r'.*[A-Z].*'), message='Password must contain at least one uppercase letter.'),
         Regexp(re.compile(r'.*[0-9].*'), message='Password must contain at least one digit.'),
         Regexp(re.compile(r'.*[!@#$%^&*()_+=\-{}\[\]:;,<.>?].*'), message='Password must contain at least one special character.')
-    ])
-    confirm_password = PasswordField('Confirm Password', validators=[
+    ],
+    render_kw={'placeholder': 'New Password'})
+    confirm_password = PasswordField('Repeat Password', validators=[
         DataRequired(),
-        EqualTo('new_password', message='Passwords must match.')
-    ])
-    expiration_time = HiddenField('Expiration Time')
+        EqualTo('new_password', message='Passwords must match')
+    ],
+    render_kw={'placeholder': 'Repeat Password'})
     submit = SubmitField('Reset Password')
 
 

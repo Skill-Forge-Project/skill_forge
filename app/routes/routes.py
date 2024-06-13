@@ -69,6 +69,11 @@ def register():
         send_welcome_mail(form.email.data, form.username.data)
         flash('Your account has been created! You are now able to log in.', 'success ')
         return redirect(url_for('main.login'))
+    else:
+        if form.errors:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f"{getattr(form, field).label.text} - {error}", 'error')
     return render_template('register.html', form=form)
 
 
@@ -78,16 +83,16 @@ def register():
 def open_forgot_password():
     return render_template('forgot_password.html')
 
-@bp.route('/reset_password/<user_id>/<username>/<token>/<expiration_time>', methods=['GET', 'POST'])
-def open_reset_password(token, user_id, username, expiration_time):
-    form = PasswordResetForm(
-        user_id=user_id,
-        username=username,
-        token=token,
-        expiration_time=expiration_time
-    )
-    mongo_transaction('user_password_reset_requests', action=f'User {username} requested password change', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time, form=form)
+# @bp.route('/reset_password/', methods=['GET', 'POST'])
+# def open_reset_password(token, user_id, username, expiration_time):
+#     form = PasswordResetForm(
+#         user_id=user_id,
+#         username=username,
+#         token=token,
+#         expiration_time=expiration_time
+#     )
+#     mongo_transaction('user_password_reset_requests', action=f'User {username} requested password change', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+#     return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time, form=form)
 
 @bp.route('/send_email_token', methods=['POST'])
 def send_email_token():
@@ -96,52 +101,78 @@ def send_email_token():
         flash('Please provide an email address.', 'error')
         return redirect(url_for('main.open_forgot_password'))
     
-    user_mail = request.form.get('email_address')
-    current_user = User.query.filter_by(email=user_mail).first()
+    current_user = User.query.filter_by(email=email).first()
     if current_user:
-        user_id = User.query.filter_by(email=email).first().user_id
-        username = User.query.filter_by(email=email).first().username
+        user_id = current_user.user_id
+        username = current_user.username
         # Generate a unique token
         token = secrets.token_urlsafe(32)
         # Calculate expiration time (60 minutes from now)
         expiration_time = datetime.now() + timedelta(minutes=60)
-        new_token = ResetToken(user_id=user_id, username=username, user_email=user_mail, token=token, expiration_time=expiration_time)
+        # Convert expiration_time to string in a format that can be easily parsed later
+        expiration_time_str = expiration_time.strftime("%Y-%m-%d %H:%M:%S")
+        new_token = ResetToken(user_id=user_id, username=username, user_email=email, token=token, expiration_time=expiration_time_str)
         db.session.add(new_token)
         db.session.commit()
 
+        reset_url = url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time_str, _external=True)
         # Send email with reset link containing the token
-        send_reset_email(token, username, email, expiration_time)
-        return redirect(url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
+        send_reset_email(reset_url, username, email, expiration_time)
+        flash('A password reset link has been sent to your email.', 'success')
+        return redirect(url_for('main.login'))
     flash('User with this email does not exist.', 'error')
     return redirect(url_for('main.open_forgot_password'))
 
-@bp.route('/save_new_password', methods=['POST'])
-def update_new_password():
+
+@bp.route('/reset_password/', methods=['GET', 'POST'])
+def open_reset_password():
+    token = request.args.get('token')
+    user_id = request.args.get('user_id')
+    username = request.args.get('username')
+    expiration_time_str = request.args.get('expiration_time')
+    
+    # Parse expiration_time_str into datetime object
+    expiration_time = datetime.strptime(expiration_time_str, "%Y-%m-%d %H:%M:%S")
+    
     form = PasswordResetForm()
+    form.token.data = token
+    form.user_id.data = user_id
+    form.username.data = username
+    form.expiration_time.data = expiration_time
+
+    if form.validate_on_submit():
+        return update_new_password(form)
+    
+    return render_template('reset_password.html', form=form, token=token, user_id=user_id, username=username, expiration_time=expiration_time)
+
+@bp.route('/save_new_password', methods=['POST'])
+def update_new_password(form=None):
+    if not form:
+        form = PasswordResetForm()
 
     if form.validate_on_submit():
         user_id = form.user_id.data
         username = form.username.data
         token = form.token.data
-        user_token = form.user_token.data
         new_password = form.new_password.data
-        expiration_time = form.expiration_time.data
+        expiration_time = datetime.strptime(form.expiration_time.data, "%Y-%m-%d %H:%M:%S")
 
-        if user_token is None or user_token != token:
+        reset_token = ResetToken.query.filter_by(user_id=user_id, token=token).first()
+
+        if reset_token is None or reset_token.token != token:
             flash('Invalid token.', 'error')
             return redirect(url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
 
-        if datetime.now().strftime("%Y-%m-%d %H:%M:%S") > expiration_time:
+        if datetime.now() > reset_token.expiration_time:
             flash('Token has expired.', 'error')
             return redirect(url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time))
 
         user = User.query.get(user_id)
         from app import bcrypt
         user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        used_token = ResetToken.query.filter_by(user_id=user_id, token=user_token).first()
-        db.session.delete(used_token)
+        db.session.delete(reset_token)
         db.session.commit()
-        mongo_transaction('user_password_reset', action=f'User {username} restore the password', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        mongo_transaction('user_password_reset', action=f'User {username} restored the password', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         flash(f'Password for {username} successfully changed. Now you can log in with your new password.', 'success')
         return redirect(url_for('main.login'))  # Redirect to the login page after successful password reset
 

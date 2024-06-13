@@ -23,7 +23,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     xp = db.Column(db.Integer, default=0, nullable=False)
     level = db.Column(db.Integer, default=1, nullable=False)
-    rank = db.Column(db.String(30), default="Novice Adventurer")
+    rank = db.Column(db.String(30), default="Neophyte")
     avatar = db.Column(db.LargeBinary, default=None)
     date_registered = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     password = db.Column(db.String(120), nullable=False)
