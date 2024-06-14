@@ -33,7 +33,23 @@
 <body>
     <!-- Include Navbar template -->
     {% include 'navbar.html' %}
-
+    <div class="description-container">
+        <div class="description-text">
+            <h2>Submit a Quest</h2>
+            <p>Got a great idea for a new quest? Share it with our community! Submitting a quest is easy and helps others learn and grow. 
+                Once your quest is submited, administrator will review it and will send you a feedback if the quest is being approved or 
+                additional changes are required.</p>
+            <h2>Instructions</h2>
+            <li>Quest Name: Unique and creative name for your quest, but keep in mind that the name should be related to the quest.</li>
+            <li>Quest Language: Choose the programming language for your quest.</li>
+            <li>Quest Difficulty: How difficult is your quest. Choose wisely.</li>
+            <li>Quest Condition: Describe the quest condition in a few sentences. What is the goal of the quest? What is the problem?</li>
+            <li>Example Solution: Provide an example solution of your quest.</li>
+            <li>Inputs Samples: Provide example inputs for the function in format: [input arguments] [ input arguments] separated each on a new line.</li>
+            <li>Outputs Samples: Provide expected outputs from the function in the same order as the inputs in format: [output] [output] separated each on a new line.</li>
+        </div>
+        <img src="../static/images/quest_submiter_avatar.png" alt="Your Application Logo" class="description-image">
+    </div>
     <form action="/user_submit_quest" method="post">
         <div id="addQuestContent" class="content">
             <div class="input-row">
