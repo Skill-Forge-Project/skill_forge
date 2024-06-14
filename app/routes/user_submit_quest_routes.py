@@ -95,7 +95,7 @@ def user_submit_quest():
     # Add the new quest to the database session
     db.session.add(new_user_submitted_quest)
     db.session.commit()
-    return redirect(url_for('open_user_submit_quest'))
+    return redirect(url_for('usq.open_user_submit_quest'))
 
 
 # Open User Submited Quest for editing from the Admin Panel

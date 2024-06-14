@@ -55,8 +55,8 @@ def submit_quest():
             date_added=datetime.now(),
             last_modified=datetime.now(),
             condition=create_quest_post.quest_condition.data,
-            function_template=create_quest_post.quest_condition.data,
-            unit_tests=create_quest_post.quest_condition.data,
+            function_template=create_quest_post.function_template.data,
+            unit_tests=create_quest_post.quest_unitests.data,
             test_inputs=create_quest_post.quest_inputs.data,
             test_outputs=create_quest_post.quest_outputs.data,
             type=type,
@@ -405,12 +405,20 @@ def submit_solution():
                 # Update the user XP level and rank
                 with open(os.path.join('app/static/configs/levels.json'), 'r') as levels_file:
                     leveling_data = json.load(levels_file)
+                    print(f'Leveling data: {leveling_data}')
                 for level in leveling_data:
                     for level_name, level_stats in level.items():
-                        if int(level_stats['min_xp']) <= int(current_quest.xp) <= int(level_stats['max_xp']):
+                        print(f'Level name: {level_name}')
+                        print(f'Level stats: {level_stats}')
+                        if int(level_stats['min_xp']) <= int(current_user.xp) <= int(level_stats['max_xp']):
+                            print(f'Current user XP: {current_user.xp}')
+                            print(f'Current user level: {current_user.level}')
+                            print(f'Current user rank: {current_user.rank}')
+                            print(f'Level stats: {level_stats}')
                             current_user.level = level_stats['level']
                             current_user.rank = level_name
-                            break            
+                            db.session.commit()        
+                            break    
 
             
                 # Generate achievement for the user    

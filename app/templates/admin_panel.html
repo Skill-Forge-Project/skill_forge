@@ -136,7 +136,7 @@
                                                     <td>{{ quest.language }}</td>
                                                     <td>{{ quest.difficulty }}</td>
                                                     <td>{{ quest.quest_author }}</td>
-                                                    <td>{{ quest.date_added }}</td>
+                                                    <td>{{ quest.date_added.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -179,7 +179,7 @@
                                                     <td>{{ quest.language }}</td>
                                                     <td>{{ quest.difficulty }}</td>
                                                     <td>{{ quest.quest_author }}</td>
-                                                    <td>{{ quest.date_added }}</td>
+                                                    <td>{{ quest.date_added.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                                     <td>{{ quest.status }}</td>
                                                 </tr>
                                                 {% endfor %}
