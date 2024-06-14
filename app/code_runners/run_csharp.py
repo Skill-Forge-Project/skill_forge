@@ -1,4 +1,8 @@
 import subprocess, os, re, uuid, shutil
+from datetime import datetime
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import (csharp_compliation_error_transaction, 
+                                               csharp_code_runner_transaction)
 
 def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
@@ -51,6 +55,14 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
         zero_tests.append(correct_output)
         unsuccessful_tests = tests_count
         message = 'Your solution is incorrect! Try again!'
+        # Insert the compilation error transaction into the MongoDB log database
+        csharp_compliation_error_transaction('csharp_compliation_errors', 
+                                            user_id=user_id, 
+                                            username=username, 
+                                            quest_id=quest_id, 
+                                            csharp_code=csharp_code, 
+                                            stderr_str=stderr_str,
+                                            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
     
     # If Compilation was successful run and check the code
@@ -89,24 +101,18 @@ def run_code(csharp_code, inputs, outputs, user_id, username, quest_id):
 
     # Cleanup the directory
     shutil.rmtree(workdir)
+    # Insert the code runner transaction into the MongoDB log database
+    csharp_code_runner_transaction('csharp_code_runner', 
+                                user_id = user_id, 
+                                username=username, 
+                                quest_id=quest_id, 
+                                csharp_code=csharp_code, 
+                                inputs=inputs, 
+                                outputs=outputs, 
+                                message=message, 
+                                successful_tests=successful_tests,
+                                unsuccessful_tests=unsuccessful_tests,
+                                zero_tests=zero_tests, 
+                                zero_tests_outputs=zero_tests_outputs,
+                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-        
-# Example C# code
-csharp_code = """
-using System;
-class Program
-{
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello World!");
-    }
-}
-"""
-
-# Use for debuging porposes only
-# Execute C# code
-# stdout, stderr = run_code(csharp_code)
-# print("STDOUT:")
-# print(stdout)
-# print("STDERR:")
-# print(stderr)

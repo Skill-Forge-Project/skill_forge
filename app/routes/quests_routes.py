@@ -313,10 +313,10 @@ def submit_solution():
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
 
         elif current_quest_language == 'JavaScript':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
                     
         elif current_quest_language == 'Java':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)

@@ -1,6 +1,10 @@
 import subprocess, os, re, uuid, shutil
+from datetime import datetime
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import (javascript_compliation_error_transaction,
+                                               javascript_code_runner_transaction)
 
-def run_code(js_code, inputs, outputs):
+def run_code(js_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
@@ -34,10 +38,22 @@ def run_code(js_code, inputs, outputs):
                            '--timeout=00:00:01', 'node', os.path.join(workdir, code_filename)]
         process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
+            
         
         # Decode output from bytes to string
         stdout_str = stdout.decode('utf-8').replace('\n', '').replace('undefined', '') # handle undefined output as well
         stderr_str = stderr.decode('utf-8')
+        
+        if stderr_str:
+            # Insert the compilation error transaction into the MongoDB log database
+            javascript_compliation_error_transaction('javascript_compliation_errors', 
+                                                user_id=user_id, 
+                                                username=username, 
+                                                quest_id=quest_id, 
+                                                javascript_code=js_code,
+                                                stderr_str=stderr_str,
+                                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
         
         # Handle the zero test case
         if i == 0:
@@ -60,13 +76,18 @@ def run_code(js_code, inputs, outputs):
             
     # Cleanup the directory
     shutil.rmtree(workdir)
+    # Insert the code runner transaction into the MongoDB log database
+    javascript_code_runner_transaction('javascript_code_runner', 
+                                    user_id=user_id, 
+                                    username=username, 
+                                    quest_id=quest_id, 
+                                    javascript_code=js_code,
+                                    inputs=inputs,
+                                    outputs=outputs,
+                                    message=message,
+                                    successful_tests=successful_tests,
+                                    unsuccessful_tests=unsuccessful_tests,
+                                    zero_tests=zero_tests,
+                                    zero_tests_outputs=zero_tests_outputs,
+                                    timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-
-
-
-# js_code = """
-# console.log('Hello, world!');
-# """
-
-# Use for debuging porposes only
-# run_code(js_code)

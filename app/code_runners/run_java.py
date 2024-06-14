@@ -1,4 +1,8 @@
 import subprocess, os, re, uuid, shutil
+from datetime import datetime
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import (java_compliation_error_transaction, 
+                                               java_code_runner_transaction)
 
 def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
@@ -37,17 +41,22 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
         zero_tests.append(correct_output)
         unsuccessful_tests = tests_count
         message = 'Your solution is incorrect! Try again!'
+        # Insert the compilation error transaction into the MongoDB log database
+        java_compliation_error_transaction('java_compliation_errors', 
+                                        user_id=user_id, 
+                                        username=username, 
+                                        quest_id=quest_id, 
+                                        java_code=java_code,
+                                        stderr_str=stderr_str,
+                                        timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
 
     # If compilation was successful, run and check the code
     else:
         for i in range(tests_count):        
             current_input = [element for element in inputs[i]]
-            print(current_input)
             current_input = ' '.join(current_input)
             correct_output = outputs[i][0]
-            print(correct_output)
-            print(type(current_input), type(correct_output))
             
             # Execute the compiled Java code using firejail
             execute_command = [
@@ -81,22 +90,18 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
 
     # Cleanup the directory
     shutil.rmtree(workdir)
+    # Insert the code runner transaction into the MongoDB log database
+    java_code_runner_transaction('java_code_runner', 
+                                user_id=user_id, 
+                                username=username, 
+                                quest_id=quest_id, 
+                                java_code=java_code, 
+                                inputs=inputs, 
+                                outputs=outputs,
+                                message=message, 
+                                successful_tests=successful_tests,
+                                unsuccessful_tests=unsuccessful_tests,
+                                zero_tests=zero_tests, 
+                                zero_tests_outputs=zero_tests_outputs,
+                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-
-# Example Java code
-# java_code = """
-# public class Main {
-#     public static void main(String[] args) {
-#         System.out.println("Hello, world!");
-#     }
-# }
-# """
-
-
-# Use for debuging porposes only
-# Execute Java code
-# stdout, stderr = run_code(java_code)
-# print("STDOUT:")
-# print(stdout)
-# print("STDERR:")
-# print(stderr)

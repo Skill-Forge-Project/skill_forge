@@ -1,6 +1,11 @@
 import subprocess, os, re, uuid, shutil
+import subprocess, os, re, uuid, shutil
+from datetime import datetime
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import (python_compliation_error_transaction,
+                                               python_code_runner_transaction)
 
-def run_code(python_code, inputs, outputs):
+def run_code(python_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
@@ -34,6 +39,16 @@ def run_code(python_code, inputs, outputs):
             run_process = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout_str = run_process.stdout.decode('utf-8').strip()
             stderr_str = run_process.stderr.decode('utf-8').strip()
+            if stderr_str:
+                # Insert the compilation error transaction into the MongoDB log database
+                python_compliation_error_transaction('python_compliation_errors', 
+                                                    user_id=user_id, 
+                                                    username=username, 
+                                                    quest_id=quest_id, 
+                                                    python_code=python_code,
+                                                    stderr_str=stderr_str,
+                                                    timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
         except subprocess.TimeoutExpired:
             stdout_str = ''
             stderr_str = 'Execution timed out.'
@@ -58,16 +73,18 @@ def run_code(python_code, inputs, outputs):
     
     # Cleanup the directory
     shutil.rmtree(workdir)
+    # Insert the transaction into the MongoDB log database
+    python_code_runner_transaction('python_code_runner', 
+                                    user_id=user_id, 
+                                    username=username, 
+                                    quest_id=quest_id, 
+                                    python_code=python_code,
+                                    inputs=inputs,
+                                    outputs=outputs,
+                                    message=message,
+                                    successful_tests=successful_tests,
+                                    unsuccessful_tests=unsuccessful_tests,
+                                    zero_tests=zero_tests,
+                                    zero_tests_outputs=zero_tests_outputs,
+                                    timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-
-# Example Python code
-# python_code = """
-# print('Hello, world!')
-# """
-
-# # Execute Python code
-# stdout, stderr = run_code(python_code)
-# print("STDOUT:")
-# print(stdout)
-# print("STDERR:")
-# print(stderr)
