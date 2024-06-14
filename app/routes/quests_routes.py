@@ -405,16 +405,9 @@ def submit_solution():
                 # Update the user XP level and rank
                 with open(os.path.join('app/static/configs/levels.json'), 'r') as levels_file:
                     leveling_data = json.load(levels_file)
-                    print(f'Leveling data: {leveling_data}')
                 for level in leveling_data:
                     for level_name, level_stats in level.items():
-                        print(f'Level name: {level_name}')
-                        print(f'Level stats: {level_stats}')
                         if int(level_stats['min_xp']) <= int(current_user.xp) <= int(level_stats['max_xp']):
-                            print(f'Current user XP: {current_user.xp}')
-                            print(f'Current user level: {current_user.level}')
-                            print(f'Current user rank: {current_user.rank}')
-                            print(f'Level stats: {level_stats}')
                             current_user.level = level_stats['level']
                             current_user.rank = level_name
                             db.session.commit()        
@@ -425,7 +418,6 @@ def submit_solution():
                 achievement = Achievement.query.filter(
                     Achievement.language == current_quest_language,
                     Achievement.quests_number_required == current_quest_number).all()
-                print(f'Achievement is: {achievement}')
                 if achievement:
                     achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
                     # Generate random suffix

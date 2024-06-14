@@ -42,9 +42,12 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     # If compilation was successful, run and check the code
     else:
         for i in range(tests_count):        
-            current_input = [f'"{element}"' if isinstance(element, str) else str(element) for element in inputs[i]]
+            current_input = [element for element in inputs[i]]
+            print(current_input)
             current_input = ' '.join(current_input)
-            correct_output = str(outputs[i][0])
+            correct_output = outputs[i][0]
+            print(correct_output)
+            print(type(current_input), type(correct_output))
             
             # Execute the compiled Java code using firejail
             execute_command = [
