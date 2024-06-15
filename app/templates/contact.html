@@ -19,10 +19,21 @@
 <body>
     <!-- Include Navbar template -->
     {% include 'navbar.html' %}
+    <div class="description-container">
+        <div class="description-text">
+            <h2>Get in touch with us!</h2>
+            <p>You have a question? You want to report a bug or propose a new feature or just want to share your feedback with us?
+                We would love to hear from you! Please fill out the form below and we will get back to you as soon as possible.
+            </p>
+
+        </div>
+        <img src="{{ url_for('static', filename='images/dwarf_avatar.png') }}" alt="dwarf" class="description-image"/>
+    </div>
+
 
     <div class="container contact-form">
         <div class="contact-image">
-            <img src="{{ url_for('static', filename='images/dwarf_avatar.png') }}" alt="dwarf" />
+
         </div>
         <form method="post" action="{{ url_for('main.send_message') }}">
             {{ form.hidden_tag() }}
