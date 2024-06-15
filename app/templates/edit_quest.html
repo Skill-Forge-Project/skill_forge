@@ -37,61 +37,53 @@
     <body>
         <!-- Include Navbar template -->
         {% include 'navbar.html' %}
-
+    
         <div class="content-section">
             <div id="editQuestContent" class="content">
-                <form action="/edit_quest_db" method="post">
-                    <div>
-                        <input type="hidden" name="quest_id" value="{{ quest.quest_id }}">
-                    </div>
+                <form action="{{ url_for('quests.edit_quest_db') }}" method="post">
+                    {{ form.hidden_tag() }}
+                    
                     <div class="input-row">
-                        <h4><strong class="row-label">Quest Name: </strong></h4>
-                        <input type="text" name="quest_name" id="quest_name_input" class="text_input" value="{{ quest.quest_name }}">
+                        <h4><strong class="row-label">{{ form.quest_name.label }}</strong></h4>
+                        {{ form.quest_name(class="text_input") }}
                     </div>
+                    
                     <div class="input-row">
-                        <h4><strong class="row-label">Quest Language: </strong></h4>
-                        <select name="quest_language" id="quest_language_input" class="dropdown_input">
-                            <option value="Python" {% if quest.language == 'Python' %} selected {% endif %}>Python</option>
-                            <option value="JavaScript" {% if quest.language == 'JavaScript' %} selected {% endif %}>JavaScript</option>
-                            <option value="Java" {% if quest.language == 'Java' %} selected {% endif %}>Java</option>
-                            <option value="C#" {% if quest.language == 'C#' %} selected {% endif %}>C#</option>
-                        </select>
+                        <h4><strong class="row-label">{{ form.quest_language.label }}</strong></h4>
+                        {{ form.quest_language(class="dropdown_input", id="quest_language_input") }}
                     </div>
+                    
                     <div class="input-row">
-                        <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                        <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                            <option value="Novice Quests" {% if quest.difficulty == 'Novice Quests' %} selected {% endif %}>Novice Quests</option>
-                            <option value="Adventurous Challenges" {% if quest.difficulty == 'Adventurous Challenges' %} selected {% endif %}>Adventurous Challenges</option>
-                            <option value="Epic Campaigns" {% if quest.difficulty == 'Epic Campaigns' %} selected {% endif %}>Epic Campaigns</option>
-                        </select>
+                        <h4><strong class="row-label">{{ form.quest_difficulty.label }}</strong></h4>
+                        {{ form.quest_difficulty(class="dropdown_input") }}
                     </div>
+                    
                     <div class="input-row" style="flex-direction: column;">
-                        <h4><strong class="row-label">Quest Condition: </strong></h4>
-                        <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10" class="text_input">{{ quest.condition }}</textarea>          
+                        <h4><strong class="row-label">{{ form.quest_condition.label }}</strong></h4>
+                        {{ form.quest_condition(rows="10", class="text_input") }}
                     </div>
+                    
                     <div class="input-row" style="flex-direction: column;">
-                        <h4><strong class="row-label">Quest Template: </strong></h4>
-                        <textarea name="function_template" id="template_input">{{ quest.function_template }}</textarea>
+                        <h4><strong class="row-label">{{ form.function_template.label }}</strong></h4>
+                        {{ form.function_template(class="text_input", id="template_input") }}
                     </div>
-                    <div>
-                        <div class="input-row" style="flex-direction:column;">
-                            <h4><strong class="row-label">Quest Tests Inputs: </strong></h4>
-                            <textarea name="quest_test_inputs" id="input_tests" class="text_input">{{ quest.test_inputs }}</textarea>
-                        </div>
+                    
+                    <div class="input-row" style="flex-direction: column;">
+                        <h4><strong class="row-label">{{ form.quest_test_inputs.label }}</strong></h4>
+                        {{ form.quest_test_inputs(class="text_input") }}
                     </div>
-                    <div>
-                        <div class="input-row" style="flex-direction:column;">
-                            <h4><strong class="row-label">Quest Tests Outputs: </strong></h4>
-                            <textarea name="quest_test_outputs" id="output_tests" class="text_input">{{ quest.test_outputs }}</textarea>
-                        </div>
+                    
+                    <div class="input-row" style="flex-direction: column;">
+                        <h4><strong class="row-label">{{ form.quest_test_outputs.label }}</strong></h4>
+                        {{ form.quest_test_outputs(class="text_input") }}
                     </div>
-                    <div class="input-row">
-                        <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
-                        <textarea name="quest_unitests" id="unit_tests_input">{{ quest.unit_tests }}</textarea>
+                    
+                    <div class="input-row" style="flex-direction: column;">
+                        <h4><strong class="row-label">{{ form.quest_unitests.label }}</strong></h4>
+                        {{ form.quest_unitests(class="text_input", id="unit_tests_input") }}
                     </div>
                     <div class="btn-row">
-                        <button type="submit" id="editQuest" class="submit-button"
-                            onclick=location.href="{{ url_for('quests.edit_quest_db') }}">Save Changes</button>
+                        {{ form.submit(class="submit-button") }}
                     </div>
                 </form>
             </div>
@@ -99,7 +91,12 @@
         <!-- JavaScript script to handle the CodeMirror custom fields. 
             This script should be loaded after the initialization of the fields above! 
         -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
         <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
-        
     </body>
 </html>

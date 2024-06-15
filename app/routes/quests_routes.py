@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, url_for, request, render_template, jsonif
 from flask_login import login_required, current_user
 # Import the forms and models
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
-from app.forms import QuestForm, PublishCommentForm
+from app.forms import QuestForm, PublishCommentForm, EditQuestForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import the database instance
@@ -156,53 +156,80 @@ def delete_comment():
 # Handle quest edit from the Admin Panel
 @bp_qst.route('/edit_quest_db', methods=['GET', 'POST'])
 def edit_quest_db():
-    quest_id = request.form.get('quest_id')
-    quest_name = request.form.get('quest_name')
-    quest_language = request.form.get('quest_language')
-    quest_difficulty = request.form.get('quest_difficulty')
-    quest_condition = request.form.get('quest_condition')
-    function_template = request.form.get('function_template')
-    unit_tests = request.form.get('quest_unitests')
-    input_tests = request.form.get('quest_test_inputs')
-    output_tests = request.form.get('quest_test_outputs')
-    
-    quest = Quest.query.get(quest_id)
-    reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
-    if quest:
-        quest.quest_name = quest_name
-        quest.language = quest_language
-        quest.difficulty = quest_difficulty
-        quest.condition = quest_condition
-        quest.function_template = function_template
-        quest.unit_tests = unit_tests
-        quest.test_inputs = input_tests
-        quest.test_outputs = output_tests
+    form = EditQuestForm()
+    print("Calling the update quest function!")
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            quest_id = form.quest_id.data
+            quest = Quest.query.get(quest_id)
+            reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
 
-        # If this is True it means that the user is editing a reported quest (there is a chosen radion button)
-        if request.form.get('progress_option'):
-            report_progress = request.form.get('progress_option')
-            reported_quest.report_status = report_progress
-            if report_progress == 'Resolved':
-                db.session.delete(reported_quest)
-        db.session.commit()
-        mongo_transaction('quest_edited',
-                          action=f'User {current_user.username} edited quest {quest_id}',
-                          user_id=current_user.user_id,
-                          username=current_user.username,
-                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        
-        return redirect(url_for('usr.open_admin_panel'))
-    else:
-        return 'Quest not found!', 404
+            if quest:
+                quest.quest_name = form.quest_name.data
+                quest.language = form.quest_language.data
+                quest.difficulty = form.quest_difficulty.data
+                quest.condition = form.quest_condition.data
+                quest.function_template = form.function_template.data
+                quest.unit_tests = form.quest_unitests.data
+                quest.test_inputs = form.quest_test_inputs.data
+                quest.test_outputs = form.quest_test_outputs.data
+
+                # Change the XP points based on difficulty
+                selected_difficulty = form.quest_difficulty.data
+                xp_mapping = {
+                    'Novice Quests': 30,
+                    'Adventurous Challenges': 60,
+                    'Epic Campaigns': 100
+                }
+                xp = xp_mapping.get(selected_difficulty, 0)
+                quest.xp = str(xp)
+
+                # if form.progress_option.data:
+                #     report_progress = form.progress_option.data
+                #     reported_quest.report_status = report_progress
+                #     if report_progress == 'Resolved':
+                #         db.session.delete(reported_quest)
+
+                db.session.commit()
+                mongo_transaction('quest_edited',
+                                  action=f'User {current_user.username} edited quest {quest_id}',
+                                  user_id=current_user.user_id,
+                                  username=current_user.username,
+                                  timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+                return redirect(url_for('usr.open_admin_panel'))
+            else:
+                flash('Quest not found!', 'danger')
+                return render_template('edit_quest.html', form=form), 404
+        else:
+            # If the form is not valid, print the errors for debugging
+            print(form.errors)
+            flash('Form validation failed!', 'danger')
+    return render_template('edit_quest.html', form=form)
+
 
 
 # Open Quest for editing from the Admin Panel
 @login_required
-@bp_qst.route('/edit_quest/<quest_id>')
+@bp_qst.route('/edit_quest/<quest_id>', methods=['GET'])
 def open_edit_quest(quest_id):
+    edit_quest_form = EditQuestForm()
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
-    return render_template('edit_quest.html', quest=quest)
+    if quest:
+        edit_quest_form.quest_id.data = quest.quest_id
+        edit_quest_form.quest_name.data = quest.quest_name
+        edit_quest_form.quest_language.data = quest.language
+        edit_quest_form.quest_difficulty.data = quest.difficulty
+        edit_quest_form.quest_condition.data = quest.condition
+        edit_quest_form.function_template.data = quest.function_template
+        edit_quest_form.quest_test_inputs.data = quest.test_inputs
+        edit_quest_form.quest_test_outputs.data = quest.test_outputs
+        edit_quest_form.quest_unitests.data = quest.unit_tests
+        return render_template('edit_quest.html', form=edit_quest_form)
+    else:
+        flash('Quest not found!', 'danger')
+        return redirect(url_for('usr.open_admin_panel')), 404
 
 
 # Open Reported Quest for editing from the Admin Panel
