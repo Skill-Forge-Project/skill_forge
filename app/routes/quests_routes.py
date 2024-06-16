@@ -4,7 +4,7 @@ from flask import Blueprint, redirect, url_for, request, render_template, jsonif
 from flask_login import login_required, current_user
 # Import the forms and models
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
-from app.forms import QuestForm, PublishCommentForm, EditQuestForm
+from app.forms import QuestForm, PublishCommentForm, EditQuestForm, EditReportedQuestForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import the database instance
@@ -154,9 +154,57 @@ def delete_comment():
 
 
 # Handle quest edit from the Admin Panel
-@bp_qst.route('/edit_quest_db', methods=['GET', 'POST'])
+@bp_qst.route('/edit_quest', methods=['GET', 'POST'])
 def edit_quest_db():
     form = EditQuestForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            quest_id = form.quest_id.data
+            quest = Quest.query.get(quest_id)
+            reported_quest = ReportedQuest.query.filter_by(quest_id=quest_id).first()
+
+            if quest:
+                quest.quest_name = form.quest_name.data
+                quest.language = form.quest_language.data
+                quest.difficulty = form.quest_difficulty.data
+                quest.condition = form.quest_condition.data
+                quest.function_template = form.function_template.data
+                quest.unit_tests = form.quest_unitests.data
+                quest.test_inputs = form.quest_test_inputs.data
+                quest.test_outputs = form.quest_test_outputs.data
+
+                # Change the XP points based on difficulty
+                selected_difficulty = form.quest_difficulty.data
+                xp_mapping = {
+                    'Novice Quests': 30,
+                    'Adventurous Challenges': 60,
+                    'Epic Campaigns': 100
+                }
+                xp = xp_mapping.get(selected_difficulty, 0)
+                quest.xp = str(xp)
+
+                db.session.commit()
+                mongo_transaction('quests_edited',
+                                  action=f'User {current_user.username} edited quest {quest_id}',
+                                  user_id=current_user.user_id,
+                                  username=current_user.username,
+                                  timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+                flash('Quest updated successfully!', 'success')
+                return redirect(url_for('usr.open_admin_panel'))
+            else:
+                flash('Quest not found!', 'danger')
+                return render_template('edit_quest.html', form=form), 404
+        else:
+            # If the form is not valid, print the errors for debugging
+            print(form.errors)
+            flash('Form validation failed!', 'danger')
+    return render_template('edit_quest.html', form=form)
+
+# Handle editing a reported quest from the Admin Panel
+@bp_qst.route('/edit_reported_quest', methods=['GET', 'POST'])
+def edit_reported_quest():
+    form = EditReportedQuestForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             quest_id = form.quest_id.data

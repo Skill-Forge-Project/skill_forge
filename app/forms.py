@@ -148,6 +148,20 @@ class EditQuestForm(FlaskForm):
     quest_test_inputs = TextAreaField('Quest Tests Inputs', validators=[DataRequired()])
     quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()])
     quest_unitests = TextAreaField('Quest Unit Tests')
+    submit = SubmitField('Save Changes')
+
+
+########### Edit Reported Quest Form - as Admin ###########
+class EditReportedQuestForm(FlaskForm):
+    quest_id = HiddenField('Quest ID')
+    quest_name = StringField('Quest Name', validators=[DataRequired()])
+    quest_language = SelectField('Quest Language', choices=[('Python', 'Python'), ('JavaScript', 'JavaScript'), ('Java', 'Java'), ('C#', 'C#')], validators=[DataRequired()])
+    quest_difficulty = SelectField('Quest Difficulty', choices=[('Novice Quests', 'Novice Quests'), ('Adventurous Challenges', 'Adventurous Challenges'), ('Epic Campaigns', 'Epic Campaigns')], validators=[DataRequired()])
+    quest_condition = TextAreaField('Quest Condition', validators=[DataRequired()])
+    function_template = TextAreaField('Quest Template', validators=[DataRequired()])
+    quest_test_inputs = TextAreaField('Quest Tests Inputs', validators=[DataRequired()])
+    quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()])
+    quest_unitests = TextAreaField('Quest Unit Tests')
     progress_option = RadioField('Progress Option', choices=[('In Progress', 'In Progress'), ('Resolved', 'Resolved')])
     submit = SubmitField('Save Changes')
     
