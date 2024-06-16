@@ -157,7 +157,6 @@ def delete_comment():
 @bp_qst.route('/edit_quest_db', methods=['GET', 'POST'])
 def edit_quest_db():
     form = EditQuestForm()
-    print("Calling the update quest function!")
     if request.method == 'POST':
         if form.validate_on_submit():
             quest_id = form.quest_id.data
@@ -203,6 +202,7 @@ def edit_quest_db():
                                   username=current_user.username,
                                   timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
+                flash('Quest updated successfully!', 'success')
                 return redirect(url_for('usr.open_admin_panel'))
             else:
                 flash('Quest not found!', 'danger')
@@ -302,7 +302,8 @@ def report_quest(curr_quest_id, report_reason='no reason'):
                       user_id=current_user.user_id,
                       username=current_user.username,
                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    return redirect(url_for('quests.open_curr_quest', quest_id=curr_quest_id))
+    flash('Quest reported successfully! Administrator will review your report and will take actions shortly.', 'success')
+    return redirect(url_for('main.main_page', quest_id=curr_quest_id))
 
 
 # Redirect to the table with all tasks. Change from template to real page!!!! 
