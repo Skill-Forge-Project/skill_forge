@@ -8,7 +8,7 @@ from app.mailtrap import send_reset_email, send_welcome_mail, send_contact_email
 from app.database.db_init import db
 from app import bcrypt
 # Import the forms and models
-from app.forms import LoginForm, RegistrationForm, PasswordResetForm, ContactForm
+from app.forms import LoginForm, RegistrationForm, EmailResetForm, PasswordResetForm, ContactForm
 from app.models import User, ResetToken, Quest, SubmitedSolution
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
@@ -81,7 +81,8 @@ def register():
 # Route to open the forgot password form
 @bp.route('/forgot_password')
 def open_forgot_password():
-    return render_template('forgot_password.html')
+    form = EmailResetForm()
+    return render_template('forgot_password.html', form=form)
 
 # @bp.route('/reset_password/', methods=['GET', 'POST'])
 # def open_reset_password(token, user_id, username, expiration_time):
@@ -96,32 +97,39 @@ def open_forgot_password():
 
 @bp.route('/send_email_token', methods=['POST'])
 def send_email_token():
-    email = request.form.get('email_address')
-    if len(email) == 0:
-        flash('Please provide an email address.', 'error')
-        return redirect(url_for('main.open_forgot_password'))
+    form = EmailResetForm()
+    if form.validate_on_submit():
+        email = form.email_address.data
+        current_user = User.query.filter_by(email=email).first()
+        all_token = ResetToken.query.filter_by(user_email=email).first()
     
-    current_user = User.query.filter_by(email=email).first()
-    if current_user:
-        user_id = current_user.user_id
-        username = current_user.username
-        # Generate a unique token
-        token = secrets.token_urlsafe(32)
-        # Calculate expiration time (60 minutes from now)
-        expiration_time = datetime.now() + timedelta(minutes=60)
-        # Convert expiration_time to string in a format that can be easily parsed later
-        expiration_time_str = expiration_time.strftime("%Y-%m-%d %H:%M:%S")
-        new_token = ResetToken(user_id=user_id, username=username, user_email=email, token=token, expiration_time=expiration_time_str)
-        db.session.add(new_token)
-        db.session.commit()
+        if all_token:
+            flash('A password reset link has already been sent to your email. Please check your inbox.', 'error')
+            return redirect(url_for('main.login'))
+                
+        if current_user:
+            user_id = current_user.user_id
+            username = current_user.username
+            # Generate a unique token
+            token = secrets.token_urlsafe(32)
+            # Calculate expiration time (60 minutes from now)
+            expiration_time = datetime.now() + timedelta(minutes=60)
+            # Convert expiration_time to string in a format that can be easily parsed later
+            expiration_time_str = expiration_time.strftime("%Y-%m-%d %H:%M:%S")
+            new_token = ResetToken(user_id=user_id, username=username, user_email=email, token=token, expiration_time=expiration_time_str)
+            db.session.add(new_token)
+            db.session.commit()
 
-        reset_url = url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time_str, _external=True)
-        # Send email with reset link containing the token
-        send_reset_email(reset_url, username, email, expiration_time)
-        flash('A password reset link has been sent to your email.', 'success')
-        return redirect(url_for('main.login'))
-    flash('User with this email does not exist.', 'error')
-    return redirect(url_for('main.open_forgot_password'))
+            reset_url = url_for('main.open_reset_password', token=token, user_id=user_id, username=username, expiration_time=expiration_time_str, _external=True)
+            # Send email with reset link containing the token
+            send_reset_email(reset_url, username, email, expiration_time)
+            flash('A password reset link has been sent to your email.', 'success')
+            return redirect(url_for('main.login'))
+        else:
+            flash('User with this email does not exist.', 'error')
+            return redirect(url_for('main.open_forgot_password'))
+        
+    return render_template('forgot_password.html', form=form)
 
 
 @bp.route('/reset_password/', methods=['GET', 'POST'])

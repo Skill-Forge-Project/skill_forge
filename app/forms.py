@@ -65,6 +65,11 @@ class ContactForm(FlaskForm):
     message = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send Message')
 
+########### Password Reset Request Form ###########
+class EmailResetForm(FlaskForm):
+    email_address = StringField('Email Address', validators=[DataRequired(), Email()])
+    submit = SubmitField('Send Me Token')
+
 ########### Password Reset Form ###########
 class PasswordResetForm(FlaskForm):
     token = HiddenField('Token', validators=[DataRequired()])

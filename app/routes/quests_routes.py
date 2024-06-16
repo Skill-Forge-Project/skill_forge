@@ -214,7 +214,6 @@ def edit_quest_db():
     return render_template('edit_quest.html', form=form)
 
 
-
 # Open Quest for editing from the Admin Panel
 @login_required
 @bp_qst.route('/edit_quest/<quest_id>', methods=['GET'])
