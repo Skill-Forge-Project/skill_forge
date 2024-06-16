@@ -84,17 +84,6 @@ def open_forgot_password():
     form = EmailResetForm()
     return render_template('forgot_password.html', form=form)
 
-# @bp.route('/reset_password/', methods=['GET', 'POST'])
-# def open_reset_password(token, user_id, username, expiration_time):
-#     form = PasswordResetForm(
-#         user_id=user_id,
-#         username=username,
-#         token=token,
-#         expiration_time=expiration_time
-#     )
-#     mongo_transaction('user_password_reset_requests', action=f'User {username} requested password change', user_id=user_id, username=username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-#     return render_template('reset_password.html', token=token, user_id=user_id, username=username, expiration_time=expiration_time, form=form)
-
 @bp.route('/send_email_token', methods=['POST'])
 def send_email_token():
     form = EmailResetForm()
@@ -231,12 +220,12 @@ def contact():
 @login_required
 def send_message():
     contact_form = ContactForm()
+    user = contact_form.username.data
     email = contact_form.email.data
     subject = contact_form.subject.data
     message = contact_form.message.data
-    print(email, subject, message)
     if contact_form.validate_on_submit():
-        send_contact_email(email, subject, message)
-        flash('Your message has been sent.', 'success')
+        send_contact_email(user, email, subject, message)
+        flash('Thank you for contacting us. We will back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
     return render_template('contact.html', form=contact_form)

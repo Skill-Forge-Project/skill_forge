@@ -32,9 +32,15 @@
 
 
     <div class="container contact-form">
-        <div class="contact-image">
-
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
         </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <form method="post" action="{{ url_for('main.send_message') }}">
             {{ form.hidden_tag() }}
             <h3>Drop Us a Message</h3>
