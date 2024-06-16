@@ -177,7 +177,7 @@ class ReportedQuest(db.Model):
     report_reason = db.Column(db.Text, nullable=True)
     admin_assigned = db.Column(db.String(10), ForeignKey('users.user_id'), nullable=True)
     
-    # Specify the foreign keys explicitly
+    # Define the relationship between the reported_quests with coding_quests table and users table.
     reported_quest = db.relationship("Quest", foreign_keys=[quest_id], backref="reported_quests")
     user_reporter = db.relationship("User", foreign_keys=[report_user_id], backref="reported_quests")
     admin = db.relationship("User", foreign_keys=[admin_assigned], backref="assigned_reports")
