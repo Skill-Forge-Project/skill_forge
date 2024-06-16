@@ -40,6 +40,7 @@
 
     <div class="task-container">
         <form id="submit_form" action="/submit-solution">
+            {{ form.hidden_tag() }}
             <div class="first-row">
                 <h4><strong style="color: #03e9f4">Quest: </strong> {{ quest.quest_name }}</h4>
             </div>

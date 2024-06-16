@@ -27,6 +27,7 @@ def run_code(python_code, inputs, outputs, user_id, username, quest_id):
         
         # Concatenate the Python code with the function call
         current_execute = python_code + '\n\n' + f'print({function_name[0]}({current_input}))'
+        print(current_execute)
 
         # Write Python code to file
         with open(os.path.join(workdir, code_filename), 'w') as f:
@@ -35,23 +36,27 @@ def run_code(python_code, inputs, outputs, user_id, username, quest_id):
         # Execute the Python code
         run_command = ['firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
                        '--timeout=00:00:01', 'python3', os.path.join(workdir, code_filename)] + current_input.split()
-        try:
-            run_process = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdout_str = run_process.stdout.decode('utf-8').strip()
-            stderr_str = run_process.stderr.decode('utf-8').strip()
-            if stderr_str:
-                # Insert the compilation error transaction into the MongoDB log database
-                python_compliation_error_transaction('python_compliation_errors', 
-                                                    user_id=user_id, 
-                                                    username=username, 
-                                                    quest_id=quest_id, 
-                                                    python_code=python_code,
-                                                    stderr_str=stderr_str,
-                                                    timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-                return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-        except subprocess.TimeoutExpired:
-            stdout_str = ''
-            stderr_str = 'Execution timed out.'
+
+        run_process = subprocess.run(run_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout_str = run_process.stdout.decode('utf-8').strip()
+        stderr_str = run_process.stderr.decode('utf-8').strip()
+        if stderr_str:
+            # Insert the compilation error transaction into the MongoDB log database
+            python_compliation_error_transaction('python_compliation_errors', 
+                                                user_id=user_id, 
+                                                username=username, 
+                                                quest_id=quest_id, 
+                                                python_code=python_code,
+                                                stderr_str=stderr_str,
+                                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            message = 'Runtime Error! Try again!'
+            successful_tests = 0
+            unsuccessful_tests = len(inputs)
+            zero_tests.append(current_input)
+            zero_tests.append(correct_output)
+            zero_tests_outputs.append(stdout_str)
+            zero_tests_outputs.append(stderr_str)
+            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
         
         if i == 0:
             zero_tests.append(current_input)
