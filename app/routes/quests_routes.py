@@ -66,7 +66,7 @@ def submit_quest():
         # Add the new quest to the database session
         db.session.add(new_quest)
         db.session.commit()
-        mongo_transaction('quest_created', 
+        mongo_transaction('quests_created', 
                           action=f'User {current_user.username} created a new quest {quest_id}-{create_quest_post.quest_name}',                
                           user_id=current_user.user_id, 
                           username=current_user.username, 
@@ -104,7 +104,7 @@ def quest_post_comment(quest_id):
         quest.quest_comments = all_quest_comments
         # Commit the changes to the database
         db.session.commit()
-        mongo_transaction('quest_comments',
+        mongo_transaction('quests_comments',
                           action=f'User {username} posted a comment on quest {quest_id}',
                           user_id=user_id,
                           username=username,
@@ -184,14 +184,20 @@ def edit_quest_db():
                 xp = xp_mapping.get(selected_difficulty, 0)
                 quest.xp = str(xp)
 
-                # if form.progress_option.data:
-                #     report_progress = form.progress_option.data
-                #     reported_quest.report_status = report_progress
-                #     if report_progress == 'Resolved':
-                #         db.session.delete(reported_quest)
+                if form.progress_option.data:
+                    report_progress = form.progress_option.data
+                    reported_quest.report_status = report_progress
+                    if report_progress == 'Resolved':
+                        db.session.delete(reported_quest)
+                        quest.is_active = True
+                        mongo_transaction('quests_resolved',
+                                          action=f'User {current_user.username} resolved quest {quest_id}',
+                                          user_id=current_user.user_id,
+                                          username=current_user.username,
+                                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))                                         
 
                 db.session.commit()
-                mongo_transaction('quest_edited',
+                mongo_transaction('quests_edited',
                                   action=f'User {current_user.username} edited quest {quest_id}',
                                   user_id=current_user.user_id,
                                   username=current_user.username,
@@ -236,10 +242,23 @@ def open_edit_quest(quest_id):
 @login_required
 @bp_qst.route('/edit_reported_quest/<report_id>')
 def open_edit_reported_quest(report_id):
+    reported_quest_form = EditQuestForm()
     reported_quest = ReportedQuest.query.filter_by(report_id=report_id).first()
-    print(reported_quest)
     quest = Quest.query.get(reported_quest.quest_id)
-    return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest)
+    if quest:
+        reported_quest_form.quest_id.data = quest.quest_id
+        reported_quest_form.quest_name.data = quest.quest_name
+        reported_quest_form.quest_language.data = quest.language
+        reported_quest_form.quest_difficulty.data = quest.difficulty
+        reported_quest_form.quest_condition.data = quest.condition
+        reported_quest_form.function_template.data = quest.function_template
+        reported_quest_form.quest_test_inputs.data = quest.test_inputs
+        reported_quest_form.quest_test_outputs.data = quest.test_outputs
+        reported_quest_form.quest_unitests.data = quest.unit_tests
+        return render_template('edit_reported_quest.html', quest=quest, reported_quest=reported_quest, form=reported_quest_form)
+    else:
+        flash('Quest not found!', 'danger')
+        return redirect(url_for('usr.open_admin_panel')), 404
 
 
 # Route to handle `Report Quest` Button
@@ -391,7 +410,7 @@ def submit_solution():
         # Add the new submission to the database session
         db.session.add(new_submission)
         db.session.commit()
-        mongo_transaction('quest_solutions',
+        mongo_transaction('quests_solutions',
                           action=f'User {username} submitted a solution for quest {quest_id}',
                           user_id=user_id,
                           username=username,
@@ -482,53 +501,3 @@ def submit_solution():
             'zero_test_result': zero_tests_outputs[0],
             'zero_test_error': zero_tests_outputs[1]
         })
-    
-    # Handle the advanced quests testing (requires unit tests)
-    # elif current_quest_type == 'Advanced':
-    #     if current_quest_language == 'Python':
-    #         # # # # # # # # # # # # Python Tests Verify # # # # # # # # # # # #
-    #         user_code = request.form.get('user_code')
-    #         unit_tests = request.form.get('unit_tests')
-    #         total_code = user_code + '\n\n' + unit_tests
-    #         try:
-    #             user_output = subprocess.check_output(['./venv/bin/python3.11', '-c', total_code], text=True)
-    #         except subprocess.CalledProcessError as e:
-    #             user_output = e.output
-    #         return user_output
-        
-    #     elif current_quest_language == 'JavaScript':
-    #     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-    #         try:
-    #             user_code = request.form.get('user_code')
-    #             unit_tests = request.form.get('unit_tests')
-                
-    #             ############# KEEP THIS CODE JUST IN CASE. IT'S WORKING BUT NEEDS TO BE JSON-FIED ##########################
-    #             # print(user_code)
-    #             # command = [
-    #             #     'curl', 
-    #             #     '-X', 'POST', 
-    #             #     '-H', 'Content-Type: application/json', 
-    #             #     # '-d', f'{{"code": "{user_code}", "unit_tests": "{unit_tests}"}}', 
-    #             #     '-d', f'{{"code": "{user_code}"}}',
-    #             #     'http://192.168.0.169:3000/execute'
-    #             # ]
-    #             # result = subprocess.run(command, stdout=subprocess.PIPE, text=True, check=True)
-    #             # print(result.stdout)
-    #             # print(result.stderr)
-    #             # return result.stdout
-    #             #############################################################################################################
-                
-    #             server_url = f"http://{srv_address}:3000/execute"
-    #             response = requests.post(server_url, json={'code': user_code})
-    #             result = response.json()['result']
-    #             return jsonify({'result': result})
-    #         except Exception as e:
-    #             print(f'An unexpected error occurred: {e}')
-    #             return e
-                
-    #     elif current_quest_language == 'Java':
-    #     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-    #         pass
-    #     elif current_quest_language == 'C#':
-    #     # # # # # # # # # # # # JavaScript Tests Verify # # # # # # # # # # # #
-    #         pass

@@ -143,6 +143,7 @@ class EditQuestForm(FlaskForm):
     quest_test_inputs = TextAreaField('Quest Tests Inputs', validators=[DataRequired()])
     quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()])
     quest_unitests = TextAreaField('Quest Unit Tests')
+    progress_option = RadioField('Progress Option', choices=[('In Progress', 'In Progress'), ('Resolved', 'Resolved')])
     submit = SubmitField('Save Changes')
     
 ########### Publish New Comment On Quest Form ###########
