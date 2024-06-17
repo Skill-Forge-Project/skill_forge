@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask import flash
-from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField, TextAreaField, RadioField
-from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError, Regexp
+from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField, TextAreaField, RadioField, FileField
+from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError, Regexp, Optional
 import re
 
 ########### Login Form ###########
@@ -177,3 +177,17 @@ class ContactForm(FlaskForm):
     subject = StringField('Subject', validators=[DataRequired(), Length(min=4, max=25)])
     message = TextAreaField('Message', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Send Message')
+    
+    
+########### User Profile Form - update user's profile ###########
+class UserProfileForm(FlaskForm):
+    first_name = StringField('First Name', validators=[Optional()])
+    last_name = StringField('Last Name', validators=[Optional()])
+    email = StringField('Email', validators=[Optional(), Email()])
+    facebook_profile = StringField('Facebook Profile', validators=[Optional()])
+    instagram_profile = StringField('Instagram', validators=[Optional()])
+    github_profile = StringField('GitHub', validators=[Optional()])
+    discord_id = StringField('Discord ID', validators=[Optional()])
+    linked_in = StringField('LinkedIn', validators=[Optional()])
+    avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional()])
+    submit = SubmitField('Save Changes', name="submit")
