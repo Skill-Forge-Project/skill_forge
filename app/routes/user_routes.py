@@ -187,7 +187,7 @@ def edit_user_db():
 
 
 # Route to handle the user profile (self-open)
-@bp_usr.route('/user_profile/<username>', methods=['POST', 'GET'])
+@bp_usr.route('/user_profile/<username>', methods=['GET'])
 @login_required
 def open_user_profile_view(username):
     # Get the user info from the database

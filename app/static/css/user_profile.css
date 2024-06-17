@@ -131,6 +131,9 @@ body {
     margin-bottom: 0px;
     margin-left: 0px;
     margin-right: 0px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .online_status {
@@ -356,16 +359,17 @@ body {
     vertical-align: middle;
 }
 
-.right_stats.level {
-    color: #d2d0d0;
+.left_stats.stats {
+    color: #03e9f4;
     display: flex;
     flex-direction: column;
     margin: 0 0 0 10px;
-    width: 50%;
+    width: 20%;
     padding: 0px;
     margin-bottom: 0px;
-    align-items: center;
+    align-items: left;
     vertical-align: middle;
+
 }
 
 .left_status.h3 {
@@ -389,6 +393,30 @@ body {
     align-items: left;
     padding: 0px;
     margin-bottom: 0px;
+    vertical-align: middle;
+}
+
+.right_stats.level {
+    color: #d2d0d0;
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 10px;
+    width: 50%;
+    padding: 0px;
+    margin-bottom: 0px;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.right_stats.stats {
+    color: #d2d0d0;
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 10px;
+    width: 50%;
+    padding: 0px;
+    margin-bottom: 0px;
+    align-items: left;
     vertical-align: middle;
 }
 

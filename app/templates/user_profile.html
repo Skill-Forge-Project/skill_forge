@@ -130,7 +130,7 @@
                         <div class="user_stats">
                             <div style="display:flex; flex-direction: column;">
                                 <div style="display:flex; flex-direction: row; margin-top: 5px">
-                                    <p class="left_stats">Facebook Profile:</p>
+                                    <p class="left_stats">Facebook:</p>
                                     {{ form.facebook_profile(class="right_stats_edit") }}
                                 </div>
                                 <div style="display:flex; flex-direction: row;">
@@ -160,7 +160,8 @@
             <!-- Change Avatar Form -->
             <div class="change-avatar-section">
                 <p class="ca-1">Change Avatar</p>
-                <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data" class="ca-2">
+                <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
+                    class="ca-2">
                     {{ form.hidden_tag() }}
                     {{ form.avatar(class="ca-3") }}
                     <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
@@ -173,7 +174,8 @@
                     <div class="achv-container">
                         {% for user_achievement in user_achievements %}
                         <div class="achv">
-                            <img src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
+                            <img
+                                src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
                             <div class="achv-descr">
                                 <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name }}
                                     <br>{{ user_achievement.achievement.achievement_description }}
@@ -184,50 +186,50 @@
                     </div>
                 </div>
             </div>
+            <!-- User stats section -->
+            <div class="central_pane">
+                <h3 class="left_status h3">User Stats</h3>
+                <div class="user_stats">
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">Date Registration:</p>
+                        <p class="right_stats stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">Total Solved Quests:</p>
+                        <p class="right_stats stats">{{ user.total_solved_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">&emsp;Python:</p>
+                        <p class="right_stats stats">{{ user.total_python_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">&emsp;Java:</p>
+                        <p class="right_stats stats">{{ user.total_java_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">&emsp;JavaScript:</p>
+                        <p class="right_stats stats">{{ user.total_javascript_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">&emsp;C# Quests:</p>
+                        <p class="right_stats stats">{{ user.total_csharp_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">Total Submited Quests:</p>
+                        <p class="right_stats stats">{{ user.total_submited_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">&emsp;Approved:</p>
+                        <p class="right_stats stats">{{ user.total_approved_submited_quests}}</p>
+                    </div>
+                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
+                        <p class="left_stats stats">&emsp;Rejected:</p>
+                        <p class="right_stats stats">{{ user.total_rejected_submited_quests}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="center_pane_form">
-        <!-- User stats section -->
-        <h3 class="left_status h3">User Stats</h3>
-        <div class="user_stats">
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">Date Registration:</p>
-                <p class="right_stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">Total Solved Quests:</p>
-                <p class="right_stats">{{ user.total_solved_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">&emsp;Python:</p>
-                <p class="right_stats">{{ user.total_python_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">&emsp;Java:</p>
-                <p class="right_stats">{{ user.total_java_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">&emsp;JavaScript:</p>
-                <p class="right_stats">{{ user.total_javascript_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">&emsp;C# Quests:</p>
-                <p class="right_stats">{{ user.total_csharp_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">Total Submited Quests:</p>
-                <p class="right_stats">{{ user.total_submited_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">&emsp;Approved:</p>
-                <p class="right_stats">{{ user.total_approved_submited_quests}}</p>
-            </div>
-            <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                <p class="left_stats">&emsp;Rejected:</p>
-                <p class="right_stats">{{ user.total_rejected_submited_quests}}</p>
-            </div>
-        </div>
     </div>
 
     <!-- User's Solved Quests table -->
