@@ -1,8 +1,9 @@
+from functools import wraps
 from flask import Flask, redirect, url_for, render_template, flash
 from config import Config
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_socketio import SocketIO
 from flask_wtf.csrf import CSRFProtect
 # Import database instance
@@ -59,5 +60,5 @@ def create_app():
     def load_user(user_id):
         from app.models import User
         return User.query.get(user_id)
-    
+        
     return app

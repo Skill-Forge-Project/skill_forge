@@ -6,18 +6,20 @@ from flask_login import login_required, current_user
 from app.database.db_init import db
 # Import the forms and models
 from app.models import SubmitedQuest, Quest
+# Import admin_required decorator
+from app.user_permission import admin_required
 
 bp_usq = Blueprint('usq', __name__)
 
 # Redirect to the user submit quest page
-@login_required
 @bp_usq.route('/user_submit_quest')
+@login_required
 def open_user_submit_quest():
     return render_template('user_submit_quest.html')
 
 # Submit new quest as a regular user
-@login_required
 @bp_usq.route('/user_submit_quest', methods=['GET', 'POST'])
+@login_required
 def user_submit_quest():
     language = request.form.get('quest_language')
     difficulty = request.form.get('quest_difficulty')
@@ -99,8 +101,9 @@ def user_submit_quest():
 
 
 # Open User Submited Quest for editing from the Admin Panel
-@login_required
 @bp_usq.route('/open_submited_quest/<quest_id>')
+@login_required
+@admin_required
 def open_submited_quest(quest_id):
     submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
@@ -110,8 +113,9 @@ def open_submited_quest(quest_id):
                            user_avatar=user_avatar)
 
 # Route to Approve the Submited Quest to the database class Quests
-@login_required
 @bp_usq.route('/approve_submited_quest', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def approve_submited_quest():
     # Get the desired admin action
     action = request.form.get('action')
@@ -197,8 +201,8 @@ def approve_submited_quest():
         return redirect(url_for('usr.open_admin_panel'))
 
 # Post new comment in comments sections
-@login_required
 @bp_usq.route('/post_comment', methods=['POST'])
+@login_required
 def post_comment():
     submited_quest_id = request.form.get('submited_quest_id')
     all_comments = eval(request.form.get('submited_quest_comments'))

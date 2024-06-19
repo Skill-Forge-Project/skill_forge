@@ -10,6 +10,8 @@ from app.forms import QuestForm, UserProfileForm
 from app.database.db_init import db
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
+# Import admin_required decorator
+from app.user_permission import admin_required
 
 bp_usr = Blueprint('usr', __name__)
 
@@ -160,6 +162,7 @@ def open_user_profile():
 # # Open user for editing from the Admin Panel
 @bp_usr.route('/edit_user/<user_id>')
 @login_required
+@admin_required
 def open_edit_user(user_id):
     # Retrieve the specific user from the database, based on the user_id
     user = User.query.get(user_id)
@@ -168,6 +171,7 @@ def open_edit_user(user_id):
 # Handle user edit from the Admin Panel
 @bp_usr.route('/edit_user_db', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_user_db():
     user_id = request.form.get('user_id')
     user_role = request.form.get('user_role')
@@ -225,6 +229,7 @@ def open_user_profile_view(username):
 # Redirect to the Admin Panel (Admin Role in the database is needed)
 @bp_usr.route('/admin_panel')
 @login_required
+@admin_required
 def open_admin_panel():
     create_quest_post = QuestForm()
     # Retrieve all quests from the database
@@ -254,6 +259,7 @@ def open_admin_panel():
 # Ban user route
 @bp_usr.route('/ban_user/<user_id>')
 @login_required
+@admin_required
 def ban_user(user_id, ban_reason='no reason'):
     # Retrieve the specific user from the database, based on the user_id
     user = User.query.get(user_id)
@@ -268,6 +274,7 @@ def ban_user(user_id, ban_reason='no reason'):
 # Unban user route
 @bp_usr.route('/unban_user/<user_id>')
 @login_required
+@admin_required
 def unban_user(user_id):
     # Retrieve the specific user from the database, based on the user_id
     user = User.query.get(user_id)

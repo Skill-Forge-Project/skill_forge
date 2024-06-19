@@ -11,12 +11,15 @@ from app.code_runners import run_python, run_javascript, run_java, run_csharp
 from app.database.db_init import db
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
+# Import admin_required decorator
+from app.user_permission import admin_required
 
 bp_qst = Blueprint('quests', __name__)
 
 # Create a new quest as admin
 @bp_qst.route('/submit_quest', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def submit_quest():
     create_quest_post = QuestForm()
     if create_quest_post.validate_on_submit():
@@ -130,6 +133,7 @@ def quest_post_comment(quest_id):
 # Delete comment from the comments section (Admin role is required)
 @bp_qst.route('/delete_comment', methods=['POST'])
 @login_required
+@admin_required
 def delete_comment():
     quest_id = request.form.get('quest_id')
     comment_index = int(request.form.get('comment_index'))
@@ -203,6 +207,8 @@ def edit_quest_db():
 
 # Handle editing a reported quest from the Admin Panel
 @bp_qst.route('/edit_reported_quest', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def edit_reported_quest():
     form = EditReportedQuestForm()
     if request.method == 'POST':
@@ -263,8 +269,9 @@ def edit_reported_quest():
 
 
 # Open Quest for editing from the Admin Panel
-@login_required
 @bp_qst.route('/edit_quest/<quest_id>', methods=['GET'])
+@login_required
+@admin_required
 def open_edit_quest(quest_id):
     edit_quest_form = EditQuestForm()
     # Retrieve the specific quest from the database, based on the quest_id
@@ -286,8 +293,9 @@ def open_edit_quest(quest_id):
 
 
 # Open Reported Quest for editing from the Admin Panel
-@login_required
 @bp_qst.route('/edit_reported_quest/<report_id>')
+@login_required
+@admin_required
 def open_edit_reported_quest(report_id):
     reported_quest_form = EditQuestForm()
     reported_quest = ReportedQuest.query.filter_by(report_id=report_id).first()
@@ -309,8 +317,8 @@ def open_edit_reported_quest(report_id):
 
 
 # Route to handle `Report Quest` Button
-@login_required
 @bp_qst.route('/report_quest/<curr_quest_id>')
+@login_required
 def report_quest(curr_quest_id, report_reason='no reason'):
     request_arguments = dict(request.args)  # This prints {'report_reason': 'some_value'}
     quest = Quest.query.get(curr_quest_id)
