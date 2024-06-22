@@ -106,7 +106,7 @@ def csharp_code_runner_transaction(collection_name, **kwargs):
     session = mongo1_client.start_session()
     with session.start_transaction():
         try:
-            collection_name.insert_one(
+            collection.insert_one(
                 {
                     'user_id': kwargs['user_id'], 
                     'username': kwargs['username'], 

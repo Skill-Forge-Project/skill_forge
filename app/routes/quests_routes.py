@@ -425,7 +425,7 @@ def submit_solution():
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
 
         elif current_quest_language == 'C#':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
         
         # Submit new solution to the database
         quest_id = request.form.get('quest_id')
