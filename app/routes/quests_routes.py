@@ -408,6 +408,7 @@ def submit_solution():
     current_quest_type = request.form.get('quest_type')
     current_quest_id = request.form.get('quest_id')
     current_quest_difficulty = request.form.get('quest_difficulty')
+    current_quest_unit_tests = request.form.get('unit_tests')
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
@@ -421,7 +422,7 @@ def submit_solution():
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
                     
         elif current_quest_language == 'Java':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
 
         elif current_quest_language == 'C#':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
