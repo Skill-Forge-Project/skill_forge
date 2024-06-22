@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Submission Update from Skill Forge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+        @import url('https://fonts.cdnfonts.com/css/jetbrains-mono');
+
+        html {
+            font-family: 'JetBrains Mono', sans-serif;
+            background-size: cover;
+            background-position: right bottom;
+            background-color: #243b55;
+        }
+
+        body {
+            flex-direction: column;
+            font-family: 'JetBrains Mono', sans-serif;
+            background: linear-gradient(#141e30, #243b55) !important;
+            background-size: cover;
+            background-position: repeat;
+            align-items: center;
+            justify-content: center;
+            color: #d2d0d0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .main_container {
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            align-items: left;
+            background: rgba(0, 0, 0, .5);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+            width: 90%;
+            margin: auto;
+        }
+
+        .main_title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .content {
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .content a {
+            color: #03e9f4;
+            text-decoration: none;
+        }
+
+        .content a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #03e9f4;
+            background: none;
+            border: 2px solid #03e9f4;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #03e9f4;
+            color: #141e30;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main_container">
+        <div class="main_title">Quest Submission Update from Skill Forge</div>
+        <div class="content">
+            <p>Dear {{ username }},</p>
+            <p>We appreciate your effort in submitting the quest {{ quest_name }} in {{ quest_language }}. After careful review, we regret to inform you that your quest submission has not been approved at this time.</p>
+            <p>Our team evaluates each quest based on various criteria to ensure it meets the quality and standards we strive to maintain. Unfortunately, your submission did not meet one or more of these criteria. Here are some common reasons for rejection:</p>
+            <ul>
+                <li>Insufficient detail or clarity in the quest description</li>
+                <li>Incompatibility with our existing quest guidelines</li>
+                <li>Issues with the quest's technical implementation</li>
+            </ul>
+            <p>We encourage you to review our <a href="https://skill-forge.stratios.net/user_submit_quest">Quest Submission Guidelines</a> and make the necessary revisions. You are welcome to resubmit your quest after making these changes.</p>
+            <p>If you have any questions or need further clarification on why your quest was rejected, please feel free to reach out to us using the contact form <a href="https://skill-forge.stratios.net/contact_us">contact form</a>. We are here to help and support you in creating outstanding quests.</p>
+            <p>Thank you for your understanding and for being a part of the Skill Forge community. We look forward to seeing your revised submission.</p>
+            <p>Best regards,</p>
+            <p>The Skill Forge Team</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -5,9 +5,12 @@ from flask_login import login_required, current_user
 # Import the database instance
 from app.database.db_init import db
 # Import the forms and models
-from app.models import SubmitedQuest, Quest
+from app.models import SubmitedQuest, Quest, User
 # Import admin_required decorator
 from app.user_permission import admin_required
+# Import the mail functions
+from app.mailtrap import (send_quest_approved_email,
+                          send_quest_rejected_email,)
 
 bp_usq = Blueprint('usq', __name__)
 
@@ -178,6 +181,8 @@ def approve_submited_quest():
         # Commit the changes to the database
         db.session.add(new_quest)
         db.session.commit()
+        recipient = User.query.filter_by(user_id=submited_quest.quest_author_id).first().email
+        send_quest_approved_email(recipient.email, submited_quest_author, submited_quest.quest_name, submited_quest.quest_language, submited_quest.quest_id)
         return redirect(url_for('usr.open_admin_panel'))
     
     # IF the action is 'reject', then change the status of the submited quest to 'Rejected'
@@ -198,6 +203,7 @@ def approve_submited_quest():
         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
         submited_quest.status = 'Pending'
         db.session.commit()
+        send_quest_approved_email(recipient.email, submited_quest_author, submited_quest.quest_name, submited_quest.quest_language)
         return redirect(url_for('usr.open_admin_panel'))
 
 # Post new comment in comments sections
