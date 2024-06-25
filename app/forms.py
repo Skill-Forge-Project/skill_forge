@@ -178,7 +178,6 @@ class ContactForm(FlaskForm):
     message = TextAreaField('Message', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Send Message')
     
-    
 ########### User Profile Form - update user's profile ###########
 class UserProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[Optional()])
@@ -191,3 +190,40 @@ class UserProfileForm(FlaskForm):
     linked_in = StringField('LinkedIn', validators=[Optional()])
     avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional()])
     submit = SubmitField('Save Changes', name="submit")
+
+    
+########### Submit Quest Form - as a Regular User ###########
+class QuestSubmissionForm(FlaskForm):
+    quest_name = StringField('Quest Name', validators=[DataRequired(), Length(max=100)])
+    quest_language = SelectField('Quest Language', choices=[('Python', 'Python'), ('JavaScript', 'JavaScript'), 
+                                                            ('Java', 'Java'), 
+                                                            ('C#', 'C#')], 
+                                 validators=[DataRequired()])
+    quest_difficulty = SelectField('Quest Difficulty', choices=[('Novice Quests', 'Novice Quests'), 
+                                                                ('Adventurous Challenges', 'Adventurous Challenges'), 
+                                                                ('Epic Campaigns', 'Epic Campaigns'), ('Abyssal Trials', 'Abyssal Trials')], 
+                                   validators=[DataRequired()])
+    quest_condition = TextAreaField('Quest Condition', validators=[DataRequired()])
+    function_template = TextAreaField('Example Solution', validators=[Optional()])
+    quest_inputs = TextAreaField('Inputs Samples', validators=[DataRequired()])
+    quest_outputs = TextAreaField('Outputs Samples', validators=[DataRequired()])
+    quest_unitests = TextAreaField('Quest Unit Tests')
+    submit = SubmitField('Submit Quest')
+
+########### Manage Submited Quest - as an Admin ###########
+class QuestApprovalForm(FlaskForm):
+    submited_quest_id = HiddenField()
+    submited_quest_name = StringField('Quest Name', validators=[DataRequired()])
+    submited_quest_author = HiddenField('Quest Author', validators=[DataRequired()])
+    submited_quest_date_added = HiddenField('Quest Date Added', validators=[DataRequired()])
+    submited_quest_language = SelectField('Quest Language', choices=[('Python', 'Python'), ('JavaScript', 'JavaScript'), ('Java', 'Java'), ('C#', 'C#')], validators=[DataRequired()])
+    submited_quest_difficulty = SelectField('Quest Difficulty', choices=[('Novice Quests', 'Novice Quests'), ('Adventurous Challenges', 'Adventurous Challenges'), ('Epic Campaigns', 'Epic Campaigns')], validators=[DataRequired()])
+    submited_quest_condition = TextAreaField('Quest Condition', validators=[DataRequired()])
+    submited_function_template = TextAreaField('Quest Template', validators=[DataRequired()])
+    submited_quest_unitests = TextAreaField('Quest Unit Tests', validators=[Optional()])
+    submited_quest_inputs = TextAreaField('Quest Test Inputs', validators=[DataRequired()])
+    submited_quest_outputs = TextAreaField('Quest Test Outputs', validators=[DataRequired()])
+    action = HiddenField()
+    approve = SubmitField('Approve Quest', render_kw={'value': 'approve'})
+    request_changes = SubmitField('Request Changes', render_kw={'value': 'request-changes'})
+    reject = SubmitField('Reject Quest', render_kw={'value': 'reject'})

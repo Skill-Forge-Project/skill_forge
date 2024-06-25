@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 # Import the forms and models
 from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest
-from app.forms import QuestForm, UserProfileForm
+from app.forms import QuestForm, UserProfileForm, QuestApprovalForm
 # Import the database instance
 from app.database.db_init import db
 # Import MongoDB transactions functions

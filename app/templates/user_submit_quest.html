@@ -14,16 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
     <!-- Include CodeMirror CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
-    <!-- Include CodeMirror modes -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-    <!-- Include bootstrap dataTables libraries -->
-    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
-    <!-- JavaScript to toggle visibility of content sections -->
-    <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
-    <!-- JavaScript to toggle visibility of content sections -->
-    <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
     <!-- Track the user status -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
     <!-- Webpack build (mostly for tracking the user status on the client side) -->
@@ -33,6 +23,14 @@
 <body>
     <!-- Include Navbar template -->
     {% include 'navbar.html' %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     <div class="description-container">
         <div class="description-text">
             <h2>Submit a Quest</h2>
@@ -48,65 +46,61 @@
             <li>Inputs Samples: Provide example inputs for the function in format: [input arguments] [ input arguments] separated each on a new line.</li>
             <li>Outputs Samples: Provide expected outputs from the function in the same order as the inputs in format: [output] [output] separated each on a new line.</li>
         </div>
-        <img src="../static/images/quest_submiter_avatar.png" alt="Your Application Logo" class="description-image">
+        <img src="{{ url_for('static', filename='images/quest_submiter_avatar.png') }}" alt="Your Application Logo" class="description-image">
     </div>
-    <form action="/user_submit_quest" method="post">
+    
+
+    <form method="POST" action="{{ url_for('usq.user_submit_quest') }}">
+        {{ form.hidden_tag() }}
         <div id="addQuestContent" class="content">
             <div class="input-row">
                 <h4><strong class="row-label">Quest Name: </strong></h4>
-                <input type="text" name="quest_name" id="quest_name_input" class="text_input">
+                {{ form.quest_name(class="text_input") }}
             </div>
             <div class="input-row">
                 <h4><strong class="row-label">Quest Language: </strong></h4>
-                <select name="quest_language" id="quest_language_input" class="dropdown_input">
-                    <option value="Python">Python</option>
-                    <option value="JavaScript">JavaScript</option>
-                    <option value="Java">Java</option>
-                    <option value="C#">C#</option>
-                </select>
+                {{ form.quest_language(class="dropdown_input", id="quest_language_input") }}
             </div>
             <div class="input-row">
                 <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                <select name="quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                    <option value="Novice Quests">Novice Quests</option>
-                    <option value="Adventurous Challenges">Adventurous Challenges</option>
-                    <option value="Epic Campaigns">Epic Campaigns</option>
-                </select>
+                {{ form.quest_difficulty(class="dropdown_input") }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Quest Condition: </strong></h4>
-                <textarea type="text" name="quest_condition" id="quest_condition_input" rows="10"
-                    class="text_input"></textarea>
+                {{ form.quest_condition(rows=10, class="text_input") }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Example Solution: </strong></h4>
-                <textarea name="function_template" id="template_input"></textarea>
+                {{ form.function_template(id="template_input") }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Inputs Samples: </strong></h4>
-                <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument,
-                    second_argument....] [first_argument, second_argument....]</p>
-                <textarea class="text_input" name="quest_inputs" id="quest_inputs_input"></textarea>
+                <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument, second_argument....] [first_argument, second_argument....]</p>
+                {{ form.quest_inputs(class="text_input", rows=10) }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Outputs Samples: </strong></h4>
-                <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the
-                    inputs in format: [output, output...] [output, output...]</p>
-                <textarea class="text_input" name="quest_outputs" id="quest_outputs_input"></textarea>
+                <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the inputs in format: [output, output...] [output, output...]</p>
+                {{ form.quest_outputs(class="text_input", rows=10) }}
             </div>
             <div class="input-row">
-                <h4><strong class="row-label">Quest Unit Tests (Only for Abyssal Trials difficulty): </strong></h4>
-                <textarea name="quest_unitests" id="unit_tests_input"></textarea>
+                <h4><strong class="row-label">Quest Unit Tests(Not Obligatory): </strong></h4>
+                {{ form.quest_unitests(id="unit_tests_input") }}
             </div>
-            <div class="btn-row">
-                <button type="submit" id="submitQuest" class="submit-button"
-                    onclick=location.href="{{ url_for('usq.user_submit_quest') }}">Submit Quest</button>
+            <div class="button-container">
+                {{ form.submit(class="submit-button") }}
             </div>
         </div>
     </form>
     <!-- JavaScript script to handle the CodeMirror custom fields. 
         This script should be loaded after the initialization of the fields above! 
     -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
     <script src="{{ url_for('static', filename='js/codeMirrorHandling.js') }}"></script>
 </body>
 <footer>

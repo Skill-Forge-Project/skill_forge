@@ -6,7 +6,7 @@ reset_pass_template_path = os.path.join(script_dir, 'templates', 'email-reset-pa
 welcome_template_path = os.path.join(script_dir, 'templates', 'email-welcome-template.html')
 contact_email_path = os.path.join(script_dir, 'templates', 'email-contact-template.html')
 approve_submited_quest_path = os.path.join(script_dir, 'templates', 'email-approve-submited-quest-template.html')
-total_rejected_submited_quests = os.path.join(script_dir, 'templates', 'email-reject-submited-quest-template.html')
+reject_submited_quest_path = os.path.join(script_dir, 'templates', 'email-reject-submited-quest-template.html')
 
 # Read welcome mail template from file
 def read_file_content(file_path):
@@ -69,7 +69,7 @@ def send_contact_email(username, email, subject, message):
 
 # Send email to notify the user that their quest has been approved
 def send_quest_approved_email(recipient, username, quest_name, quest_language, quest_id):
-    html_content = read_file_content(welcome_template_path)
+    html_content = read_file_content(approve_submited_quest_path)
     html_content = html_content.replace("{{ username }}", username)
     html_content = html_content.replace("{{ quest_name }}", quest_name)
     html_content = html_content.replace("{{ quest_language }}", quest_language)
@@ -86,9 +86,9 @@ def send_quest_approved_email(recipient, username, quest_name, quest_language, q
     client.send(mail)
 
 # Send email to notify the user that their quest has been rejected
-def send_quest_rejected_email(recipient, quest_name, quest_language):
-    html_content = read_file_content(total_rejected_submited_quests)
-    html_content = html_content.replace("{{ username }}", quest_name)
+def send_quest_rejected_email(recipient, username, quest_name, quest_language):
+    html_content = read_file_content(reject_submited_quest_path)
+    html_content = html_content.replace("{{ username }}", username)
     html_content = html_content.replace("{{ quest_name }}", quest_name)
     html_content = html_content.replace("{{ quest_language }}", quest_language)
     
