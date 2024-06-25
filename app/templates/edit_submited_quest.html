@@ -4,7 +4,7 @@
 
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-    <title>Skill Forge - Admin Panel</title>
+    <title>Skill Forge - Admin Panel - Edit Submited Quest</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_submited_quest.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
     <!-- Import Navigation bar styles -->
@@ -49,85 +49,56 @@
 
     <div class="content-section">
         <div id="editQuestContent" class="content">
-            <form action="/approve_submited_quest " method="post" style="width: 100%;">
+            <form action="{{ url_for('usq.approve_submited_quest', quest_id=submited_quest.quest_id) }}" method="post" style="width: 100%;">
+                {{ form.hidden_tag() }}
                 <div class="input-row">
                     <div>
-                        <p class="quest-data-labels" name="submited_quest_id">Generated Quest ID: {{
-                            submited_quest.quest_id
-                            }}</p>
-                        <p class="quest-data-labels" name="submited_quest_status">Current Quest Status: {{
-                            submited_quest.status }}</p>
-                        <p class="quest-data-labels" name="submited_quest_author">Quest Author: {{
-                            submited_quest.quest_author }}</p>
-                        <p class="quest-data-labels" name="submited_quest_author_id">Quest Author ID: {{
-                            submited_quest.quest_author_id }}</p>
-                        <p class="quest-data-labels" name="submited_quest_date_added">Date Submited: {{
-                            submited_quest.date_added }}</p>
+                        <p class="quest-data-labels">Generated Quest ID: {{ submited_quest.quest_id }}</p>
+                        <p class="quest-data-labels">Current Quest Status: {{ submited_quest.status }}</p>
+                        <p class="quest-data-labels">Quest Author: {{ submited_quest.quest_author }}</p>
+                        <p class="quest-data-labels">Quest Author ID: {{ submited_quest.quest_author_id }}</p>
+                        <p class="quest-data-labels">Date Submited: {{ submited_quest.date_added }}</p>
                     </div>
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Name: </strong></h4>
-                    <input type="text" name="submited_quest_name" id="quest_name_input" class="text_input"
-                        value="{{ submited_quest.quest_name }}">
+                    {{ form.submited_quest_name(class="text_input") }}
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Language: </strong></h4>
-                    <select name="submited_quest_language" id="quest_language_input" class="dropdown_input">
-                        <option value="Python" {% if submited_quest.language=='Python' %} selected {% endif %}>Python
-                        </option>
-                        <option value="JavaScript" {% if submited_quest.language=='JavaScript' %} selected {% endif %}>
-                            JavaScript</option>
-                        <option value="Java" {% if submited_quest.language=='Java' %} selected {% endif %}>Java</option>
-                        <option value="C#" {% if submited_quest.language=='C#' %} selected {% endif %}>C#</option>
-                    </select>
+                    {{ form.submited_quest_language(class="dropdown_input", id="quest_language_input") }}
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Difficulty: </strong></h4>
-                    <select name="submited_quest_difficulty" id="quest_difficulty_input" class="dropdown_input">
-                        <option value="Novice Quests" {% if submited_quest.difficulty=='Novice Quests' %} selected {%
-                            endif %}>Novice Quests</option>
-                        <option value="Adventurous Challenges" {% if submited_quest.difficulty=='Adventurous Challenges'
-                            %} selected {% endif %}>Adventurous Challenges</option>
-                        <option value="Epic Campaigns" {% if submited_quest.difficulty=='Epic Campaigns' %} selected {%
-                            endif %}>Epic Campaigns</option>
-                    </select>
+                    {{ form.submited_quest_difficulty(class="dropdown_input") }}
                 </div>
                 <div class="input-row" style="flex-direction: column;">
                     <h4><strong class="row-label">Quest Condition: </strong></h4>
-                    <textarea type="text" name="submited_quest_condition" id="quest_condition_input" rows="10"
-                        class="text_input">{{ submited_quest.condition }}</textarea>
+                    {{ form.submited_quest_condition(class="text_input", rows=10) }}
                 </div>
                 <div class="input-row" style="flex-direction: column;">
                     <h4><strong class="row-label">Quest Template: </strong></h4>
-                    <textarea name="submited_function_template"
-                        id="template_input">{{ submited_quest.function_template }}</textarea>
+                    {{ form.submited_function_template(class="text_input", id="template_input") }}
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Unit Tests: </strong></h4>
-                    <textarea name="submited_quest_unitests"
-                        id="unit_tests_input">{{ submited_quest.unit_tests }}</textarea>
+                    {{ form.submited_quest_unitests(class="text_input", id="unit_tests_input") }}
                 </div>
                 <div class="input-row">
                     <h4><strong class="row-label">Quest Test Inputs: </strong></h4>
-                    <textarea name="submited_quest_inputs" id="tests_inputs"
-                        class="text_input">{{ submited_quest.test_inputs }}</textarea>
+                    {{ form.submited_quest_inputs(class="text_input", rows=10) }}
                 </div>
                 <div class="input-row">
-                    <h4><strong class="row-label">Quest Test Oututs: </strong></h4>
-                    <textarea name="submited_quest_outputs" id="tests_outputs"
-                        class="text_input">{{ submited_quest.test_outputs }}</textarea>
+                    <h4><strong class="row-label">Quest Test Outputs: </strong></h4>
+                    {{ form.submited_quest_outputs(class="text_input", rows=10) }}
                 </div>
-                <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
-                <input type="hidden" name="submited_quest_author" value="{{ submited_quest.quest_author}}">
-                <input type="hidden" name="submited_quest_date_added" value="{{ submited_quest.date_added}}">
+                {{ form.submited_quest_id }}
+                {{ form.submited_quest_author }}
+                {{ form.submited_quest_date_added }}
                 <div class="btn-row">
-                    <!-- Redirect to real routes once impemented -->
-                    <button type="submit" id="approveQuestButton" class="submit-button approve-btn" name="action" value="approve">
-                        <a href="{{ url_for('usq.approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Approve Quest</button>
-                    <button type="submit" id="requestChangeButton" class="submit-button request-changes-btn" name="action" value="request-changes">
-                        <a href="{{ url_for('usq.approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Request Changes</button>
-                    <button type="submit" id="rejectButton" class="submit-button reject-btn" name="action" value="reject">
-                        <a href="{{ url_for('usq.approve_submited_quest', quest_id=submited_quest.quest_id) }}"></a>Reject Quest</button>
+                    {{ form.approve(class="submit-button approve-btn") }}
+                    {{ form.request_changes(class="submit-button request-changes-btn") }}
+                    {{ form.reject(class="submit-button reject-btn") }}
                 </div>
             </form>
 

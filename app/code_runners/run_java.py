@@ -4,7 +4,7 @@ from datetime import datetime
 from app.database.mongodb_transactions import (java_compliation_error_transaction, 
                                                java_code_runner_transaction)
 
-def run_code(java_code, inputs, outputs, user_id, username, quest_id):
+def run_code(java_code, inputs, outputs, unit_tests, user_id, username, quest_id):
     tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
@@ -16,11 +16,12 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     
     # Generate a unique dir and file name for the Java code
     java_file_path = os.path.join(workdir, "Main.java")
-    class_file_path = os.path.join(workdir, "Main.class")
     
+    # Replace the user's solution in the unit tests with the Java code
+    submission_code = unit_tests.replace("// Your solution", java_code)
     # Save the Java code to a file
     with open(java_file_path, "w") as java_file:
-        java_file.write(java_code)
+        java_file.write(submission_code)
 
     # Compile the Java code using firejail
     compile_command = ['firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
@@ -35,8 +36,8 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
         stderr_str = re.findall(r"(?<=java:\d:)\s.*", stderr_str)
         zero_tests_outputs.append(stdout_str)
         zero_tests_outputs.append(stderr_str)
-        current_input = inputs[0]
-        correct_output = outputs[0]
+        current_input = str(inputs[0])
+        correct_output = str(outputs[0])
         zero_tests.append(current_input)
         zero_tests.append(correct_output)
         unsuccessful_tests = tests_count
@@ -46,7 +47,7 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
                                         user_id=user_id, 
                                         username=username, 
                                         quest_id=quest_id, 
-                                        java_code=java_code,
+                                        java_code=submission_code,
                                         stderr_str=stderr_str,
                                         timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
@@ -54,9 +55,8 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
     # If compilation was successful, run and check the code
     else:
         for i in range(tests_count):        
-            current_input = [element for element in inputs[i]]
-            current_input = ' '.join(current_input)
-            correct_output = outputs[i][0]
+            current_input = ' '.join([str(element) for element in inputs[i]])
+            correct_output = str(outputs[i][0])
             
             # Execute the compiled Java code using firejail
             execute_command = [
@@ -68,7 +68,7 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
             stderr_str = stderr.decode('utf-8').strip()
 
             # Check if output matches expected output
-            if stdout_str == correct_output:
+            if str(stdout_str) == str(correct_output):
                 successful_tests += 1
             else:
                 unsuccessful_tests += 1
@@ -95,7 +95,7 @@ def run_code(java_code, inputs, outputs, user_id, username, quest_id):
                                 user_id=user_id, 
                                 username=username, 
                                 quest_id=quest_id, 
-                                java_code=java_code, 
+                                java_code=submission_code, 
                                 inputs=inputs, 
                                 outputs=outputs,
                                 message=message, 

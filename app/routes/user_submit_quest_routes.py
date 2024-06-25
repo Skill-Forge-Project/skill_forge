@@ -4,10 +4,17 @@ from flask import Blueprint, render_template, redirect, url_for, flash, current_
 from flask_login import login_required, current_user
 # Import the database instance
 from app.database.db_init import db
+# Import MongoDB transactions functions
+from app.database.mongodb_transactions import mongo_transaction
 # Import the forms and models
-from app.models import SubmitedQuest, Quest
+from app.models import SubmitedQuest, Quest, User, Achievement, UserAchievement
+# Import the forms
+from app.forms import QuestSubmissionForm, QuestApprovalForm
 # Import admin_required decorator
 from app.user_permission import admin_required
+# Import the mail functions
+from app.mailtrap import (send_quest_approved_email,
+                          send_quest_rejected_email,)
 
 bp_usq = Blueprint('usq', __name__)
 
@@ -15,190 +22,293 @@ bp_usq = Blueprint('usq', __name__)
 @bp_usq.route('/user_submit_quest')
 @login_required
 def open_user_submit_quest():
-    return render_template('user_submit_quest.html')
-
-# Submit new quest as a regular user
-@bp_usq.route('/user_submit_quest', methods=['GET', 'POST'])
-@login_required
-def user_submit_quest():
-    language = request.form.get('quest_language')
-    difficulty = request.form.get('quest_difficulty')
-    quest_name = request.form.get('quest_name')
-    quest_condition = request.form.get('quest_condition')
-    function_template = request.form.get('function_template')
-    unit_tests = request.form.get('quest_unitests')
-    quest_inputs = request.form.get('quest_inputs')
-    quest_outputs = request.form.get('quest_outputs')
-    
-    # Generate random suffix
-    suffix_length = 6
-    suffix = ''.join(random.choices(string.digits, k=suffix_length))
-    # Determine prefix based on language
-    if request.form['quest_language'] == 'Python':
-        prefix = 'PY-'
-    elif request.form['quest_language'] == 'Java':
-        prefix = 'JV-'
-    elif request.form['quest_language'] == 'JavaScript':
-        prefix = 'JS-'
-    elif request.form['quest_language'] == 'C#':
-        prefix = 'CS-'
-    else:
-        prefix = 'UNK-'  # Default prefix for unknown languages
-    # Construct quest ID
-    quest_id = f"{prefix}{suffix}"
-    
-    # Assing XP points based on difficulty
-    xp = 0
-    quest_type = ''
-    if request.form['quest_difficulty'] == 'Novice Quests':
-        xp = 30
-        quest_type = 'Basic'
-    elif request.form['quest_difficulty'] == 'Adventurous Challenges':
-        xp = 60
-        quest_type = 'Basic'
-    elif request.form['quest_difficulty'] == 'Epic Campaigns':
-        xp = 100
-        quest_type = 'Basic'
-    elif request.form['quest_difficulty'] == 'Abyssal Trials':
-        quest_type = 'Advanced'
-        
-    # Define default state for the quest (Pending)
-    state = 'Pending'
-    
-    # Get the User ID for the session
-    current_user_id = current_user.user_id
-    current_username = current_user.username
-    
-    # Get the current time
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Create a new Quest object
-    new_user_submitted_quest = SubmitedQuest(
-        quest_id= quest_id,
-        language=language,
-        difficulty=difficulty,
-        quest_name=quest_name,
-        quest_author=current_username, 
-        quest_author_id=current_user_id,
-        status='Pending', # Default status is 'Pending
-        date_added=current_time,
-        last_modified=current_time,
-        condition=quest_condition,
-        function_template=function_template,
-        unit_tests=unit_tests,
-        test_inputs=quest_inputs,
-        test_outputs=quest_outputs,
-        type=quest_type,
-        xp=str(xp)
-    )
-    
-    # Increase the user's submited quest count
-    current_user.total_submited_quests += 1
-    # Add the new quest to the database session
-    db.session.add(new_user_submitted_quest)
-    db.session.commit()
-    return redirect(url_for('usq.open_user_submit_quest'))
+    form = QuestSubmissionForm()
+    return render_template('user_submit_quest.html', form=form)
 
 
-# Open User Submited Quest for editing from the Admin Panel
-@bp_usq.route('/open_submited_quest/<quest_id>')
+# # Open User Submited Quest for editing from the Admin Panel
+@bp_usq.route('/open_submited_quest/<quest_id>', methods=['GET'])
 @login_required
 @admin_required
 def open_submited_quest(quest_id):
     submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    form = QuestApprovalForm()
+    form.submited_quest_id.data = quest_id
+    form.submited_quest_name.data = submited_quest.quest_name
+    form.submited_quest_language.data = submited_quest.language
+    form.submited_quest_difficulty.data = submited_quest.difficulty
+    form.submited_quest_author.data = submited_quest.quest_author
+    form.submited_quest_date_added.data = submited_quest.date_added
+    form.submited_quest_condition.data = submited_quest.condition
+    form.submited_function_template.data = submited_quest.function_template
+    form.submited_quest_unitests.data = submited_quest.unit_tests
+    form.submited_quest_inputs.data = submited_quest.test_inputs
+    form.submited_quest_outputs.data = submited_quest.test_outputs
+    
     
     return render_template('edit_submited_quest.html', 
                            submited_quest=submited_quest,
-                           user_avatar=user_avatar)
+                           user_avatar=user_avatar,
+                           form=form)
 
-# Route to Approve the Submited Quest to the database class Quests
-@bp_usq.route('/approve_submited_quest', methods=['GET', 'POST'])
+# Submit new quest as a regular user
+@bp_usq.route('/submit_quest', methods=['GET', 'POST'])
 @login_required
-@admin_required
-def approve_submited_quest():
-    # Get the desired admin action
-    action = request.form.get('action')
-    
-    # IF the action is 'approve', then add the quest to the database class Quests
-        # The original submited quest should remain in the user_submited_quests table and change the status to 'Approved'
-    if action == "approve":
-        # Read the values from the HTML form to pass to the Class constructor
-        submited_quest_id = request.form.get('submited_quest_id')
-        submited_quest_name = request.form.get('submited_quest_name')
-        submited_quest_language = request.form.get('submited_quest_language')
-        submited_quest_difficulty = request.form.get('submited_quest_difficulty')
-        submited_quest_author = request.form.get('submited_quest_author')
-        submited_quest_date_added = request.form.get('submited_quest_date_added')
-        submited_quest_condition = request.form.get('submited_quest_condition')
-        submited_function_template = request.form.get('submited_function_template')
-        submited_quest_unit_tests = request.form.get('submited_quest_unitests')
-        submited_quest_inputs = request.form.get('submited_quest_inputs')
-        submited_quest_outputs = request.form.get('submited_quest_outputs')
+def user_submit_quest():
+    form = QuestSubmissionForm()
+    if form.validate_on_submit():
         
-        print(f'Submited Quest Difficulty: {submited_quest_difficulty}')
+        # Generate random suffix
+        suffix_length = 6
+        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+        # Determine prefix based on language
+        if request.form['quest_language'] == 'Python':
+            prefix = 'PY-'
+        elif request.form['quest_language'] == 'Java':
+            prefix = 'JV-'
+        elif request.form['quest_language'] == 'JavaScript':
+            prefix = 'JS-'
+        elif request.form['quest_language'] == 'C#':
+            prefix = 'CS-'
+        else:
+            prefix = 'UNK-'  # Default prefix for unknown languages
+        # Construct quest ID
+        quest_id = f"{prefix}{suffix}"
+        
         # Assing XP points based on difficulty
         xp = 0
-        type = ''
-        if request.form['submited_quest_difficulty'] == 'Novice Quests':
+        quest_type = ''
+        if request.form['quest_difficulty'] == 'Novice Quests':
             xp = 30
-            type = 'Basic'
-        elif request.form['submited_quest_difficulty'] == 'Adventurous Challenges':
+            quest_type = 'Basic'
+        elif request.form['quest_difficulty'] == 'Adventurous Challenges':
             xp = 60
-            type = 'Basic'
-        elif request.form['submited_quest_difficulty'] == 'Epic Campaigns':
+            quest_type = 'Basic'
+        elif request.form['quest_difficulty'] == 'Epic Campaigns':
             xp = 100
-            type = 'Basic'
+            quest_type = 'Basic'
+        elif request.form['quest_difficulty'] == 'Abyssal Trials':
+            quest_type = 'Advanced'
         
         # Get the current time
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # Create a new Quest object
-        new_quest = Quest(
-            quest_id=submited_quest_id,
-            language=submited_quest_language,
-            difficulty=submited_quest_difficulty,
-            quest_name=submited_quest_name,
-            quest_author=submited_quest_author,
-            date_added=submited_quest_date_added,
+        new_user_submitted_quest = SubmitedQuest(
+            quest_id = quest_id,
+            quest_name=form.quest_name.data,
+            language=form.quest_language.data,
+            difficulty=form.quest_difficulty.data,
+            quest_author=current_user.username,
+            quest_author_id=current_user.user_id,
+            status = 'Pending',
+            date_added=current_time,
             last_modified=current_time,
-            condition=submited_quest_condition,
-            function_template=submited_function_template,
-            unit_tests=submited_quest_unit_tests,
-            test_inputs=submited_quest_inputs,
-            test_outputs=submited_quest_outputs,
-            xp=str(xp),
-            type=type
+            condition=form.quest_condition.data,
+            function_template=form.function_template.data,
+            test_inputs=form.quest_inputs.data,
+            test_outputs=form.quest_outputs.data,
+            unit_tests=form.quest_unitests.data,
+            type = quest_type,
+            xp = str(xp),
         )
-        # Update the quest status in user_submited_quests table
-        submited_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
-        submited_quest.status = 'Approved'
-        # Increate the total approved quests count
-        current_user.total_approved_submited_quests += 1
-        # Commit the changes to the database
-        db.session.add(new_quest)
+        
+        # Increase the user's submited quest count
+        current_user.total_submited_quests += 1
+        
+        db.session.add(new_user_submitted_quest)
         db.session.commit()
-        return redirect(url_for('usr.open_admin_panel'))
+        mongo_transaction('user_submitted_quests', action = f'User {current_user.username} submitted a new quest with ID: {quest_id}',
+                          user_id = current_user.user_id, username = current_user.username, timestamp = current_time)
+        flash('Your quest has been submitted successfully!', 'success')
+        return redirect(url_for('main.main_page'))
+    else:
+        flash('Quest submission failed! Check the fields and try again', 'danger')
+        return render_template('user_submit_quest.html', form=form)
+
+# Route to Approve the Submited Quest to the database class Quests
+@bp_usq.route('/approve_quest/<quest_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def approve_submited_quest(quest_id):
+    form = QuestApprovalForm()
+    quest = SubmitedQuest.query.get_or_404(quest_id)
+    quest_author = User.query.filter_by(username=form.submited_quest_author.data).first()
     
-    # IF the action is 'reject', then change the status of the submited quest to 'Rejected'
-        # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
-    elif action == "reject":
-        quest_id = request.form.get('submited_quest_id')
-        submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
-        submited_quest.status = 'Rejected'
-        # Increase the total rejected quests count
-        current_user.total_rejected_submited_quests += 1
+    if request.method == 'POST':
+        action = ''
+        if 'approve' in request.form:
+            action = 'approve'
+        elif 'request_changes' in request.form:
+            action = 'request_changes'
+        elif 'reject' in request.form:
+            action = 'reject'
+    if form.validate_on_submit():
+        if action == 'approve':
+            quest.status = 'Approved'
+            # Assing XP points based on difficulty
+            xp = 0
+            type = ''
+            if request.form['submited_quest_difficulty'] == 'Novice Quests':
+                xp = 30
+                type = 'Basic'
+            elif request.form['submited_quest_difficulty'] == 'Adventurous Challenges':
+                xp = 60
+                type = 'Basic'
+            elif request.form['submited_quest_difficulty'] == 'Epic Campaigns':
+                xp = 100
+                type = 'Basic'
+        
+            # Get the current time
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            new_quest = Quest(
+                quest_id=form.submited_quest_id.data,
+                language=form.submited_quest_language.data,
+                difficulty=form.submited_quest_difficulty.data,
+                quest_name=form.submited_quest_name.data,
+                quest_author=quest_author.username,
+                date_added=form.submited_quest_date_added.data,
+                last_modified=current_time,
+                condition=form.submited_quest_condition.data,
+                function_template=form.submited_function_template.data,
+                unit_tests=form.submited_quest_unitests.data,
+                test_inputs=form.submited_quest_inputs.data,
+                test_outputs=form.submited_quest_outputs.data,
+                xp=str(xp),
+                type=type
+            )
+            quest_author.total_approved_submited_quests += 1
+            
+            achievement = Achievement.query.filter(Achievement.achievement_name=="Skill Forge Contributor").all()
+            if achievement:
+                achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
+                # Generate random suffix
+                suffix_length = 16
+                suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                prefix = 'USR-ACHV-'
+                user_achievement_id = f"{prefix}{suffix}"
+                while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                    # If it exists, generate a new submission_id
+                    suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                    user_achievement_id = f"{prefix}{suffix}"
+                user_achievement = UserAchievement(user_achievement_id=user_achievement_id, 
+                                                   user_id=quest_author.user_id,
+                                                   username=quest_author.username,
+                                                   achievement_id=achievement_id, 
+                                                   earned_on=current_time)
+            
+            db.session.add(new_quest)
+            db.session.add(user_achievement)
+            send_quest_approved_email(quest_author.email, quest_author.username, quest.quest_name, quest.language, quest.quest_id)
+            mongo_transaction('user_submited_approved_quests', action=f'Quest {quest.quest_name} has been approved by {current_user.username}', user_id=current_user.user_id, username=current_user.username, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            flash('Quest approved successfully.', 'success')
+        elif action == 'reject':
+            quest.status = 'Rejected'
+            quest_author.total_rejected_submited_quests += 1
+            send_quest_rejected_email(quest_author.email, quest_author.username, quest.quest_name, quest.language)
+            mongo_transaction('user_submited_rejected_quests', action=f'Quest {quest.quest_name} has been rejected by {current_user.username}', user_id=current_user.user_id, username=current_user.username, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            flash('Quest rejected.', 'danger')
+        elif action == 'request-changes':
+            quest.status = 'Pending'
+            flash('Changes requested for the quest.', 'warning')
         db.session.commit()
         return redirect(url_for('usr.open_admin_panel'))
+    flash('ERROR!', 'error')
+    print(f'Form Errors: {form.errors}')
+    return redirect(url_for('usr.open_admin_panel'))
+
+
+
+# @bp_usq.route('/approve_submited_quest', methods=['GET', 'POST'])
+# @login_required
+# @admin_required
+# def approve_submited_quest():
+#     # Get the desired admin action
+#     action = request.form.get('action')
     
-    # IF the action is 'request-changes', then change the status of the submited quest to 'Pending'
-        # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
-    elif action == 'request-changes':
-        quest_id = request.form.get('submited_quest_id')
-        submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
-        submited_quest.status = 'Pending'
-        db.session.commit()
-        return redirect(url_for('usr.open_admin_panel'))
+#     # IF the action is 'approve', then add the quest to the database class Quests
+#         # The original submited quest should remain in the user_submited_quests table and change the status to 'Approved'
+#     if action == "approve":
+#         # Read the values from the HTML form to pass to the Class constructor
+#         submited_quest_id = request.form.get('submited_quest_id')
+#         submited_quest_name = request.form.get('submited_quest_name')
+#         submited_quest_language = request.form.get('submited_quest_language')
+#         submited_quest_difficulty = request.form.get('submited_quest_difficulty')
+#         submited_quest_author = request.form.get('submited_quest_author')
+#         submited_quest_date_added = request.form.get('submited_quest_date_added')
+#         submited_quest_condition = request.form.get('submited_quest_condition')
+#         submited_function_template = request.form.get('submited_function_template')
+#         submited_quest_unit_tests = request.form.get('submited_quest_unitests')
+#         submited_quest_inputs = request.form.get('submited_quest_inputs')
+#         submited_quest_outputs = request.form.get('submited_quest_outputs')
+        
+#         print(f'Submited Quest Difficulty: {submited_quest_difficulty}')
+#         # Assing XP points based on difficulty
+#         xp = 0
+#         type = ''
+#         if request.form['submited_quest_difficulty'] == 'Novice Quests':
+#             xp = 30
+#             type = 'Basic'
+#         elif request.form['submited_quest_difficulty'] == 'Adventurous Challenges':
+#             xp = 60
+#             type = 'Basic'
+#         elif request.form['submited_quest_difficulty'] == 'Epic Campaigns':
+#             xp = 100
+#             type = 'Basic'
+        
+#         # Get the current time
+#         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+#         # Create a new Quest object
+#         new_quest = Quest(
+#             quest_id=submited_quest_id,
+#             language=submited_quest_language,
+#             difficulty=submited_quest_difficulty,
+#             quest_name=submited_quest_name,
+#             quest_author=submited_quest_author,
+#             date_added=submited_quest_date_added,
+#             last_modified=current_time,
+#             condition=submited_quest_condition,
+#             function_template=submited_function_template,
+#             unit_tests=submited_quest_unit_tests,
+#             test_inputs=submited_quest_inputs,
+#             test_outputs=submited_quest_outputs,
+#             xp=str(xp),
+#             type=type
+#         )
+#         # Update the quest status in user_submited_quests table
+#         submited_quest = SubmitedQuest.query.filter_by(quest_id=submited_quest_id).first()
+#         submited_quest.status = 'Approved'
+#         # Increate the total approved quests count
+#         current_user.total_approved_submited_quests += 1
+#         # Commit the changes to the database
+#         db.session.add(new_quest)
+#         db.session.commit()
+#         recipient = User.query.filter_by(user_id=submited_quest.quest_author_id).first().email
+#         send_quest_approved_email(recipient.email, submited_quest_author, submited_quest.quest_name, submited_quest.quest_language, submited_quest.quest_id)
+#         return redirect(url_for('usr.open_admin_panel'))
+    
+#     # IF the action is 'reject', then change the status of the submited quest to 'Rejected'
+#         # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
+#     elif action == "reject":
+#         quest_id = request.form.get('submited_quest_id')
+#         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+#         submited_quest.status = 'Rejected'
+#         # Increase the total rejected quests count
+#         current_user.total_rejected_submited_quests += 1
+#         db.session.commit()
+#         return redirect(url_for('usr.open_admin_panel'))
+    
+#     # IF the action is 'request-changes', then change the status of the submited quest to 'Pending'
+#         # The original submited quest should remain in the user_submited_quests table. It can be modified in the future.
+#     elif action == 'request-changes':
+#         quest_id = request.form.get('submited_quest_id')
+#         submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+#         submited_quest.status = 'Pending'
+#         db.session.commit()
+#         send_quest_approved_email(recipient.email, submited_quest_author, submited_quest.quest_name, submited_quest.quest_language)
+#         return redirect(url_for('usr.open_admin_panel'))
 
 # Post new comment in comments sections
 @bp_usq.route('/post_comment', methods=['POST'])

@@ -153,14 +153,16 @@ body {
 }
 
 .text_input {
+    display:flex !important;
     font-family: inherit;
     font-size: 16px;
     width: 100%;
     border: 0;
-    border-bottom: 1px solid #03e9f4;
+    /* border-bottom: 1px solid #03e9f4; */
     outline: 0;
     color: white;
-    padding: 7px 0;
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
     background: transparent;
 }
 
