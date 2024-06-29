@@ -179,20 +179,13 @@ def approve_submited_quest(quest_id):
                 type=type
             )
             quest_author.total_approved_submited_quests += 1
-
-            if quest_author.total_approved_submited_quests >= 1:
-                continue
             
-            achievement = Achievement.query.filter(Achievement.achievement_name=="Skill Forge Contributor").all()
+            achievement = Achievement.query.filter(
+                Achievement.achievement_name=="Skill Forge Contributor", 
+                Achievement.quests_number_required==quest_author.total_approved_submited_quests)
+                .all()
+
             if achievement:
-                # existing_user_achievement = UserAchievement.query.filter(
-                #     achievement_id = achievement[0].achievement_id, 
-                #     user_id=quest_author.user_id
-                # )
-
-                # if existing_user_achievement:
-                #     continue
-
                 achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
                 # Generate random suffix
                 suffix_length = 16
