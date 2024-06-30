@@ -91,7 +91,7 @@ def send_email_token():
         email = form.email_address.data
         current_user = User.query.filter_by(email=email).first()
         all_token = ResetToken.query.filter_by(user_email=email).first()
-    
+        
         if all_token:
             flash('A password reset link has already been sent to your email. Please check your inbox.', 'error')
             return redirect(url_for('main.login'))
@@ -117,7 +117,8 @@ def send_email_token():
         else:
             flash('User with this email does not exist.', 'error')
             return redirect(url_for('main.open_forgot_password'))
-        
+
+    flash('Invalid email address', 'error')
     return render_template('forgot_password.html', form=form)
 
 
