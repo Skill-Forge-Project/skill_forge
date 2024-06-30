@@ -225,6 +225,8 @@ class QuestApprovalForm(FlaskForm):
     submited_quest_unitests = TextAreaField('Quest Unit Tests', validators=[Optional()])
     submited_quest_inputs = TextAreaField('Quest Test Inputs', validators=[DataRequired()])
     submited_quest_outputs = TextAreaField('Quest Test Outputs', validators=[DataRequired()])
+    request_changes_comment = TextAreaField('Request Changes Comment', validators=[Optional()], 
+                                            render_kw={'placeholder': 'Provide a comment for the author'})
     action = HiddenField()
     approve = SubmitField('Approve Quest', render_kw={'value': 'approve'})
     request_changes = SubmitField('Request Changes', render_kw={'value': 'request-changes'})

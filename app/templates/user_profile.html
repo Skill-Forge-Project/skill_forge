@@ -5,11 +5,11 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_profile.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_profile.css') }}">
     <!-- Track the user status -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
     <!-- Webpack build (mostly for tracking the user status on the client side) -->
@@ -259,7 +259,7 @@
                                         <td>{{ submited_quest.difficulty }}</td>
                                         <td>{{ submited_quest.date_added.strftime('%Y-%m-%d %H:%M') }}</td>
                                         <td>{{ submited_quest.last_modified.strftime('%Y-%m-%d %H:%M') }}</td>
-                                        <td>{{ submited_quest.status}}</td>
+                                        <td class="labels {{ submited_quest.status }}">{{ submited_quest.status}}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>

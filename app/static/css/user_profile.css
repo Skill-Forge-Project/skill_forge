@@ -634,3 +634,24 @@ body {
     z-index: 0;
     border-radius: 100%;
 }
+
+
+.labels {
+    color: #d2d0d0;
+    /* margin-left: 20px; */
+    display: flex;
+    flex-direction: row;
+}
+
+
+.labels.Approved {
+    color: #0bf403bd !important;
+}
+
+.labels.Rejected {
+    color: #f73333f3 !important;
+}
+
+.labels.Pending {
+    color: #f79a04 !important;
+}

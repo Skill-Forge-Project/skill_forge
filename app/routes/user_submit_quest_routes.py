@@ -14,7 +14,8 @@ from app.forms import QuestSubmissionForm, QuestApprovalForm, EditQuestForm
 from app.user_permission import admin_required
 # Import the mail functions
 from app.mailtrap import (send_quest_approved_email,
-                          send_quest_rejected_email,)
+                          send_quest_rejected_email,
+                          send_quest_changes_requested_email)
 
 bp_usq = Blueprint('usq', __name__)
 
@@ -215,10 +216,20 @@ def approve_submited_quest(quest_id):
             quest.status = 'Rejected'
             quest_author.total_rejected_submited_quests += 1
             send_quest_rejected_email(quest_author.email, quest_author.username, quest.quest_name, quest.language)
-            mongo_transaction('user_submited_rejected_quests', action=f'Quest {quest.quest_name} has been rejected by {current_user.username}', user_id=current_user.user_id, username=current_user.username, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            mongo_transaction('user_submited_rejected_quests', 
+                              action=f'Quest {quest.quest_name} has been rejected by {current_user.username}', 
+                              user_id=current_user.user_id, username=current_user.username, 
+                              timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             flash('Quest rejected.', 'danger')
-        elif action == 'request-changes':
+        elif action == 'request_changes':
+            print("I want changes!")
             quest.status = 'Pending'
+            comments = form.request_changes_comment.data
+            send_quest_changes_requested_email(quest_author.email, quest_author.username, quest.quest_name, quest.language, comments)
+            mongo_transaction('user_submited_changes_requested', 
+                              action=f'Changes requested for quest {quest.quest_name} by {current_user.username}', 
+                              user_id=current_user.user_id, username=current_user.username, 
+                              timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             flash('Changes requested for the quest.', 'warning')
         db.session.commit()
         return redirect(url_for('usr.open_admin_panel'))
