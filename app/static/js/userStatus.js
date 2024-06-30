@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socketIp = process.env.SOCKET_IP;
     const socketPort = process.env.SOCKET_PORT;
     const userId = "{{ user.user_id }}";  // Get the user ID dynamically
-    const socket = io(`http://${socketIp}:${socketPort}/`, {
+    const socket = io(`https://skill-forge.stratios.net/`, {
         query: {
             user_id: userId
         }
