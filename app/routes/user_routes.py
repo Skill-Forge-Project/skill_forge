@@ -66,7 +66,9 @@ def open_user_profile():
         form.linked_in.data = user.linked_in
 
     user_submited_quests = SubmitedQuest.query.filter(SubmitedQuest.quest_author_id == user_id).all()
-    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
+    user_solved_quests = SubmitedSolution.query.options(
+        joinedload(SubmitedSolution.coding_quest)
+    ).filter_by(user_id=user_id).all()    
     user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     user_status = user.user_online_status
