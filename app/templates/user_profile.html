@@ -254,7 +254,7 @@
                                     {% for submited_quest in user_submited_quests %}
                                     <tr style="font-size: 12px">
                                         <td>{{ submited_quest.quest_id }}</td>
-                                        <td><a href="{{ url_for('usq.open_submited_quest_as_user', quest_id=submited_quest.quest_id) }}">{{ submited_quest.quest_name }}</a></td>
+                                        <td><a style="color:#569deb" href="{{ url_for('usq.open_submited_quest_as_user', quest_id=submited_quest.quest_id) }}">{{ submited_quest.quest_name }}</a></td>
                                         <td>{{ submited_quest.language }}</td>
                                         <td>{{ submited_quest.difficulty }}</td>
                                         <td>{{ submited_quest.date_added.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -295,11 +295,11 @@
                                 <tbody>
                                     {% for solved_quest in user_solved_quests %}
                                     <tr style="font-size: 12px">
-                                        <td><a
+                                        <td><a style="color:#569deb"
                                                 href="{{ url_for('uss.open_view_solution', solution_id=solved_quest.submission_id) }}">{{
                                                 solved_quest.submission_id }}</a></td>
                                         <td>{{ solved_quest.quest_id }}</td>
-                                        <td><a
+                                        <td><a style="color:#569deb"
                                                 href="{{ url_for('quests.open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{
                                                 solved_quest.coding_quest.quest_name }}</a></td>
                                         <td>{{ solved_quest.coding_quest.language }}</td>

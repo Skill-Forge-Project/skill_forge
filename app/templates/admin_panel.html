@@ -131,7 +131,7 @@
                                                 {% for quest in all_quests %}
                                                 <tr>
                                                     <td>{{ quest.quest_id }}</td>
-                                                    <td><a
+                                                    <td><a style="color:#569deb"
                                                             href="{{ url_for('quests.open_edit_quest', quest_id=quest.quest_id) }}">{{
                                                             quest.quest_name }}</a></td>
                                                     <td>{{ quest.language }}</td>
@@ -175,7 +175,7 @@
                                                 {% for quest in all_submited_quests %}
                                                 <tr>
                                                     <td>{{ quest.quest_id }}</td>
-                                                    <td><a
+                                                    <td><a style="color:#569deb"
                                                             href="{{ url_for('usq.open_submited_quest', quest_id=quest.quest_id) }}">{{
                                                             quest.quest_name }}</a></td>
                                                     <td>{{ quest.language }}</td>
@@ -220,7 +220,7 @@
                                                 {% for user in all_users %}
                                                 <tr>
                                                     <td>{{ user.user_id }}</td>
-                                                    <td><a href="{{ url_for('usr.open_user_profile_view', username=user.username) }}">{{ user.username }}</a></td>
+                                                    <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=user.username) }}">{{ user.username }}</a></td>
                                                     <td>{{ user.email }}</td>
                                                     <td>{{ user.date_registered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                                     <td>{{ user.rank }}</td>
@@ -272,7 +272,7 @@
                                                 <tr>
                                                     <td>{{ report.report_id }}</td>
                                                     <td>{{ report.reported_quest.quest_id }}</td>
-                                                    <td><a
+                                                    <td><a style="color:#569deb"
                                                             href="{{ url_for('quests.open_edit_reported_quest', report_id=report.report_id) }}">{{
                                                             report.reported_quest.quest_name }}</a></td>
                                                     <td>{{ report.reported_quest.language }}</td>
