@@ -138,6 +138,8 @@ class QuestForm(FlaskForm):
     
     
 ########### Edit Quest Form - as Admin ###########
+########### Edit Submited Quest - as Admin ###########
+########### Edit Submited Quest - as Regular User ###########
 class EditQuestForm(FlaskForm):
     quest_id = HiddenField('Quest ID')
     quest_name = StringField('Quest Name', validators=[DataRequired()])
@@ -227,3 +229,4 @@ class QuestApprovalForm(FlaskForm):
     approve = SubmitField('Approve Quest', render_kw={'value': 'approve'})
     request_changes = SubmitField('Request Changes', render_kw={'value': 'request-changes'})
     reject = SubmitField('Reject Quest', render_kw={'value': 'reject'})
+    save_changes = SubmitField('Save Changes', render_kw={'value': 'save-changes'})

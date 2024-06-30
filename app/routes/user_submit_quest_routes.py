@@ -9,7 +9,7 @@ from app.database.mongodb_transactions import mongo_transaction
 # Import the forms and models
 from app.models import SubmitedQuest, Quest, User, Achievement, UserAchievement
 # Import the forms
-from app.forms import QuestSubmissionForm, QuestApprovalForm
+from app.forms import QuestSubmissionForm, QuestApprovalForm, EditQuestForm
 # Import admin_required decorator
 from app.user_permission import admin_required
 # Import the mail functions
@@ -143,6 +143,7 @@ def approve_submited_quest(quest_id):
             action = 'request_changes'
         elif 'reject' in request.form:
             action = 'reject'
+            
     if form.validate_on_submit():
         if action == 'approve':
             quest.status = 'Approved'
@@ -259,3 +260,53 @@ def post_comment():
                            submited_quest=current_quest, 
                            user_role=user_role, 
                            user_id=user_id))
+    
+
+# Route to open submited quest for editing as regular user
+@bp_usq.route('/edit_submited_quest/<quest_id>', methods=['GET'])
+@login_required
+def open_submited_quest_as_user(quest_id):
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    form = QuestApprovalForm()
+    form.submited_quest_id.data = quest_id
+    form.submited_quest_name.data = submited_quest.quest_name
+    form.submited_quest_language.data = submited_quest.language
+    form.submited_quest_difficulty.data = submited_quest.difficulty
+    form.submited_quest_author.data = submited_quest.quest_author
+    form.submited_quest_date_added.data = submited_quest.date_added
+    form.submited_quest_condition.data = submited_quest.condition
+    form.submited_function_template.data = submited_quest.function_template
+    form.submited_quest_unitests.data = submited_quest.unit_tests
+    form.submited_quest_inputs.data = submited_quest.test_inputs
+    form.submited_quest_outputs.data = submited_quest.test_outputs
+    
+    return render_template('edit_submited_quest_as_user.html', 
+                           submited_quest=submited_quest,
+                           form=form)
+    
+# Route to update the submited quest as regular user
+@bp_usq.route('/update_submited_quest/<quest_id>', methods=['POST'])
+def update_submited_quest(quest_id):
+    form = QuestApprovalForm()
+    quest_id = form.submited_quest_id.data
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    
+    if form.validate_on_submit():
+        submited_quest.quest_name = form.submited_quest_name.data
+        submited_quest.language = form.submited_quest_language.data
+        submited_quest.difficulty = form.submited_quest_difficulty.data
+        submited_quest.condition = form.submited_quest_condition.data
+        submited_quest.function_template = form.submited_function_template.data
+        submited_quest.unit_tests = form.submited_quest_unitests.data
+        submited_quest.test_inputs = form.submited_quest_inputs.data
+        submited_quest.test_outputs = form.submited_quest_outputs.data
+        submited_quest.last_modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        db.session.commit()
+        flash('Quest updated successfully!', 'success')
+        return redirect(url_for('usq.open_submited_quest_as_user', quest_id=quest_id))
+    else:
+        flash('Quest update failed! Check the fields and try again', 'danger')
+        return render_template('edit_submited_quest_as_user.html', 
+                               submited_quest=submited_quest,
+                               form=form)

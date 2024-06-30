@@ -11,6 +11,7 @@ $(function () {
   });
 });
 
+// Table for user submited quests in the admin panel
 $(function () {
   $(document).ready(function () {
       $('#submited_quests_table').DataTable();
@@ -31,6 +32,13 @@ $(function () {
   });
 });
 
+
+// Table for user submited quests in the user profile
+$(function () {
+  $(document).ready(function () {
+    $('#user_submited_quests').DataTable();
+  });
+});
 
 // Table for user solved quests
 $(function () {

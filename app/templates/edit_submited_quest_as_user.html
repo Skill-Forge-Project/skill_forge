@@ -57,7 +57,7 @@
 
     <div class="content-section">
         <div id="editQuestContent" class="content">
-            <form action="{{ url_for('usq.approve_submited_quest', quest_id=submited_quest.quest_id) }}" method="post" style="width: 100%;">
+            <form action="{{ url_for('usq.update_submited_quest', quest_id=submited_quest.quest_id) }}" method="post" style="width: 100%;">
                 {{ form.hidden_tag() }}
                 <div class="input-row">
                     <div>
@@ -104,15 +104,15 @@
                 {{ form.submited_quest_id }}
                 {{ form.submited_quest_author }}
                 {{ form.submited_quest_date_added }}
+                {% if submited_quest.status == "Pending" %}
                 <div class="btn-row">
-                    {{ form.approve(class="submit-button approve-btn") }}
-                    {{ form.request_changes(class="submit-button request-changes-btn") }}
-                    {{ form.reject(class="submit-button reject-btn") }}
+                    {{ form.save_changes(class="submit-button request-changes-btn") }}
                 </div>
+                {% endif %}
             </form>
 
             <!-- Bootstrap Comments Section -->
-            <form action="/post_comment" method="post" style="width: 100%">
+            <!-- <form action="/post_comment" method="post" style="width: 100%">
                 <input type="hidden" name="submited_quest_id" value="{{ submited_quest.quest_id }}">
                 <input type="hidden" name="submited_quest_comments" value="{{ submited_quest.comments }}">
                 <div class="input-row">
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form> -->
         </div>
 
         <!-- JavaScript script to handle the CodeMirror custom fields. 
