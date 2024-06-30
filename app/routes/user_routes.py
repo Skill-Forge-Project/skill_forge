@@ -65,7 +65,10 @@ def open_user_profile():
         form.discord_id.data = user.discord_id
         form.linked_in.data = user.linked_in
 
-    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).all()
+    user_submited_quests = SubmitedQuest.query.filter(SubmitedQuest.quest_author_id == user_id).all()
+    user_solved_quests = SubmitedSolution.query.options(
+        joinedload(SubmitedSolution.coding_quest)
+    ).filter_by(user_id=user_id).all()    
     user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
     user_status = user.user_online_status
@@ -82,6 +85,7 @@ def open_user_profile():
     return render_template('user_profile.html',
                         form=form,
                         user=user,
+                        user_submited_quests=user_submited_quests,
                         user_solved_quests=user_solved_quests,
                         user_achievements=user_achievements,
                         avatar_base64=avatar_base64,
@@ -89,74 +93,6 @@ def open_user_profile():
                         last_logged_date=last_logged_date,
                         xp_percentage=xp_percentage,
                         max_xp=max_xp)
-
-# # Update User info route (Self-Update)
-# @bp_usr.route('/self_update', methods=['GET', 'POST'])
-# @login_required
-# def user_self_update():
-#     current_user_id = current_user.user_id
-#     new_first_name = request.form.get('change_first_name')
-#     new_last_name = request.form.get('change_last_name')
-#     new_email_address = request.form.get('change_email')
-#     fb_link = request.form.get('change_facebook')
-#     instagram_link = request.form.get('change_instagram')
-#     gh_link = request.form.get('change_github')
-#     discord_id = request.form.get('change_discord')
-#     linked_in_link = request.form.get('change_linkedin')
-#     user = User.query.get(current_user_id)
-#     user.first_name = new_first_name
-#     user.last_name = new_last_name
-#     user.email = new_email_address
-#     user.facebook_profile = fb_link
-#     user.instagram_profile = instagram_link
-#     user.github_profile = gh_link
-#     user.discord_id = discord_id
-#     user.linked_in = linked_in_link
-#     db.session.commit()
-    
-#     mongo_transaction('user_info_update',
-#                       action=f'User {user.username} updated its info',
-#                       user_id=current_user_id, 
-#                       username=user.username,
-#                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-#     return redirect(url_for('usr.open_user_profile'))
-
-
-
-
-# # Change the User avatar route
-# @bp_usr.route('/upload_avatar', methods=['POST'])
-# @login_required
-# def upload_avatar():
-#     # Get user ID from session or request parameters
-#     user_id = current_user.user_id
-#     if user_id is None:
-#         # Handle case where user is not logged in
-#         return redirect(url_for('login'))
-    
-#     # Check if the avatar file is provided in the request
-#     if 'avatar' not in request.files:
-#         # Handle case where no file is uploaded
-#         flash('No avatar file uploaded', 'error')
-#         return redirect(request.url)
-    
-#     # Get the uploaded file data
-#     avatar_file = request.files['avatar']
-    
-#     # Read the file data as bytes
-#     avatar_data = avatar_file.read()
-    
-#     # Update the user's avatar in the database
-#     user = User.query.get(user_id)
-#     user.avatar = avatar_data
-#     db.session.commit()
-#     mongo_transaction('user_avatar_change', 
-#                       action=f'User {user.username} changed avatar',
-#                       user_id=user_id, username=user.username, 
-#                       timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    
-#     # Redirect to the user profile page or any other page
-#     return redirect(url_for('usr.open_user_profile'))
 
 
 # # Open user for editing from the Admin Panel

@@ -17,6 +17,7 @@ html {
 }
 
 body {
+    display: flex;
     flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#141e30, #243b55) !important;

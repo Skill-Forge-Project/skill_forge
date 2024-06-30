@@ -116,12 +116,12 @@
                   {% if quest.is_active %}
                     <tr>
                       <td>{{ quest.quest_id }}</td>
-                      <td><a href="{{ url_for('quests.open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name
+                      <td><a style="color:#569deb" href="{{ url_for('quests.open_curr_quest', quest_id=quest.quest_id) }}">{{ quest.quest_name
                           }}</a></td>
                       <td>{{ quest.language }}</td>
                       <td>{{ quest.difficulty }}</td>
                       <td>
-                        <a href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{
+                        <a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{
                           quest.quest_author }}</a>
                       </td>
                       <td>{{ quest.date_added.strftime('%Y-%m-%d %H:%M:%S') }}</td>

@@ -7,6 +7,7 @@ welcome_template_path = os.path.join(script_dir, 'templates', 'email-welcome-tem
 contact_email_path = os.path.join(script_dir, 'templates', 'email-contact-template.html')
 approve_submited_quest_path = os.path.join(script_dir, 'templates', 'email-approve-submited-quest-template.html')
 reject_submited_quest_path = os.path.join(script_dir, 'templates', 'email-reject-submited-quest-template.html')
+email_request_changes_quest_path = os.path.join(script_dir, 'templates', 'email-request-changes-submited-quest-template.html')
 
 # Read welcome mail template from file
 def read_file_content(file_path):
@@ -100,3 +101,22 @@ def send_quest_rejected_email(recipient, username, quest_name, quest_language):
         category="Quests Rejected")
     client = mt.MailtrapClient(token=os.getenv("MAILTRAP_API_TOKEN"))
     client.send(mail)
+    
+# Send email to notify the user that changes are requested for their quest
+def send_quest_changes_requested_email(recipient, username, quest_name, quest_language, comments):
+    print("Sending email")
+    html_content = read_file_content(email_request_changes_quest_path)
+    html_content = html_content.replace("{{ username }}", username)
+    html_content = html_content.replace("{{ quest_name }}", quest_name)
+    html_content = html_content.replace("{{ quest_language }}", quest_language)
+    html_content = html_content.replace("{{ specific_comments }}", comments)
+    
+    mail = mt.Mail(
+        sender=mt.Address(email="support@stratios.net", name="Skill Forge Support"),
+        to=[mt.Address(email=recipient)],
+        subject="Changes requested for your Quest",
+        html=html_content,
+        category="Quests Changes Requested")
+    client = mt.MailtrapClient(token=os.getenv("MAILTRAP_API_TOKEN"))
+    client.send(mail)
+    print("Email sent")

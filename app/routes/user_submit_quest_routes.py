@@ -9,12 +9,13 @@ from app.database.mongodb_transactions import mongo_transaction
 # Import the forms and models
 from app.models import SubmitedQuest, Quest, User, Achievement, UserAchievement
 # Import the forms
-from app.forms import QuestSubmissionForm, QuestApprovalForm
+from app.forms import QuestSubmissionForm, QuestApprovalForm, EditQuestForm
 # Import admin_required decorator
 from app.user_permission import admin_required
 # Import the mail functions
 from app.mailtrap import (send_quest_approved_email,
-                          send_quest_rejected_email,)
+                          send_quest_rejected_email,
+                          send_quest_changes_requested_email)
 
 bp_usq = Blueprint('usq', __name__)
 
@@ -143,6 +144,7 @@ def approve_submited_quest(quest_id):
             action = 'request_changes'
         elif 'reject' in request.form:
             action = 'reject'
+            
     if form.validate_on_submit():
         if action == 'approve':
             quest.status = 'Approved'
@@ -162,6 +164,10 @@ def approve_submited_quest(quest_id):
             # Get the current time
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
+            approved_quest = Quest.query.filter_by(quest_id=form.submited_quest_id.data).first()
+            if approved_quest:
+                flash('Quest already exists in the database.', 'danger')
+                return redirect(url_for('usq.open_submited_quest', quest_id=quest_id))
             new_quest = Quest(
                 quest_id=form.submited_quest_id.data,
                 language=form.submited_quest_language.data,
@@ -180,7 +186,10 @@ def approve_submited_quest(quest_id):
             )
             quest_author.total_approved_submited_quests += 1
             
-            achievement = Achievement.query.filter(Achievement.achievement_name=="Skill Forge Contributor").all()
+            achievement = Achievement.query.filter(
+                Achievement.achievement_name=="Skill Forge Contributor", 
+                Achievement.quests_number_required==quest_author.total_approved_submited_quests).all()
+
             if achievement:
                 achievement_id = Achievement.query.filter(Achievement.achievement_id == achievement[0].achievement_id).first().achievement_id
                 # Generate random suffix
@@ -197,9 +206,9 @@ def approve_submited_quest(quest_id):
                                                    username=quest_author.username,
                                                    achievement_id=achievement_id, 
                                                    earned_on=current_time)
+                db.session.add(user_achievement)
             
             db.session.add(new_quest)
-            db.session.add(user_achievement)
             send_quest_approved_email(quest_author.email, quest_author.username, quest.quest_name, quest.language, quest.quest_id)
             mongo_transaction('user_submited_approved_quests', action=f'Quest {quest.quest_name} has been approved by {current_user.username}', user_id=current_user.user_id, username=current_user.username, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             flash('Quest approved successfully.', 'success')
@@ -207,10 +216,20 @@ def approve_submited_quest(quest_id):
             quest.status = 'Rejected'
             quest_author.total_rejected_submited_quests += 1
             send_quest_rejected_email(quest_author.email, quest_author.username, quest.quest_name, quest.language)
-            mongo_transaction('user_submited_rejected_quests', action=f'Quest {quest.quest_name} has been rejected by {current_user.username}', user_id=current_user.user_id, username=current_user.username, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            mongo_transaction('user_submited_rejected_quests', 
+                              action=f'Quest {quest.quest_name} has been rejected by {current_user.username}', 
+                              user_id=current_user.user_id, username=current_user.username, 
+                              timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             flash('Quest rejected.', 'danger')
-        elif action == 'request-changes':
+        elif action == 'request_changes':
+            print("I want changes!")
             quest.status = 'Pending'
+            comments = form.request_changes_comment.data
+            send_quest_changes_requested_email(quest_author.email, quest_author.username, quest.quest_name, quest.language, comments)
+            mongo_transaction('user_submited_changes_requested', 
+                              action=f'Changes requested for quest {quest.quest_name} by {current_user.username}', 
+                              user_id=current_user.user_id, username=current_user.username, 
+                              timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             flash('Changes requested for the quest.', 'warning')
         db.session.commit()
         return redirect(url_for('usr.open_admin_panel'))
@@ -252,3 +271,53 @@ def post_comment():
                            submited_quest=current_quest, 
                            user_role=user_role, 
                            user_id=user_id))
+    
+
+# Route to open submited quest for editing as regular user
+@bp_usq.route('/edit_submited_quest/<quest_id>', methods=['GET'])
+@login_required
+def open_submited_quest_as_user(quest_id):
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    form = QuestApprovalForm()
+    form.submited_quest_id.data = quest_id
+    form.submited_quest_name.data = submited_quest.quest_name
+    form.submited_quest_language.data = submited_quest.language
+    form.submited_quest_difficulty.data = submited_quest.difficulty
+    form.submited_quest_author.data = submited_quest.quest_author
+    form.submited_quest_date_added.data = submited_quest.date_added
+    form.submited_quest_condition.data = submited_quest.condition
+    form.submited_function_template.data = submited_quest.function_template
+    form.submited_quest_unitests.data = submited_quest.unit_tests
+    form.submited_quest_inputs.data = submited_quest.test_inputs
+    form.submited_quest_outputs.data = submited_quest.test_outputs
+    
+    return render_template('edit_submited_quest_as_user.html', 
+                           submited_quest=submited_quest,
+                           form=form)
+    
+# Route to update the submited quest as regular user
+@bp_usq.route('/update_submited_quest/<quest_id>', methods=['POST'])
+def update_submited_quest(quest_id):
+    form = QuestApprovalForm()
+    quest_id = form.submited_quest_id.data
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    
+    if form.validate_on_submit():
+        submited_quest.quest_name = form.submited_quest_name.data
+        submited_quest.language = form.submited_quest_language.data
+        submited_quest.difficulty = form.submited_quest_difficulty.data
+        submited_quest.condition = form.submited_quest_condition.data
+        submited_quest.function_template = form.submited_function_template.data
+        submited_quest.unit_tests = form.submited_quest_unitests.data
+        submited_quest.test_inputs = form.submited_quest_inputs.data
+        submited_quest.test_outputs = form.submited_quest_outputs.data
+        submited_quest.last_modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        db.session.commit()
+        flash('Quest updated successfully!', 'success')
+        return redirect(url_for('usq.open_submited_quest_as_user', quest_id=quest_id))
+    else:
+        flash('Quest update failed! Check the fields and try again', 'danger')
+        return render_template('edit_submited_quest_as_user.html', 
+                               submited_quest=submited_quest,
+                               form=form)
