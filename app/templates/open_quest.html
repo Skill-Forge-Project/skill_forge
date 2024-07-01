@@ -105,8 +105,7 @@
                             <h6>Comments</h6>
                         </div>
                         <div class="mt-3 d-flex flex-row align-items-center p-3 form-color">
-                            <img src="data:image/jpeg;base64,{{ user_avatar }}" width="50" height="50"
-                                class="rounded-circle mr-2">
+                            <img src={{ user_avatar }} width="50" height="50" class="rounded-circle mr-2">
                             {{ form.comment(class_="form-control", placeholder="Enter your comment...") }}
                         </div>
                         <div class="submit-comment-btn-area">
@@ -117,8 +116,7 @@
     {% if comment|length > 1 %}
     <div class="mt-2">
         <div class="d-flex flex-row p-3">
-            <img src="{{ url_for('usr.get_avatar', user_id=comment['user_id']) }}" width="40" height="40"
-                class="rounded-circle mr-3">
+            <img src={{ user_avatar }} width="40" height="40" class="rounded-circle mr-3">
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex flex-row align-items-center">
@@ -129,9 +127,11 @@
                     </div>
                     <small>{{comment["posted_at"]}}
                         {% if user_role == "Admin" %}
-                        <button type="button" class="btn btn-danger btn-sm delete-comment"
-                            data-comment-id="{{ loop.index0 }}">Delete</button>
-                        {% endif %}
+                        <button type="button" class="btn btn-danger btn-sm delete-comment" data-comment-id="{{ loop.index0 }}" 
+                        data-quest-id="{{ quest_id }}">
+                            Delete
+                        </button>
+                    {% endif %}
                     </small>
                 </div>
                 <p class="text-justify comment-text mb-0" name="submited_quest_comment">
@@ -149,65 +149,20 @@
     <!-- Update Test Info Results -->
     <script src="{{ url_for('static', filename='js/updateTestInfo.js') }}"></script>
 
-    <!-- Include CodeMirror handling script -->
+
+    <!-- JavaScript script to handle the CodeMirror custom fields. 
+        This script should be loaded after the initialization of the fields above! 
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
     <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
 
     <!-- Make the Submit Quest Inactive for 30 seconds after being pressed -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var button = document.getElementById('submitSolution');
-            var disabledTimestamp = localStorage.getItem('buttonDisabledTimestamp');
-            var currentTime = new Date().getTime();
-            var thirtySeconds = 30000; // 30 seconds in milliseconds
-
-            // Check if the button should still be disabled based on the stored timestamp
-            if (disabledTimestamp && currentTime - disabledTimestamp < thirtySeconds) {
-                // Button should still be disabled
-                disableButton();
-                startTimer(currentTime - disabledTimestamp);
-            }
-
-            // Add event listener to handle button click
-            button.addEventListener('click', function() {
-                // Disable the button
-                disableButton();
-                startTimer(0);
-
-                // Store the current timestamp in localStorage
-                localStorage.setItem('buttonDisabledTimestamp', new Date().getTime());
-            });
-
-            // Function to disable the button
-            function disableButton() {
-                button.disabled = true;
-                button.classList.remove('submit-button');
-                button.classList.add('inactive-button');
-                button.textContent = 'Please wait for 30 seconds.';
-            }
-
-            // Function to start the timer
-            function startTimer(elapsedTime) {
-                var remainingTime = thirtySeconds - elapsedTime;
-
-                // Set a timeout to restore the button's previous state after the remaining time
-                setTimeout(function() {
-                    // Enable the button
-                    enableButton();
-                }, remainingTime);
-            }
-
-            // Function to enable the button
-            function enableButton() {
-                button.disabled = false;
-                button.textContent = 'Submit Quest';
-                button.classList.remove('inactive-button');
-                button.classList.add('submit-button');
-
-                // Remove the stored timestamp from localStorage
-                localStorage.removeItem('buttonDisabledTimestamp');
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/questWaitTime.js') }}"></script>
 
     <script>
         function reportReasonHandle() {
@@ -232,38 +187,46 @@
 
         reportReasonHandle()
     </script>
+    <!-- JavaScript to handle delete action -->
     <script>
-        // Add event listener to handle delete comment button click
-        document.querySelectorAll('.delete-comment').forEach(button => {
-            button.addEventListener('click', function() {
-                const commentIndex = this.getAttribute('data-comment-id');
-                deleteComment(commentIndex);
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.delete-comment').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentIndex = this.getAttribute('data-comment-id');
+                    const questId = '{{ quest.quest_id }}'; // Assuming quest_id is available in the context
+
+                    fetch('/delete_comment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            quest_id: questId,
+                            comment_index: commentIndex
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(errorData => {
+                                    throw new Error(errorData.error || 'Unknown error occurred');
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                alert(`Failed to delete the comment: ${data.error}`);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while deleting the comment.');
+                        });
+                });
             });
         });
-    
-        // Function to send AJAX request to delete comment
-        function deleteComment(commentIndex) {
-            const questId = "{{ quest.quest_id }}"; // Replace with actual quest ID
-            const formData = new FormData();
-            formData.append('quest_id', questId);
-            formData.append('comment_index', commentIndex);
-
-            fetch('/delete_comment', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Reload the page or update the comments section as needed
-                    window.location.reload(); // Example: Reload the page
-                } else {
-                    console.error('Failed to delete comment');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
     </script>
 </body>
 <footer>

@@ -135,26 +135,28 @@ def quest_post_comment(quest_id):
 @login_required
 @admin_required
 def delete_comment():
-    quest_id = request.form.get('quest_id')
-    comment_index = int(request.form.get('comment_index'))
-    # Get the quest from the database
-    quest = Quest.query.filter_by(quest_id=quest_id).first()
-    quest_comment = quest.quest_comments[comment_index]
-    reversed_comments = list(reversed(quest.quest_comments))
-    if quest:
-        if 0 <= comment_index < len(quest.quest_comments):
+    try:
+        data = request.get_json()
+        quest_id = data.get('quest_id')
+        comment_index = int(data.get('comment_index'))
+
+        # Get the quest from the database
+        quest = Quest.query.filter_by(quest_id=quest_id).first()
+        if quest and 0 <= comment_index < len(quest.quest_comments):
+            reversed_comments = list(reversed(quest.quest_comments))
             reversed_comments.pop(comment_index)
-            reversed_comments = list(reversed(reversed_comments))
-            quest.quest_comments = reversed_comments
+            quest.quest_comments = list(reversed(reversed_comments))
             db.session.commit()
             mongo_transaction('quest_comments',
                               action=f'User {current_user.username} deleted a comment on quest {quest_id}',
                               user_id=current_user.user_id,
                               username=current_user.username,
                               timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            return redirect(url_for('quests.open_curr_quest', quest_id=quest_id))
-    else:
-        print("Error: Comment could not be deleted."), 404
+            return jsonify({'success': True}), 200
+        else:
+            return jsonify({'success': False, 'error': 'Invalid quest or comment index'}), 400
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 # Handle quest edit from the Admin Panel
@@ -388,7 +390,7 @@ def open_curr_quest(quest_id):
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
     quest_id = quest.quest_id
-    user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
+    user_avatar = f"data:image/png;base64,{base64.b64encode(current_user.avatar).decode('utf-8')}"
     user_role = current_user.user_role
     return render_template('open_quest.html', 
                            quest=quest,

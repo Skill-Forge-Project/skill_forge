@@ -187,9 +187,9 @@ button {
     flex-direction: row;
 }
 
-.box:hover {
+/* .box:hover {
     transform: translateY(-10px);
-}
+} */
 
 .box:nth-child(1) { grid-area: box1; }
 .box:nth-child(2) { grid-area: box2; }

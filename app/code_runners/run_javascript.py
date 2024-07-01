@@ -24,10 +24,11 @@ def run_code(js_code, inputs, outputs, user_id, username, quest_id):
         correct_output = str(outputs[i][0])
         
 
-        if current_input.isalpha():
-            current_execute = js_code + '\n\n' + f'console.log({function_name[0]}("{current_input}"))'
-        else:
-            current_execute = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
+        # if current_input.isalpha():
+        #     current_execute = js_code + '\n\n' + f'console.log({function_name[0]}("{current_input}"))'
+        # else:
+        #     current_execute = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
+        current_execute = js_code + '\n\n' + f'console.log({function_name[0]}({current_input}))'
         
         # Write Python code to file
         with open(os.path.join(workdir, code_filename), 'w') as f:

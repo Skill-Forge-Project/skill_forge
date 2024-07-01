@@ -82,15 +82,15 @@
                         </div>
                         <div class="input-row">
                             {{ form.quest_condition.label(class_='row-label') }}
-                            {{ form.quest_condition(class_='text_input') }}
+                            {{ form.quest_condition(class_='text_input', rows=15) }}
                         </div>
                         <div class="input-row">
                             {{ form.quest_inputs.label(class_='row-label') }}
-                            {{ form.quest_inputs(class_='text_input') }}
+                            {{ form.quest_inputs(class_='text_input', rows=10) }}
                         </div>
                         <div class="input-row">
                             {{ form.quest_outputs.label(class_='row-label') }}
-                            {{ form.quest_outputs(class_='text_input') }}
+                            {{ form.quest_outputs(class_='text_input', rows=10) }}
                         </div>
                         <div class="input-row" style="flex-direction: column;">
                             {{ form.function_template.label(class_='row-label') }}
