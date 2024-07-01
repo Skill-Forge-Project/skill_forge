@@ -20,7 +20,7 @@ from app.mailtrap import (send_quest_approved_email,
 bp_usq = Blueprint('usq', __name__)
 
 # Redirect to the user submit quest page
-@bp_usq.route('/user_submit_quest')
+@bp_usq.route('/open_user_submit_quest')
 @login_required
 def open_user_submit_quest():
     form = QuestSubmissionForm()
@@ -54,7 +54,7 @@ def open_submited_quest(quest_id):
                            form=form)
 
 # Submit new quest as a regular user
-@bp_usq.route('/submit_quest', methods=['GET', 'POST'])
+@bp_usq.route('/user_submit_quest', methods=['GET', 'POST'])
 @login_required
 def user_submit_quest():
     form = QuestSubmissionForm()
