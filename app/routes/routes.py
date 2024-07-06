@@ -141,6 +141,8 @@ def open_reset_password():
     if form.validate_on_submit():
         return update_new_password(form)
     
+    for error in form.errors:
+        flash(f'{form.errors[error][0]}', 'error')
     return render_template('reset_password.html', form=form, token=token, user_id=user_id, username=username, expiration_time=expiration_time)
 
 @bp.route('/save_new_password', methods=['POST'])
