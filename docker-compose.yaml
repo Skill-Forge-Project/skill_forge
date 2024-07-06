@@ -33,37 +33,34 @@ services:
 
   # MongoDB database replica cluster
   mongo1:
-    image: mongo:latest
+    image: mongo:4.4.18
     container_name: mongo1
     command: mongod --replSet rs0 --bind_ip localhost,mongo1
     ports:
       - "27017:27017"
     volumes:
       - mongo1:/data/db
-    networks: 
-      - mongo-cluster
 
   mongo2:
-    image: mongo:latest
+    image: mongo:4.4.18
     container_name: mongo2
     command: mongod --replSet rs0 --bind_ip localhost,mongo2
     ports:
       - "27018:27017"
     volumes:
       - mongo2:/data/db
-    networks: 
-      - mongo-cluster
 
   mongo3:
-    image: mongo:latest
+    image: mongo:4.4.18
     container_name: mongo3
     command: mongod --replSet rs0 --bind_ip localhost,mongo3
     ports:
       - "27019:27017"
     volumes:
       - mongo3:/data/db
-    networks: 
-      - mongo-cluster
+
+
+
 
 volumes:
   db:
