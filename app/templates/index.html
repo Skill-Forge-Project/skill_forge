@@ -30,7 +30,6 @@
                 <div>
                     {{ form.username(class="user-box input", placeholder="Username", id="inputUsername") }}
                 </div>
-
                 <div>
                     {{ form.password(class="user-box input", placeholder="Password", id="inputPassword") }}
                 </div>
@@ -40,8 +39,7 @@
                 </div>
                 <button type="submit" class="user-box btn">Login</button>
                 <button type="button" class="user-box btn"
-                    onclick=location.href="{{ url_for('main.register') }}">Register</button>
-            </form>
+                    onclick=location.href="{{ url_for('main.register') }}">Register</button>            </form>
         </div>
         <div class="hero_avatar">
             <img src="../static/images/hero_avatar.png">

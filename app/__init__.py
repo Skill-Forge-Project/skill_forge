@@ -1,4 +1,3 @@
-from functools import wraps
 from flask import Flask, redirect, url_for, render_template, flash
 from config import Config
 from flask_migrate import Migrate
@@ -6,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
 from flask_socketio import SocketIO
 from flask_wtf.csrf import CSRFProtect
+from werkzeug.middleware.proxy_fix import ProxyFix
 # Import database instance
 from app.database.db_init import db
 
@@ -26,6 +26,9 @@ def create_app():
     login_manager.init_app(app)
     socketio.init_app(app)
     csrf.init_app(app)
+    
+    # Apply ProxyFix to handle the reverse proxy
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
     
     # Import sockets
     from app.sockets import handle_connect, handle_disconnect, handle_heartbeat, handle_request_user_status
