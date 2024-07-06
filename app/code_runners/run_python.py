@@ -27,7 +27,6 @@ def run_code(python_code, inputs, outputs, user_id, username, quest_id):
         
         # Concatenate the Python code with the function call
         current_execute = python_code + '\n\n' + f'print({function_name[0]}({current_input}))'
-        print(current_execute)
 
         # Write Python code to file
         with open(os.path.join(workdir, code_filename), 'w') as f:
