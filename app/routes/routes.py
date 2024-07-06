@@ -229,4 +229,7 @@ def send_message():
         send_contact_email(user, email, subject, message)
         flash('Thank you for contacting us. We will back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
+    flash('Error during sending the email.', 'error')
+    for error in contact_form.errors:
+        flash(f'{contact_form.errors[error][0]}', 'error')
     return render_template('contact.html', form=contact_form)
