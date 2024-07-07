@@ -1,16 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+
 @font-face {
     font-family: 'JetBrainsMonoRegular';
     src: url('../fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+}
 
+@font-face {
     font-family: 'JetBrainsMonoBold';
     src: url('../fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
-
-body, html {
+body,
+html {
     height: 100%;
+    width: 100%;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -44,7 +48,8 @@ body, html {
 }
 
 .hero_avatar {
-    margin-right: 0px; /* Adjust margin as needed */
+    margin-right: 0px;
+    /* Adjust margin as needed */
 }
 
 .sign-in-label {
@@ -61,13 +66,13 @@ body, html {
     flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif !important;
     color: #03e9f4;
-    width: 400px;
     padding: 40px;
     background: rgba(0, 0, 0, .5);
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px;
-    margin-right: -120px;
+    margin-bottom: 20px;
+    /* Adjust margin as needed */
 }
 
 .login-box p {
@@ -79,6 +84,8 @@ body, html {
 
 .user-box {
     position: relative;
+    margin-bottom: 20px;
+    /* Adjust margin as needed */
 }
 
 .user-box input {
@@ -147,9 +154,9 @@ body, html {
     background: #03e9f4;
     color: #fff;
     box-shadow: 0 0 5px #03e9f4,
-                0 0 25px #03e9f4,
-                0 0 50px #03e9f4,
-                0 0 100px #03e9f4;
+        0 0 25px #03e9f4,
+        0 0 50px #03e9f4,
+        0 0 100px #03e9f4;
 }
 
 .btn span {
@@ -170,7 +177,9 @@ body, html {
     0% {
         left: -100%;
     }
-    50%, 100% {
+
+    50%,
+    100% {
         left: 100%;
     }
 }
@@ -189,7 +198,9 @@ body, html {
     0% {
         top: -100%;
     }
-    50%, 100% {
+
+    50%,
+    100% {
         top: 100%;
     }
 }
@@ -208,7 +219,9 @@ body, html {
     0% {
         right: -100%;
     }
-    50%, 100% {
+
+    50%,
+    100% {
         right: 100%;
     }
 }
@@ -227,7 +240,9 @@ body, html {
     0% {
         bottom: -100%;
     }
-    50%, 100% {
+
+    50%,
+    100% {
         bottom: 100%;
     }
 }
@@ -242,11 +257,10 @@ body, html {
     display: block;
 }
 
-/* Autofill styling */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important; /* Adjust this color to match your input background */
-    -webkit-text-fill-color: #03e9f4 !important; /* Text color */
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important;
+    -webkit-text-fill-color: #03e9f4 !important;
 }
