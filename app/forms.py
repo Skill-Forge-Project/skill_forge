@@ -190,7 +190,7 @@ class ContactForm(FlaskForm):
 class UserProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[Optional()])
     last_name = StringField('Last Name', validators=[Optional()])
-    email = StringField('Email', validators=[Optional(), Email(), validate_password])
+    email = StringField('Email', validators=[Optional(), Email(), latin_characters_only])
     facebook_profile = StringField('Facebook Profile', validators=[Optional()])
     instagram_profile = StringField('Instagram', validators=[Optional()])
     github_profile = StringField('GitHub', validators=[Optional()])
