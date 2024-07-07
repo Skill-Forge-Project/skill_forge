@@ -1,50 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge</title>
-    <!-- Import Navigation bar styles -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login_form.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
-
 </head>
 
 <body>
-    <div class="login_form">
-        <div class="login-box">
-            <div class="sign-in-label">
-                <h2 class="sign-in-label">Sign In</h2>
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center vh-100">
+            <div class="col-lg-6">
+                <div class="login_form">
+                    <div class="login-box">
+                        <div class="sign-in-label">
+                            <h2 class="sign-in-label">Sign In</h2>
+                        </div>
+                        <div class="alert-msg" style="font-family: 'JetBrainsMonoBold', sans-serif; font-size: 16px">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                        <form class="user-box input" method="post" action="{{ url_for('main.login') }}">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                {{ form.username(class="form-control user-box input", placeholder="Username", id="inputUsername") }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.password(class="form-control user-box input", placeholder="Password", id="inputPassword") }}
+                            </div>
+                            <div class="frg-pass">
+                                <div style="cursor: pointer"
+                                    onclick=location.href="{{ url_for('main.open_forgot_password') }}">Forgot
+                                    Password</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            <button type="button" class="btn btn-secondary btn-block"
+                                onclick=location.href="{{ url_for('main.register') }}">Register</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="alert-msg" style="font-family: 'JetBrainsMonoBold', sans-serif; font-size: 16px">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="hero_avatar">
+                    <img src="../static/images/hero_avatar.png" class="img-fluid">
+                </div>
             </div>
-            <form class="user-box input" method="post" action="{{ url_for('main.login') }}">
-                {{ form.hidden_tag() }}
-                <div>
-                    {{ form.username(class="user-box input", placeholder="Username", id="inputUsername") }}
-                </div>
-                <div>
-                    {{ form.password(class="user-box input", placeholder="Password", id="inputPassword") }}
-                </div>
-                <div class="frg-pass">
-                    <div style="cursor: pointer" onclick=location.href="{{ url_for('main.open_forgot_password') }}">
-                        Forgot Password</div>
-                </div>
-                <button type="submit" class="user-box btn">Login</button>
-                <button type="button" class="user-box btn"
-                    onclick=location.href="{{ url_for('main.register') }}">Register</button>            </form>
-        </div>
-        <div class="hero_avatar">
-            <img src="../static/images/hero_avatar.png">
         </div>
     </div>
+
+    <!-- Bootstrap JS and dependencies (jQuery and Popper.js) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
