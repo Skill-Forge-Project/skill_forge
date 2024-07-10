@@ -149,11 +149,16 @@ def open_user_profile_view(username):
                 if rank== user.rank:
                     max_xp = data['max_xp']
         xp_percentage = int((user.xp / max_xp) * 100)
+        
+        # Get the user achievements
+        user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
+        
         if user:
             return render_template('user_profile_view.html', 
                                 user=user, 
                                 avatar=avatar_base64,
                                 user_status=user_status,
+                                user_achievements=user_achievements,
                                 last_logged_date=last_logged_date,
                                 max_xp=max_xp,
                                 xp_percentage=xp_percentage)
