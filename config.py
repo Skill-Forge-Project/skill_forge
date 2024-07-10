@@ -12,7 +12,11 @@ class Config:
     SESSION_COOKIE_DOMAIN = False
     TIMEZONE = 'Europe/Sofia'
     PREFERRED_URL_SCHEME = 'https'
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = True
-    CSRF_COOKIE_SECURE = True
+    
+    ##### Debug these setting in development #####
+    ##### Not clear what they do #####
+    
+    # SESSION_COOKIE_HTTPONLY = True
+    # SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_HTTPONLY = True
+    # CSRF_COOKIE_SECURE = True
