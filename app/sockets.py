@@ -20,6 +20,7 @@ def handle_connect(auth):
         user_id = current_user.user_id
         update_user_status(user_id, 'Online')
         emit('status_update', {'user_id': user_id, 'status': 'Online'}, broadcast=True)
+        print(f"User {user_id} connected.")
 
 @socketio.on('disconnect')
 def handle_disconnect():
@@ -27,6 +28,7 @@ def handle_disconnect():
         user_id = current_user.user_id
         update_user_status(user_id, 'Offline')
         emit('status_update', {'user_id': user_id, 'status': 'Offline'}, broadcast=True)
+        print(f"User {user_id} disconnected.")
 
 @socketio.on('heartbeat')
 def handle_heartbeat(data):
