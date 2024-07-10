@@ -58,7 +58,7 @@ def register():
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
             flash('Email or username already in use', 'error')
-            return redirect(url_for('main.register'))
+            return render_template('register.html', form=form)
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(email=form.email.data, username=form.username.data, 
@@ -67,8 +67,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        flash('Your account has been created! You are now able to log in.', 'success ')
-        return redirect(url_for('main.login'))
+        flash('Your account has been created! You are now able to log in.', 'success')
+        return render_template('index.html', form=form)
     else:
         if form.errors:
             for field, errors in form.errors.items():

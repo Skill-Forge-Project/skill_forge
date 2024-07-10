@@ -9,12 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('connect', () => {
-        console.log('Connected to server');
+        // console.log('Connected to server');
         requestUserStatus();
     });
 
     socket.on('disconnect', () => {
-        console.log('Disconnected from server');
+        // console.log('Disconnected from server');
         updateOnlineStatus('Offline');
     });
 

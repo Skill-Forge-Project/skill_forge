@@ -22,12 +22,12 @@
                         <div class="sign-in-label">
                             <h2 class="sign-in-label">Sign In</h2>
                         </div>
-                        <div class="alert-msg" style="font-family: 'JetBrainsMonoBold', sans-serif; font-size: 16px">
+                        <div class="alert-msg" style="font-family: 'JetBrainsMonoBold', sans-serif; font-size: 16px;">
                             {% with messages = get_flashed_messages(with_categories=true) %}
                             {% if messages %}
-                            {% for category, message in messages %}
-                            <div class="alert alert-{{ category }}">{{ message }}</div>
-                            {% endfor %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                                {% endfor %}
                             {% endif %}
                             {% endwith %}
                         </div>

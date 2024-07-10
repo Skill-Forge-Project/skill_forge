@@ -54,6 +54,7 @@ class User(UserMixin, db.Model):
         self.last_name = last_name
         self.email = email
         self.password = password
+        self.date_registered = datetime.now()
         with open(default_avatar_path, 'rb') as f:
             self.avatar = base64.b64encode(f.read())
         self.generate_user_id()
