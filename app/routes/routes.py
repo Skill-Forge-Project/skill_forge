@@ -58,7 +58,7 @@ def register():
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
             flash('Email or username already in use', 'error')
-            return redirect(url_for('main.register'))
+            return render_template('register.html', form=form)
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(email=form.email.data, username=form.username.data, 
@@ -67,8 +67,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        flash('Your account has been created! You are now able to log in.', 'success ')
-        return redirect(url_for('main.login'))
+        flash('Your account has been created! You are now able to log in.', 'success')
+        return render_template('index.html', form=form)
     else:
         if form.errors:
             for field, errors in form.errors.items():
@@ -141,6 +141,8 @@ def open_reset_password():
     if form.validate_on_submit():
         return update_new_password(form)
     
+    for error in form.errors:
+        flash(f'{form.errors[error][0]}', 'error')
     return render_template('reset_password.html', form=form, token=token, user_id=user_id, username=username, expiration_time=expiration_time)
 
 @bp.route('/save_new_password', methods=['POST'])
@@ -229,4 +231,7 @@ def send_message():
         send_contact_email(user, email, subject, message)
         flash('Thank you for contacting us. We will back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
+    flash('Error during sending the email.', 'error')
+    for error in contact_form.errors:
+        flash(f'{contact_form.errors[error][0]}', 'error')
     return render_template('contact.html', form=contact_form)

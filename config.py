@@ -5,9 +5,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    SECRET_KEY = os.urandom(24).hex()
+    SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
     TEMPLATES_AUTO_RELOAD = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_DOMAIN = False
     TIMEZONE = 'Europe/Sofia'
+    PREFERRED_URL_SCHEME = 'https'
+    
+    ##### Debug these setting in development #####
+    ##### Not clear what they do #####
+    
+    # SESSION_COOKIE_HTTPONLY = True
+    # SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_HTTPONLY = True
+    # CSRF_COOKIE_SECURE = True

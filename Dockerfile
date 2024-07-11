@@ -30,8 +30,8 @@ RUN npm install
 # Buld the dependencies
 RUN npm run build
 
-# Expose port 5000
-EXPOSE 5000
+# Expose port 8000
+EXPOSE 8000
 
 # Run the Python app
-CMD ["python", "run.py"]
+CMD ["gunicorn", "-k", "eventlet", "-w", "1", "-b", "0.0.0.0:8000", "wsgi:app"]
