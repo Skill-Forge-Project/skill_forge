@@ -3,9 +3,9 @@ FROM karastoyanov/skill-forge-baseimage
 
 # Image Labels. Update values for each build
 LABEL Name="Skill-Forge"
-LABEL Version=1.3.8
+LABEL Version=1.3.11
 LABEL Release="pre-release"
-LABEL ReleaseDate="30.06-2024"
+LABEL ReleaseDate="11.07-2024"
 LABEL Description="Skill Forge is a open-source platform for learning and practicing programming languages."
 LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GNU GPL v3.0 license"
