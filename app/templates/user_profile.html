@@ -24,7 +24,7 @@
     <div class="user_info">
         <div class="left_pane">
             <div>
-                {% if avatar_base64 %}
+                {% if user.avatar %}
                 <img src="data:image/jpeg;base64,{{ avatar_base64 }}" alt="Avatar" class="user_avatar">
                 {% else %}
                 <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
