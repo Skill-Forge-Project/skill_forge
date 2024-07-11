@@ -24,7 +24,7 @@
     <div class="user_info">
         <div class="left_pane">
             <div>
-                {% if avatar_base64 %}
+                {% if user.avatar %}
                 <img src="data:image/jpeg;base64,{{ avatar_base64 }}" alt="Avatar" class="user_avatar">
                 {% else %}
                 <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
@@ -231,11 +231,11 @@
         </div>
     </div>
 
-    <!-- User's Submited Quests -->
+    <!-- User's Submitted Quests -->
     <div class="container-fluid" style="margin-bottom: 20px">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h3 class="left_status h3" style="font-weight: bold">Your Submited Quests</h3>
+                <h3 class="left_status h3" style="font-weight: bold">Your Submitted Quests</h3>
                 <div class="card rounded shadow border-0">
                     <div class="card-body p-5 bg-white rounded">
                         <div class="table-responsive">
@@ -246,7 +246,7 @@
                                         <th>Quest Name</th>
                                         <th>Language</th>
                                         <th>Difficulty</th>
-                                        <th>Submited On</th>
+                                        <th>Submitted On</th>
                                         <th>Last Modified On</th>
                                         <th>Status</th>
                                     </tr>
@@ -276,7 +276,7 @@
     <div class="container-fluid" style="margin-bottom: 20px">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h3 class="left_status h3" style="font-weight: bold">Your Submited Solutions</h3>
+                <h3 class="left_status h3" style="font-weight: bold">Your Submitted Solutions</h3>
                 <div class="card rounded shadow border-0">
                     <div class="card-body p-5 bg-white rounded">
                         <div class="table-responsive">
@@ -288,7 +288,7 @@
                                         <th>Quest Name</th>
                                         <th>Language</th>
                                         <th>Difficulty</th>
-                                        <th>Submited On</th>
+                                        <th>Submitted On</th>
                                         <th style="width: 20px">Succesful Tests</th>
                                         <th style="width: 20px">Unsuccesful Tests</th>
                                         <th style="width: 20px">Quest Passed</th>
