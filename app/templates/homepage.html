@@ -1,96 +1,92 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-        <title>Skill Forge</title>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/homepage.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/buttons.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
-        <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
-        <!-- Markdown showdown library -->
-        <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
-        <!-- Track the user status -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-        <!-- Webpack build (mostly for tracking the user status on the client side) -->
-        <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
-    </head>
-    
-    <body>
-        <!-- Include Navbar template -->
-        {% include 'navbar.html' %}
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
+</head>
+<body class="bg-gradient-to-b from-[#141e30] to-[#243b55] flex flex-col items-center">
 
+    {% include 'navbar.html' %}
 
-        <div class="main_container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-            {% endwith %}
-            <div class="description-container">
-                <div class="description-text">
-                    <h2>Welcome to Skill Forge!</h2>
-                    <p>Discover a world of coding challenges and quests designed to enhance your programming skills. 
-                        Whether you're a beginner or an expert, Skill Forge offers a variety of quests in different languages to help you grow and succeed. 
-                        Join our community, track your progress, and compete with others!</p>
-                    <p>Pick your programming language and quest difficulty. Solve as many as you can gaining XP points, progressing through new levels and ranks,
-                        unlocking achievements and badges while improving your skills.</p>
-                    <p>Be part of community of passionate coders and learners. Engage into conversations and share your knowedge with others.
-                        Contribute to the community by submiting new quests and challenges.</p>
-                    <h2>Your next challenge awaits you!</h2>
-                </div>
-                <img src="../static/images/coding_avatar.png" alt="Your Application Logo" class="description-image">
+    <div class="main_container flex flex-col items-center py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} mt-2 p-3">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="description-container flex flex-col md:flex-row items-center p-4 mb-8 bg-black bg-opacity-50 rounded-lg shadow-lg">
+            <div class="description-text text-white mr-4">
+                <h2 class="text-2xl text-[#03e9f4] font-semibold">Welcome to Skill Forge!</h2>
+                <p class="text-lg">Discover a world of coding challenges...</p>
+                <p class="text-lg">Pick your programming language and quest difficulty...</p>
+                <p class="text-lg">Be part of a community of passionate coders...</p>
+                <h2 class="text-2xl text-[#03e9f4] font-semibold">Your next challenge awaits you!</h2>
             </div>
-            <div class="button-container">
-                <div class="button-container button-box">
-                    <div class="btn python-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='Python') }}">Python</div>
-                    <div class="btn java-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='Java') }}">Java</div>
-                    <div class="btn js-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='JavaScript') }}">JavaScript</div>
-                    <div class="btn csharp-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='C#') }}">C#</div>
+            <img src="../static/images/coding_avatar.png" alt="Your Application Logo" class="max-w-xs w-full md:w-1/2">
+        </div>
+
+        <div class="button-container flex justify-center mb-10">
+            <div class="button-box flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="btn python-btn" onclick="location.href='{{ url_for('quests.open_quests_table', language='Python') }}'">Python</button>
+                <button class="btn java-btn" onclick="location.href='{{ url_for('quests.open_quests_table', language='Java') }}'">Java</button>
+                <button class="btn js-btn" onclick="location.href='{{ url_for('quests.open_quests_table', language='JavaScript') }}'">JavaScript</button>
+                <button class="btn csharp-btn" onclick="location.href='{{ url_for('quests.open_quests_table', language='C#') }}'">C#</button>
+            </div>
+        </div>
+
+        <div class="container grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
+            <div class="box bg-black bg-opacity-50 rounded-lg shadow-lg flex flex-col md:flex-row">
+                <img src="../static/images/alchemist_avatar.png" alt="Alchemist" class="box-image w-full md:w-1/3 rounded-t-lg md:rounded-l-lg">
+                <div class="text-content p-4 text-white">
+                    <h3 class="title text-xl">Stats</h3>
+                    <p class="content">Total Number of users: {{ user_count }}</p>
+                    <p class="content">Online users: {{ online_users }}</p>
+                    <p class="content">Total Number of quests: {{ quest_count }}</p>
+                    <p class="content">Total Number of solved quests: {{ solutions_count }}</p>
                 </div>
             </div>
 
-            <div class="container">
-                <div class="box">
-                    <img src="../static/images/alchemist_avatar.png" alt="Alchemist" class="box-image">
-                    <div class="text-content">
-                        <h3 class="box title">Stats</h3>
-                        <p class="box content">Total Number of users: {{ user_count }}</p>
-                        <p class="box content">Online users: {{ online_users }}</p>
-                        <p class="box content">Total Number of quests: {{ quest_count }}</p>
-                        <p class="box content">Total Number of solved quests: {{ solutions_count }}</p>
-                    </div>
+            <div class="box bg-black bg-opacity-50 rounded-lg shadow-lg flex flex-col md:flex-row">
+                <img src="../static/images/construction_worker.png" alt="Construction Worker" class="box-image w-full md:w-1/3 rounded-t-lg md:rounded-l-lg">
+                <div class="text-content p-4 text-white">
+                    <h3 class="title text-xl">Coming Soon</h3>
                 </div>
-                <div class="box">
-                    <img src="../static/images/construction_worker.png" alt="Alchemist" class="box-image">
-                    <div class="text-content">
-                        <h3 class="box title">Coming Soon</h3>
-                    </div>
+            </div>
+
+            <div class="box bg-black bg-opacity-50 rounded-lg shadow-lg flex flex-col md:flex-row">
+                <img src="../static/images/construction_worker.png" alt="Construction Worker" class="box-image w-full md:w-1/3 rounded-t-lg md:rounded-l-lg">
+                <div class="text-content p-4 text-white">
+                    <h3 class="title text-xl">Coming Soon</h3>
                 </div>
-                <div class="box">
-                    <img src="../static/images/construction_worker.png" alt="Alchemist" class="box-image">
-                    <div class="text-content">
-                        <h3 class="box title">Coming Soon</h3>
-                    </div>
-                </div>
-                <div class="box">
-                    <img src="../static/images/construction_worker.png" alt="Alchemist" class="box-image">
-                    <div class="text-content">
-                        <h3 class="box title">Coming Soon</h3>
-                    </div>
+            </div>
+
+            <div class="box bg-black bg-opacity-50 rounded-lg shadow-lg flex flex-col md:flex-row">
+                <img src="../static/images/construction_worker.png" alt="Construction Worker" class="box-image w-full md:w-1/3 rounded-t-lg md:rounded-l-lg">
+                <div class="text-content p-4 text-white">
+                    <h3 class="title text-xl">Coming Soon</h3>
                 </div>
             </div>
         </div>
-    </body>
-    <footer style="bottom: 100%;">
-        <!-- Include Footer template -->
+    </div>
+
+    <footer class="mt-auto w-full">
         {% include 'footer.html' %}
     </footer>
 
+</body>
 </html>
