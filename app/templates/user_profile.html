@@ -24,11 +24,9 @@
     <div class="user_info">
         <div class="left_pane">
             <div>
-                {% if user.avatar %}
-                <img src="data:image/jpeg;base64,{{ avatar_base64 }}" alt="Avatar" class="user_avatar">
-                {% else %}
-                <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
-                {% endif %}
+                <div>
+                    <img id="avatarPreview" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar" class="user_avatar">
+                </div>
             </div>
             <p class="user_name">{{ user.username }}</p>
             <div class="social_links">
@@ -157,13 +155,14 @@
                     </div>
                 </form>
             </div>
+            
             <!-- Change Avatar Form -->
             <div class="change-avatar-section">
                 <p class="ca-1">Change Avatar</p>
                 <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
                     class="ca-2">
                     {{ form.hidden_tag() }}
-                    {{ form.avatar(class="ca-3") }}
+                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)') }}
                     <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
                 </form>
             </div>
@@ -338,6 +337,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        function previewAvatar(event) {
+            const avatarPreview = document.getElementById('avatarPreview');
+            const file = event.target.files[0];
+    
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </body>
 
 <footer>
