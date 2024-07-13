@@ -162,7 +162,7 @@
                 <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
                     class="ca-2">
                     {{ form.hidden_tag() }}
-                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)') }}
+                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
                     <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
                 </form>
             </div>
