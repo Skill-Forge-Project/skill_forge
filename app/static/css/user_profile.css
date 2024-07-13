@@ -517,6 +517,15 @@ body {
     vertical-align: middle;
 }
 
+
+.ca-3::-webkit-file-upload-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    border-radius: 5px;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+
+}
+
 .ca-4 {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#141e30, #243b55);
