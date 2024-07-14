@@ -29,7 +29,7 @@
             {% if current_user.user_role == "Admin" %}
                 <div class="nav-link admin-btn cursor-pointer" onclick=location.href="{{ url_for('usr.open_admin_panel') }}">Admin Panel</div>
             {% endif %}
-            <div class="navbar-link logout-btn cursor-pointer" onclick=location.href="{{ url_for('main.logout') }}">Log Out</div>
+            <div class="nav-link logout-btn cursor-pointer" onclick=location.href="{{ url_for('main.logout') }}">Log Out</div>
             <img class="user_image cursor-pointer" src="../static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('usr.open_user_profile') }}">
         </div>
     </div>
