@@ -27,9 +27,9 @@
     <div class="main_container flex flex-col justify-center items-center">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">{{ message }}</div>
-        {% endfor %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
         {% endif %}
         {% endwith %}
         <div class="description-container flex items-center p-5 mt-5 mb-5 mr-5 ml-12">
@@ -102,5 +102,4 @@
     {% include 'footer.html' %}
 </footer>
 
-</body>
 </html>
