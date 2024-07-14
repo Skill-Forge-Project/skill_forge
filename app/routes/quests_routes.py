@@ -1,6 +1,6 @@
 import random, string, base64, json, os
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, session
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, abort
 from flask_login import login_required, current_user
 # Import the forms and models
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
@@ -389,6 +389,8 @@ def open_curr_quest(quest_id):
     quest_post_form = PublishCommentForm()
     # Retrieve the specific quest from the database, based on the quest_id
     quest = Quest.query.get(quest_id)
+    if not quest:
+        return abort(404)
     quest_id = quest.quest_id
     user_avatar = f"data:image/png;base64,{base64.b64encode(current_user.avatar).decode('utf-8')}"
     user_role = current_user.user_role
