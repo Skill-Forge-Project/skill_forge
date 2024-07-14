@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge</title>
@@ -28,20 +29,24 @@
     <div class="main_container flex flex-col justify-center items-center">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
         {% endif %}
         {% endwith %}
         <div class="description-container flex items-center p-5 mt-5 mb-5 mr-5 ml-12">
             <div class="description-text text-gray-300">
                 <h2 class="text-2xl mb-2 text-cyan-400">Welcome to Skill Forge!</h2>
-                <p class="text-lg mb-2">Discover a world of coding challenges and quests designed to enhance your programming skills. 
-                    Whether you're a beginner or an expert, Skill Forge offers a variety of quests in different languages to help you grow and succeed. 
+                <p class="text-lg mb-2">Discover a world of coding challenges and quests designed to enhance your
+                    programming skills.
+                    Whether you're a beginner or an expert, Skill Forge offers a variety of quests in different
+                    languages to help you grow and succeed.
                     Join our community, track your progress, and compete with others!</p>
-                <p class="text-lg mb-2">Pick your programming language and quest difficulty. Solve as many as you can gaining XP points, progressing through new levels and ranks,
+                <p class="text-lg mb-2">Pick your programming language and quest difficulty. Solve as many as you can
+                    gaining XP points, progressing through new levels and ranks,
                     unlocking achievements and badges while improving your skills.</p>
-                <p class="text-lg mb-2">Be part of community of passionate coders and learners. Engage into conversations and share your knowedge with others.
+                <p class="text-lg mb-2">Be part of community of passionate coders and learners. Engage into
+                    conversations and share your knowedge with others.
                     Contribute to the community by submiting new quests and challenges.</p>
                 <h2 class="text-2xl mt-4 text-cyan-400">Your next challenge awaits you!</h2>
             </div>
@@ -49,41 +54,47 @@
         </div>
         <div class="button-container flex justify-center items-center mt-5">
             <div class="button-box flex">
-                <div class="btn python-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='Python') }}">Python</div>
-                <div class="btn java-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='Java') }}">Java</div>
-                <div class="btn js-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='JavaScript') }}">JavaScript</div>
-                <div class="btn csharp-btn" onclick=location.href="{{ url_for('quests.open_quests_table', language='C#') }}">C#</div>
+                <div class="btn python-btn"
+                    onclick=location.href="{{ url_for('quests.open_quests_table', language='Python') }}">Python</div>
+                <div class="btn java-btn"
+                    onclick=location.href="{{ url_for('quests.open_quests_table', language='Java') }}">Java</div>
+                <div class="btn js-btn"
+                    onclick=location.href="{{ url_for('quests.open_quests_table', language='JavaScript') }}">JavaScript
+                </div>
+                <div class="btn csharp-btn"
+                    onclick=location.href="{{ url_for('quests.open_quests_table', language='C#') }}">C#</div>
             </div>
         </div>
 
-        <div class="container grid grid-cols-1 md:grid-cols-2 gap-4 p-10 max-w-full">
-            <div class="box flex flex-col md:flex-row bg-gray-800 rounded-lg shadow-md">
-                <img src="../static/images/alchemist_avatar.png" alt="Alchemist" class="box-image max-w-full object-cover flex-shrink-0 w-full h-64 md:w-64 md:h-auto">
-                <div class="text-content p-5 text-gray-300">
-                    <h3 class="title text-xl mb-3 text-cyan-400">Stats</h3>
-                    <p class="content mb-2">Total Number of users: {{ user_count }}</p>
-                    <p class="content mb-2">Online users: {{ online_users }}</p>
-                    <p class="content mb-2">Total Number of quests: {{ quest_count }}</p>
-                    <p class="content mb-2">Total Number of solved quests: {{ solutions_count }}</p>
+        <div class="grid grid-cols-1 sm:grid md:grid-cols-3 gap-4">
+            <div class="homepage_box mx-3 mt-6 flex flex-col rounded-lg text-gray-300 shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0">
+                <img class="box rounded-t-lg object-cover w-64" src="../static/images/alchemist_avatar.png" alt="Alchemist" />
+                <div class="box p-4 md:p-2">
+                    <h5 class="mb-2 text-xl font-medium leading-tight text-cyan-400">Stats</h5>
+                    <p class="mb-2 text-base">Total Number of users: {{ user_count }}</p>
+                    <p class="mb-2 text-base">Online users: {{ online_users }}</p>
+                    <p class="mb-2 text-base">Total Number of quests: {{ quest_count }}</p>
+                    <p class="mb-2 text-base">Total Number of solved quests: {{ solutions_count }}</p>
                 </div>
+                <div class="mt-auto border-t-0 border-neutral-100 px-2 py-3"></div>
             </div>
-            <div class="box flex bg-gray-800 rounded-lg shadow-md">
-                <img src="../static/images/construction_worker.png" alt="Coming Soon" class="box-image max-w-full object-cover flex-shrink-0 w-64 h-64">
-                <div class="text-content p-5 text-gray-300">
-                    <h3 class="title text-xl mb-3 text-cyan-400">Coming Soon</h3>
+        
+            <div class="homepage_box mx-3 mt-6 flex flex-col rounded-lg bg-gray-800 text-gray-300 shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0">
+                <img class="box rounded-t-lg object-cover w-64" src="../static/images/construction_worker.png" alt="Coming Soon" />
+                <div class="box p-4 md:p-2">
+                    <h5 class="mb-2 text-xl font-medium leading-tight text-cyan-400">Coming Soon</h5>
+                    <p class="mb-2 text-base">This section is coming soon with more features.</p>
                 </div>
+                <div class="mt-auto border-t-0 border-neutral-100 px-2 py-3"></div>
             </div>
-            <div class="box flex bg-gray-800 rounded-lg shadow-md">
-                <img src="../static/images/construction_worker.png" alt="Coming Soon" class="box-image max-w-full object-cover flex-shrink-0 w-64 h-64">
-                <div class="text-content p-5 text-gray-300">
-                    <h3 class="title text-xl mb-3 text-cyan-400">Coming Soon</h3>
+        
+            <div class="homepage_box mx-3 mt-6 flex flex-col rounded-lg bg-gray-800 text-gray-300 shadow-secondary-1 dark:bg-surface-dark dark:text-white sm:shrink-0 sm:grow sm:basis-0">
+                <img class="box rounded-t-lg object-cover w-64" src="../static/images/construction_worker.png" alt="Coming Soon" />
+                <div class="box p-4 md:p-2">
+                    <h5 class="mb-2 text-xl font-medium leading-tight text-cyan-400">Coming Soon</h5>
+                    <p class="mb-2 text-base">This section is coming soon with more features.</p>
                 </div>
-            </div>
-            <div class="box flex bg-gray-800 rounded-lg shadow-md">
-                <img src="../static/images/construction_worker.png" alt="Coming Soon" class="box-image max-w-full object-cover flex-shrink-0 w-64 h-64">
-                <div class="text-content p-5 text-gray-300">
-                    <h3 class="title text-xl mb-3 text-cyan-400">Coming Soon</h3>
-                </div>
+                <div class="mt-auto border-t-0 border-neutral-100 px-2 py-3"></div>
             </div>
         </div>
     </div>
