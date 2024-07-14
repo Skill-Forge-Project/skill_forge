@@ -54,6 +54,11 @@ def open_user_profile():
             else:
                 flash('Please select an avatar to upload', 'warning')
             return redirect(url_for('usr.open_user_profile'))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{field}: {error}', 'danger')
+                return redirect(url_for('usr.open_user_profile'))
 
     if request.method == 'GET':
         form.first_name.data = user.first_name
