@@ -1,6 +1,6 @@
 import base64, json, re
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, flash, render_template
+from flask import Blueprint, redirect, url_for, request, flash, render_template, abort
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 # Import the forms and models
@@ -54,6 +54,11 @@ def open_user_profile():
             else:
                 flash('Please select an avatar to upload', 'warning')
             return redirect(url_for('usr.open_user_profile'))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{field}: {error}', 'danger')
+                return redirect(url_for('usr.open_user_profile'))
 
     if request.method == 'GET':
         form.first_name.data = user.first_name
@@ -132,6 +137,8 @@ def edit_user_db():
 def open_user_profile_view(username):
     # Get the user info from the database
     user = User.query.filter_by(username=username).first()
+    if not user:
+        return abort(404)
     user_id = user.user_id
     if user_id == current_user.user_id:
         return redirect(url_for('usr.open_user_profile'))
@@ -164,7 +171,7 @@ def open_user_profile_view(username):
                                 xp_percentage=xp_percentage)
         else:
             # Handle the case where the user is not found
-            return "User not found", 404
+            return abort(404)
 
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)

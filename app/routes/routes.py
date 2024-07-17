@@ -229,7 +229,7 @@ def send_message():
     message = contact_form.message.data
     if contact_form.validate_on_submit():
         send_contact_email(user, email, subject, message)
-        flash('Thank you for contacting us. We will back to you as soon as possible.', 'success')
+        flash('Thank you for contacting us. We will get back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
     flash('Error during sending the email.', 'error')
     for error in contact_form.errors:
