@@ -196,7 +196,7 @@ def main_page():
     online_users = User.query.filter_by(user_online_status="Online").count()
     quest_count = Quest.query.count()
     solutions_count = SubmitedSolution.query.filter_by(quest_passed=True).count()
-    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    server_time = datetime.now()
     return render_template('homepage.html', 
                            server_time=server_time, 
                            user_count=user_count,
