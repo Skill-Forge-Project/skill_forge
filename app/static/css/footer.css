@@ -7,7 +7,9 @@
     src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
-
+.footer {
+    background: transparent !important;
+}
 
 .footer-section {
     @apply bg-white rounded-lg shadow m-4;
@@ -29,6 +31,7 @@
 .footer-info {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #d2d0d0;
+    background: transparent !important;
     font-size: 14px;
     text-align: left;
     margin: 2px;
