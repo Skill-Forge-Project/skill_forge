@@ -26,7 +26,7 @@ def create_app():
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    socketio.init_app(app, manage_session=False)
+    socketio.init_app(app, manage_session=False, ping_timeout=10, ping_interval=5)
     csrf.init_app(app)
     
     # Apply ProxyFix to handle the reverse proxy
@@ -39,7 +39,10 @@ def create_app():
     app.register_blueprint(user_submit_quest_routes.bp_usq)
     app.register_blueprint(user_submited_solutions.bp_uss)
     app.register_blueprint(quests_routes.bp_qst)
+    
     # Import websockets
+    # Define ping timeout and ping interval (in seconds)
+    # socketio = socketio(app, ping_timeout=10, ping_interval=5)
     from app.sockets import handle_connect, handle_disconnect
 
     ########### Routes handling error codes responds ###########

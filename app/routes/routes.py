@@ -217,6 +217,11 @@ def main_page():
                            quest_count=quest_count,
                            solutions_count=solutions_count)
 
+@bp.route('/get_online_users')
+def get_online_users():
+    online_users = User.query.filter_by(user_online_status='Online').count()
+    return jsonify({'online_users': online_users})
+
 # Route to open the about page
 @bp.route('/about')
 @login_required

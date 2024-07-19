@@ -6,22 +6,20 @@ from app.models import User
 from app.database.db_init import db
 from app import socketio as socketio
 
+# Define the function to update the user status
 def update_user_status(user_id, status):
     user = User.query.filter(User.user_id == user_id).first()
-    current_time = datetime.now()
     if user:
         user.user_online_status = status
-        user.last_status_update = current_time
+        user.last_status_update = datetime.now()
         db.session.commit()
-        print(f'User {user.username} status updated to {status}')
-        
-        
+ 
+# Define the event handlers               
 @socketio.on('connect')
 def handle_connect():
     if current_user.is_authenticated:
         user_id = current_user.user_id
         update_user_status(user_id, 'Online')
-        print(f'User {current_user.username} connected')
         emit('status_update', {'status': 'Online', 'user': current_user.username}, broadcast=True)
     else:
         disconnect()
@@ -31,15 +29,12 @@ def handle_disconnect():
     if current_user.is_authenticated:
         user_id = current_user.user_id
         update_user_status(user_id, 'Offline')
-        print(f'User {current_user.username} disconnected')
         emit('status_update', {'status': 'Offline', 'user': current_user.username}, broadcast=True)
-        
+  
+# Define the event handler for the status update request        
 @socketio.on('status_update_request')
 def handle_status_update_request(data):
     if current_user.is_authenticated:
         status = data.get('status', 'Offline')
-        current_user.user_online_status = status
-        current_user.last_status_update = datetime.now()
-        db.session.commit()
-        print(f'User {current_user.username} status updated to {status}')
+        update_user_status(current_user.user_id, status)
         emit('status_update', {'status': status, 'user': current_user.username}, broadcast=True)
