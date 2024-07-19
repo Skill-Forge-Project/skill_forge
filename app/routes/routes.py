@@ -1,6 +1,6 @@
 import secrets, os
 from datetime import datetime, timedelta
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 # Import the mail functions
 from app.mailtrap import send_reset_email, send_welcome_mail, send_contact_email
@@ -29,6 +29,9 @@ def login():
             if not user.is_banned:
                 if bcrypt.check_password_hash(user.password, form.password.data):
                     login_user(user, force=True)
+                    user.user_online_status = "Online"
+                    user.last_status_update = datetime.now()
+                    db.session.commit()
                     mongo_transaction('user_logins', action=f"User {user.username} logged in", user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     return redirect(url_for('main.main_page'))
                 else:
@@ -44,10 +47,14 @@ def login():
 @login_required
 def logout():
     user = current_user
+    user.user_online_status = "Offline"
+    user.last_status_update = datetime.now()
+    db.session.commit()
     mongo_transaction('user_logouts', action=f'User {user.username} logged out', user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
+
 
 # Handle the registration route
 @bp.route('/register', methods=['GET', 'POST'])
@@ -193,10 +200,16 @@ def update_new_password(form=None):
 @login_required
 def main_page():
     user_count = User.query.count()
-    online_users = User.query.filter_by(user_online_status="Online").count()
+    online_users = User.query.filter_by(user_online_status='Online').count()
+    online_users_query = User.query.filter_by(user_online_status="Online").all()
     quest_count = Quest.query.count()
     solutions_count = SubmitedSolution.query.filter_by(quest_passed=True).count()
     server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    print(f'Total users: {user_count}, Online users: {online_users}')  # Debug statement
+    for user in online_users_query:
+        print(f'User online: {user.username}, Status: {user.user_online_status}')  # Debug statement
+    
     return render_template('homepage.html', 
                            server_time=server_time, 
                            user_count=user_count,
