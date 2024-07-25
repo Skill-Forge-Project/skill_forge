@@ -36,6 +36,5 @@ def handle_disconnect():
 def handle_status_update_request(data):
     if current_user.is_authenticated:
         status = data.get('status', 'Offline')
-        print(data)
         update_user_status(current_user.user_id, status)
         emit('status_update', {'status': status, 'user': current_user.username}, broadcast=True)

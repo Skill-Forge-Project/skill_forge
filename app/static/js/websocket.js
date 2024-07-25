@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startHeartbeat() {
         setInterval(() => {
             socket.emit('status_update_request', {status: 'Online'});
-        }, 5000);  // Send a heartbeat every 30 seconds
+        }, 5000);  // Send a heartbeat every 5 seconds
     }
 
     // Detect page visibility changes and send status update
