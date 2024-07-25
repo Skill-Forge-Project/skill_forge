@@ -146,7 +146,6 @@ class QuestForm(FlaskForm):
     )
     submit = SubmitField('Submit Quest')
     
-    
 ########### Edit Quest Form - as Admin ###########
 ########### Edit Submited Quest - as Admin ###########
 ########### Edit Submited Quest - as Regular User ###########
@@ -161,7 +160,6 @@ class EditQuestForm(FlaskForm):
     quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()], render_kw={'rows': 10})
     quest_unitests = TextAreaField('Quest Unit Tests')
     submit = SubmitField('Save Changes')
-
 
 ########### Edit Reported Quest Form - as Admin ###########
 class EditReportedQuestForm(FlaskForm):

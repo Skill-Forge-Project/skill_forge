@@ -3,12 +3,13 @@ from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, abort
 from flask_login import login_required, current_user
 # Import the forms and models
-from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement
+from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement, Comment
 from app.forms import QuestForm, PublishCommentForm, EditQuestForm, EditReportedQuestForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import the database instance
 from app.database.db_init import db
+from sqlalchemy.orm import joinedload
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
 # Import admin_required decorator
@@ -84,50 +85,47 @@ def submit_quest():
 @bp_qst.route('/quest_post_comment/<quest_id>', methods=['POST'])
 @login_required
 def quest_post_comment(quest_id):
-    username = current_user.username
-    user_id = current_user.user_id
-    user_role = current_user.user_role
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
-    # Get the quest from the database
     quest_post_form = PublishCommentForm()
     if quest_post_form.validate_on_submit():
-        comment = quest_post_form.comment.data
-        # Append the new comment to the quest's comments list
-        data = {
-            'username': username,
-            'user_id': user_id,
-            'user_role': user_role,
-            'posted_at': current_time,
-            'comment': comment
-            }
-        quest = Quest.query.filter_by(quest_id=quest_id).first()
-        all_quest_comments = list(quest.quest_comments)
-        all_quest_comments.append(data)
-        quest.quest_comments = all_quest_comments
-        # Commit the changes to the database
+        comment_text = quest_post_form.comment.data
+        
+        while True:
+            # Generate a random 7-digit number
+            random_digits = random.randint(1000000, 9999999)
+            comment_id = f"QC-{random_digits}"
+            # Check if this ID already exists in the database
+            existing_comment = Comment.query.filter_by(comment_id=comment_id).first()
+            if not existing_comment:
+                break
+        
+        new_comment = Comment(
+            comment_id=comment_id,
+            quest_id=quest_id,
+            user_id=current_user.user_id,
+            posted_at=datetime.now(),
+            comment=comment_text
+        )
+        db.session.add(new_comment)
         db.session.commit()
+        
         mongo_transaction('quests_comments',
-                          action=f'User {username} posted a comment on quest {quest_id}',
-                          user_id=user_id,
-                          username=username,
-                          timestamp=current_time)
-        # Redirect to the quest page
+                          action=f'User {current_user.username} posted a comment on quest {quest_id}',
+                          user_id=current_user.user_id,
+                          username=current_user.username,
+                          timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        
         flash('Comment posted successfully!', 'success')
         return redirect(url_for('quests.open_curr_quest', 
                                 quest_id=quest_id,
-                                user_role=user_role,
-                                user_id=user_id,
+                                user_role=current_user.user_role,
+                                user_id=current_user.user_id,
                                 form=quest_post_form))
     else:
-        quest_id = quest_post_form.quest_id.data
-        user_role = current_user.user_role
-        user_id = current_user.user_id
         flash('Comment posting unsuccessful!', 'error')
         return redirect(url_for('quests.open_curr_quest', 
                                 quest_id=quest_id,
-                                user_role=user_role,
-                                user_id=user_id,
+                                user_role=current_user.user_role,
+                                user_id=current_user.user_id,
                                 form=quest_post_form))
 
 # Delete comment from the comments section (Admin role is required)
@@ -137,24 +135,21 @@ def quest_post_comment(quest_id):
 def delete_comment():
     try:
         data = request.get_json()
-        quest_id = data.get('quest_id')
-        comment_index = int(data.get('comment_index'))
+        comment_id = data.get('comment_id')
 
-        # Get the quest from the database
-        quest = Quest.query.filter_by(quest_id=quest_id).first()
-        if quest and 0 <= comment_index < len(quest.quest_comments):
-            reversed_comments = list(reversed(quest.quest_comments))
-            reversed_comments.pop(comment_index)
-            quest.quest_comments = list(reversed(reversed_comments))
+        # Get the comment from the database
+        comment = Comment.query.filter_by(id=comment_id).first()
+        if comment:
+            db.session.delete(comment)
             db.session.commit()
             mongo_transaction('quest_comments',
-                              action=f'User {current_user.username} deleted a comment on quest {quest_id}',
-                              user_id=current_user.user_id,
+                              action=f'User {current_user.username} deleted a comment on quest {comment.quest_id}',
+                              user_id=current_user.id,
                               username=current_user.username,
                               timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             return jsonify({'success': True}), 200
         else:
-            return jsonify({'success': False, 'error': 'Invalid quest or comment index'}), 400
+            return jsonify({'success': False, 'error': 'Invalid comment ID'}), 400
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -388,7 +383,7 @@ def open_quests_table(language):
 def open_curr_quest(quest_id):
     quest_post_form = PublishCommentForm()
     # Retrieve the specific quest from the database, based on the quest_id
-    quest = Quest.query.get(quest_id)
+    quest = Quest.query.options(joinedload(Quest.comments).joinedload(Comment.user)).filter_by(quest_id=quest_id).first_or_404()
     if not quest:
         return abort(404)
     quest_id = quest.quest_id
