@@ -9,6 +9,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from datetime import datetime, timedelta
 # Import database instance
 from app.database.db_init import db
+from app.models import User
 
 
 migrate = Migrate()
@@ -43,7 +44,7 @@ def create_app():
     # Import websockets
     # Define ping timeout and ping interval (in seconds)
     # socketio = socketio(app, ping_timeout=10, ping_interval=5)
-    from app.sockets import handle_connect, handle_disconnect
+    from app.sockets import handle_connect, handle_disconnect, handle_status_update_request
 
     ########### Routes handling error codes responds ###########
     # Custom error handler for Unauthorized (404) error
@@ -68,5 +69,12 @@ def create_app():
     def load_user(user_id):
         from app.models import User
         return User.query.get(user_id)
+    
+    @app.route('/get_user_status/user_id')
+    def get_user_status(user_id):
+        user = User.query.filter_by(user_id=user_id).first()
+        if user:
+            return jsonify(status=user.user_online_status, last_logged_date=user.last_status_update.strftime('%d-%m-%Y %H:%M') if user.last_status_update else None)
+        return jsonify(status='Offline', last_logged_date=None)
         
     return app
