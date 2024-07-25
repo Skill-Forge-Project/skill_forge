@@ -120,7 +120,7 @@
                         <div class="submit-comment-btn-area">
                             {{ form.submit(class_="submit-button submit-comment-btn") }}
                         </div>
-                        {% for comment in quest.comments %}
+                        {% for comment in quest.comments|reverse %}
                         <div class="mt-2">
                             <div class="d-flex flex-row p-3">
                                 <a href="{{ url_for('usr.open_user_profile_view', username=comment.user.username) }}">
