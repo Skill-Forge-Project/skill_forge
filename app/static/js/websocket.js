@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle the status update event
     socket.on('status_update', function(data) {
-        console.log('Status update:', data);
         updateOnlineStatus(data.status);
     });
 
@@ -85,4 +84,4 @@ function updateOnlineUsers() {
 updateOnlineUsers();
 
 // Update the count every second
-setInterval(updateOnlineUsers, 1000); // 1000 milliseconds = 1 second
+setInterval(updateOnlineUsers, 5000); // 1000 milliseconds = 5 second
