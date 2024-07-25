@@ -7,18 +7,22 @@
     src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
 }
 
-
+.footer {
+    background: transparent !important;
+}
 
 .footer-section {
+    @apply bg-white rounded-lg shadow m-4;
     position: relative;
+    background: transparent !important;
     bottom: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     margin: 0px;
-    margin-top: 20px;
+    margin-top: 50px !important;
     padding-top: 10px;
     padding-bottom: 10px;
     z-index: 9999; /* Stays on top on other elements */
@@ -27,8 +31,9 @@
 .footer-info {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #d2d0d0;
+    background: transparent !important;
     font-size: 14px;
-    text-align: center;
+    text-align: left;
     margin: 2px;
     padding: 0px;
 }
