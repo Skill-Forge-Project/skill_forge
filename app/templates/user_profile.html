@@ -4,9 +4,9 @@
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
@@ -25,14 +25,15 @@
         <div class="left_pane">
             <div>
                 <div>
-                    <img id="avatarPreview" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar" class="user_avatar">
+                    <!-- <img id="avatarPreview" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar" class="user_avatar"> -->
+                    <img class="inline-block w-48 h-48 rounded-full user_avatar" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar">
                 </div>
             </div>
             <p class="user_name">{{ user.username }}</p>
             <div class="social_links">
                 <p class="social_links title">Social Links</p>
                 <div class="social_links icons">
-                    {% if user.facebook_profile %}
+                    {% if user.facebook_profile %}]
                     <a href="{{ user.facebook_profile }}" target="_blank">
                         <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile">
                     </a>
