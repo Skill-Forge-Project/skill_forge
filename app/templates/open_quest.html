@@ -138,10 +138,9 @@
                                         </div>
                                         <small>{{ comment.posted_at.strftime('%d-%m-%Y %H:%M') }}
                                             {% if current_user.user_role == "Admin" %}
-                                            <button type="button" class="btn btn-danger btn-sm delete-comment"
-                                                data-comment-id="{{ comment.id }}" data-quest-id="{{ quest_id }}">
+                                            <a href="{{ url_for('quests.delete_comment', comment_id=comment.comment_id) }}" class="btn btn-danger btn-sm">
                                                 Delete
-                                            </button>
+                                            </a>
                                             {% endif %}
                                         </small>
                                     </div>
@@ -206,38 +205,44 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.delete-comment').forEach(button => {
                 button.addEventListener('click', function () {
-                    const commentIndex = this.getAttribute('data-comment-id');
-                    const questId = '{{ quest.quest_id }}'; // Assuming quest_id is available in the context
-
+                    const commentId = this.getAttribute('data-comment-id');
+                    const questId = '{{ quest.quest_id }}'; // Ensure quest_id is correctly passed
+        
+                    console.log(`Deleting comment with ID: ${commentId}, Quest ID: ${questId}`);
+        
+                    // Retrieve CSRF token from meta tag
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
                     fetch('/delete_comment', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken  // Add CSRF token to headers
                         },
                         body: JSON.stringify({
-                            quest_id: questId,
-                            comment_index: commentIndex
+                            comment_id: commentId,
+                            quest_id: questId
                         })
                     })
-                        .then(response => {
-                            if (!response.ok) {
-                                return response.json().then(errorData => {
-                                    throw new Error(errorData.error || 'Unknown error occurred');
-                                });
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            } else {
-                                alert(`Failed to delete the comment: ${data.error}`);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while deleting the comment.');
-                        });
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(errorText => {
+                                throw new Error(errorText || 'Unknown error occurred');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert(`Failed to delete the comment: ${data.error}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the comment.');
+                    });
                 });
             });
         });

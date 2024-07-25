@@ -14,6 +14,8 @@ from sqlalchemy.orm import joinedload
 from app.database.mongodb_transactions import mongo_transaction
 # Import admin_required decorator
 from app.user_permission import admin_required
+import logging
+
 
 bp_qst = Blueprint('quests', __name__)
 
@@ -129,29 +131,26 @@ def quest_post_comment(quest_id):
                                 form=quest_post_form))
 
 # Delete comment from the comments section (Admin role is required)
-@bp_qst.route('/delete_comment', methods=['POST'])
+@bp_qst.route('/delete_comment/<comment_id>', methods=['GET'])
 @login_required
 @admin_required
-def delete_comment():
+def delete_comment(comment_id):
+    comment = Comment.query.filter_by(comment_id=comment_id).first()
+    quest_id = comment.quest_id
     try:
-        data = request.get_json()
-        comment_id = data.get('comment_id')
-
-        # Get the comment from the database
-        comment = Comment.query.filter_by(id=comment_id).first()
-        if comment:
-            db.session.delete(comment)
-            db.session.commit()
-            mongo_transaction('quest_comments',
-                              action=f'User {current_user.username} deleted a comment on quest {comment.quest_id}',
-                              user_id=current_user.id,
-                              username=current_user.username,
-                              timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            return jsonify({'success': True}), 200
-        else:
-            return jsonify({'success': False, 'error': 'Invalid comment ID'}), 400
+        db.session.delete(comment)
+        db.session.commit()
+        mongo_transaction('quest_comments',
+                    action=f'User {current_user.username} deleted a comment on quest {quest_id}',
+                    user_id=current_user.user_id,
+                    username=current_user.username,
+                    timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        flash('Comment deleted successfully!', 'success')
+        return redirect(url_for('quests.open_curr_quest', quest_id=comment.quest_id))
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+        flash('Comment deletion failed!', 'danger')
+        return redirect(url_for('quests.open_curr_quest', quest_id=comment.quest_id))
+
 
 
 # Handle quest edit from the Admin Panel
