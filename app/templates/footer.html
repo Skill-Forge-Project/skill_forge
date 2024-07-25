@@ -7,7 +7,7 @@
         <p class="footer-info font-bold">Skill Forge - Open Source Platform</p>
         <p class="footer-info font-bold">The place where you can learn and grow</p>
         <p class="footer-info">The current server time is: 
-            <span id="server-time">{% if server_time %}{{ server_time.strftime('%d.%m.%Y %H:%M:%S') }}{% else %}Loading...{% endif %}</span>
+            <span id="server-time">{% if server_time %}{{ server_time }}{% else %}Loading...{% endif %}</span>
         </p>
         <!-- JavaScript to update server time format -->
         <script src="{{ url_for('static', filename='js/updateServerTime.js') }}"></script>
