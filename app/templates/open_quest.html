@@ -123,17 +123,21 @@
                         {% for comment in quest.comments %}
                         <div class="mt-2">
                             <div class="d-flex flex-row p-3">
-                                <img src="data:image/jpeg;base64,{{ comment.user.avatar_data }}" width="40" height="40" class="rounded-circle mr-3">
+                                <a href="{{ url_for('usr.open_user_profile_view', username=comment.user.username) }}">
+                                    <img src="data:image/jpeg;base64,{{ comment.user.avatar_data }}" width="40" height="40" class="rounded-circle mr-3">
+                                </a>
                                 <div class="w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex flex-row align-items-center">
-                                            <span class="mr-2">{{ comment.user.username }}</span>
+                                            <span class="mr-2">
+                                                <a style="color:#03e9f4" href="{{ url_for('usr.open_user_profile_view', username=comment.user.username) }}">{{ comment.user.username }}</a>
+                                            </span>
                                             {% if comment.user.user_role == "Admin" %}
                                             <small class="c-badge">Admin</small>
                                             {% endif %}
                                         </div>
                                         <small>{{ comment.posted_at.strftime('%d-%m-%Y %H:%M') }}
-                                            {% if comment.user.user_role == "Admin" %}
+                                            {% if current_user.user_role == "Admin" %}
                                             <button type="button" class="btn btn-danger btn-sm delete-comment"
                                                 data-comment-id="{{ comment.id }}" data-quest-id="{{ quest_id }}">
                                                 Delete

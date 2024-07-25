@@ -177,7 +177,7 @@ class EditReportedQuestForm(FlaskForm):
     
 ########### Publish New Comment On Quest Form ###########
 class PublishCommentForm(FlaskForm):
-    comment = TextAreaField('Comment', validators=[DataRequired()])
+    comment = TextAreaField('Comment', validators=[DataRequired(), Length(max=1000)])
     submit = SubmitField('Comment')
 
 ########### Contact Form ###########
