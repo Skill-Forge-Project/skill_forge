@@ -14,10 +14,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
         <!-- Markdown showdown library -->
         <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
-        <!-- Track the user status -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-        <!-- Webpack build (mostly for tracking the user status on the client side) -->
-        <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
     </head>
     
     <body>
@@ -61,8 +59,8 @@
                     <img src="../static/images/alchemist_avatar.png" alt="Alchemist" class="box-image">
                     <div class="text-content">
                         <h3 class="box title">Stats</h3>
-                        <p class="box content">Total Number of users: {{ user_count }}</p>
-                        <p class="box content">Online users: {{ online_users }}</p>
+                        <p class="box content" id="totalUsersNumber">Total Number of users: {{ user_count }}</p>
+                        <p class="box content" id="onlineUsersNumber">Online users: {{ online_users }}</p>
                         <p class="box content">Total Number of quests: {{ quest_count }}</p>
                         <p class="box content">Total Number of solved quests: {{ solutions_count }}</p>
                     </div>
