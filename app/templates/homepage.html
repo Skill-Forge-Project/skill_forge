@@ -4,7 +4,7 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
         <title>Skill Forge</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
         <script src="{{ url_for('static', filename='scripts.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -78,7 +78,7 @@
                 <div class="box p-4 md:p-2">
                     <h5 class="mb-2 text-xl font-medium leading-tight text-cyan-400">Stats</h5>
                     <p class="mb-2 text-base">Total Number of users: {{ user_count }}</p>
-                    <p class="mb-2 text-base">Online users: {{ online_users }}</p>
+                    <p class="mb-2 text-base" id="onlineUsersNumber">Online users: {{ online_users }}</p>
                     <p class="mb-2 text-base">Total Number of quests: {{ quest_count }}</p>
                     <p class="mb-2 text-base">Total Number of solved quests: {{ solutions_count }}</p>
                 </div>

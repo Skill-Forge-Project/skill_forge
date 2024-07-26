@@ -67,8 +67,8 @@ def create_app():
     
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models import User
-        return User.query.get(user_id)
+        user = User.query.get(user_id)
+        return user
     
     @app.route('/get_user_status/user_id')
     def get_user_status(user_id):
