@@ -78,8 +78,7 @@ body {
     position: relative;
     display: flex;
     flex-direction: column;
-    /* background-color: #ffffff; */
-    border: 7px solid #03e8f43b;
+    border: 7px solid rgba(3, 232, 244, 0.23);
     border-radius: 50%;
     overflow: hidden;
     font-family: 'JetBrainsMonoRegular', sans-serif;
@@ -87,9 +86,20 @@ body {
     height: 200px;
     margin-top: 60px;
     box-sizing: border-box;
-    box-shadow: 20px 20px 45px rgba(0, 0, 0, 0.5), inset 0 10px 15px #03e8f48b, inset 0 10px 20px #03e8f48b;
+    box-shadow: 
+        20px 20px 45px rgba(0, 0, 0, 0.5), 
+        inset 0 5px 10px rgba(255, 255, 255, 0.2), 
+        inset 0 -5px 15px rgba(0, 0, 0, 0.3);
     background-size: cover;
     background-position: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.user_avatar:hover {
+    box-shadow: 
+        30px 30px 60px rgba(0, 0, 0, 0.8), 
+        inset 0 5px 15px rgba(255, 255, 255, 0.3), 
+        inset 0 -5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .user_avatar img {
@@ -245,8 +255,8 @@ body {
     font-size: 20px;
     color: #03e9f4;
     text-align: center;
-    margin-top: 10px;
-    margin: 5px;
+    margin-top: 20px;
+    /* margin: 5px; */
     /* margin-top: auto;  */
 }
 
@@ -505,6 +515,15 @@ body {
     margin-left: 10px;
     margin-right: 5px;
     vertical-align: middle;
+}
+
+
+.ca-3::-webkit-file-upload-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    border-radius: 5px;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+
 }
 
 .ca-4 {

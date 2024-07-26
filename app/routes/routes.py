@@ -1,6 +1,6 @@
 import secrets, os
 from datetime import datetime, timedelta
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 # Import the mail functions
 from app.mailtrap import send_reset_email, send_welcome_mail, send_contact_email
@@ -29,6 +29,9 @@ def login():
             if not user.is_banned:
                 if bcrypt.check_password_hash(user.password, form.password.data):
                     login_user(user, force=True)
+                    user.user_online_status = "Online"
+                    user.last_status_update = datetime.now()
+                    db.session.commit()
                     mongo_transaction('user_logins', action=f"User {user.username} logged in", user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
                     return redirect(url_for('main.main_page'))
                 else:
@@ -44,10 +47,14 @@ def login():
 @login_required
 def logout():
     user = current_user
+    user.user_online_status = "Offline"
+    user.last_status_update = datetime.now()
+    db.session.commit()
     mongo_transaction('user_logouts', action=f'User {user.username} logged out', user_id=user.user_id, username=user.username, timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
+
 
 # Handle the registration route
 @bp.route('/register', methods=['GET', 'POST'])
@@ -58,7 +65,7 @@ def register():
         existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
         if existing_user:
             flash('Email or username already in use', 'error')
-            return redirect(url_for('main.register'))
+            return render_template('register.html', form=form)
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         new_user = User(email=form.email.data, username=form.username.data, 
@@ -67,8 +74,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
-        flash('Your account has been created! You are now able to log in.', 'success ')
-        return redirect(url_for('main.login'))
+        flash('Your account has been created! You are now able to log in.', 'success')
+        return render_template('index.html', form=form)
     else:
         if form.errors:
             for field, errors in form.errors.items():
@@ -141,6 +148,8 @@ def open_reset_password():
     if form.validate_on_submit():
         return update_new_password(form)
     
+    for error in form.errors:
+        flash(f'{form.errors[error][0]}', 'error')
     return render_template('reset_password.html', form=form, token=token, user_id=user_id, username=username, expiration_time=expiration_time)
 
 @bp.route('/save_new_password', methods=['POST'])
@@ -191,7 +200,8 @@ def update_new_password(form=None):
 @login_required
 def main_page():
     user_count = User.query.count()
-    online_users = User.query.filter_by(user_online_status="Online").count()
+    online_users = User.query.filter_by(user_online_status='Online').count()
+    online_users_query = User.query.filter_by(user_online_status="Online").all()
     quest_count = Quest.query.count()
     solutions_count = SubmitedSolution.query.filter_by(quest_passed=True).count()
     server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -201,6 +211,11 @@ def main_page():
                            online_users=online_users,
                            quest_count=quest_count,
                            solutions_count=solutions_count)
+
+@bp.route('/get_online_users')
+def get_online_users():
+    online_users = User.query.filter_by(user_online_status='Online').count()
+    return jsonify({'online_users': online_users})
 
 # Route to open the about page
 @bp.route('/about')
@@ -227,6 +242,9 @@ def send_message():
     message = contact_form.message.data
     if contact_form.validate_on_submit():
         send_contact_email(user, email, subject, message)
-        flash('Thank you for contacting us. We will back to you as soon as possible.', 'success')
+        flash('Thank you for contacting us. We will get back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
+    flash('Error during sending the email.', 'error')
+    for error in contact_form.errors:
+        flash(f'{contact_form.errors[error][0]}', 'error')
     return render_template('contact.html', form=contact_form)

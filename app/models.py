@@ -41,12 +41,16 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default="")
     discord_id = db.Column(db.String(120), default="")
     linked_in = db.Column(db.String(120), default="")
-    achievements = db.relationship('UserAchievement')
     is_banned = db.Column(db.Boolean, default=lambda: False)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
     last_status_update = db.Column(db.DateTime, default=datetime.now(), nullable=True)
+    
+    # Define the relationship with the UserAchievement model
+    achievements = db.relationship('UserAchievement')
+    # Define the relationship with the Comment model
+    comments = db.relationship('Comment', back_populates='user')
 
     def __init__(self, username, first_name, last_name, password, email, avatar=None):
         self.username = username
@@ -54,6 +58,7 @@ class User(UserMixin, db.Model):
         self.last_name = last_name
         self.email = email
         self.password = password
+        self.date_registered = datetime.now()
         with open(default_avatar_path, 'rb') as f:
             self.avatar = base64.b64encode(f.read())
         self.generate_user_id()
@@ -77,6 +82,13 @@ class User(UserMixin, db.Model):
     def get_userinfo(self):
         return f'User {self.username}\nID: {self.user_id}\nEmail: {self.email}\nRank: {self.rank}\nXP: {self.xp}XP.'
 
+    # Get the avatar data
+    @property
+    def avatar_data(self):
+        if self.avatar:
+            return base64.b64encode(self.avatar).decode('utf-8')
+        return None
+
 
 ########### Define the model for reset password tokens ###########
 class ResetToken(db.Model):
@@ -86,9 +98,7 @@ class ResetToken(db.Model):
     user_email = db.Column(db.String(120), nullable=False)
     token = db.Column(db.String(64), primary_key=True)
     expiration_time = db.Column(db.DateTime, nullable=False)
-    
-    
-
+        
 ########### Define the Achievement model ###########
 class Achievement(db.Model):
     __tablename__ = 'achievements'
@@ -114,8 +124,6 @@ class UserAchievement(db.Model):
     # Define the relationship with the Achievement model
     achievement = relationship("Achievement", back_populates="user_achievements")
 
-
-
 ########### Define the Quest model ###########
 # Class for storing the quests(exercises)
 class Quest(db.Model):
@@ -140,6 +148,24 @@ class Quest(db.Model):
 
     def __repr__(self):
         return f"QuestID={self.quest_id}, Quest Name='{self.quest_name}', Language='{self.language}', Difficulty='{self.difficulty}', XP='{self.xp}'"
+
+    # Define the relationship between the Quest model and the Comment model
+    comments = db.relationship('Comment', back_populates='quest')
+    
+
+########### Define the Quest Comment model ###########
+class Comment(db.Model):
+    __tablename__ = 'quest_comments'
+    comment_id = db.Column(db.String(10), primary_key=True)
+    quest_id = db.Column(db.String(10), db.ForeignKey('coding_quests.quest_id'), nullable=False)
+    user_id = db.Column(db.String(10), db.ForeignKey('users.user_id'), nullable=False)
+    posted_at = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    comment = db.Column(db.Text, nullable=False)
+
+    # Define the relationship between the Comment model and the Quest model
+    quest = db.relationship('Quest', back_populates='comments')
+    # Define the relationship between the Comment model and the User model
+    user = db.relationship('User', back_populates='comments')
 
 ########### Define the SubmitedQuest model - Quest submited by the user ###########
 # Define the database table for the submitted quests

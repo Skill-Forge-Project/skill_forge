@@ -105,6 +105,10 @@ body {
     background: transparent;
 }
 
+.dropdown_input option {
+    background-color: rgba(27, 32, 39, 0.829);
+}
+
 .quest_language_input {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     margin-top: 5px;

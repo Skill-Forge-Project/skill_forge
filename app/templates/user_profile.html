@@ -6,14 +6,14 @@
     <title>Skill Forge</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_profile.css') }}">
     <!-- Track the user status -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
-    <!-- Webpack build (mostly for tracking the user status on the client side) -->
-    <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
 
 </head>
 
@@ -24,11 +24,9 @@
     <div class="user_info">
         <div class="left_pane">
             <div>
-                {% if avatar_base64 %}
-                <img src="data:image/jpeg;base64,{{ avatar_base64 }}" alt="Avatar" class="user_avatar">
-                {% else %}
-                <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
-                {% endif %}
+                <div>
+                    <img id="avatarPreview" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar" class="user_avatar">
+                </div>
             </div>
             <p class="user_name">{{ user.username }}</p>
             <div class="social_links">
@@ -157,13 +155,14 @@
                     </div>
                 </form>
             </div>
+            
             <!-- Change Avatar Form -->
             <div class="change-avatar-section">
-                <p class="ca-1">Change Avatar</p>
+                <!-- <p class="ca-1">Change Avatar</p> -->
                 <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
                     class="ca-2">
                     {{ form.hidden_tag() }}
-                    {{ form.avatar(class="ca-3") }}
+                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
                     <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
                 </form>
             </div>
@@ -231,11 +230,11 @@
         </div>
     </div>
 
-    <!-- User's Submited Quests -->
+    <!-- User's Submitted Quests -->
     <div class="container-fluid" style="margin-bottom: 20px">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h3 class="left_status h3" style="font-weight: bold">Your Submited Quests</h3>
+                <h3 class="left_status h3" style="font-weight: bold">Your Submitted Quests</h3>
                 <div class="card rounded shadow border-0">
                     <div class="card-body p-5 bg-white rounded">
                         <div class="table-responsive">
@@ -246,7 +245,7 @@
                                         <th>Quest Name</th>
                                         <th>Language</th>
                                         <th>Difficulty</th>
-                                        <th>Submited On</th>
+                                        <th>Submitted On</th>
                                         <th>Last Modified On</th>
                                         <th>Status</th>
                                     </tr>
@@ -276,7 +275,7 @@
     <div class="container-fluid" style="margin-bottom: 20px">
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <h3 class="left_status h3" style="font-weight: bold">Your Submited Solutions</h3>
+                <h3 class="left_status h3" style="font-weight: bold">Your Submitted Solutions</h3>
                 <div class="card rounded shadow border-0">
                     <div class="card-body p-5 bg-white rounded">
                         <div class="table-responsive">
@@ -288,7 +287,7 @@
                                         <th>Quest Name</th>
                                         <th>Language</th>
                                         <th>Difficulty</th>
-                                        <th>Submited On</th>
+                                        <th>Submitted On</th>
                                         <th style="width: 20px">Succesful Tests</th>
                                         <th style="width: 20px">Unsuccesful Tests</th>
                                         <th style="width: 20px">Quest Passed</th>
@@ -338,6 +337,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        function previewAvatar(event) {
+            const avatarPreview = document.getElementById('avatarPreview');
+            const file = event.target.files[0];
+    
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
 </body>
 
 <footer>

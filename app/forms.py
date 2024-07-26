@@ -1,14 +1,8 @@
 from flask_wtf import FlaskForm
 from flask import flash
-from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField, TextAreaField, RadioField, FileField
+from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField, TextAreaField, RadioField, FileField, BooleanField
 from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError, Regexp, Optional
 import re
-
-########### Login Form ###########
-class LoginForm(FlaskForm):
-    username = StringField('Username', [DataRequired()])
-    password = PasswordField('Password', [DataRequired()])
-    submit = SubmitField('Login')
 
 
 def validate_password(form, password):
@@ -38,36 +32,52 @@ def validate_password(form, password):
     
     return password
 
-    
+# Custom validator for email field, requires email to contain only Latin characters
+def latin_characters_only(form, field):
+    latin_chars_regex = re.compile(r'^[a-zA-Z0-9@._+-]+$')
+    if not latin_chars_regex.match(field.data):
+        raise ValidationError('Email must contain only Latin characters.')
+
+########### Login Form ###########
+class LoginForm(FlaskForm):
+    username = StringField('Username', [DataRequired()])
+    password = PasswordField('Password', [DataRequired()])
+    submit = SubmitField('Login')
+
+
 ########### Register Form ###########
 class RegistrationForm(FlaskForm):
     username = StringField('', render_kw={'placeholder': 'Username'}, validators=[DataRequired(), Length(min=4, max=25)])
     first_name = StringField('', render_kw={'placeholder': 'First name'}, validators=[DataRequired(), Length(min=1, max=30)])
     last_name = StringField('', render_kw={'placeholder': 'Last name'}, validators=[DataRequired(), Length(min=1, max=30)])
-    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(), Email()])   
+    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(), Email(), latin_characters_only])   
     password = PasswordField('', validators=[
         DataRequired(),
-        Length(min=10, message='Password must be at least 10 characters long.'),
+        Length(min=10, max=50, message='Password must be between 10 and 50 characters.'),
         Regexp(re.compile(r'.*[A-Z].*'), message='Password must contain at least one uppercase letter.'),
         Regexp(re.compile(r'.*[0-9].*'), message='Password must contain at least one digit.'),
         Regexp(re.compile(r'.*[!@#$%^&*()_+=\-{}\[\]:;,<.>?].*'), message='Password must contain at least one special character.')
     ],
         render_kw={'placeholder': 'Password'})
-    confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'}, validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
+    confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'}, validators=[
+        DataRequired(), 
+        EqualTo('password', message='Passwords must match'), 
+        Length(min=10, max=50, message='Password must be between 10 and 50 characters.')
+    ])
     submit = SubmitField('Register')
     
 
 ########### Contact Form ###########
 class ContactForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    email = StringField('Email address', validators=[DataRequired(), Email()])
+    email = StringField('Email address', validators=[DataRequired(), Email(), latin_characters_only])
     subject = StringField('Subject', validators=[DataRequired()])
     message = TextAreaField('Message', validators=[DataRequired()])
     submit = SubmitField('Send Message')
 
 ########### Password Reset Request Form ###########
 class EmailResetForm(FlaskForm):
-    email_address = StringField('Email Address', validators=[DataRequired(), Email()])
+    email_address = StringField('Email Address', validators=[DataRequired(), Email(), latin_characters_only])
     submit = SubmitField('Send Me Token')
 
 ########### Password Reset Form ###########
@@ -136,7 +146,6 @@ class QuestForm(FlaskForm):
     )
     submit = SubmitField('Submit Quest')
     
-    
 ########### Edit Quest Form - as Admin ###########
 ########### Edit Submited Quest - as Admin ###########
 ########### Edit Submited Quest - as Regular User ###########
@@ -151,7 +160,6 @@ class EditQuestForm(FlaskForm):
     quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()], render_kw={'rows': 10})
     quest_unitests = TextAreaField('Quest Unit Tests')
     submit = SubmitField('Save Changes')
-
 
 ########### Edit Reported Quest Form - as Admin ###########
 class EditReportedQuestForm(FlaskForm):
@@ -169,13 +177,13 @@ class EditReportedQuestForm(FlaskForm):
     
 ########### Publish New Comment On Quest Form ###########
 class PublishCommentForm(FlaskForm):
-    comment = TextAreaField('Comment', validators=[DataRequired()])
+    comment = TextAreaField('Comment', validators=[DataRequired(), Length(max=1000)])
     submit = SubmitField('Comment')
 
 ########### Contact Form ###########
 class ContactForm(FlaskForm):
     username = StringField('Name', validators=[DataRequired(), Length(min=4, max=25)],)
-    email = StringField('Email address', validators=[DataRequired(), Email()])
+    email = StringField('Email address', validators=[DataRequired(), Email(), latin_characters_only])
     subject = StringField('Subject', validators=[DataRequired(), Length(min=4, max=25)])
     message = TextAreaField('Message', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Send Message')
@@ -184,7 +192,7 @@ class ContactForm(FlaskForm):
 class UserProfileForm(FlaskForm):
     first_name = StringField('First Name', validators=[Optional()])
     last_name = StringField('Last Name', validators=[Optional()])
-    email = StringField('Email', validators=[Optional(), Email()])
+    email = StringField('Email', validators=[Optional(), Email(), latin_characters_only])
     facebook_profile = StringField('Facebook Profile', validators=[Optional()])
     instagram_profile = StringField('Instagram', validators=[Optional()])
     github_profile = StringField('GitHub', validators=[Optional()])

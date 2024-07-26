@@ -1,44 +1,88 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
-        <title>Skill Forge</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge</title>
 
-        <!-- Import Navigation bar styles -->
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login_form.css') }}">
-    </head>
-    
-    <body>
-
-        <div class="login-box">
-            <div class="user-box">
-                <h2 style="font-family: 'JetBrainsMonoBold', sans-serif">Create new account</h2>
-            </div>
-            
-            <div>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-                {% endwith %}
-                <form method="POST" class="user-box input", action="{{ url_for('main.register') }}">
-                    {{ form.hidden_tag() }}
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.username.label }} {{ form.username(size=20) }}</div>
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.first_name.label}} {{ form.first_name(size=20) }}</div>
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.last_name.label}} {{ form.last_name(size=20) }}</div>
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.email.label }} {{ form.email(size=20) }}</div>
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.password.label }} {{ form.password(size=20) }}</div>
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">{{ form.confirm.label }} {{ form.confirm(size=20) }}</div>
-                    <div class="user-box" style="font-family: 'JetBrainsMonoBold', sans-serif">
-                        <button type="submit" class="btn">Submit</button>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="login-box">
+                    <div class="user-box">
+                        <h2 style="font-family: 'JetBrainsMonoBold', sans-serif">Create new account</h2>
                     </div>
-                </form>
-            </div>
-            <div class="user-box">
-                <p style="font-family: 'JetBrainsMonoBold', sans-serif">Already have an account?<br><a href="{{ url_for('main.login') }}" style="color: #03e9f4; font-family: 'JetBrainsMonoBold', sans-serif">Login here</a></p>
+                    
+                    <div>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        <form method="POST" class="user-box input" action="{{ url_for('main.register') }}">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group user-box">
+                                {{ form.username.label(class="control-label") }}
+                                {{ form.username(class="form-control") }}
+                            </div>
+                            <div class="form-group user-box">
+                                {{ form.first_name.label(class="control-label") }}
+                                {{ form.first_name(class="form-control") }}
+                            </div>
+                            <div class="form-group user-box">
+                                {{ form.last_name.label(class="control-label") }}
+                                {{ form.last_name(class="form-control") }}
+                            </div>
+                            <div class="form-group user-box">
+                                {{ form.email.label(class="control-label") }}
+                                {{ form.email(class="form-control") }}
+                            </div>
+                            <div class="form-group user-box">
+                                {{ form.password.label(class="control-label") }}
+                                {{ form.password(class="form-control") }}
+                            </div>
+                            <div class="form-group user-box">
+                                {{ form.confirm.label(class="control-label") }}
+                                {{ form.confirm(class="form-control") }}
+                            </div>
+
+                            <!-- New div for password requirements -->
+                            <div class="user-box">
+                                <h3>Password Requirements:</h3>
+                                <ul>
+                                    <li>At least 8 characters long</li>
+                                    <li>Contains at least one uppercase letter</li>
+                                    <li>Contains at least one number</li>
+                                    <li>Contains at least one special character (e.g., @, #, $)</li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group user-box">
+                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="user-box text-center">
+                        <p style="font-family: 'JetBrainsMonoBold', sans-serif">Already have an account?<br>
+                            <a href="{{ url_for('main.login') }}" style="color: #03e9f4; font-family: 'JetBrainsMonoBold', sans-serif">Login here</a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </body>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
