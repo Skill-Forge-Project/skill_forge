@@ -258,3 +258,32 @@ button {
         max-width: 95% !important;
     }
 }
+
+
+/* Guild Section */
+.guild_button {
+    font-family: 'JetBrainsMonoBold', sans-serif !important;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: rgba(0, 0, 0, .5) !important;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 30px;
+    letter-spacing: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 0;
+}
+
+.guild_button:hover {
+    background: #03e9f4;
+    color: #fff;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+}
