@@ -213,6 +213,7 @@ def main_page():
                            quest_count=quest_count,
                            solutions_count=solutions_count)
 
+# Check the number of online users. Function used by the websockets and client side script.
 @bp.route('/get_online_users')
 def get_online_users():
     online_users = User.query.filter_by(user_online_status='Online').count()
