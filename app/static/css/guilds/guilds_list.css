@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.txt-1 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 32px;
+    color: #03e9f4;
+    margin-bottom: 20px;
+}

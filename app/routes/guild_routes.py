@@ -1,6 +1,6 @@
 import random, string, base64, json, os
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, abort
+from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, abort, send_file
 from flask_login import login_required, current_user
 # Import the forms and models
 from app.models import Guild
@@ -14,7 +14,8 @@ from sqlalchemy.orm import joinedload
 from app.database.mongodb_transactions import mongo_transaction
 # Import admin_required decorator
 from app.user_permission import admin_required
-
+import io
+import base64
 
 bp_guild = Blueprint('guilds', __name__)
 
@@ -23,6 +24,25 @@ bp_guild = Blueprint('guilds', __name__)
 def open_create_guild():
     form = CreateGuildForm()
     return render_template('guild_templates/create_guild.html', form=form)
+
+
+# Redirect to the guilds list page
+@bp_guild.route('/guilds', methods=['GET'])
+def open_guilds_list():
+    guilds = Guild.query.all()
+    return render_template('guild_templates/guilds_list.html', guilds=guilds)
+
+
+@bp_guild.route('/guilds/avatar/<guild_id>')
+def get_guild_avatar(guild_id):
+    guild = Guild.query.filter_by(guild_id=guild_id).first_or_404()
+    if guild.guild_avatar:
+        img_data = guild.guild_avatar
+    else:
+        # Return a default image if no avatar is set
+        with open('app/static/images/default-guild-avatar.png', 'rb') as f:
+            img_data = f.read()
+    return send_file(io.BytesIO(img_data), mimetype='image/jpeg')
 
 # Create new guild
 @bp_guild.route('/guilds/create', methods=['GET', 'POST'])
