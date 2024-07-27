@@ -4,10 +4,18 @@
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge - Guilds List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.2/dist/bootstrap-table.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/guilds/guilds_list.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+
+    <!-- Bootstrap Data Table -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
 </head>
 
@@ -15,41 +23,54 @@
     <!-- Include Navbar template -->
     {% include 'navbar.html' %}
 
-    <!-- Main Container -->
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-extrabold text-center text-teal-400 mb-8">Join Guild</h1>
-        <div class="guilds-list">
-            {% for guild in guilds %}
-            <div class="guild-card">
-                <div class="guild_avatar">
-                    <img src="{{ url_for('guilds.get_guild_avatar', guild_id=guild.guild_id) }}" alt="{{ guild.guild_name }}" class="guild-avatar">
-                </div>
-                <div class="guild-info">
-                    <h5 class="guild-title">{{ guild.guild_name }}</h5>
-                    <p class="guild-description" style="margin-bottom: 20px">{{ guild.description }}</p>
-                    <p class="guild-description guild-master">Guild Master: 
-                        <a style="color:#569deb;text-decoration: None" href="{{ url_for('usr.open_user_profile_view', username=guild.guild_master.username) }}">
-                            {{ guild.guild_master.username }}</a></p>
-                    <p class="guild-description members">Members: {{ guild.guild_members_count }}</p>
-                    <p class="guild-description level">Guild Level: {{ guild.level }}</p>
-                    <p class="guild-description points">Guild Points: {{ guild.points }}</p>
-                    <p class="guild-description points">Dungeons Completed: {{ guild.dungeons_completed }}</p>
-                    <button type="submit" class="join_button btn btn-primary w-full join_guild_button">Request Join</button>
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card rounded shadow border-0">
+                        <div class="card-body p-5 bg-white rounded">
+                            <div class="table-responsive">
+                                <table id="guilds_list" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Guild Name</th>
+                                            <th>Guild Master</th>
+                                            <th>Guild Level</th>
+                                            <th>Guild Points</th>
+                                            <th>Dungeons Completed</th>
+                                            <th>Members</th>
+                                            <th>Join</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for guild in guilds %}
+                                        <tr>
+                                            <td>{{ guild.guild_name }}</td>
+                                            <td>{{ guild.guild_master.username }}</td>
+                                            <td>{{ guild.level }}</td>
+                                            <td>{{ guild.points }}</td>
+                                            <td>{{ guild.dungeons_completed }}</td>
+                                            <td>{{ guild.guild_members_count }}</td>
+                                            <td>JOIN</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
     </div>
-
 
     <!-- Footer -->
     <footer style="bottom: 100%;">
         <!-- Include Footer template -->
         {% include 'footer.html' %}
     </footer>
+    <!-- JavaScript managing the content in the Bootstrap table -->
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
