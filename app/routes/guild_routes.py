@@ -63,6 +63,13 @@ def create_new_guild():
         db.session.add(guild)
         db.session.commit()
         
+        mongo_transaction(
+            'guild_create',
+            action=f'Guild {form.name.data} created by {current_user.username}',
+            user_id=current_user.user_id,
+            username=current_user.username,
+            timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        )
         flash(f'Guild {form.name.data} created successfully!', 'success')
         return redirect(url_for('guilds.create_new_guild'))
     else:
