@@ -32,3 +32,105 @@ body {
     color: #03e9f4;
     margin-bottom: 20px;
 }
+
+
+
+.guild-card {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    padding: 10px;
+    background: rgba(0, 0, 0, .5) !important;
+    border-radius: 0.5rem;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    width: 100% !important;
+    margin-bottom: 30px;
+}
+
+.guild-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+.guild-content {
+    flex: 1;
+}
+
+.guild-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #03e9f4;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.guild-description {
+    color: #d2d0d0;
+    
+}
+
+.container {
+    max-width: 1200px;
+}
+
+
+.join_button {
+    font-family: 'JetBrainsMonoBold', sans-serif !important;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: rgba(0, 0, 0, .5) !important;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    letter-spacing: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 0;
+    width: 100%;
+}
+
+.join_button:hover {
+    background: #03e9f4;
+    color: #fff;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+}
+
+
+/* Avatar styling */
+.guild_avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 5px solid rgba(3, 232, 244, 0.23);
+    border-radius: 50%;
+    overflow: hidden;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    width: 10%;
+    height: 10%;
+    box-sizing: border-box;
+    box-shadow: 
+        20px 20px 45px rgba(0, 0, 0, 0.5), 
+        inset 0 5px 10px rgba(255, 255, 255, 0.2), 
+        inset 0 -5px 15px rgba(0, 0, 0, 0.3);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.guild_avatar:hover {
+    box-shadow: 
+        30px 30px 60px rgba(0, 0, 0, 0.8), 
+        inset 0 5px 15px rgba(255, 255, 255, 0.3), 
+        inset 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
+

@@ -244,3 +244,5 @@ class Guild(db.Model):
     
     # Define the relationship between the Guild model and the User model
     members = db.relationship('User', back_populates='guild', foreign_keys=[User.guild_id])
+    # Define the relationship with the User model for guild master
+    guild_master = db.relationship('User', foreign_keys=[guild_master_id])

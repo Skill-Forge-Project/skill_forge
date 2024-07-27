@@ -122,7 +122,7 @@ body {
 
 
 /*  Avatar Styling  */
-.user_avatar {
+.guild_avatar {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -143,7 +143,7 @@ body {
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.user_avatar:hover {
+.guild_avatar:hover {
     box-shadow: 
         30px 30px 60px rgba(0, 0, 0, 0.8), 
         inset 0 5px 15px rgba(255, 255, 255, 0.3), 

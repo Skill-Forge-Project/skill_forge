@@ -17,19 +17,22 @@
 
     <!-- Main Container -->
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-extrabold text-center text-teal-400 mb-8 txt-1">Join Guild</h1>
-
-        <div class="row">
-            <!-- Example Guild Card -->
+        <h1 class="text-4xl font-extrabold text-center text-teal-400 mb-8">Join Guild</h1>
+        <div class="guilds-list">
             {% for guild in guilds %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-lg rounded-lg overflow-hidden">
-                    <img src="{{ url_for('guilds.get_guild_avatar', guild_id=guild.guild_id) }}" class="card-img-top" alt="{{ guild.guild_name }}">
-                    <div class="card-body bg-gray-800 text-white">
-                        <h5 class="card-title text-xl font-semibold">{{ guild.guild_name }}</h5>
-                        <p class="card-text">{{ guild.description }}</p>
-
-                    </div>
+            <div class="guild-card">
+                <div class="guild_avatar">
+                    <img src="{{ url_for('guilds.get_guild_avatar', guild_id=guild.guild_id) }}" alt="{{ guild.guild_name }}" class="guild-avatar">
+                </div>
+                <div class="guild-info">
+                    <h5 class="guild-title">{{ guild.guild_name }}</h5>
+                    <p class="guild-description" style="margin-bottom: 20px">{{ guild.description }}</p>
+                    <p class="guild-description guild-master">Guild Master: {{ guild.guild_master.username }}</p>
+                    <p class="guild-description members">Members: {{ guild.guild_members_count }}</p>
+                    <p class="guild-description level">Guild Level: {{ guild.level }}</p>
+                    <p class="guild-description points">Guild Points: {{ guild.points }}</p>
+                    <p class="guild-description points">Dungeons Completed: {{ guild.dungeons_completed }}</p>
+                    <button type="submit" class="join_button btn btn-primary w-full join_guild_button">Request Join</button>
                 </div>
             </div>
             {% endfor %}
@@ -42,4 +45,9 @@
         <!-- Include Footer template -->
         {% include 'footer.html' %}
     </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

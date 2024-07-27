@@ -25,14 +25,13 @@ def open_create_guild():
     form = CreateGuildForm()
     return render_template('guild_templates/create_guild.html', form=form)
 
-
 # Redirect to the guilds list page
 @bp_guild.route('/guilds', methods=['GET'])
 def open_guilds_list():
     guilds = Guild.query.all()
     return render_template('guild_templates/guilds_list.html', guilds=guilds)
 
-
+# Handle the guild avatar image requests
 @bp_guild.route('/guilds/avatar/<guild_id>')
 def get_guild_avatar(guild_id):
     guild = Guild.query.filter_by(guild_id=guild_id).first_or_404()
