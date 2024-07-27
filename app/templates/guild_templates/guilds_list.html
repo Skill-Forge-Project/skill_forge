@@ -27,7 +27,9 @@
                 <div class="guild-info">
                     <h5 class="guild-title">{{ guild.guild_name }}</h5>
                     <p class="guild-description" style="margin-bottom: 20px">{{ guild.description }}</p>
-                    <p class="guild-description guild-master">Guild Master: {{ guild.guild_master.username }}</p>
+                    <p class="guild-description guild-master">Guild Master: 
+                        <a style="color:#569deb;text-decoration: None" href="{{ url_for('usr.open_user_profile_view', username=guild.guild_master.username) }}">
+                            {{ guild.guild_master.username }}</a></p>
                     <p class="guild-description members">Members: {{ guild.guild_members_count }}</p>
                     <p class="guild-description level">Guild Level: {{ guild.level }}</p>
                     <p class="guild-description points">Guild Points: {{ guild.points }}</p>
