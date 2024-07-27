@@ -14,3 +14,6 @@ from .user_routes import bp_usr
 
 # Import routes from user submited solutions routes
 from .user_submited_solutions import bp_uss
+
+# Import routes from guild routes
+from .guild_routes import bp_guild
