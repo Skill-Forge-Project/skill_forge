@@ -25,6 +25,26 @@ body {
     justify-content: center;
 }
 
+.alert {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+}
+
+.alert-success {
+    color: #4CAF50;
+}
+
+.alert-error {
+    color: #f44336;
+}
+
+.alert-info {
+    color: #2196F3;
+}
+
 
 .main-container {
     min-height: 100vb !important;
@@ -55,6 +75,7 @@ body {
     overflow: hidden;
     transition: .5s;
     margin-top: 30px;
+    margin-bottom: 20px;
     letter-spacing: 4px;
     border-radius: 5px;
     cursor: pointer;
@@ -98,6 +119,10 @@ body {
         30px 30px 60px rgba(0, 0, 0, 0.8), 
         inset 0 5px 15px rgba(255, 255, 255, 0.3), 
         inset 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.ca-2 {
+    margin-bottom: 20px;
 }
 
 .ca-3::-webkit-file-upload-button {

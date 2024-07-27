@@ -3,8 +3,8 @@ from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, abort
 from flask_login import login_required, current_user
 # Import the forms and models
-from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement, Comment
-from app.forms import QuestForm, PublishCommentForm, EditQuestForm, EditReportedQuestForm
+from app.models import Guild
+from app.forms import CreateGuildForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
 # Import the database instance
@@ -21,10 +21,54 @@ bp_guild = Blueprint('guilds', __name__)
 # Redirect to create new guild page
 @bp_guild.route('/create_guild', methods=['GET'])
 def open_create_guild():
-    return render_template('guild_templates/create_guild.html')
+    form = CreateGuildForm()
+    return render_template('guild_templates/create_guild.html', form=form)
 
 # Create new guild
 @bp_guild.route('/guilds/create', methods=['GET', 'POST'])
 @login_required
 def create_new_guild():
-    pass
+    form = CreateGuildForm()
+    if form.validate_on_submit():
+        existing_guild = Guild.query.filter_by(guild_name=form.name.data).first()
+        if existing_guild:
+            flash('This guild name is already taken. Please choose a different name.', 'error')
+            return render_template('create_guild.html', form=form)
+        
+        if form.avatar.data:
+            guild_avatar = form.avatar.data.read()
+        else:
+            with open('app/static/images/default-guild-avatar.png', 'rb') as f:
+                guild_avatar = f.read()
+    
+        # Generate a random guild ID
+        while True:
+            # Generate a random 7-digit number
+            random_digits = random.randint(1000000, 9999999)
+            guild_id = f"GD-{random_digits}"
+            # Check if this ID already exists in the database
+            existing_guild = Guild.query.filter_by(guild_id=guild_id).first()
+            if not existing_guild:
+                break
+        
+
+        # Create new guild
+        guild = Guild(
+            guild_id=guild_id,
+            guild_name=form.name.data,
+            description=form.description.data,
+            guild_master_id=current_user.user_id,
+            guild_avatar=guild_avatar)
+        
+        db.session.add(guild)
+        db.session.commit()
+        
+        flash(f'Guild {form.name.data} created successfully!', 'success')
+        return redirect(url_for('guilds.create_new_guild'))
+    else:
+        # Print form errors as flash messages
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"Error in the {getattr(form, field).label.text} field - {error}", 'error')
+
+    return render_template('guild_templates/create_guild.html', form=form)

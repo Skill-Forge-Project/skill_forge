@@ -17,31 +17,40 @@
     {% include 'navbar.html' %}
 
     <!-- Main Container -->
+    
     <div class="main_container min-h-screen flex items-center justify-center main-container">
         <div class="container mx-auto p-5 bg-gray-800 rounded-lg shadow-lg crt_guild_box">
             <h2 class="text-3xl font-bold text-center text-teal-300 mb-6 txt-1">Create New Guild</h2>
             <!-- Avatar Preview Section -->
             <div class="avatar-section flex flex-col items-center mb-6">
                 <div>
-                    <img id="avatarPreview" src="{{ url_for('static', filename='images/default-avatar.png') }}" alt="Avatar" class="user_avatar">
+                    <img id="avatarPreview" src="{{ url_for('static', filename='images/default-guild-avatar.png') }}" alt="Avatar" class="user_avatar">
                 </div>
             </div>
-            <form action="/create-guild" method="post" enctype="multipart/form-data">
+            <div class="change-avatar-section">
+                <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data" class="ca-2">
+                    {{ form.hidden_tag() }}
+                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
+                </form>
+            </div>
+            <form action="{{ url_for('guilds.create_new_guild') }}" method="post" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
                 <div class="form-group">
-                    <label for="guildName" class="text-gray-400">Guild Name</label>
-                    <input type="text" class="form-control" id="guildName" name="guild_name"
-                        placeholder="Enter guild name" required>
+                    {{ form.name.label(class="text-gray-400") }}
+                    {{ form.name(class="form-control", id="guildName", placeholder="Enter guild name") }}
                 </div>
                 <div class="form-group">
-                    <label for="guildDescription" class="text-gray-400">Description</label>
-                    <textarea class="form-control" id="guildDescription" name="description" rows="4"
-                        placeholder="Enter guild description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="guildAvatar" class="text-gray-400">Guild Avatar</label>
-                    <input type="file" class="form-control-file ca-3" id="guildAvatar" name="guild_avatar">
+                    {{ form.description.label(class="text-gray-400") }}
+                    {{ form.description(class="form-control", id="guildDescription", placeholder="Enter guild description") }}
                 </div>
                 <button type="submit" class="guild_button btn btn-primary w-full crt_guild_button">Create Guild</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
             </form>
         </div>
     </div>
