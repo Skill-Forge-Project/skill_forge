@@ -63,6 +63,34 @@ body {
     margin-bottom: 20px;
 }
 
+.text_label {
+    color: #03e9f4;
+    font-size: 20px;
+}
+
+.form-control {
+    display: flex;
+    color: #d2d0d0 !important;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5) !important;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 0px;
+}
+
+/* Autofill styling */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus,
+.form-control:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important; /* Adjust this color to match your input background */
+    -webkit-text-fill-color: #03e9f4 !important; /* Text color */
+}
+
 .crt_guild_button {
     font-family: 'JetBrainsMonoBold', sans-serif !important;
     display: inline-block;
@@ -80,6 +108,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     border: 0;
+    width: 20%;
 }
 
 .crt_guild_button:hover {
@@ -123,6 +152,7 @@ body {
 
 .ca-2 {
     margin-bottom: 20px;
+    color: #03e9f4;
 }
 
 .ca-3::-webkit-file-upload-button {
