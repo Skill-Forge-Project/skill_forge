@@ -42,8 +42,8 @@ def latin_characters_only(form, field):
 class LoginForm(FlaskForm):
     username = StringField('Username', [DataRequired()])
     password = PasswordField('Password', [DataRequired()])
+    remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
-
 
 ########### Register Form ###########
 class RegistrationForm(FlaskForm):
@@ -146,7 +146,6 @@ class QuestForm(FlaskForm):
     )
     submit = SubmitField('Submit Quest')
     
-    
 ########### Edit Quest Form - as Admin ###########
 ########### Edit Submited Quest - as Admin ###########
 ########### Edit Submited Quest - as Regular User ###########
@@ -161,7 +160,6 @@ class EditQuestForm(FlaskForm):
     quest_test_outputs = TextAreaField('Quest Tests Outputs', validators=[DataRequired()], render_kw={'rows': 10})
     quest_unitests = TextAreaField('Quest Unit Tests')
     submit = SubmitField('Save Changes')
-
 
 ########### Edit Reported Quest Form - as Admin ###########
 class EditReportedQuestForm(FlaskForm):
@@ -179,7 +177,7 @@ class EditReportedQuestForm(FlaskForm):
     
 ########### Publish New Comment On Quest Form ###########
 class PublishCommentForm(FlaskForm):
-    comment = TextAreaField('Comment', validators=[DataRequired()])
+    comment = TextAreaField('Comment', validators=[DataRequired(), Length(max=1000)])
     submit = SubmitField('Comment')
 
 ########### Contact Form ###########

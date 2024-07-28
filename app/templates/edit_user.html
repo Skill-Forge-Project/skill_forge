@@ -27,10 +27,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
         <!-- Include bootstrap dataTables libraries -->
         <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
-        <!-- JavaScript to toggle visibility of content sections -->
-        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
-        <!-- JavaScript to toggle visibility of content sections -->
-        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+        <!-- Track the user status -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+        <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
         
     </head>
 

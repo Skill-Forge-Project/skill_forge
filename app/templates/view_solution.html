@@ -26,8 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
     <!-- Track the user status -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <!-- Webpack build (mostly for tracking the user status on the client side) -->
-    <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
 </head>
 
 <body>

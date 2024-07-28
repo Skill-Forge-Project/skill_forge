@@ -6,8 +6,8 @@
     src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
 }
 
-
 .skill_forge_image {
+    @apply relative flex justify-center items-center w-15 h-15 mr-2 rounded-full bg-gradient-to-r from-blue-900 to-blue-600 cursor-pointer;
     position: relative;
     display: flex;
     justify-content: center;
@@ -18,33 +18,34 @@
     border-radius: 50%;
     background: linear-gradient(#141e30, #243b55);
     cursor: pointer;
+
 }
 
 .skill_forge_image img {
+    @apply max-w-full max-h-full pr-2;
     display: flex;
     max-width: 100%;
     max-height: 100%;
     padding-right: 2px;
-
 }
 
 .navbar-brand {
-    cursor: pointer;
-    font-family: 'JetBrainsMonoRegular', sans-serif;
+    @apply cursor-pointer font-jetbrains;
 }
 
 .navbar-nav {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
+    @apply font-jetbrains;
 }
 
 .nav-link {
-    cursor: pointer;
+    @apply cursor-pointer bg-gradient-to-r from-blue-900 to-blue-600 text-blue-200 shadow-lg rounded-md mx-1 h-10 flex items-center transition duration-500;
 }
 
 .navbar-nav .nav-link {
+    @apply text-blue-200 !important;
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    background: linear-gradient(#141e30, #243b55);
-    color: #03e9f4;
+    background: linear-gradient(#141e30, #243b55) !important;
+    color: #03e9f4 !important;
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 5px;
@@ -53,17 +54,13 @@
     height: 40px;
     vertical-align: middle;
     transition: .5s;
+
 }
 
-.navbar .navbar-nav .nav-item .nav-link,
-.navbar-light .navbar-nav .nav-link {
-    color: #03e9f4 !important;
-}
-
-.navbar .navbar-nav .nav-item .nav-link:hover,
-.navbar-light .navbar-nav .nav-link:hover {
+.navbar-nav .nav-link:hover {
+    @apply text-blue-900 bg-blue-200 shadow-blue-900/25;
     color: #141e30 !important;
-    background: #03e9f4;
+    background: #03e9f4 !important;
     box-shadow: 0 0 5px #141e30,
                 0 0 25px #141e30,
                 0 0 50px #141e30,
@@ -71,22 +68,26 @@
 }
 
 .user_pane {
-    display: flex;
-    flex-direction: row;
-    padding: 0px;
+    @apply flex flex-row;
+    
 }
 
 .user_image {
+    @apply ml-2 cursor-pointer;
     align-items: right;
     justify-content: right;
     margin-left: 10px;
     cursor: pointer;
+    height: 40px;
+    width: 40px;
+    margin-top: 5px;
 }
 
-
-.navbar-link.admin-btn {
+.nav-link.admin-btn {
+    @apply bg-gradient-to-r from-red-800 to-red-600 shadow-lg rounded-md mx-1 mt-1 w-32 text-center;
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#880000, #6a0400);
+    color: #fff;
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 5px;
@@ -104,7 +105,8 @@
     padding-right: 5px;
 }
 
-.navbar-link.admin-btn:hover {
+.nav-link.admin-btn:hover {
+    @apply shadow-red-500/50;
     border-radius: 5px;
     box-shadow: 0 0 2px #ff0000ba,
     0 0 20px #ff0000ba,
@@ -112,20 +114,40 @@
     0 0 20px #ff0000ba;
 }
 
+.nav-link.logout-btn {
+    @apply text-blue-200 !important;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 40px;
+    vertical-align: middle;
+    transition: .5s;
+}
+
+.nav-link.logout-btn:hover {
+    @apply text-blue-900 bg-blue-200 shadow-blue-900/25;
+    color: #141e30 !important;
+    background: #03e9f4;
+    box-shadow: 0 0 5px #141e30,
+                0 0 25px #141e30,
+                0 0 50px #141e30,
+                0 0 100px #141e30;
+}
 
 nav {
-    width: 100%;
+    @apply w-full;
 }
 
 #navbarNav .navbar-nav {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+    @apply flex justify-between w-full;
 }
 
 #navbarNav .navbar-nav .left-side ul {
-    display: flex;
-    text-decoration: none;
-    list-style: none;
-
+    @apply flex list-none;
 }

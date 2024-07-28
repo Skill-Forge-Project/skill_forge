@@ -27,3 +27,13 @@ body {
 }
 
 
+/* Homepage custom Tailwind */
+.homepage_box {
+    background: rgba(0, 0, 0, 100) !important;
+}
+
+.box {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
+    background: rgba(0, 0, 0, .5) !important;
+}
+
