@@ -24,12 +24,6 @@ RUN pip install -r requirements.txt --no-cache
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install the node modules
-RUN npm install
-
-# Buld the dependencies
-RUN npm run build
-
 # Expose port 8000
 EXPOSE 8000
 
