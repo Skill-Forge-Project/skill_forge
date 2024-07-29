@@ -1,8 +1,9 @@
+
 from flask import Flask, redirect, url_for, render_template, flash, jsonify
 from config import Config
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, current_user, login_required
+from flask_login import LoginManager, current_user, login_required, login_user, user_loaded_from_header
 from flask_socketio import SocketIO, emit, disconnect
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -10,12 +11,14 @@ from datetime import datetime, timedelta
 # Import database instance
 from app.database.db_init import db
 from app.models import User
-
+# Import scheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+import atexit
 
 migrate = Migrate()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-socketio = SocketIO()
+socketio = SocketIO(manage_session=True)
 csrf = CSRFProtect()
 
 
@@ -27,7 +30,7 @@ def create_app():
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    socketio.init_app(app, manage_session=False, ping_timeout=10, ping_interval=5)
+    socketio.init_app(app, manage_session=False, ping_timeout=10, ping_interval=5, cors_allowed_origins="*", logger=True, engineio_logger=True)
     csrf.init_app(app)
     
     # Apply ProxyFix to handle the reverse proxy
@@ -44,8 +47,7 @@ def create_app():
     
     # Import websockets
     # Define ping timeout and ping interval (in seconds)
-    # socketio = socketio(app, ping_timeout=10, ping_interval=5)
-    from app.sockets import handle_connect, handle_disconnect, handle_status_update_request
+    # from app.sockets import handle_connect, handle_disconnect, handle_status_update_request
 
     ########### Routes handling error codes responds ###########
     # Custom error handler for Unauthorized (404) error
@@ -71,11 +73,25 @@ def create_app():
         user = User.query.get(user_id)
         return user
     
-    @app.route('/get_user_status/user_id')
-    def get_user_status(user_id):
-        user = User.query.filter_by(user_id=user_id).first()
-        if user:
-            return jsonify(status=user.user_online_status, last_logged_date=user.last_status_update.strftime('%d-%m-%Y %H:%M') if user.last_status_update else None)
-        return jsonify(status='Offline', last_logged_date=None)
+    @app.before_request
+    def update_last_activity():
+        if current_user.is_authenticated:
+            current_user.last_status_update = datetime.now()
+            if current_user.user_online_status != "Online":
+                current_user.user_online_status = "Online"
+        db.session.commit()
+            
+    def check_inactive_users():
+        with app.app_context():
+            timeout = datetime.now() - timedelta(seconds=5)
+            inactive_users = User.query.filter(User.user_online_status == 'Online', User.last_status_update < timeout).all()
+            for user in inactive_users:
+                user.user_online_status = 'Offline'
+                db.session.commit()
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=check_inactive_users, trigger="interval", seconds=10)
+    scheduler.start()
+
+    atexit.register(lambda: scheduler.shutdown())
         
     return app
