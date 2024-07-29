@@ -78,7 +78,7 @@ def create_new_guild():
             description=form.description.data,
             guild_master_id=current_user.user_id,
             guild_avatar=guild_avatar)
-        
+
         db.session.add(guild)
         db.session.commit()
         
