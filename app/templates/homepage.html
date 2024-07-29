@@ -18,15 +18,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
         <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
     </head>
-    
 
-    <!-- Markdown showdown library -->
-    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
-    <!-- Track the user status -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <!-- Webpack build (mostly for tracking the user status on the client side) -->
-    <script type="module" src="{{ url_for('static', filename='dist/bundle.js') }}"></script>
-</head>
 
 <body class="bg-gradient-to-b from-gray-800 to-gray-900">
     <!-- Include Navbar template -->
@@ -78,7 +70,7 @@
                 <div class="box p-4 md:p-2">
                     <h5 class="mb-2 text-xl font-medium leading-tight text-cyan-400">Stats</h5>
                     <p class="mb-2 text-base">Total Number of users: {{ user_count }}</p>
-                    <p class="mb-2 text-base">Online users: {{ online_users }}</p>
+                    <p class="mb-2 text-base" id="onlineUsersNumber">Online users: {{ online_users }}</p>
                     <p class="mb-2 text-base">Total Number of quests: {{ quest_count }}</p>
                     <p class="mb-2 text-base">Total Number of solved quests: {{ solutions_count }}</p>
                 </div>

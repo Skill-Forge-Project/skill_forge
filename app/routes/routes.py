@@ -28,7 +28,8 @@ def login():
         if user:
             if not user.is_banned:
                 if bcrypt.check_password_hash(user.password, form.password.data):
-                    login_user(user, force=True)
+                    login_user(user, remember=form.remember_me.data)
+                    print(form.remember_me.data)
                     user.user_online_status = "Online"
                     user.last_status_update = datetime.now()
                     db.session.commit()
@@ -204,7 +205,7 @@ def main_page():
     online_users_query = User.query.filter_by(user_online_status="Online").all()
     quest_count = Quest.query.count()
     solutions_count = SubmitedSolution.query.filter_by(quest_passed=True).count()
-    server_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    server_time = datetime.now()
     return render_template('homepage.html', 
                            server_time=server_time, 
                            user_count=user_count,
@@ -212,6 +213,7 @@ def main_page():
                            quest_count=quest_count,
                            solutions_count=solutions_count)
 
+# Check the number of online users. Function used by the websockets and client side script.
 @bp.route('/get_online_users')
 def get_online_users():
     online_users = User.query.filter_by(user_online_status='Online').count()

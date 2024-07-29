@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Load the env variables
 load_dotenv()
@@ -12,11 +13,9 @@ class Config:
     SESSION_COOKIE_DOMAIN = False
     TIMEZONE = 'Europe/Sofia'
     PREFERRED_URL_SCHEME = 'https'
-    
-    ##### Debug these setting in development #####
-    ##### Not clear what they do #####
-    
-    # SESSION_COOKIE_HTTPONLY = True
-    # SESSION_COOKIE_SECURE = True
-    # CSRF_COOKIE_HTTPONLY = True
-    # CSRF_COOKIE_SECURE = True
+    REMEMBER_COOKIE_DURATION = timedelta(days=7)
+
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = False  # Ensure cookies are sent over HTTPS
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_SECURE = False  # Ensure remember me cookie is sent over HTTPS

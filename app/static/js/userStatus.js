@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socketIp = process.env.SOCKET_IP || '0.0.0.0';
     const socketPort = process.env.SOCKET_PORT || '8000';
     const userId = "{{ user.user_id }}";  // Get the user ID dynamically
-    const socket = io(`https://${socketIp}:${socketPort}/`, {
+    const socket = io(``, {
         query: { user_id: userId }
     });
 
