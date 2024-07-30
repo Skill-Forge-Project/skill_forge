@@ -19,10 +19,7 @@ body {
     flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#141e30, #243b55) !important;
-    background-size: cover;
-    background-position: repeat;
-    align-items: center;
-    justify-content: center;
+
 }
 
 .alert {
@@ -43,24 +40,11 @@ body {
 }
 
 
-.main_container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* background: linear-gradient(#141e30, #243b55); */
-    background-size: cover;
-    background-position: repeat;
-}
-
 .description-container {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     display: flex;
     align-items: center;
     background-color: linear-gradient(#141e30, #243b55);
-    margin-top: 5px !important;
-    margin-bottom: 20px !important;
-    margin-left: 10px !important;
 }
 .description-image {
     max-width: 300px;

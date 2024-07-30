@@ -5,40 +5,9 @@
     src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
 }
 
-.button-container {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
 
-.button-container .button-box {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+.btn {
 
-.button-box {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    top: 50%;
-    left: 50%;
-    width: 900px;
-    height: 50px;
-    padding: 40px;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, .5) !important;
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    border-radius: 10px;
-
-}
-
-.button-box .btn {
     position: relative;
     display: inline-block;
     padding: 10px 20px;
@@ -52,17 +21,16 @@
     letter-spacing: 4px;
     margin: 10px;
     border: 0px;
-    width: 300px;
+    width: 200px;
 }
 
-
 /* Python button styles */
-.button-box .btn.python-btn {
+.btn.python-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #03e9f4;
 }
 
-.button-box .btn.python-btn:hover {
+.btn.python-btn:hover {
     background: #ffde57 !important; /* Unique color for Python button hover */
     color: #4584b6 !important;
     border-radius: 5px !important;
@@ -74,11 +42,11 @@
 
 
 /* Java button styles */
-.button-box .btn.java-btn {
+.btn.java-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
-.button-box .btn.java-btn:hover {
+.btn.java-btn:hover {
     background: #f89820 !important; /* Unique color for Java button hover */
     color: #5382a1 !important;
     border-radius: 5px !important;
@@ -88,16 +56,16 @@
                 0 0 100px #f89820;
 }
 
-.user-box .btn .java-btn span:nth-child(1) {
+.btn .java-btn span:nth-child(1) {
     background: linear-gradient(90deg, transparent, #4caf50); /* Unique color for Java button animation */
 }
 
 /* JavaScript button styles */
-.button-box .btn.js-btn {
+.btn.js-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
-.button-box .btn.js-btn:hover {
+.btn.js-btn:hover {
     background: #f0db4f !important; /* Unique color for JavaScript button hover */
     color: #000000 !important;
     border-radius: 5px !important;
@@ -112,11 +80,11 @@
 }
 
 /* C# button styles */
-.button-box .btn.csharp-btn {
+.btn.csharp-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
 }
 
-.button-box .btn.csharp-btn:hover {
+.btn.csharp-btn:hover {
     background: #9b4993 !important; /* Unique color for C# button hover */
     color: #fff !important;
     border-radius: 5px !important;
@@ -126,12 +94,12 @@
                 0 0 100px #9b4993;
 }
 
-.button-box .btn span {
+.btn span {
     position: absolute;
     display: block;
 }
 
-.button-box .btn span:nth-child(1) {
+.btn span:nth-child(1) {
     top: 0;
     left: -100%;
     width: 100%;
@@ -173,7 +141,7 @@
     }
 }
 
-.button-box .btn span:nth-child(3) {
+.btn span:nth-child(3) {
     bottom: 0;
     right: -100%;
     width: 100%;
