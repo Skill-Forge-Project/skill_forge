@@ -16,8 +16,8 @@
 }
 
 .nav_bar {
-    background: #080c1492; /* Fully transparent background */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4) !important; /* Soft shadow */
+    background: #141e30; /* Fully transparent background */
+    /* box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.4) !important; */
     margin-bottom: 10px;
     align-items: center;
     transition: all 0.3s ease; /* Smooth transition for hover effects */
@@ -25,60 +25,81 @@
 
 .nav-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    background: linear-gradient(#141e30, #243b55) !important;
     color: #03e9f4 !important;
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 5px;
     margin-left: 5px;
     margin-right: 5px;
-    /* height: 40px; */
     transition: .5s;
     justify-content: center !important;
     margin-bottom: 0px !important;
-
+    background: transparent; /* Ensure background is transparent */
+    border: none; /* Remove border */
+    padding: 10px 20px; /* Add padding for better spacing */
+    cursor: pointer; /* Add cursor pointer for interactivity */
 }
 
 .nav-btn:hover {
-    color: #141e30 !important;
-    background: #03e9f4 !important;
-    box-shadow: 0 0 5px #141e30,
-                0 0 25px #141e30,
-                0 0 50px #141e30,
-                0 0 100px #141e30;
+    color: #03e9f4 !important;
+    text-shadow: 0 0 5px #03e9f4,
+                 0 0 10px #03e9f4,
+                 0 0 20px #03e9f4,
+                 0 0 30px #03e9f4;
+    background: transparent !important;
 }
 
 
-.nav-btn.admin-btn {
+.icon-wrapper {
+    display: inline-block;
+}
+
+/* Sign Out Icon */
+.sign-out-icon {
+    color: #007bff; /* Blue color for the sign-out icon */
+}
+
+.sign-out-icon:hover i {
+    text-shadow: 0 0 2px #007bff,
+                 0 0 10px #007bff,
+                 0 0 20px #007bff,
+                 0 0 30px #007bff !important;
+}
+
+/* Settings Icon */
+.settings-icon {
+    color: #ff0000; /* Red color for the settings icon */
+}
+
+.settings-icon:hover i {
+    text-shadow: 0 0 2px #ff0000,
+                 0 0 10px #ff0000,
+                 0 0 20px #ff0000,
+                 0 0 30px #ff0000 !important;
+}
+
+/* User Icon */
+.user-icon {
+    color: #28a745; /* Green color for the user icon */
+}
+
+.user-icon:hover i {
+    text-shadow: 0 0 2px #28a745,
+                 0 0 10px #28a745,
+                 0 0 20px #28a745,
+                 0 0 30px #28a745 !important;
+}
+
+.admin-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    background: linear-gradient(#880000, #6a0400) !important;
-    color: #fff !important;
-    box-sizing: border-box !important;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6) !important;
-    border-radius: 5px;
-    text-align: center;
     cursor: pointer;
-}
-
-.nav-btn.admin-btn:hover {
-    @apply shadow-red-500/50;
     border-radius: 5px;
-    box-shadow: 0 0 2px #ff0000ba,
-    0 0 20px #ff0000ba,
-    0 0 20px #ff0000ba,
-    0 0 20px #ff0000ba !important;
 }
 
-.nav_link {
-    margin: auto !important;
-    width: 100% !important;
-    text-align: center !important;
-}
-
-
-.nav_link:hover {
-    text-decoration: none;
-    color: #141e30;
+/* Optional: if you want the glow effect only on the text */
+.admin-btn:hover {
+    text-shadow: 0 0 2px #ff0000ba,
+                 0 0 20px #ff0000ba,
+                 0 0 20px #ff0000ba,
+                 0 0 20px #ff0000ba !important;
 }
 
 /* .skill_forge_image img {

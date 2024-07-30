@@ -1,42 +1,40 @@
-<!-- navbar.html -->
-<!-- component -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<!-- This is an example component -->
-
-<!--light mode - text and icons-->
-<div class="py-3 pl-10 pr-10 text-gray-900 font-medium capitalize nav_bar">
-    <span class="px-2 mr-2 border-r border-gray-800">
-        <img src="../static/images/anvil.png"
-            alt="alt placeholder" class="w-10 h-10 -mt-1 inline mx-auto skill_forge_image">
-    </span>
-    <span class="px-1 py-1 cursor-pointer text-sm rounded mb-5 nav-btn">
-        <a class="nav_link" onclick=location.href="{{ url_for('main.main_page') }}">Home</a>
-    </span>
-    <span class="px-1 py-1 cursor-pointer text-sm rounded mb-5 nav-btn">
-        <a class="nav_link" onclick=location.href="{{ url_for('main.about') }}">About</a>
-    </span>
-    <span class="px-1 py-1 cursor-pointer text-sm rounded mb-5 nav-btn">
-        <a class="nav_link" onclick=location.href="{{ url_for('main.contact') }}">Contact</a>
-    </span>
-    <span class="px-1 py-1 cursor-pointer text-sm rounded mb-5 nav-btn">
-        <a class="nav_link" onclick=location.href="{{ url_for('usq.open_user_submit_quest') }}">Submit Quest</a>
-    </span>
-
-
-
-    <span class="w-10 relative  mr-0 ml-3 cursor-pointer float-right">
-        <img src="../static/images/user.png"
-            alt="alt placeholder" class="w-10 h-10 -mt-1 inline mx-auto skill_forge_image">
-    </span>
-
-    <span class="px-1 py-1 cursor-pointer float-right text-sm rounded mb-5 ml-2 nav-btn">
-        <a onclick=location.href="{{ url_for('usr.open_admin_panel') }}">Log Out</a>
-    </span>
-
-    {% if current_user.user_role == "Admin" %}
-        <span class="px-1 py-1 cursor-pointer text-sm rounded mb-5 nav-btn float-right mr-0 nav-btn admin-btn">
-            <a onclick=location.href="{{ url_for('usr.open_admin_panel') }}">Admin Panel</a>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+<!--horizontal navigations-->
+<div class="p-4 w-full mb-0 lg:xl">
+    <div class="p-2 mx-8 text-gray-900 rounded-lg shadow-xl shadow-secondary-1 nav_bar">
+        <span class="px-2 mr-2 border-r border-gray-800">
+            <img src="../static/images/anvil.png"
+                alt="alt placeholder" class="w-8 h-8 -mt-1 inline mx-auto">
         </span>
-    {% endif %}
+
+        <span class="px-1 cursor-pointer nav-btn">
+            <span class="mx-1" onclick=location.href="{{ url_for('main.main_page') }}">Home</span>
+        </span>
+        <span class="px-1 cursor-pointer hover:text-gray-700 nav-btn">
+            <span class="mx-1" onclick=location.href="{{ url_for('main.about') }}">About</span>
+        </span>
+        <span class="px-1 cursor-pointer hover:text-gray-700 nav-btn">
+            <span class="mx-1" onclick=location.href="{{ url_for('main.contact') }}">Contact</span>
+        </span>
+        <span class="px-1 cursor-pointer hover:text-gray-700 nav-btn">
+            <span class="mx-1" onclick=location.href="{{ url_for('usq.open_user_submit_quest') }}">Submit Quest</span>
+        </span>
+
+        <!-- Sign Out Icon -->
+        <span class="icon-wrapper sign-out-icon cursor-pointer float-right hover:text-gray-700">
+            <i class="fas fa-sign-out-alt p-2 bg-gray-200 rounded-full" onclick=location.href="{{ url_for('main.logout') }}"></i>
+        </span>
+        {% if current_user.user_role == "Admin" %}
+        <!-- Admin Icon -->
+        <span class="icon-wrapper settings-icon cursor-pointer mr-3 float-right hover:text-gray-700 admin-btn">
+            <i class="fas fa-cog p-2 bg-gray-200 rounded-full" onclick=location.href="{{ url_for('usr.open_admin_panel') }}"></i>
+        </span>
+        {% endif %}
+        <!-- User Icon -->
+        <span class="icon-wrapper user-icon cursor-pointer mr-3 float-right hover:text-gray-700">
+            <i class="fas fa-user p-2 bg-gray-200 rounded-full" onclick=location.href="{{ url_for('usr.open_user_profile') }}"></i>
+        </span>
+    </div>
 </div>

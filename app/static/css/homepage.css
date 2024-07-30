@@ -59,7 +59,7 @@ body {
     align-items: center;
     padding: 20px;
     background-color: linear-gradient(#141e30, #243b55);
-    margin-top: 5px !important;
+    /* margin-top: 5px !important; */
     margin-bottom: 20px !important;
     margin-left: 10px !important;
 }
