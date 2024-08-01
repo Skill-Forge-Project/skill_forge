@@ -35,7 +35,6 @@
     background: transparent; /* Ensure background is transparent */
     border: none; /* Remove border */
     padding: 10px 20px; /* Add padding for better spacing */
-    cursor: pointer; /* Add cursor pointer for interactivity */
 }
 
 .nav-btn:hover {
