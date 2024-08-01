@@ -12,7 +12,7 @@
     display: inline-block;
     padding: 10px 20px;
     color: #03e9f4 !important;
-    background-color: #141e30 !important;
+    background: rgba(0, 0, 0, .5) !important;
     font-size: 16px; 
     text-decoration: none;
     text-transform: uppercase;
