@@ -45,44 +45,6 @@ body {
     color: #2196F3;
 }
 
-.user_profile_info {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #d2d0d0;
-}
-
-.user_profile_info.left_pane {
-    background: rgba(0, 0, 0, 0.5) !important;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .4) !important;
-}
-
-
-.user_profile_info.username {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.user_profile_info.rank {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 0px;
-}
-
-
-.user_profile_info.level {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
-    text-align: center;
-    margin-top: 2px;
-    margin-bottom: 10px;
-}
-
-
 
 .user_info {
     font-family: 'JetBrainsMonoRegular', sans-serif;
@@ -101,7 +63,16 @@ body {
     border-radius: 10px;
 }
 
-
+.left_pane {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    align-items: center;
+    width: 20%
+}
 
 .user_avatar {
     position: relative;
@@ -111,6 +82,7 @@ body {
     border-radius: 50%;
     overflow: hidden;
     font-family: 'JetBrainsMonoRegular', sans-serif;
+    margin-top: 60px;
     box-sizing: border-box;
     box-shadow: 
         20px 20px 45px rgba(0, 0, 0, 0.5), 
@@ -123,15 +95,15 @@ body {
 
 .user_avatar:hover {
     box-shadow: 
-        15px 15px 30px #03e9f4, 
+        30px 30px 60px rgba(0, 0, 0, 0.8), 
         inset 0 5px 15px rgba(255, 255, 255, 0.3), 
         inset 0 -5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .user_avatar img {
-    /* width: 100%; */
+    width: 100%;
     /* Make the image fill the circular div */
-    /* height: auto; */
+    height: auto;
     /* Maintain aspect ratio */
     display: block;
     /* Remove any default spacing */
