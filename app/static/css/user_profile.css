@@ -62,12 +62,21 @@ body {
     font-size: 24px;
     text-align: center;
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 2px;
+}
+
+.user_profile_info.name {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #d2d0d0;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .user_profile_info.rank {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
+    color: #d2d0d0;
     text-align: center;
     margin-top: 10px;
     margin-bottom: 0px;
@@ -76,13 +85,15 @@ body {
 
 .user_profile_info.level {
     font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
+    color: #d2d0d0;
     text-align: center;
     margin-top: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
-
+.user_profile_info.xp_points {
+    background: linear-gradient(90deg, #ff6347, #ffa07a);
+}
 
 .user_info {
     font-family: 'JetBrainsMonoRegular', sans-serif;

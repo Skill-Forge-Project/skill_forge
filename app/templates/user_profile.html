@@ -29,24 +29,19 @@
                         <div class="flex flex-col items-center">
                             <img class="inline-block w-48 rounded-full user_avatar" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar">
                             <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
-                            <p class="text-l user_profile_info rank">{{user.rank}}r</p>
-                            <p class="text-s user_profile_info level">Level:{{user.level}}</p>
+                            <p class="text-l user_profile_info name">{{user.first_name}} {{user.last_name}}</p>
+                            <p class="text-l user_profile_info rank">Rank: {{user.rank}}r</p>
                             <div class="mt-6 flex flex-wrap gap-4 justify-center">
                                 <!-- <a href="#" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">Contact</a>
                                 <a href="#" class="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">Resume</a> -->
                             </div>
                         </div>
                         <hr class="my-6 border-t border-gray-300">
-                        <!-- <div class="flex flex-col">
-                            <span class="text-gray-700 uppercase font-bold tracking-wider mb-2">Skills</span>
-                            <ul>
-                                <li class="mb-2">JavaScript</li>
-                                <li class="mb-2">React</li>
-                                <li class="mb-2">Node.js</li>
-                                <li class="mb-2">HTML/CSS</li>
-                                <li class="mb-2">Tailwind Css</li>
-                            </ul>
-                        </div> -->
+                        <p class="text-s user_profile_info level">Level: {{user.level}}</p>
+                        <div class="flex w-full h-4 bg-gray-200 rounded-full overflow-hidde" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            <div class="flex flex-col justify-center rounded-full overflow-hidden text-xs text-white text-center whitespace-nowrap dark:bg-blue-500 transition duration-500 user_profile_info xp_points" style='width: {{ xp_percentage }}%'>{{xp_percentage}}%</div>
+                          </div>
+                          <p class="text-xs text-center">{{ user.xp }} / {{ max_xp }} XP</p>
                     </div>
                 </div>
                 <div class="col-span-4 sm:col-span-9">
