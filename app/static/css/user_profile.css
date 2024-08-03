@@ -48,6 +48,7 @@ body {
 .user_profile_info {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     color: #d2d0d0;
+    border-radius: 20px !important;
 }
 
 .user_profile_info.left_pane {
@@ -92,8 +93,34 @@ body {
 }
 
 .user_profile_info.xp_points {
-    background: linear-gradient(90deg, #ff6347, #ffa07a);
+    background: linear-gradient(90deg, #03858b, #03e9f4);
 }
+
+
+.user_profile_info.title {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+}
+
+.user_profile_info.about_me_text {
+    font-size: 14px;
+    color: #d2d0d0;
+}
+
+.user_profile_info.input_field {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e304b, #243b5548);
+    color: #03e9f4;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 40px;
+    border: 0px;
+    vertical-align: middle;
+}
+
 
 .user_info {
     font-family: 'JetBrainsMonoRegular', sans-serif;
