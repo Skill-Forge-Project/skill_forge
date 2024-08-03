@@ -99,7 +99,8 @@ table.dataTable thead .sorting_desc_disabled:before {
     margin: 0px !important;
     padding: 10px !important;
     justify-content: center;
-    background: linear-gradient(#141e30, #243b55) !important;
+    /* background: linear-gradient(#141e30, #243b55) !important; */
+    background: rgba(0, 0, 0, .5) !important;
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px !important;

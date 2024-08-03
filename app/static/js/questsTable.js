@@ -53,3 +53,10 @@ $(function () {
     $('#mange_users_table').DataTable();
   });
 });
+
+// Table for displaying the guilds list
+$(function () {
+  $(document).ready(function () {
+    $('#guilds_list').DataTable();
+  });
+});

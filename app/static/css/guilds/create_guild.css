@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+}
+
+.alert-success {
+    color: #4CAF50;
+}
+
+.alert-error {
+    color: #f44336;
+}
+
+.alert-info {
+    color: #2196F3;
+}
+
+
+.main-container {
+    min-height: 100vb !important;
+    margin-top: 50px;
+}
+
+.crt_guild_box {
+    background: rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .4) !important;
+}
+
+.txt-1 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 32px;
+    color: #03e9f4;
+    margin-bottom: 20px;
+}
+
+.text_label {
+    color: #03e9f4;
+    font-size: 20px;
+}
+
+.form-control {
+    display: flex;
+    color: #d2d0d0 !important;
+    flex-direction: column;
+    background: rgba(0, 0, 0, .5) !important;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 0px;
+}
+
+/* Autofill styling */
+.form-control:-webkit-autofill,
+.form-control:-webkit-autofill:hover,
+.form-control:-webkit-autofill:focus,
+.form-control:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(0, 0, 0, 0.8) inset !important; /* Adjust this color to match your input background */
+    -webkit-text-fill-color: #03e9f4 !important; /* Text color */
+}
+
+.crt_guild_button {
+    font-family: 'JetBrainsMonoBold', sans-serif !important;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    background-color: rgba(0, 0, 0, .5) !important;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: .5s;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    letter-spacing: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 0;
+    width: 20%;
+}
+
+.crt_guild_button:hover {
+    background: #03e9f4;
+    color: #fff;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+}
+
+
+/*  Avatar Styling  */
+.guild_avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 7px solid rgba(3, 232, 244, 0.23);
+    border-radius: 50%;
+    overflow: hidden;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    width: 200px;
+    height: 200px;
+    margin-top: 60px;
+    box-sizing: border-box;
+    box-shadow: 
+        20px 20px 45px rgba(0, 0, 0, 0.5), 
+        inset 0 5px 10px rgba(255, 255, 255, 0.2), 
+        inset 0 -5px 15px rgba(0, 0, 0, 0.3);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.guild_avatar:hover {
+    box-shadow: 
+        30px 30px 60px rgba(0, 0, 0, 0.8), 
+        inset 0 5px 15px rgba(255, 255, 255, 0.3), 
+        inset 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.ca-2 {
+    margin-bottom: 20px;
+    color: #03e9f4;
+}
+
+.ca-3::-webkit-file-upload-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    border-radius: 5px;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+
+}

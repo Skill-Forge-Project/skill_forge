@@ -239,3 +239,10 @@ class QuestApprovalForm(FlaskForm):
     request_changes = SubmitField('Request Changes', render_kw={'value': 'request-changes'})
     reject = SubmitField('Reject Quest', render_kw={'value': 'reject'})
     save_changes = SubmitField('Save Changes', render_kw={'value': 'save-changes'})
+    
+########### Create New Guild Form ###########
+class CreateGuildForm(FlaskForm):
+    name = StringField('Guild Name', validators=[DataRequired(), Length(min=5, max=50)])
+    description = TextAreaField('Description', validators=[Optional(), Length(min=10, max=500)])
+    avatar = FileField('Avatar')
+    submit = SubmitField('Create Guild')

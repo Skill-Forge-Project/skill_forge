@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+
+html {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background-size: cover;
+    background-position: right bottom;
+    background-color: #243b55;
+}
+
+body {
+    flex-direction: column;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55) !important;
+    background-size: cover;
+    background-position: repeat;
+    align-items: center;
+    justify-content: center;
+}
+
+.guild_card {
+    background: rgba(0, 0, 0, .5) !important;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    color: #03e9f4 !important;
+}
+
+/* Avatar styling */
+.guild_avatar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 5px solid rgba(3, 232, 244, 0.23);
+    border-radius: 50%;
+    overflow: hidden;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    width: 15%;
+    height: 15%;
+    box-sizing: border-box;
+    box-shadow: 
+        20px 20px 45px rgba(0, 0, 0, 0.5), 
+        inset 0 5px 10px rgba(255, 255, 255, 0.2), 
+        inset 0 -5px 15px rgba(0, 0, 0, 0.3);
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.guild_avatar:hover {
+    box-shadow: 
+        30px 30px 60px rgba(0, 0, 0, 0.8), 
+        inset 0 5px 15px rgba(255, 255, 255, 0.3), 
+        inset 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
