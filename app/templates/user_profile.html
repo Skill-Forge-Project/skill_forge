@@ -30,6 +30,13 @@
     <!-- User Profile Section -->
     <div>
         <div class="container mx-auto py-8 user_profile_info">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
             <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
                 <div class="col-span-4 sm:col-span-3">
                     <div class="shadow rounded-lg p-6 user_profile_info left_pane">
@@ -69,96 +76,90 @@
                         <p class="text-gray-700 user_profile_info about_me_text">{{ user.about_me }}</p>
                         <p class="text-gray-700 user_profile_info about_me_text">Some Bio Info</p>
                         <!-- User Info Section -->
-                        <form>
+                        <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data">
+                            {{ form.hidden_tag() }}
                             <div class="grid gap-6 mb-6 md:grid-cols-2">
                                 <div>
-                                    <label for="first_name"
-                                        class="block mb-2 font-medium text-gray-900 dark:text-white">First
-                                        name</label>
-                                    <input type="text" id="first_name"
-                                        class="text-gray-900 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field"
-                                        placeholder="{{ user.first_name }}" />
+                                    <label for="first_name" class="block mb-2 font-medium text-gray-900 dark:text-white">First name</label>
+                                    {{ form.first_name (class="text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                    user_profile_info input_field", placeholder="First Name") }}
                                 </div>
                                 <div>
                                     <label for="last_name"
-                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Last
-                                        name</label>
-                                    <input type="text" id="last_name"
-                                        class="text-gray-900 rounded-lg 
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Last name</label>
+                                        {{ form.last_name (class="text-gray-900 rounded-lg 
                                         focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field"
-                                        placeholder="{{ user.last_name }}" required />
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        user_profile_info input_field", placeholder="Last Name") }}
                                 </div>
                             </div>
                             <div class="mb-6">
                                 <label for="email"
-                                    class="block mb-2 font-medium text-gray-900 dark:text-white">Email
-                                    address</label>
-                                <input type="email" id="email"
-                                    class="text-gray-900 rounded-lg 
-                                focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field"
-                                    placeholder="{{ user.email }}" required />
+                                    class="block mb-2 font-medium text-gray-900 dark:text-white">Email address</label>
+                                    {{ form.email (class="text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                    user_profile_info input_field", placeholder="Email Address") }}
                             </div>
                             <!-- Social Media URLs Section -->
                             <label class="mb-2 text-black block">Social Media Links</label>
                             <div>
                                 <div class="relative flex items-center">
-                                    <input type='text' placeholder='{{user.facebook_profile}}'
-                                        class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field" />
+                                    {{ form.facebook_profile (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="Facebook Profile") }}
                                     <div class="absolute left-4">
                                         <img src="../static/images/facebook.svg" width="12" height="12"
                                             alt="Facebook Profile">
                                     </div>
                                 </div>
                                 <div class="relative flex items-center">
-                                    <input type='text' placeholder='{{user.instagram_profile}}'
-                                        class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field" />
+                                    {{ form.instagram_profile (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="Instagram Profile") }}
                                     <div class="absolute left-4">
                                         <img src="../static/images/instagram.png" width="18" height="18"
                                             alt="Instagram Profile">
                                     </div>
                                 </div>
                                 <div class="relative flex items-center">
-                                    <input type='text' placeholder='{{user.github_profile}}'
-                                        class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field" />
+                                    {{ form.github_profile (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="GitHub Profile") }}
                                     <div class="absolute left-4">
                                         <img src="../static/images/github.png" width="18" height="18"
                                             alt="GitHub Profile">
                                     </div>
                                 </div>
                                 <div class="relative flex items-center">
-                                    <input type='text' placeholder='{{user.discord_id}}'
-                                        class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field" />
+                                    {{ form.discord_id (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="Discord ID") }}
                                     <div class="absolute left-4">
                                         <img src="../static/images/discord.svg" width="18" height="18"
                                             alt="Discord ID">
                                     </div>
                                 </div>
                                 <div class="relative flex items-center">
-                                    <input type='text' placeholder='{{user.linked_in}}'
-                                        class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
-                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
-                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 user_profile_info input_field" />
+                                    {{ form.linked_in (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="LinedIn Profile") }}
                                     <div class="absolute left-4">
                                         <img src="../static/images/linkedin.png" width="18" height="18"
                                             alt="LinkedIn Profile">
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 
-                                font-medium rounded-lg w-full sm:w-auto mt-4 px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                            <div class="btn-section">
+                                {{ form.submit(class="submit-buton") }}
+                            </div>
                         </form>
 
                         <h3 class="font-semibold text-center mt-3 -mb-2 text-xl font-bold mb-4 user_profile_info title">

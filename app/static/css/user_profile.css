@@ -110,7 +110,7 @@ body {
 .user_profile_info.input_field {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     background: linear-gradient(#141e304b, #243b5548);
-    color: #03e9f4;
+    color: #d2d0d0;
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 5px;

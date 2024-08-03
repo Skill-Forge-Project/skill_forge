@@ -190,18 +190,17 @@ class ContactForm(FlaskForm):
     
 ########### User Profile Form - update user's profile ###########
 class UserProfileForm(FlaskForm):
-    first_name = StringField('First Name', validators=[Optional()])
-    last_name = StringField('Last Name', validators=[Optional()])
-    email = StringField('Email', validators=[Optional(), Email(), latin_characters_only])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email(), latin_characters_only])
     facebook_profile = StringField('Facebook Profile', validators=[Optional()])
     instagram_profile = StringField('Instagram', validators=[Optional()])
     github_profile = StringField('GitHub', validators=[Optional()])
     discord_id = StringField('Discord ID', validators=[Optional()])
     linked_in = StringField('LinkedIn', validators=[Optional()])
     avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional()])
-    submit = SubmitField('Save Changes', name="submit")
+    submit = SubmitField('Update Profile', name="submit")
 
-    
 ########### Submit Quest Form - as a Regular User ###########
 class QuestSubmissionForm(FlaskForm):
     quest_name = StringField('Quest Name', validators=[DataRequired(), Length(max=100)])
