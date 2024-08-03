@@ -42,6 +42,7 @@ class User(UserMixin, db.Model):
     discord_id = db.Column(db.String(120), default="")
     linked_in = db.Column(db.String(120), default="")
     is_banned = db.Column(db.Boolean, default=lambda: False)
+    about_me = db.Column(db.Text, default=" ", nullable=True)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
