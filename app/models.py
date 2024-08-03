@@ -41,13 +41,13 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default="")
     discord_id = db.Column(db.String(120), default="")
     linked_in = db.Column(db.String(120), default="")
+    about_me = db.Column(db.Text, default="", nullable=True)
     is_banned = db.Column(db.Boolean, default=lambda: False)
-    about_me = db.Column(db.Text, default=" ", nullable=True)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
     last_status_update = db.Column(db.DateTime, default=datetime.now(), nullable=True)
-    guild_id = db.Column(db.String(20), db.ForeignKey('guilds.guild_id'), nullable=False)
+    guild_id = db.Column(db.String(20), db.ForeignKey('guilds.guild_id'), nullable=True)
     
     # Define the relationship with the UserAchievement model
     achievements = db.relationship('UserAchievement')
