@@ -55,6 +55,7 @@
                     </div>
                 </div>
                 <div class="col-span-4 sm:col-span-9">
+                    <!-- User Stats Section -->
                     <div class="shadow rounded-lg p-6 user_profile_info left_pane">
                         <!-- About Me Section -->
                         <h2 class="text-xl font-bold mb-4 user_profile_info title">About Me</h2>
@@ -183,6 +184,65 @@
                             </a>
                             {% endif %}
                         </div>
+                    </div>
+                    <!-- User Achievements Section -->
+                    <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">
+                        <h2 class="text-xl font-bold mb-4 user_profile_info title">My Achievements</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {% for user_achievement in user_achievements %}
+                            <div>
+                                <img class="h-24 w-24 rounded-lg mx-auto" 
+                                src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}" alt="User Achievement">
+                                <p class="achievement_descr">{{ user_achievement.achievement.achievement_name }} {{ user_achievement.achievement.achievement_description }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- User Stats -->
+                    <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">
+                        <h2 class="text-xl font-bold mb-4 user_profile_info title">My Stats</h2>
+                        <div class="space-y-1">
+                            <div class="flex justify-between">
+                                <p class="left_stats">Date Registration:</p>
+                                <p class="right_stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+                            </div>
+                            <div class="flex justify-between">
+                                <p class="left_stats">Total Solved Quests:</p>
+                                <p class="right_stats">{{ user.total_solved_quests }}</p>
+                            </div>
+                            <div class="pl-4">
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Python:</p>
+                                    <p class="right_stats">{{ user.total_python_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Java:</p>
+                                    <p class="right_stats">{{ user.total_java_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">JavaScript:</p>
+                                    <p class="right_stats">{{ user.total_javascript_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">C# Quests:</p>
+                                    <p class="right_stats">{{ user.total_csharp_quests }}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <p class="left_stats">Total Submitted Quests:</p>
+                                <p class="right_stats">{{ user.total_submited_quests }}</p>
+                            </div>
+                            <div class="pl-4">
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Approved:</p>
+                                    <p class="right_stats">{{ user.total_approved_submited_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Rejected:</p>
+                                    <p class="right_stats">{{ user.total_rejected_submited_quests }}</p>
+                                </div>
+                            </div>
+
                     </div>
                 </div>
             </div>
