@@ -74,7 +74,7 @@
                         <!-- About Me Section -->
                         <h2 class="text-xl font-bold mb-4 user_profile_info title">About Me</h2>
                         <p class="text-gray-700 user_profile_info about_me_text">{{ user.about_me }}</p>
-                        <p class="text-gray-700 user_profile_info about_me_text">Some Bio Info</p>
+                        <!-- <p class="text-gray-700 user_profile_info about_me_text">Some Bio Info</p> -->
                         <!-- User Info Section -->
                         <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data">
                             {{ form.hidden_tag() }}
