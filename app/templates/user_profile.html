@@ -43,7 +43,7 @@
                         <div class="flex flex-col items-center">
                             <img class="inline-block w-48 rounded-full user_avatar"
                                 src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}"
-                                alt="Avatar">
+                                id="avatarPreview" alt="Avatar">
                             <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
                             <p class="text-l user_profile_info name">{{user.first_name}} {{user.last_name}}</p>
                             <p class="user_profile_info rank">Rank: {{user.rank}}r</p>
@@ -161,6 +161,16 @@
                                 {{ form.submit(class="submit-buton") }}
                             </div>
                         </form>
+                        <!-- Change Avatar Form -->
+                        <div class="change-avatar-section">
+                        <!-- <p class="ca-1">Change Avatar</p> -->
+                        <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
+                            class="ca-2">
+                            {{ form.hidden_tag() }}
+                            {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
+                            <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
+                        </form>
+            </div>
 
                         <h3 class="font-semibold text-center mt-3 -mb-2 text-xl font-bold mb-4 user_profile_info title">
                             Find me on
@@ -349,6 +359,20 @@
       </div>
     <!-- JavaScript managing the content in the Bootstrap table -->
     <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <script>
+        function previewAvatar(event) {
+            const avatarPreview = document.getElementById('avatarPreview');
+            const file = event.target.files[0];
+    
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
     
 </body>
 

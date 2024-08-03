@@ -218,6 +218,54 @@ body {
     vertical-align: middle;
 }
 
+.ca-1 {
+    padding: 0px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    margin-bottom: 0px;
+}
+
+.ca-2 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.ca-3 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4 !important;
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+
+.ca-3::-webkit-file-upload-button {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    border-radius: 5px;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+
+}
+
+.ca-4 {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: linear-gradient(#141e30, #243b55);
+    color: #03e9f4;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 5px;
+    margin-left: 5px;
+    padding: 5px;
+    height: 40px;
+    border: 0px;
+    vertical-align: middle;
+    width: auto;
+}
+
+
 
 /* ---------------- */
 .level_container {
@@ -496,51 +544,6 @@ body {
     margin-right: 20px;
 }
 
-.ca-1 {
-    padding: 0px;
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
-    margin-bottom: 0px;
-}
-
-.ca-2 {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
-    margin-left: 10px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-.ca-3 {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4 !important;
-    margin-left: 10px;
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-
-.ca-3::-webkit-file-upload-button {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    border-radius: 5px;
-    background: linear-gradient(#141e30, #243b55);
-    color: #03e9f4;
-
-}
-
-.ca-4 {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    background: linear-gradient(#141e30, #243b55);
-    color: #03e9f4;
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    border-radius: 5px;
-    margin-left: 5px;
-    height: 40px;
-    border: 0px;
-    vertical-align: middle;
-    width: auto;
-}
 
 
 .ca-4:hover {
