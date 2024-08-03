@@ -199,9 +199,8 @@ class UserProfileForm(FlaskForm):
     discord_id = StringField('Discord ID', validators=[Optional()])
     linked_in = StringField('LinkedIn', validators=[Optional()])
     avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional()])
-    submit = SubmitField('Save Changes', name="submit")
+    submit = SubmitField('Update Profile', name="submit")
 
-    
 ########### Submit Quest Form - as a Regular User ###########
 class QuestSubmissionForm(FlaskForm):
     quest_name = StringField('Quest Name', validators=[DataRequired(), Length(max=100)])

@@ -4,13 +4,19 @@
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
     <title>Skill Forge</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.2/dist/bootstrap-table.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_profile.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/table.css') }}">
+    <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <!-- Track the user status -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
     <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
@@ -21,322 +27,338 @@
     <!-- Include Navbar template -->
     {% include 'navbar.html' %}
 
-    <div class="user_info">
-        <div class="left_pane">
-            <div>
-                <div>
-                    <img id="avatarPreview" src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}" alt="Avatar" class="user_avatar">
-                </div>
-            </div>
-            <p class="user_name">{{ user.username }}</p>
-            <div class="social_links">
-                <p class="social_links title">Social Links</p>
-                <div class="social_links icons">
-                    {% if user.facebook_profile %}
-                    <a href="{{ user.facebook_profile }}" target="_blank">
-                        <img src="../static/images/facebook.svg" width="20" height="20" alt="Facebook Profile">
-                    </a>
-                    {% endif %}
-                    {% if user.instagram_profile %}
-                    <a href="{{ user.instagram_profile }}" target="_blank">
-                        <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram">
-                    </a>
-                    {% endif %}
-                    {% if user.github_profile %}
-                    <a href="{{ user.github_profile }}" target="_blank">
-                        <img src="../static/images/github.png" width="22" height="22" alt="GitHub">
-                    </a>
-                    {% endif %}
-                    {% if user.discord_id %}
-                    <a href="https://discord.com/users/{{ user.discord_id }}" target="_blank">
-                        <img src="../static/images/discord.svg" width="20" height="20" alt="Discord">
-                    </a>
-                    {% endif %}
-                    {% if user.linked_in %}
-                    <a href="{{ user.linked_in }}" target="_blank">
-                        <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn">
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="online_status" id="onlineStatusDiv">
-                {% if user_status == "Offline" %}
-                <p class="online_status title offline">Last seen</p>
-                <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
-                {% else %}
-                <p class="online_status title">{{ user_status }}</p>
-                {% endif %}
-            </div>
-            <div class="user_level">
-                <div class="level_container">
-                    <div class="level_info">
-                        <p class="left_stats level">Level</p>
-                        <p class="right_stats level">{{ user.level }}</p>
-                    </div>
-                    <div class="level_info">
-                        <p class="left_stats level">Rank</p>
-                        <p class="right_stats level">{{ user.rank }}</p>
-                    </div>
-                    <div class="xp_points_container">
-                        <p class="left_stats level">XP Points</p>
-                        <div class="progress_bar_container">
-                            <div class="progress_bar" style="width: {{ xp_percentage }}%; height: 20px;">
-                                <p style="color: transparent">{{ xp_percentage }}</p>
+    <!-- User Profile Section -->
+    <div>
+        <div class="container mx-auto py-8 user_profile_info">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+                <div class="col-span-4 sm:col-span-3">
+                    <div class="shadow rounded-lg p-6 user_profile_info left_pane">
+                        <div class="flex flex-col items-center">
+                            <img class="inline-block w-48 rounded-full user_avatar"
+                                src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}"
+                                id="avatarPreview" alt="Avatar">
+                            <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
+                            <p class="text-l user_profile_info name">{{user.first_name}} {{user.last_name}}</p>
+                            <p class="user_profile_info rank">Rank: {{user.rank}}r</p>
+                            <div class="mt-6 flex flex-wrap gap-4 justify-center">
+                                <div class="online_status" id="onlineStatusDiv">
+                                    {% if user_status == "Offline" %}
+                                    <p class="online_status title offline">Last seen</p>
+                                    <p class="online_status title offline">{{ last_logged_date.strftime('%d-%m-%Y %H:%M') }}</p>
+                                    {% else %}
+                                    <p class="online_status title">{{ user_status }}</p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                        <p class="right_stats level" style="margin: 0px">{{ user.xp }} / {{ max_xp }} XP</p>
+                        <hr class="my-6 border-t border-gray-300">
+                        <p class="text-s user_profile_info level">Level: {{user.level}}</p>
+                        <div class="flex w-full h-4 bg-gray-200 rounded-full overflow-hidde" role="progressbar"
+                            aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                            <div class="flex flex-col justify-center rounded-full overflow-hidden text-xs text-white text-center whitespace-nowrap dark:bg-blue-500 transition duration-500 user_profile_info xp_points"
+                                style='width: {{ xp_percentage }}%;'></div>
+                        </div>
+                        <p class="text-xs text-center">{{ user.xp }} / {{ max_xp }} XP</p>
+                    </div>
+                </div>
+                <div class="col-span-4 sm:col-span-9">
+                    <!-- User Stats Section -->
+                    <div class="shadow rounded-lg p-6 user_profile_info left_pane">
+                        <!-- About Me Section -->
+                        <h2 class="text-xl font-bold mb-4 user_profile_info title">About Me</h2>
+                        <p class="text-gray-700 user_profile_info about_me_text">{{ user.about_me }}</p>
+                        <p class="text-gray-700 user_profile_info about_me_text">Some Bio Info</p>
+                        <!-- User Info Section -->
+                        <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data">
+                            {{ form.hidden_tag() }}
+                            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                                <div>
+                                    <label for="first_name" class="block mb-2 font-medium text-gray-900 dark:text-white">First name</label>
+                                    {{ form.first_name (class="text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                    user_profile_info input_field", placeholder="First Name", required=True) }}
+                                </div>
+                                <div>
+                                    <label for="last_name"
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Last name</label>
+                                        {{ form.last_name (class="text-gray-900 rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        user_profile_info input_field", placeholder="Last Name", required=True) }}
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label for="email"
+                                    class="block mb-2 font-medium text-gray-900 dark:text-white">Email address</label>
+                                    {{ form.email (class="text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                    user_profile_info input_field", placeholder="Email Address", required=True) }}
+                            </div>
+                            <!-- Social Media URLs Section -->
+                            <label class="mb-2 text-black block">Social Media Links</label>
+                            <div>
+                                <div class="relative flex items-center">
+                                    {{ form.facebook_profile (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="Facebook Profile") }}
+                                    <div class="absolute left-4">
+                                        <img src="../static/images/facebook.svg" width="12" height="12"
+                                            alt="Facebook Profile">
+                                    </div>
+                                </div>
+                                <div class="relative flex items-center">
+                                    {{ form.instagram_profile (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="Instagram Profile") }}
+                                    <div class="absolute left-4">
+                                        <img src="../static/images/instagram.png" width="18" height="18"
+                                            alt="Instagram Profile">
+                                    </div>
+                                </div>
+                                <div class="relative flex items-center">
+                                    {{ form.github_profile (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="GitHub Profile") }}
+                                    <div class="absolute left-4">
+                                        <img src="../static/images/github.png" width="18" height="18"
+                                            alt="GitHub Profile">
+                                    </div>
+                                </div>
+                                <div class="relative flex items-center">
+                                    {{ form.discord_id (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="Discord ID") }}
+                                    <div class="absolute left-4">
+                                        <img src="../static/images/discord.svg" width="18" height="18"
+                                            alt="Discord ID">
+                                    </div>
+                                </div>
+                                <div class="relative flex items-center">
+                                    {{ form.linked_in (class="pr-4 pl-14 py-3 text-gray-900 rounded-lg 
+                                    focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                    user_profile_info input_field", placeholder="LinedIn Profile") }}
+                                    <div class="absolute left-4">
+                                        <img src="../static/images/linkedin.png" width="18" height="18"
+                                            alt="LinkedIn Profile">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btn-section">
+                                {{ form.submit(class="submit-buton") }}
+                            </div>
+                        </form>
+                        <!-- Change Avatar Form -->
+                        <div class="change-avatar-section">
+                        <!-- <p class="ca-1">Change Avatar</p> -->
+                        <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
+                            class="ca-2">
+                            {{ form.hidden_tag() }}
+                            {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
+                            <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
+                        </form>
+            </div>
+
+                        <h3 class="font-semibold text-center mt-3 -mb-2 text-xl font-bold mb-4 user_profile_info title">
+                            Find me on
+                        </h3>
+                        <div class="flex justify-center items-center gap-6 my-6">
+                            {% if user.facebook_profile %}
+                                <a href="{{ user.facebook_profile }}" target="_blank">
+                                    <img src="../static/images/facebook.svg" width="12" height="12" alt="Facebook Profile">
+                                </a>
+                            {% endif %}
+                            {% if user.instagram_profile %}
+                                <a href="{{ user.instagram_profile }}" target="_blank">
+                                    <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram">
+                                </a>
+                            {% endif %}
+                            {% if user.github_profile %}
+                            <a href="{{ user.github_profile }}" target="_blank">
+                                <img src="../static/images/github.png" width="22" height="22" alt="GitHub">
+                            </a>
+                            {% endif %}
+                            {% if user.discord_id %}
+                            <a href="https://discord.com/users/{{ user.discord_id }}" target="_blank">
+                                <img src="../static/images/discord.svg" width="20" height="20" alt="Discord">
+                            </a>
+                            {% endif %}
+                            {% if user.linked_in %}
+                            <a href="{{ user.linked_in }}" target="_blank">
+                                <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn">
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- User Achievements Section -->
+                    <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">
+                        <h2 class="text-xl font-bold mb-4 user_profile_info title">My Achievements</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {% for user_achievement in user_achievements %}
+                            <div>
+                                <img class="h-24 w-24 rounded-lg mx-auto" 
+                                src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}" alt="User Achievement">
+                                <p class="achievement_descr">{{ user_achievement.achievement.achievement_name }} {{ user_achievement.achievement.achievement_description }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- User Stats -->
+                    <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">
+                        <h2 class="text-xl font-bold mb-4 user_profile_info title">My Stats</h2>
+                        <div class="space-y-1">
+                            <div class="flex justify-between">
+                                <p class="left_stats">Date Registration:</p>
+                                <p class="right_stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
+                            </div>
+                            <div class="flex justify-between">
+                                <p class="left_stats">Total Solved Quests:</p>
+                                <p class="right_stats">{{ user.total_solved_quests }}</p>
+                            </div>
+                            <div class="pl-4">
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Python:</p>
+                                    <p class="right_stats">{{ user.total_python_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Java:</p>
+                                    <p class="right_stats">{{ user.total_java_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">JavaScript:</p>
+                                    <p class="right_stats">{{ user.total_javascript_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">C# Quests:</p>
+                                    <p class="right_stats">{{ user.total_csharp_quests }}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <p class="left_stats">Total Submitted Quests:</p>
+                                <p class="right_stats">{{ user.total_submited_quests }}</p>
+                            </div>
+                            <div class="pl-4">
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Approved:</p>
+                                    <p class="right_stats">{{ user.total_approved_submited_quests }}</p>
+                                </div>
+                                <div class="flex justify-between">
+                                    <p class="left_stats">Rejected:</p>
+                                    <p class="right_stats">{{ user.total_rejected_submited_quests }}</p>
+                                </div>
+                            </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <div style="display:flex; flex-direction:column;width:100%">
-            <!-- User Information Form -->
-            <div class="center_pane_form">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-                <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data">
-                    {{ form.hidden_tag() }}
-                    <div class="center_pane">
-                        <h3 class="left_status h3">User Information</h3>
-                        <div class="user_stats">
-                            <div style="display:flex; flex-direction: row; margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">User ID:</p>
-                                <p class="right_stats">{{ user.user_id }}</p>
-                            </div>
-                            <div style="display:flex; flex-direction: row; margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">Username:</p>
-                                <p class="right_stats">{{ user.username }}</p>
-                            </div>
-                            <div style="display:flex; flex-direction: row; margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">First Name:</p>
-                                {{ form.first_name(class="right_stats_edit") }}
-                            </div>
-                            <div style="display:flex; flex-direction: row; margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">Last Name:</p>
-                                {{ form.last_name(class="right_stats_edit") }}
-                            </div>
-                            <div style="display:flex; flex-direction: row; margin-bottom: 10px; margin-top:5px">
-                                <p class="left_stats">Email:</p>
-                                {{ form.email(class="right_stats_edit") }}
-                            </div>
-                        </div>
-                        <div class="user_stats">
-                            <div style="display:flex; flex-direction: column;">
-                                <div style="display:flex; flex-direction: row; margin-top: 5px">
-                                    <p class="left_stats">Facebook:</p>
-                                    {{ form.facebook_profile(class="right_stats_edit") }}
-                                </div>
-                                <div style="display:flex; flex-direction: row;">
-                                    <p class="left_stats">Instagram:</p>
-                                    {{ form.instagram_profile(class="right_stats_edit") }}
-                                </div>
-                                <div style="display:flex; flex-direction: row;">
-                                    <p class="left_stats">GitHub:</p>
-                                    {{ form.github_profile(class="right_stats_edit") }}
-                                </div>
-                                <div style="display:flex; flex-direction: row;">
-                                    <p class="left_stats">Discord ID:</p>
-                                    {{ form.discord_id(class="right_stats_edit") }}
-                                </div>
-                                <div style="display:flex; flex-direction: row;">
-                                    <p class="left_stats">LinkedIn:</p>
-                                    {{ form.linked_in(class="right_stats_edit") }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="btn-section">
-                        {{ form.submit(class="submit-buton") }}
-                    </div>
-                </form>
-            </div>
-            
-            <!-- Change Avatar Form -->
-            <div class="change-avatar-section">
-                <!-- <p class="ca-1">Change Avatar</p> -->
-                <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data"
-                    class="ca-2">
-                    {{ form.hidden_tag() }}
-                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
-                    <input class="ca-4" type="submit" value="Update Avatar" name="update_avatar">
-                </form>
-            </div>
-            <!-- Achievements Section -->
-            <div class="center_pane_form">
-                <h3 class="left_status h3">Achievements</h3>
-                <div class="user_stats">
-                    <div class="achv-container">
-                        {% for user_achievement in user_achievements %}
-                        <div class="achv">
-                            <img
-                                src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}">
-                            <div class="achv-descr">
-                                <p style="margin-bottom: 0px">{{ user_achievement.achievement.achievement_name }}
-                                    <br>{{ user_achievement.achievement.achievement_description }}
-                                </p>
-                            </div>
-                        </div>
+    </div>
+
+    <!-- User Submited Quests Section -->
+    <h1 class="text-xl font-bold mb-0 mt-5 pl-12 user_profile_info title">My Submited Quests</h1>
+        <div class="flex flex-col items-center py-6 px-0 mt-0 w-full sm:px-6 lg:px-8">
+          <div class="w-full px-5">
+            <div class="rounded-lg shadow-md overflow-hidden">
+              <div class="p-2 table_bg">
+                <div class="overflow-x-auto">
+                  <table id="user_submited_quests" class="min-w-full bg-transparent">
+                    <thead>
+                      <tr class="w-full">
+                        <th class="px-2 py-2">Quest ID</th>
+                        <th class="px-2 py-2">Quest Name</th>
+                        <th class="px-2 py-2">Language</th>
+                        <th class="px-2 py-2">Difficulty</th>
+                        <th class="px-2 py-2">Submited On</th>
+                        <th class="px-2 py-2">Last Modified On</th>
+                        <th class="px-2 py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for submited_quest in user_submited_quests %}
+                        <tr class="w-full border-t">
+                            <td class="px-2 py-2">{{ submited_quest.quest_id }}</td>
+                            <td class="px-2 py-2"><a style="color:#569deb" href="{{ url_for('usq.open_submited_quest_as_user', quest_id=submited_quest.quest_id) }}">{{ submited_quest.quest_name }}</a></td>
+                            <td class="px-2 py-2">{{ submited_quest.language }}</td>
+                            <td class="px-2 py-2">{{ submited_quest.difficulty }}</td>
+                            <td class="px-2 py-2">{{ submited_quest.date_added.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td class="px-2 py-2">{{ submited_quest.last_modified.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td class="px-2 py-2 labels {{ submited_quest.status }}">{{ submited_quest.status}}</td>
+                        </tr>
                         {% endfor %}
-                    </div>
+                    </tbody>
+                  </table>
                 </div>
+              </div>
             </div>
-            <!-- User stats section -->
-            <div class="central_pane">
-                <h3 class="left_status h3">User Stats</h3>
-                <div class="user_stats">
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">Date Registration:</p>
-                        <p class="right_stats stats">{{ user.date_registered.strftime('%d-%m-%Y %H:%M:%S') }}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">Total Solved Quests:</p>
-                        <p class="right_stats stats">{{ user.total_solved_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">&emsp;Python:</p>
-                        <p class="right_stats stats">{{ user.total_python_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">&emsp;Java:</p>
-                        <p class="right_stats stats">{{ user.total_java_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">&emsp;JavaScript:</p>
-                        <p class="right_stats stats">{{ user.total_javascript_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">&emsp;C# Quests:</p>
-                        <p class="right_stats stats">{{ user.total_csharp_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">Total Submited Quests:</p>
-                        <p class="right_stats stats">{{ user.total_submited_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">&emsp;Approved:</p>
-                        <p class="right_stats stats">{{ user.total_approved_submited_quests}}</p>
-                    </div>
-                    <div style="display:flex; flex-direction: row;margin-bottom: 10px; margin-top:5px">
-                        <p class="left_stats stats">&emsp;Rejected:</p>
-                        <p class="right_stats stats">{{ user.total_rejected_submited_quests}}</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
     </div>
+    <!-- User Submited Solutions Section -->
+    <h1 class="text-xl font-bold mb-0 mt-5 pl-12 user_profile_info title">My Submited Solutions</h1>
+    <div class="flex flex-col items-center py-6 px-0 mt-0 w-full sm:px-6 lg:px-8">
+        <div class="w-full px-5">
+          <div class="rounded-lg shadow-md overflow-hidden">
+            <div class="p-2 table_bg">
+              <div class="overflow-x-auto">
+                <table id="user_solved_quests" class="min-w-full bg-transparent">
+                  <thead>
+                    <tr class="w-full">
+                      <th class="text-xs px-2 py-2">Sumbission ID</th>
+                      <th class="text-xs px-2 py-2">Quest ID</th>
+                      <th class="text-xs px-2 py-2">Quest Name</th>
+                      <th class="text-xs px-2 py-2">Language</th>
+                      <th class="text-xs px-2 py-2">Difficulty</th>
+                      <th class="text-xs px-2 py-2">Submited On</th>
+                      <th class="text-xs px-2 py-2">Tests Passed</th>
+                      <th class="text-xs px-2 py-2">Tests Failed</th>
+                      <th class="text-xs px-2 py-2">Tests Passed</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for solved_quest in user_solved_quests %}
+                      <tr class="w-full border-t">
+                          <td class="text-xs px-2 py-2"><a style="color:#569deb" href="{{ url_for('uss.open_view_solution', solution_id=solved_quest.submission_id) }}">{{ solved_quest.submission_id  }}</a></td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.quest_id }}</td>
+                          <td class="text-xs px-2 py-2"><a style="color:#569deb" href="{{ url_for('quests.open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{ solved_quest.coding_quest.quest_name  }}</a></td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.coding_quest.language }}</td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.coding_quest.difficulty }}</td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.submission_date.strftime('%d-%m-%Y %H:%M') }}</td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.successful_tests }}</td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.unsuccessful_tests }}</td>
+                          <td class="text-xs px-2 py-2">
+                            {% if solved_quest.quest_passed %}
+                            <img src="{{ url_for('static', filename='images/checked.png') }}"
+                                alt="Passed" width="15" height="15">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/unchecked.png') }}"
+                                alt="Failed" width="15" height="15">
+                            {% endif %}
+                          </td>
 
-    <!-- User's Submitted Quests -->
-    <div class="container-fluid" style="margin-bottom: 20px">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <h3 class="left_status h3" style="font-weight: bold">Your Submitted Quests</h3>
-                <div class="card rounded shadow border-0">
-                    <div class="card-body p-5 bg-white rounded">
-                        <div class="table-responsive">
-                            <table id="user_submited_quests" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr style="font-size: 10px">
-                                        <th>Quest ID</th>
-                                        <th>Quest Name</th>
-                                        <th>Language</th>
-                                        <th>Difficulty</th>
-                                        <th>Submitted On</th>
-                                        <th>Last Modified On</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for submited_quest in user_submited_quests %}
-                                    <tr style="font-size: 12px">
-                                        <td>{{ submited_quest.quest_id }}</td>
-                                        <td><a style="color:#569deb" href="{{ url_for('usq.open_submited_quest_as_user', quest_id=submited_quest.quest_id) }}">{{ submited_quest.quest_name }}</a></td>
-                                        <td>{{ submited_quest.language }}</td>
-                                        <td>{{ submited_quest.difficulty }}</td>
-                                        <td>{{ submited_quest.date_added.strftime('%Y-%m-%d %H:%M') }}</td>
-                                        <td>{{ submited_quest.last_modified.strftime('%Y-%m-%d %H:%M') }}</td>
-                                        <td class="labels {{ submited_quest.status }}">{{ submited_quest.status}}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-
-    <!-- User's Solved Quests table -->
-    <div class="container-fluid" style="margin-bottom: 20px">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <h3 class="left_status h3" style="font-weight: bold">Your Submitted Solutions</h3>
-                <div class="card rounded shadow border-0">
-                    <div class="card-body p-5 bg-white rounded">
-                        <div class="table-responsive">
-                            <table id="user_solved_quests" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr style="font-size: 10px">
-                                        <th>Sumbission ID</th>
-                                        <th>Quest ID</th>
-                                        <th>Quest Name</th>
-                                        <th>Language</th>
-                                        <th>Difficulty</th>
-                                        <th>Submitted On</th>
-                                        <th style="width: 20px">Succesful Tests</th>
-                                        <th style="width: 20px">Unsuccesful Tests</th>
-                                        <th style="width: 20px">Quest Passed</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for solved_quest in user_solved_quests %}
-                                    <tr style="font-size: 12px">
-                                        <td><a style="color:#569deb"
-                                                href="{{ url_for('uss.open_view_solution', solution_id=solved_quest.submission_id) }}">{{
-                                                solved_quest.submission_id }}</a></td>
-                                        <td>{{ solved_quest.quest_id }}</td>
-                                        <td><a style="color:#569deb"
-                                                href="{{ url_for('quests.open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{
-                                                solved_quest.coding_quest.quest_name }}</a></td>
-                                        <td>{{ solved_quest.coding_quest.language }}</td>
-                                        <td>{{ solved_quest.coding_quest.difficulty }}</td>
-                                        <td>{{ solved_quest.submission_date.strftime('%Y-%m-%d %H:%M') }}</td>
-                                        <td>{{ solved_quest.successful_tests }}</td>
-                                        <td>{{ solved_quest.unsuccessful_tests }}</td>
-                                        <td>
-                                            {% if solved_quest.quest_passed %}
-                                            <img src="{{ url_for('static', filename='images/checked.png') }}"
-                                                alt="Passed" width="20" height="20">
-                                            {% else %}
-                                            <img src="{{ url_for('static', filename='images/unchecked.png') }}"
-                                                alt="Failed" width="20" height="20">
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+      </div>
     <!-- JavaScript managing the content in the Bootstrap table -->
     <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script>
         function previewAvatar(event) {
             const avatarPreview = document.getElementById('avatarPreview');
@@ -351,6 +373,7 @@
             }
         }
     </script>
+    
 </body>
 
 <footer>

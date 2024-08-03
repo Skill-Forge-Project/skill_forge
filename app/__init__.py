@@ -1,5 +1,5 @@
 
-from flask import Flask, redirect, url_for, render_template, flash, jsonify
+from flask import Flask, redirect, url_for, render_template, flash, jsonify, send_file
 from config import Config
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -13,7 +13,7 @@ from app.database.db_init import db
 from app.models import User
 # Import scheduler
 from apscheduler.schedulers.background import BackgroundScheduler
-import atexit
+import atexit, base64, io
 
 migrate = Migrate()
 bcrypt = Bcrypt()
