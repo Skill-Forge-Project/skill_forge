@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge - Create New Guild</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/guilds/create_guild.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+
+</head>
+
+<body>
+    <!-- Include Navbar template -->
+    {% include 'navbar.html' %}
+
+    <!-- Main Container -->
+    
+    <div class="main_container min-h-screen flex items-center justify-center main-container">
+        <div class="container mx-auto p-5 bg-gray-800 rounded-lg shadow-lg crt_guild_box">
+            <h2 class="text-3xl font-bold text-center text-teal-300 mb-6 txt-1">Create New Guild</h2>
+            <!-- Avatar Preview Section -->
+            <div class="avatar-section flex flex-col items-center mb-6">
+                <div>
+                    <img id="avatarPreview" src="{{ url_for('static', filename='images/default-guild-avatar.png') }}" alt="Avatar" class="guild_avatar">
+                </div>
+            </div>
+            <div class="change-avatar-section">
+                <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data" class="ca-2">
+                    {{ form.hidden_tag() }}
+                    {{ form.avatar(class="ca-3", onchange='previewAvatar(event)', accept="image/*") }}
+                </form>
+            </div>
+            <form action="{{ url_for('guilds.create_new_guild') }}" method="post" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.name.label(class="text_label") }}
+                    {{ form.name(class="form-control", id="guildName", placeholder="Enter guild name") }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label(class="text_label") }}
+                    {{ form.description(class="form-control", id="guildDescription", placeholder="Enter guild description") }}
+                </div>
+                <button type="submit" class="guild_button btn btn-primary w-full crt_guild_button">Create Guild</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="bottom: 100%;">
+        <!-- Include Footer template -->
+        {% include 'footer.html' %}
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function previewAvatar(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+
+</html>

@@ -25,6 +25,7 @@ def open_user_profile():
 
     if form.validate_on_submit():
         if 'submit' in request.form:
+            user.about_me = form.about_me.data
             user.first_name = form.first_name.data
             user.last_name = form.last_name.data
             user.email = form.email.data
@@ -61,6 +62,7 @@ def open_user_profile():
                 return redirect(url_for('usr.open_user_profile'))
 
     if request.method == 'GET':
+        form.about_me.data = user.about_me
         form.first_name.data = user.first_name
         form.last_name.data = user.last_name
         form.email.data = user.email
@@ -130,7 +132,6 @@ def edit_user_db():
     db.session.commit()
     return redirect(url_for('usr.open_admin_panel'))
 
-
 # Route to handle the user profile (self-open)
 @bp_usr.route('/user_profile/<username>', methods=['GET'])
 @login_required
@@ -172,7 +173,6 @@ def open_user_profile_view(username):
         else:
             # Handle the case where the user is not found
             return abort(404)
-
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
 @bp_usr.route('/admin_panel')
