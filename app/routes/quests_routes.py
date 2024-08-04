@@ -14,7 +14,6 @@ from sqlalchemy.orm import joinedload
 from app.database.mongodb_transactions import mongo_transaction
 # Import admin_required decorator
 from app.user_permission import admin_required
-import logging
 
 
 bp_qst = Blueprint('quests', __name__)

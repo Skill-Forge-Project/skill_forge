@@ -41,16 +41,20 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default="")
     discord_id = db.Column(db.String(120), default="")
     linked_in = db.Column(db.String(120), default="")
+    about_me = db.Column(db.Text, default="", nullable=True)
     is_banned = db.Column(db.Boolean, default=lambda: False)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
     last_status_update = db.Column(db.DateTime, default=datetime.now(), nullable=True)
+    guild_id = db.Column(db.String(20), db.ForeignKey('guilds.guild_id'), nullable=True)
     
     # Define the relationship with the UserAchievement model
     achievements = db.relationship('UserAchievement')
     # Define the relationship with the Comment model
     comments = db.relationship('Comment', back_populates='user')
+    # Define the relationship with the Guild model
+    guild = db.relationship('Guild', back_populates='members', foreign_keys=[guild_id])
 
     def __init__(self, username, first_name, last_name, password, email, avatar=None):
         self.username = username
@@ -224,3 +228,22 @@ class SubmitedSolution(db.Model):
 
     # Define the relationship between the user_submited_solutions and coding_quests table.
     coding_quest = db.relationship('Quest')
+
+########### Define the Guild model ###########
+class Guild(db.Model):
+    __tablename__ = 'guilds'
+    guild_id = db.Column(db.String(20), primary_key=True, nullable=False)
+    guild_name = db.Column(db.String(100), unique=True, nullable=False)
+    guild_avatar = db.Column(db.LargeBinary, default=None)
+    description = db.Column(db.String(200), nullable=True)
+    guild_master_id = db.Column(db.String(20), db.ForeignKey('users.user_id'), nullable=False)
+    points = db.Column(db.Integer, default=0)
+    level = db.Column(db.Integer, default=1)
+    dungeons_completed = db.Column(db.Integer, default=0)
+    date_created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    guild_members_count = db.Column(db.Integer, default=1)
+    
+    # Define the relationship between the Guild model and the User model
+    members = db.relationship('User', back_populates='guild', foreign_keys=[User.guild_id])
+    # Define the relationship with the User model for guild master
+    guild_master = db.relationship('User', foreign_keys=[guild_master_id])

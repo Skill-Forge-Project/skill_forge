@@ -190,6 +190,7 @@ class ContactForm(FlaskForm):
     
 ########### User Profile Form - update user's profile ###########
 class UserProfileForm(FlaskForm):
+    about_me = TextAreaField('About Me', validators=[Optional()])
     first_name = StringField('First Name', validators=[Optional()])
     last_name = StringField('Last Name', validators=[Optional()])
     email = StringField('Email', validators=[Optional(), Email(), latin_characters_only])
@@ -199,9 +200,8 @@ class UserProfileForm(FlaskForm):
     discord_id = StringField('Discord ID', validators=[Optional()])
     linked_in = StringField('LinkedIn', validators=[Optional()])
     avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional()])
-    submit = SubmitField('Save Changes', name="submit")
+    submit = SubmitField('Update Profile', name="submit")
 
-    
 ########### Submit Quest Form - as a Regular User ###########
 class QuestSubmissionForm(FlaskForm):
     quest_name = StringField('Quest Name', validators=[DataRequired(), Length(max=100)])
@@ -240,3 +240,10 @@ class QuestApprovalForm(FlaskForm):
     request_changes = SubmitField('Request Changes', render_kw={'value': 'request-changes'})
     reject = SubmitField('Reject Quest', render_kw={'value': 'reject'})
     save_changes = SubmitField('Save Changes', render_kw={'value': 'save-changes'})
+    
+########### Create New Guild Form ###########
+class CreateGuildForm(FlaskForm):
+    name = StringField('Guild Name', validators=[DataRequired(), Length(min=5, max=50)])
+    description = TextAreaField('Description', validators=[Optional(), Length(min=10, max=500)])
+    avatar = FileField('Avatar')
+    submit = SubmitField('Create Guild')

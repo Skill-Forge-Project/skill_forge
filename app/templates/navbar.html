@@ -1,36 +1,40 @@
-<!-- navbar.html -->
-<nav class="navbar navbar-expand-lg bg-light shadow-lg p-0.5">
-    <div class="skill_forge_image">
-        <img src="../static/images/anvil.png" alt="Skill Forge" width="50" height="50" onclick=location.href="{{ url_for('main.main_page') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+<!--horizontal navigations-->
+<div class="p-4 w-full mb-0 lg:xl">
+    <div class="p-2 mx-8 text-gray-900 rounded-lg shadow-xl shadow-secondary-1 nav_bar">
+        <span class="px-2 mr-2 border-r border-gray-800">
+            <img src="../static/images/anvil.png"
+                alt="alt placeholder" class="w-8 h-8 -mt-1 inline mx-auto">
+        </span>
+
+        <span class="px-1 nav-btn">
+            <span class="mx-1 cursor-pointer" onclick=location.href="{{ url_for('main.main_page') }}">Home</span>
+        </span>
+        <span class="px-1hover:text-gray-700 nav-btn">
+            <span class="mx-1 cursor-pointer" onclick=location.href="{{ url_for('main.about') }}">About</span>
+        </span>
+        <span class="px-1 hover:text-gray-700 nav-btn">
+            <span class="mx-1 cursor-pointer" onclick=location.href="{{ url_for('main.contact') }}">Contact</span>
+        </span>
+        <span class="px-1 hover:text-gray-700 nav-btn">
+            <span class="mx-1 cursor-pointer" onclick=location.href="{{ url_for('usq.open_user_submit_quest') }}">Submit Quest</span>
+        </span>
+
+        <!-- Sign Out Icon -->
+        <span class="icon-wrapper sign-out-icon cursor-pointer float-right hover:text-gray-700">
+            <i class="fas fa-sign-out-alt p-2 bg-gray-200 rounded-full" onclick=location.href="{{ url_for('main.logout') }}"></i>
+        </span>
+        {% if current_user.user_role == "Admin" %}
+        <!-- Admin Icon -->
+        <span class="icon-wrapper settings-icon cursor-pointer mr-3 float-right hover:text-gray-700 admin-btn">
+            <i class="fas fa-cog p-2 bg-gray-200 rounded-full" onclick=location.href="{{ url_for('usr.open_admin_panel') }}"></i>
+        </span>
+        {% endif %}
+        <!-- User Icon -->
+        <span class="icon-wrapper user-icon cursor-pointer mr-3 float-right hover:text-gray-700">
+            <i class="fas fa-user p-2 bg-gray-200 rounded-full" onclick=location.href="{{ url_for('usr.open_user_profile') }}"></i>
+        </span>
     </div>
-
-    <a class="navbar-brand cursor-pointer font-jetbrains" onclick=location.href="{{ url_for('main.main_page') }}">Skill Forge</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav flex flex-col md:flex-row">
-            <li class="nav-item">
-                <a class="nav-link cursor-pointer" onclick=location.href="{{ url_for('main.main_page') }}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link cursor-pointer" onclick=location.href="{{ url_for('main.about') }}">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link cursor-pointer" onclick=location.href="{{ url_for('main.contact') }}">Contact</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link cursor-pointer" onclick=location.href="{{ url_for('usq.open_user_submit_quest') }}">Submit Quest</a>
-            </li>
-        </ul>
-
-        <div class="user_pane flex flex-col md:flex-row ml-auto">
-            {% if current_user.user_role == "Admin" %}
-                <div class="nav-link admin-btn cursor-pointer" onclick=location.href="{{ url_for('usr.open_admin_panel') }}">Admin Panel</div>
-            {% endif %}
-            <div class="nav-link logout-btn cursor-pointer" onclick=location.href="{{ url_for('main.logout') }}">Log Out</div>
-            <img class="user_image cursor-pointer" src="../static/images/user.png" width="35" height="35" onclick=location.href="{{ url_for('usr.open_user_profile') }}">
-        </div>
-    </div>
-</nav>
+</div>
