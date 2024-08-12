@@ -1,0 +1,9 @@
+form .title {
+    color: #03e9f4;
+    font-size: 20px;
+}
+
+form .value {
+    font-size: 10px;
+    background-color: black;
+}

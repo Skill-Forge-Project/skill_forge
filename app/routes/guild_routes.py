@@ -43,6 +43,13 @@ def get_guild_avatar(guild_id):
             img_data = f.read()
     return send_file(io.BytesIO(img_data), mimetype='image/jpeg')
 
+# Redirect to the guild info page
+@bp_guild.route('/guilds/<guild_id>')
+def get_guild_info(guild_id):
+    guild = Guild.query.filter_by(guild_id=guild_id).first_or_404()
+    print(guild)
+    return render_template('guild_templates/guild_info.html', guild=guild)
+
 # Create new guild
 @bp_guild.route('/guilds/create', methods=['GET', 'POST'])
 @login_required

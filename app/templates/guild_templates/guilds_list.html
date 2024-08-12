@@ -38,6 +38,7 @@
                         <p class="text-gray-400">Guild Points: {{ guild.points }}</p>
                         <p class="text-gray-400">Dungeons Completed: {{ guild.dungeons_completed }}</p>
                         <p class="text-gray-400">Members: {{ guild.guild_members_count }}</p>
+                        <button onclick=location.href="{{ url_for('guilds.get_guild_info', guild_id=guild.guild_id) }}">Details</button>
                     </div>
                     {% endfor %}
                 </div>
