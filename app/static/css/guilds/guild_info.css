@@ -1,9 +1,11 @@
-form .title {
+.title {
     color: #03e9f4;
     font-size: 20px;
+    margin: 0
 }
 
-form .value {
-    font-size: 10px;
-    background-color: black;
+.value {
+    font-size: 18px;
+    color: white;
+    margin: 0;
 }

@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, render_template, jsonify, flash, abort, send_file
 from flask_login import login_required, current_user
 # Import the forms and models
-from app.models import Guild
+from app.models import Guild, User
 from app.forms import CreateGuildForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
@@ -47,8 +47,21 @@ def get_guild_avatar(guild_id):
 @bp_guild.route('/guilds/<guild_id>')
 def get_guild_info(guild_id):
     guild = Guild.query.filter_by(guild_id=guild_id).first_or_404()
-    print(guild)
     return render_template('guild_templates/guild_info.html', guild=guild)
+
+# Join guild
+@bp_guild.route('/guilds/join/<guild_id>')
+def join_guild(guild_id):
+    guild = Guild.query.filter_by(guild_id=guild_id).first()
+    user = User.query.filter_by(user_id=current_user.user_id).first()
+
+    guild.guild_members_count += 1
+    user.guild_id = guild_id
+
+    db.session.commit()
+
+    return redirect(url_for('guilds.open_guilds_list'))
+
 
 # Create new guild
 @bp_guild.route('/guilds/create', methods=['GET', 'POST'])

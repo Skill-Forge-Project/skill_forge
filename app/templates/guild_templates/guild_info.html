@@ -18,35 +18,38 @@
     {% include 'navbar.html' %}
 
     <!-- Main Container -->
-    
+
     <div class="main_container min-h-screen flex items-center justify-center main-container">
         <div class="container mx-auto p-5 bg-gray-800 rounded-lg shadow-lg crt_guild_box">
             <h2 class="text-3xl font-bold text-center text-teal-300 mb-6 txt-1">Create New Guild</h2>
             <!-- Avatar Preview Section -->
             <div class="avatar-section flex flex-col items-center mb-6">
                 <div>
-                    <img id="avatarPreview" src="{{ url_for('static', filename='images/default-guild-avatar.png') }}" alt="Avatar" class="guild_avatar">
+                    <img id="avatarPreview" src="{{ url_for('static', filename='images/default-guild-avatar.png') }}"
+                        alt="Avatar" class="guild_avatar">
                 </div>
             </div>
-            <form action="{{ url_for('guilds.create_new_guild') }}" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <p class="title">Guild Name</p>
-                    <p class="value">{{ guild.guild_name }}</p>
-                </div>
-                <div class="form-group">
-                    <p class="title">Description</p>
-                    <p class="value">{{ guild.description }}</p>
-                </div>
-                <div class="form-group">
-                    <p class="title">Level</p>
-                    <p class="value">{{ guild.level }}</p>
-                </div>
-                <div class="form-group">
-                    <p class="title">Members Count</p>
-                    <p class="value">{{ guild.guild_members_count }}</p>
-                </div>
-                <button type="submit" class="guild_button btn btn-primary w-full crt_guild_button">Join Guild</button>
-            </form>
+            <div class="form-group">
+                <p class="title">Guild Name</p>
+                <p class="value">{{ guild.guild_name }}</p>
+            </div>
+            <div class="form-group">
+                <p class="title">Description</p>
+                <p class="value">{{ guild.description }}</p>
+            </div>
+            <div class="form-group">
+                <p class="title">Level</p>
+                <p class="value">{{ guild.level }}</p>
+            </div>
+            <div class="form-group">
+                <p class="title">Members Count</p>
+                <p class="value">{{ guild.guild_members_count }}</p>
+            </div>
+
+            {% if current_user.guild_id != guild.guild_id %}
+                <button type="submit" class="guild_button btn btn-primary w-full crt_guild_button" onclick=location.href="{{ url_for('guilds.join_guild', guild_id=guild.guild_id) }}">Join Guild</button>
+            {% endif %}
+
         </div>
     </div>
 
