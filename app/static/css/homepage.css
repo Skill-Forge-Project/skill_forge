@@ -161,8 +161,8 @@ button {
 }
 
 .homepage_box {
-    background: rgba(0, 0, 0, 0.5) !important;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .4) !important;
+    /* background: rgba(0, 0, 0, 0.5) !important; */
+    /* box-shadow: 0 15px 25px rgba(0, 0, 0, .4) !important; */
 }
 
 .homepage_box.title {
