@@ -203,6 +203,7 @@ def main_page():
     user_count = User.query.count()
     online_users = User.query.filter_by(user_online_status='Online').count()
     online_users_query = User.query.filter_by(user_online_status="Online").all()
+    user_guild = current_user.guild_id
     quest_count = Quest.query.count()
     solutions_count = SubmitedSolution.query.filter_by(quest_passed=True).count()
     server_time = datetime.now()
@@ -210,6 +211,7 @@ def main_page():
                            server_time=server_time, 
                            user_count=user_count,
                            online_users=online_users,
+                           user_guild=user_guild,
                            quest_count=quest_count,
                            solutions_count=solutions_count)
 
