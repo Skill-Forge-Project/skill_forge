@@ -340,3 +340,16 @@ body {
     margin-right: 20px;
 }
 
+
+.title {
+    color: #03e9f4;
+    font-size: 20px;
+    margin: 0
+}
+
+.value {
+    font-size: 18px;
+    color: white;
+    margin: 0;
+}
+
