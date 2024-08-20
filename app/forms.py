@@ -190,6 +190,7 @@ class ContactForm(FlaskForm):
     
 ########### User Profile Form - update user's profile ###########
 class UserProfileForm(FlaskForm):
+    about_me = TextAreaField('About Me', validators=[Optional()])
     first_name = StringField('First Name', validators=[Optional()])
     last_name = StringField('Last Name', validators=[Optional()])
     email = StringField('Email', validators=[Optional(), Email(), latin_characters_only])

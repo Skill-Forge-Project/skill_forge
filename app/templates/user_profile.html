@@ -73,11 +73,14 @@
                     <div class="shadow rounded-lg p-6 user_profile_info left_pane">
                         <!-- About Me Section -->
                         <h2 class="text-xl font-bold mb-4 user_profile_info title">About Me</h2>
-                        <p class="text-gray-700 user_profile_info about_me_text">{{ user.about_me }}</p>
-                        <p class="text-gray-700 user_profile_info about_me_text">Some Bio Info</p>
                         <!-- User Info Section -->
                         <form action="{{ url_for('usr.open_user_profile') }}" method="post" enctype="multipart/form-data">
                             {{ form.hidden_tag() }}
+                            <label for="about_me" class="block mb-2 font-medium text-gray-900 dark:text-white">Bio</label>
+                            {{ form.about_me (class="text-gray-900 rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                            user_profile_info about_me_field", placeholder="Share your story or interests. What makes you unique?", required=True, rows=10) }}
                             <div class="grid gap-6 mb-6 md:grid-cols-2">
                                 <div>
                                     <label for="first_name" class="block mb-2 font-medium text-gray-900 dark:text-white">First name</label>
@@ -172,36 +175,6 @@
                         </form>
             </div>
 
-                        <h3 class="font-semibold text-center mt-3 -mb-2 text-xl font-bold mb-4 user_profile_info title">
-                            Find me on
-                        </h3>
-                        <div class="flex justify-center items-center gap-6 my-6">
-                            {% if user.facebook_profile %}
-                                <a href="{{ user.facebook_profile }}" target="_blank">
-                                    <img src="../static/images/facebook.svg" width="12" height="12" alt="Facebook Profile">
-                                </a>
-                            {% endif %}
-                            {% if user.instagram_profile %}
-                                <a href="{{ user.instagram_profile }}" target="_blank">
-                                    <img src="../static/images/instagram.png" width="20" height="20" alt="Instagram">
-                                </a>
-                            {% endif %}
-                            {% if user.github_profile %}
-                            <a href="{{ user.github_profile }}" target="_blank">
-                                <img src="../static/images/github.png" width="22" height="22" alt="GitHub">
-                            </a>
-                            {% endif %}
-                            {% if user.discord_id %}
-                            <a href="https://discord.com/users/{{ user.discord_id }}" target="_blank">
-                                <img src="../static/images/discord.svg" width="20" height="20" alt="Discord">
-                            </a>
-                            {% endif %}
-                            {% if user.linked_in %}
-                            <a href="{{ user.linked_in }}" target="_blank">
-                                <img src="../static/images/linkedin.png" width="20" height="20" alt="LinkedIn">
-                            </a>
-                            {% endif %}
-                        </div>
                     </div>
                     <!-- User Achievements Section -->
                     <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">

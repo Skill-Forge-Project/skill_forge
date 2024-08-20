@@ -21,15 +21,24 @@ bp_guild = Blueprint('guilds', __name__)
 
 # Redirect to create new guild page
 @bp_guild.route('/create_guild', methods=['GET'])
+@login_required
 def open_create_guild():
     form = CreateGuildForm()
     return render_template('guild_templates/create_guild.html', form=form)
 
 # Redirect to the guilds list page
 @bp_guild.route('/guilds', methods=['GET'])
+@login_required
 def open_guilds_list():
     guilds = Guild.query.all()
     return render_template('guild_templates/guilds_list.html', guilds=guilds)
+
+# Redirect to the guild page
+@bp_guild.route('/guilds/<guild_id>', methods=['GET'])
+@login_required
+def open_guild(guild_id):
+    guild = Guild.query.filter_by(guild_id=guild_id).first_or_404()
+    return render_template('guild_templates/guild_info.html', guild=guild)
 
 # Handle the guild avatar image requests
 @bp_guild.route('/guilds/avatar/<guild_id>')
@@ -99,6 +108,7 @@ def create_new_guild():
             guild_master_id=current_user.user_id,
             guild_avatar=guild_avatar)
 
+        guild.members.append(current_user)
         db.session.add(guild)
         db.session.commit()
         

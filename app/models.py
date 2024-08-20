@@ -41,19 +41,24 @@ class User(UserMixin, db.Model):
     github_profile = db.Column(db.String(120), default="")
     discord_id = db.Column(db.String(120), default="")
     linked_in = db.Column(db.String(120), default="")
+    about_me = db.Column(db.Text, default="", nullable=True)
     is_banned = db.Column(db.Boolean, default=lambda: False)
     ban_date = db.Column(db.DateTime, nullable=True)
     ban_reason = db.Column(db.String(120), default=" ", nullable=True)
     user_online_status = db.Column(db.String(10), default="Offline", nullable=True)
     last_status_update = db.Column(db.DateTime, default=datetime.now(), nullable=True)
-    guild_id = db.Column(db.String(20), db.ForeignKey('guilds.guild_id'), nullable=False)
-    
+
     # Define the relationship with the UserAchievement model
     achievements = db.relationship('UserAchievement')
     # Define the relationship with the Comment model
     comments = db.relationship('Comment', back_populates='user')
-    # Define the relationship with the Guild model
+    # Relationship with Guild model
+    guild_id = db.Column(db.String(20), db.ForeignKey('guilds.guild_id', use_alter=True, name='fk_user_guild'), nullable=True)
     guild = db.relationship('Guild', back_populates='members', foreign_keys=[guild_id])
+
+    # For the Guild Master relationship (one-to-one)
+    master_of = db.relationship('Guild', back_populates='guild_master', uselist=False, foreign_keys="[Guild.guild_master_id]")
+
 
     def __init__(self, username, first_name, last_name, password, email, avatar=None):
         self.username = username
@@ -242,7 +247,14 @@ class Guild(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     guild_members_count = db.Column(db.Integer, default=1)
     
-    # Define the relationship between the Guild model and the User model
-    members = db.relationship('User', back_populates='guild', foreign_keys=[User.guild_id])
-    # Define the relationship with the User model for guild master
-    guild_master = db.relationship('User', foreign_keys=[guild_master_id])
+    # Relationship with User model
+    members = db.relationship('User', back_populates='guild', foreign_keys="[User.guild_id]")
+    
+    # Relationship to reference guild master
+    guild_master = db.relationship('User', back_populates='master_of', foreign_keys=[guild_master_id])
+
+    def add_member(self, user):
+        """Add a user as a member of the guild."""
+        user.guild_id = self.guild_id
+        self.guild_members_count += 1
+        db.session.commit()
