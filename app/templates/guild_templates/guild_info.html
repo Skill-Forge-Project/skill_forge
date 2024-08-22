@@ -58,44 +58,109 @@
                     <!-- User Stats Section -->
                     <div class="shadow rounded-lg p-6 user_profile_info left_pane">
                         <!-- About Me Section -->
-                        <h2 class="text-xl font-bold mb-4 user_profile_info title">About Me</h2>
-                        
-                        <!-- Change Avatar Form -->
-                        <!-- <div class="change-avatar-section"> -->
-                        <!-- <p class="ca-1">Change Avatar</p> -->
-                        
-            </div>
+                        <h2 class="text-xl font-bold mb-4 user_profile_info title">About The Guild</h2>
+
+                        <div>
+
+                            <div class="grid gap-6 mb-6 md:grid-cols-2">
+                                <div>
+                                    <label for="about_me"
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Guild Name</label>
+                                    <p class="text-gray-900 rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        user_profile_info about_me_field">{{guild.guild_name}}
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <label for="about_me"
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Guild Master</label>
+                                    <a href="{{ url_for('usr.open_user_profile_view', username=guild.guild_master.username) }}" class="text-gray-900 rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        user_profile_info about_me_field guild_master_field">{{guild.guild_master.first_name + ' ' + guild.guild_master.last_name}}
+                                    </a>
+                                </div>
+                            </div>
+                            
+
+                            <div class="grid gap-6 mb-6 md:grid-cols-1">
+                                <div>
+                                    <label for="first_name"
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Description</label>
+                                    <p class="text-gray-900 rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        user_profile_info about_me_field">{{guild.description}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="grid gap-6 mb-6 md:grid-cols-3">
+                                <div>
+                                    <label for="first_name" class="block mb-2 font-medium text-gray-900 dark:text-white">Points</label>
+                                    <p class="text-gray-900 rounded-lg 
+                                        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                        user_profile_info about_me_field">{{guild.points}}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label for="last_name"
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Level</label>
+                                        <p class="text-gray-900 rounded-lg 
+                                            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                            user_profile_info about_me_field">{{guild.level}}
+                                        </p>
+                                </div>
+
+                                <div>
+                                    <label for="last_name"
+                                        class="block mb-2 font-medium text-gray-900 dark:text-white">Dungeons completed</label>
+                                        <p class="text-gray-900 rounded-lg 
+                                            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                                            user_profile_info about_me_field">{{guild.dungeons_completed}}
+                                        </p>
+                                </div>
+                            </div>
+
+                        </div>
 
                     </div>
-                    <!-- User Achievements Section -->
-                    <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">
-                        <h2 class="text-xl font-bold mb-4 user_profile_info title">My Achievements</h2>
-                        
-                    </div>
-                    
+
                 </div>
+                <!-- User Achievements Section -->
+                <div class="shadow rounded-lg p-6 mt-8 user_profile_info left_pane">
+                    <h2 class="text-xl font-bold mb-4 user_profile_info title">My Achievements</h2>
+
+                </div>
+
             </div>
         </div>
     </div>
+    </div>
 
-    
+
     <!-- JavaScript managing the content in the Bootstrap table -->
     <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
     <script>
         function previewAvatar(event) {
             const avatarPreview = document.getElementById('avatarPreview');
             const file = event.target.files[0];
-    
+
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     avatarPreview.src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             }
         }
     </script>
-    
+
 </body>
 
 <footer>
