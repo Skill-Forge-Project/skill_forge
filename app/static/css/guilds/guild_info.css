@@ -318,3 +318,38 @@ body {
     margin-top: 20px;
     margin-right: 20px;
 }
+
+
+
+
+.members_section .member_img {
+    align-self: center;
+}
+
+.members_section .member_info_container {
+    align-self: center;
+    margin: 0;
+    display: flex;
+}
+
+.members_section .member_info_container p {
+    margin: 0;
+    margin-left: 2em;
+}
+
+.members_section .member_info_container p span {
+    color: #bccfeb;
+}
+
+.members_section .right-section {
+    padding: 0;
+    display: flex;
+    align-self: center;
+}
+
+.members_section .right-section .delete_member_btn {
+    background-color: rgb(190, 0, 0);
+    border-radius: 50%;
+    height: 2em;
+    width: 2em;
+}
