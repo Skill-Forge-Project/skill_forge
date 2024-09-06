@@ -142,7 +142,7 @@ class QuestForm(FlaskForm):
         render_kw={"id": ""}
     )
     quest_unitests = TextAreaField(
-        'Quest Unit Tests - Not Obligatory'
+        'Class and Main method - only Java and C#'
     )
     submit = SubmitField('Submit Quest')
     
