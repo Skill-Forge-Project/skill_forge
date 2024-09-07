@@ -241,6 +241,13 @@ class QuestApprovalForm(FlaskForm):
     reject = SubmitField('Reject Quest', render_kw={'value': 'reject'})
     save_changes = SubmitField('Save Changes', render_kw={'value': 'save-changes'})
     
+    
+########### Give Achievement Form - as a Admin ###########
+class GiveAchievementForm(FlaskForm):
+    achievement = SelectField('Select Achievement', validators=[DataRequired()], choices=[])
+    submit = SubmitField('Give Achievement')
+    
+
 ########### Create New Guild Form ###########
 class CreateGuildForm(FlaskForm):
     name = StringField('Guild Name', validators=[DataRequired(), Length(min=5, max=50)])

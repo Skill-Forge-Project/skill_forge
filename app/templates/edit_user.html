@@ -92,7 +92,23 @@
                         {% endif %}
                     </div>
                 </form>
+
+                <!-- User achievements handling -->
+                <div class="input-row">
+                    <h4><strong class="row-label">Give achievement to user: </strong></h4>
+                    <form method="POST" action="{{ url_for('usr.give_achievement', user_id=user.user_id) }}">
+                        {{ form.hidden_tag() }}
+                        <div>
+                            <!-- <label for="achievement">{{ form.achievement.label }}</label> -->
+                            {{ form.achievement(class="dropdown_input") }}  <!-- Render the dropdown input -->
+                        </div>
+                        <div>
+                            {{ form.submit(class="submit-button") }}
+                        </div>
+                    </form>
+                </div>
             </div>
+
         <!-- JavaScript script to handle the CodeMirror custom fields. 
             This script should be loaded after the initialization of the fields above! 
         -->
