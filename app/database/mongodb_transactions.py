@@ -66,6 +66,7 @@ def java_code_runner_transaction(collection_name, **kwargs):
                     'unsuccessful_tests': kwargs['unsuccessful_tests'],
                     'zero_tests': kwargs['zero_tests'],
                     'zero_tests_outputs': kwargs['zero_tests_outputs'],
+                    'all_results': kwargs['all_results'],
                     'timestamp': kwargs['timestamp'],
                 }, 
                 session=session)
@@ -119,6 +120,7 @@ def csharp_code_runner_transaction(collection_name, **kwargs):
                     'unsuccessful_tests': kwargs['unsuccessful_tests'],
                     'zero_tests': kwargs['zero_tests'],
                     'zero_tests_outputs': kwargs['zero_tests_outputs'],
+                    'all_results': kwargs['all_results'],
                     'timestamp': kwargs['timestamp'],
                 }, 
                 session=session)
@@ -171,6 +173,7 @@ def javascript_code_runner_transaction(collection_name, **kwargs):
                     'unsuccessful_tests': kwargs['unsuccessful_tests'],
                     'zero_tests': kwargs['zero_tests'],
                     'zero_tests_outputs': kwargs['zero_tests_outputs'],
+                    'all_results': kwargs['all_results'],
                     'timestamp': kwargs['timestamp'],
                 }, 
                 session=session)
@@ -223,6 +226,7 @@ def python_code_runner_transaction(collection_name, **kwargs):
                     'unsuccessful_tests': kwargs['unsuccessful_tests'],
                     'zero_tests': kwargs['zero_tests'],
                     'zero_tests_outputs': kwargs['zero_tests_outputs'],
+                    'all_results': kwargs['all_results'],
                     'timestamp': kwargs['timestamp'],
                 }, 
                 session=session)
