@@ -134,13 +134,79 @@ body {
 }
 
 
-.achievement_descr {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    color: #03e9f4;
-    font-size: 12px;
+.achievement-container {
+    position: relative;
     text-align: center;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    width: fit-content;
+    padding: 0px;  /* Reduced padding for a tighter layout */
+    margin: 0px;  /* Reduced margin between achievements */
+    transition: all 0.3s ease;
+}
+
+.achievement-img-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 12px;
+    margin: 0px;
+    padding: 0px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-container:hover .achievement-img-wrapper img {
+    transform: scale(1.05);
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1px; /* Adjust this value to reduce space between items */
+    padding: 0px; /* Add some padding around the grid */
+}
+
+.achievement-container {
+    position: relative;
+    text-align: center;
+    padding: 0px;
+    transition: all 0.3s ease;
+}
+
+.achievement-img-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-container:hover .achievement-img-wrapper img {
+    transform: scale(1.20);
+}
+
+.achievement-info {
+    margin-top: 5px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s, transform 0.3s ease-out;
+}
+
+.achievement-container:hover .achievement-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.achievement_name {
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 1rem;
+    color: #03e9f4;
+}
+
+.achievement_descr {
+    font-size: 0.85rem;
+    color: #d2d0d0;
 }
 
 .user_avatar {
@@ -339,3 +405,5 @@ body {
     margin-top: 20px;
     margin-right: 20px;
 }
+
+
