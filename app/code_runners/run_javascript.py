@@ -12,6 +12,8 @@ def run_code(js_code, inputs, outputs, user_id, username, quest_id):
     zero_tests_outputs = [] # Hold the first example after executing the user code (stdout & stderr)
     execution_id = str(uuid.uuid4())
     workdir = f"/tmp/{execution_id}"
+    # Hold all the results of the tests
+    all_results = {}
     os.makedirs(workdir, exist_ok=True)
     
     # Create new Python file in /tmp directory
@@ -44,6 +46,9 @@ def run_code(js_code, inputs, outputs, user_id, username, quest_id):
         # Decode output from bytes to string
         stdout_str = stdout.decode('utf-8').replace('\n', '').replace('undefined', '') # handle undefined output as well
         stderr_str = stderr.decode('utf-8')
+        
+        all_results.update({f"Test {i+1}": {"input": current_input, "output": stdout_str, "expected_output": correct_output, "error": stderr_str}})
+
         
         if stderr_str:
             # Insert the compilation error transaction into the MongoDB log database
@@ -90,5 +95,6 @@ def run_code(js_code, inputs, outputs, user_id, username, quest_id):
                                     unsuccessful_tests=unsuccessful_tests,
                                     zero_tests=zero_tests,
                                     zero_tests_outputs=zero_tests_outputs,
+                                    all_results=all_results,
                                     timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
