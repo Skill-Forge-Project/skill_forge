@@ -1,11 +1,11 @@
-import base64, json, re
+import base64, json, random, string
 from datetime import datetime
 from flask import Blueprint, redirect, url_for, request, flash, render_template, abort
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 # Import the forms and models
-from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest
-from app.forms import QuestForm, UserProfileForm, QuestApprovalForm
+from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest, Achievement
+from app.forms import QuestForm, UserProfileForm, GiveAchievementForm
 # Import the database instance
 from app.database.db_init import db
 # Import MongoDB transactions functions
@@ -102,14 +102,19 @@ def open_user_profile():
                         max_xp=max_xp)
 
 
-# # Open user for editing from the Admin Panel
+# Open user for editing from the Admin Panel
 @bp_usr.route('/edit_user/<user_id>')
 @login_required
 @admin_required
 def open_edit_user(user_id):
+    form = GiveAchievementForm()
+
     # Retrieve the specific user from the database, based on the user_id
     user = User.query.get(user_id)
-    return render_template('edit_user.html', user=user)
+    achievements = Achievement.query.all()
+    # Dynamically populate the achievement field with (id, name-description) pairs
+    form.achievement.choices = [(achievement.achievement_id, f'{achievement.achievement_name} - {achievement.achievement_description}') for achievement in achievements]
+    return render_template('edit_user.html', user=user, achievements=achievements, form=form)
 
 # Handle user edit from the Admin Panel
 @bp_usr.route('/edit_user_db', methods=['GET', 'POST'])
@@ -123,7 +128,7 @@ def edit_user_db():
     email = request.form.get('user_email')
 
     user = User.query.get(user_id)
-
+    
     # Updating information about the user
     user.user_role = user_role
     user.first_name = first_name
@@ -131,6 +136,58 @@ def edit_user_db():
     user.email = email
     db.session.commit()
     return redirect(url_for('usr.open_admin_panel'))
+
+# Give user an achievement from the Admin panel
+@bp_usr.route('/give_achievement/<user_id>', methods=['POST'])
+@login_required
+@admin_required
+def give_achievement(user_id):
+    form = GiveAchievementForm()
+    
+    user = User.query.get_or_404(user_id)
+    achievements = Achievement.query.all()
+
+    # Dynamically populate the achievement field with (id, name-description) pairs
+    form.achievement.choices = [
+        (achievement.achievement_id, f'{achievement.achievement_name} - {achievement.achievement_description}')
+        for achievement in achievements
+    ]
+
+    if form.validate_on_submit():
+        achievement_id = form.achievement.data  # Get the selected achievement_id from form
+        achievement = Achievement.query.get(achievement_id)
+        
+        user_achievement_exist = UserAchievement.query.filter_by(user_id=user_id, achievement_id=achievement_id).first()
+        if user_achievement_exist:
+            flash(f'{user.username} already has the achievement "{achievement.achievement_name}".', 'error')
+            return render_template('edit_user.html', user=user, achievements=achievements, form=form)
+
+        if achievement:
+            user_achievement_id = f"USR-ACHV-{''.join(random.choices(string.digits, k=16))}"
+            # Ensure the user_achievement_id is unique
+            while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                user_achievement_id = f"USR-ACHV-{''.join(random.choices(string.digits, k=16))}"
+            
+            # Create new UserAchievement entry
+            user_achievement = UserAchievement(
+                user_achievement_id=user_achievement_id,
+                user_id=user_id,
+                username=user.username,
+                achievement_id=achievement.achievement_id,
+                earned_on=datetime.now()
+            )
+            
+            db.session.add(user_achievement)
+            db.session.commit()
+            
+            flash(f'Achievement "{achievement.achievement_name}" given successfully to {user.username}.', 'success')
+            return render_template('edit_user.html', user=user, achievements=achievements, form=form)
+
+    # If not a POST request or form is invalid, render the form again
+    flash('Invalid form data. Please try again.', 'error')
+    return render_template('edit_user.html', user=user, achievements=achievements, form=form)
+
+
 
 # Route to handle the user profile (self-open)
 @bp_usr.route('/user_profile/<username>', methods=['GET'])

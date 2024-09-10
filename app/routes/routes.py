@@ -1,4 +1,4 @@
-import secrets, os
+import secrets, os, random, string
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
@@ -9,7 +9,7 @@ from app.database.db_init import db
 from app import bcrypt
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm, EmailResetForm, PasswordResetForm, ContactForm
-from app.models import User, ResetToken, Quest, SubmitedSolution
+from app.models import User, ResetToken, Quest, SubmitedSolution, Achievement, UserAchievement
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
 
@@ -72,11 +72,27 @@ def register():
         new_user = User(email=form.email.data, username=form.username.data, 
                         first_name=form.first_name.data, last_name=form.last_name.data, 
                         password=hashed_password)
+        
+        # Check if the user is registering before 31.10.2024 and assign the Early achievement
+            # !!!! Retire that functionality after 31.10.2024 !!!!
+        if datetime.today().date() <= datetime(datetime.today().date().year, 10, 31).date():
+            achievement = Achievement.query.filter(Achievement.achievement_name=="Early Bird").first()
+            user_achievement_id = f"USR-ACHV-{''.join(random.choices(string.digits, k=16))}"
+            while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                user_achievement_id = f"USR-ACHV-{''.join(random.choices(string.digits, k=16))}"
+            
+            user_achievement = UserAchievement(user_achievement_id=user_achievement_id, 
+                                               user_id=new_user.user_id,
+                                               username = new_user.username,
+                                               achievement_id=achievement.achievement_id,
+                                               earned_on=datetime.now())
+            db.session.add(user_achievement)
+            
         db.session.add(new_user)
         db.session.commit()
         send_welcome_mail(form.email.data, form.username.data)
         flash('Your account has been created! You are now able to log in.', 'success')
-        return render_template('index.html', form=form)
+        return render_template('index.html', form=LoginForm())
     else:
         if form.errors:
             for field, errors in form.errors.items():

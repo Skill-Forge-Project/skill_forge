@@ -181,10 +181,17 @@
                         <h2 class="text-xl font-bold mb-4 user_profile_info title">My Achievements</h2>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {% for user_achievement in user_achievements %}
-                            <div>
-                                <img class="h-24 w-24 rounded-lg mx-auto" 
-                                src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}" alt="User Achievement">
-                                <p class="achievement_descr">{{ user_achievement.achievement.achievement_name }} {{ user_achievement.achievement.achievement_description }}</p>
+                            <div class="achievement-grid">
+                                <div class="achievement-container group">
+                                    <div class="achievement-img-wrapper">
+                                        <img class="h-24 w-24 rounded-lg transition-transform duration-300 ease-out" 
+                                        src="../static/images/achievements-icons/{{ user_achievement.achievement.achievement_picture }}" alt="User Achievement">
+                                    </div>
+                                    <div class="achievement-info opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-opacity duration-300 transform translate-y-4 flex flex-col items-center">
+                                        <p class="achievement_name">{{ user_achievement.achievement.achievement_name }}</p>
+                                        <p class="achievement_descr">{{ user_achievement.achievement.achievement_description }}</p>
+                                    </div>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>

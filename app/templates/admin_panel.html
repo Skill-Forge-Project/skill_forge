@@ -125,6 +125,7 @@
                                                     <th>Difficulty</th>
                                                     <th>Author</th>
                                                     <th>Date Created</th>
+                                                    <th>Last Updated</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -136,8 +137,9 @@
                                                             quest.quest_name }}</a></td>
                                                     <td>{{ quest.language }}</td>
                                                     <td>{{ quest.difficulty }}</td>
-                                                    <td>{{ quest.quest_author }}</td>
+                                                    <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></td>
                                                     <td>{{ quest.date_added.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                                    <td>{{ quest.last_modified.strftime('%Y-%m-%d %H:%M:%S')}}</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
@@ -180,7 +182,7 @@
                                                             quest.quest_name }}</a></td>
                                                     <td>{{ quest.language }}</td>
                                                     <td>{{ quest.difficulty }}</td>
-                                                    <td>{{ quest.quest_author }}</td>
+                                                    <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{ quest.quest_author }}</a></td>
                                                     <td>{{ quest.date_added.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                                     <td>{{ quest.status }}</td>
                                                 </tr>
@@ -212,6 +214,7 @@
                                                     <th>Email</th>
                                                     <th>Date Registered</th>
                                                     <th>Rank</th>
+                                                    <th>Online Status</th>
                                                     <th>Status</th>
                                                     <th>Edit Profile</th>
                                                 </tr>
@@ -224,6 +227,9 @@
                                                     <td>{{ user.email }}</td>
                                                     <td>{{ user.date_registered.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                                     <td>{{ user.rank }}</td>
+                                                    <td class="{% if user.user_online_status == 'Online' %}status-online{% else %}status-offline{% endif %}">
+                                                        {{ user.user_online_status }}
+                                                    </td>
                                                     {% if user.is_banned %}
                                                         <td>Banned</td>
                                                     {% else %}

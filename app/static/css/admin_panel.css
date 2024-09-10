@@ -146,3 +146,11 @@ body {
     font-size: 13px !important;
     justify-self: center !important;
 }
+
+.status-online {
+    color: #4CAF50 !important;
+}
+
+.status-offline {
+    color: #f44336 !important;
+}

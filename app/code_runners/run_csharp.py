@@ -12,6 +12,8 @@ def run_code(csharp_code, inputs, outputs, unit_tests, user_id, username, quest_
     zero_tests_outputs = [] # Hold the first example after executing the user code (stdout & stderr)
     execution_id = str(uuid.uuid4())
     workdir = f"/tmp/{execution_id}"
+    # Hold all the results of the tests
+    all_results = {}
     os.makedirs(workdir, exist_ok=True)
     
     # Generate a unique dir and file name for the Java code
@@ -34,6 +36,7 @@ def run_code(csharp_code, inputs, outputs, unit_tests, user_id, username, quest_
     stdout, stderr = compile_process.communicate()
     stdout_str = stdout.decode('utf-8').strip()
     stderr_str = stderr.decode('utf-8').strip()
+    
     
     # Save the C# code to a file
     with open(csharp_file_path, "w") as cs_file:
@@ -80,6 +83,9 @@ def run_code(csharp_code, inputs, outputs, unit_tests, user_id, username, quest_
             stdout_str, stderr_str = execute_process.communicate()
             stdout_str = stdout_str.decode('utf-8').replace('\n', '')
             stderr_str = stderr_str.decode('utf-8').replace('\n', '')
+            
+            all_results.update({f"Test {i+1}": {"input": current_input, "output": stdout_str, "expected_output": correct_output, "error": stderr_str}})
+
     
             # Check if output matches expected output
             if str(stdout_str) == str(correct_output):
@@ -117,5 +123,6 @@ def run_code(csharp_code, inputs, outputs, unit_tests, user_id, username, quest_
                                 unsuccessful_tests=unsuccessful_tests,
                                 zero_tests=zero_tests, 
                                 zero_tests_outputs=zero_tests_outputs,
+                                all_results=all_results,
                                 timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
