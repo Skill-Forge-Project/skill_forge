@@ -315,7 +315,7 @@ def open_edit_reported_quest(report_id):
 @bp_qst.route('/report_quest/<curr_quest_id>')
 @login_required
 def report_quest(curr_quest_id, report_reason='no reason'):
-    request_arguments = dict(request.args)  # This prints {'report_reason': 'some_value'}
+    request_arguments = dict(request.args)
     quest = Quest.query.get(curr_quest_id)
     
     # Generate random suffix
@@ -323,14 +323,12 @@ def report_quest(curr_quest_id, report_reason='no reason'):
     suffix = ''.join(random.choices(string.digits, k=suffix_length))
     prefix = 'REP-'
     report_id = f"{prefix}{suffix}"
-    # Construct quest ID
+    # Construct Report ID
     while ReportedQuest.query.filter_by(report_id=report_id).first():
         # If it exists, generate a new submission_id
         suffix = ''.join(random.choices(string.digits, k=suffix_length))
         report_id = f"{prefix}{suffix}"
     
-    # # Get the current time
-    # current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     # Save the submission to the database
     new_reported_quest = ReportedQuest(
@@ -338,11 +336,13 @@ def report_quest(curr_quest_id, report_reason='no reason'):
         report_id=report_id,
         report_status = 'Not Resolved',
         report_user_id = current_user.user_id,
-        report_reason = request_arguments['report_reason'],  # This needs to be changed
-        admin_assigned = None  # This needs to be changed
+        report_reason = request_arguments['report_reason'],
+        admin_assigned = None
     )
 
-    quest.is_active = False
+    # Enhancement #218: If the user is an admin, automatically set the quest to inactive
+    if current_user.user_role == 'Admin':
+        quest.is_active = False
 
     # Add the new submission to the database session
     db.session.add(new_reported_quest)
