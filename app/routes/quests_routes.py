@@ -7,6 +7,7 @@ from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchieve
 from app.forms import QuestForm, PublishCommentForm, EditQuestForm, EditReportedQuestForm
 # Import code runners
 from app.code_runners import run_python, run_javascript, run_java, run_csharp
+from app.code_runners.piston_api import code_runner
 # Import the database instance
 from app.database.db_init import db
 from sqlalchemy.orm import joinedload
@@ -413,16 +414,20 @@ def submit_solution():
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            # successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'py')
 
         elif current_quest_language == 'JavaScript':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
                     
         elif current_quest_language == 'Java':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
+            # successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'java')
 
         elif current_quest_language == 'C#':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
+            # successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'cs')
+
         
         # Submit new solution to the database
         quest_id = request.form.get('quest_id')

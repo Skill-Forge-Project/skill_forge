@@ -69,7 +69,13 @@
                 <div id="html-output"></div>
             </div>
             <div class="input-row">
-                <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
+                {% if quest.language == "JavaScript" %}
+                    <textarea class="input-row" name="user_code" id="editor">{{ quest.function_template }}</textarea>
+                {% elif quest.language == "Python" %}
+                    <textarea class="input-row" name="user_code" id="editor"># Your solution</textarea>
+                {% else %}
+                    <textarea class="input-row" name="user_code" id="editor">// Your solution</textarea>
+                {% endif %}
                 <input type="hidden" id="quest_id" name="quest_id" value="{{ quest.quest_id }}">
                 <input type="hidden" id="quest_difficulty" name="quest_difficulty" value="{{ quest.difficulty }}">
                 <input type="hidden" id="quest_inputs" name="quest_inputs" value="{{ quest.test_inputs }}">
