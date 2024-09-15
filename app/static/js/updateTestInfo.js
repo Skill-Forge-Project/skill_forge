@@ -12,9 +12,11 @@ $(document).ready(function () {
             data: $('#submit_form').serialize(),
             success: function (response) {
                 // Update the divs with the returned test results
-                $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
-                $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
+                // $('#successful_tests').text('Successful Tests: ' + response.successful_tests);
+                // $('#unsuccessful_tests').text('Unsuccessful Tests: ' + response.unsuccessful_tests);
                 $('#message').text(response.message);
+                $('#submission_id_info').text(response.submission_id_info);
+                $('#results').text(response.results);
                 $('#zero-test-input').text('Given Input: ' + response.zero_test_input);
                 $('#zero-test-output').text('Expected Output: ' + response.zero_test_output);
                 $('#zero-test-stdout').text('Your Output: ' + response.zero_test_result);

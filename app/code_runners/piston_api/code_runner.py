@@ -16,9 +16,10 @@ def run_code(code, inputs, outputs, user_id, username, quest_id, language):
     
     for i in range(len(inputs)):
         flattened_values = [str(value) for sublist in inputs[i] for value in sublist]
+        # print(flattened_values) # Debugging purposes
         current_input = "\n".join(flattened_values)
         expected_output = outputs[i][0]
-        # print(f"The inputs will be:\n{result}") # Debugging purposes
+        # print(f"The inputs will be:\n{current_input}") # Debugging purposes
             
         data = {
             "language": f"{language}",

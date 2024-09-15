@@ -407,6 +407,7 @@ def submit_solution():
     current_quest_id = request.form.get('quest_id')
     current_quest_difficulty = request.form.get('quest_difficulty')
     current_quest_unit_tests = request.form.get('unit_tests')
+    
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
@@ -414,18 +415,15 @@ def submit_solution():
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            # successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_python.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'py')
 
         elif current_quest_language == 'JavaScript':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
                     
         elif current_quest_language == 'Java':
-            # successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_java.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'java')
 
         elif current_quest_language == 'C#':
-            # successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_csharp.run_code(user_code, quest_inputs, quest_outputs, current_quest_unit_tests, user_id, username, current_quest_id)
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'cs')
 
         
@@ -551,10 +549,16 @@ def submit_solution():
 
         
         # Return the results of the tests and the final message to the frontend
+        submission_id_info = f'Your submission ID: {submission_id}'
+        results = f'Test Passed: {successful_tests}/{len(quest_inputs)}'
+        
+        print(results)
         return jsonify({
             'successful_tests': successful_tests,
             'unsuccessful_tests': unsuccessful_tests,
             'message': message,
+            'submission_id_info': submission_id_info,
+            'results': results,
             'zero_test_input': zero_tests[0],
             'zero_test_output': zero_tests[1],
             'zero_test_result': zero_tests_outputs[0],
