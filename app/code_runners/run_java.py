@@ -57,13 +57,13 @@ def run_code(java_code, inputs, outputs, unit_tests, user_id, username, quest_id
     # If compilation was successful, run and check the code
     else:
         for i in range(tests_count):        
-            current_input = ' '.join([str(element) for element in inputs[i]])
+            current_input = [f'"{str(element)}"' if ' ' in str(element) else str(element) for element in inputs[i]]
             correct_output = str(outputs[i][0])
             
             # Execute the compiled Java code using firejail
             execute_command = [
                 'firejail', '--quiet', '--noprofile', '--net=none', '--private', '--private-tmp', f'--whitelist={workdir}',
-                '--timeout=00:00:01', 'java', '-cp', workdir, 'Main'] + current_input.split()
+                '--timeout=00:00:01', 'java', '-cp', workdir, 'Main'] + [str(element) for element in current_input]
             execute_process = subprocess.Popen(execute_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = execute_process.communicate()
             stdout_str = stdout.decode('utf-8').strip()
