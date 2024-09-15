@@ -1,5 +1,4 @@
 import requests, uuid, os
-from flask import jsonify
 from dotenv import load_dotenv
 
 # Load the env variables
@@ -58,6 +57,11 @@ def run_code(code, inputs, outputs, user_id, username, quest_id, language):
                 zero_tests.append(expected_output)
                 zero_tests_outputs.append(current_output)
                 zero_tests_outputs.append(current_error)
+
+            all_results.update({f"Test {i+1}": {"input": current_input, 
+                                                "output": current_output, 
+                                                "expected_output": expected_output, 
+                                                "error": current_error}})
         
         # If Piston API returns an error
         else:
@@ -70,13 +74,16 @@ def run_code(code, inputs, outputs, user_id, username, quest_id, language):
             zero_tests.append("")
             zero_tests_outputs.append("")
             zero_tests_outputs.append("")
-            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
+            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results
         
-        
+
+    
     if unsuccessful_tests == 0:
         message = 'Congratulations! Your solution is correct!'
     elif successful_tests > 0 and unsuccessful_tests > 0:
         message = 'Your solution is partially correct! Try again!'
     else:
         message = 'Your solution is incorrect! Try again!'
-    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
+    
+    # Insert the transaction into the MongoDB log database
+    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results

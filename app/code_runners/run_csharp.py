@@ -1,8 +1,5 @@
 import subprocess, os, re, uuid, shutil
 from datetime import datetime
-# Import MongoDB transactions functions
-from app.database.mongodb_transactions import (csharp_compliation_error_transaction, 
-                                               csharp_code_runner_transaction)
 
 def run_code(csharp_code, inputs, outputs, unit_tests, user_id, username, quest_id):
     tests_count = len(inputs)

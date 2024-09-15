@@ -13,6 +13,7 @@ from app.database.db_init import db
 from sqlalchemy.orm import joinedload
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
+from app.database.mongodb_transactions import mongo_submission_transaction
 # Import admin_required decorator
 from app.user_permission import admin_required
 
@@ -415,17 +416,17 @@ def submit_solution():
         quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'py')
-
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'py')
+            language = "python"
         elif current_quest_language == 'JavaScript':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = run_javascript.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
-                    
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results  = run_javascript.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id)
+            language = "javascript"
         elif current_quest_language == 'Java':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'java')
-
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'java')
+            language = "java"
         elif current_quest_language == 'C#':
-            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'cs')
-
+            successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'cs')
+            language = "csharp"
         
         # Submit new solution to the database
         quest_id = request.form.get('quest_id')
@@ -552,6 +553,24 @@ def submit_solution():
         submission_id_info = f'Your submission ID: {submission_id}'
         results = f'Tests Passed: {successful_tests}/{len(quest_inputs)}'
         
+        try:
+            mongo_submission_transaction(f'{language}_submissions',
+                                        user_id=user_id,
+                                        username=username,
+                                        quest_id=quest_id,
+                                        code=user_code,
+                                        submission_id=submission_id,
+                                        inputs=quest_inputs,
+                                        outputs=quest_outputs,
+                                        message=message,
+                                        successful_tests=successful_tests,
+                                        unsuccessful_tests=unsuccessful_tests,
+                                        zero_tests=zero_tests,
+                                        zero_tests_outputs=zero_tests_outputs,
+                                        all_results=all_results,
+                                        timestamp=datetime.now())
+        except Exception as e:
+            print(f"Error while sending MongoDB transaction: {e}")
 
         return jsonify({
             'message': message,

@@ -1,9 +1,5 @@
 import subprocess, os, re, uuid, shutil
-import subprocess, os, re, uuid, shutil
 from datetime import datetime
-# Import MongoDB transactions functions
-from app.database.mongodb_transactions import (python_compliation_error_transaction,
-                                               python_code_runner_transaction)
 
 def run_code(python_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
