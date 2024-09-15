@@ -550,13 +550,12 @@ def submit_solution():
         
         # Return the results of the tests and the final message to the frontend
         submission_id_info = f'Your submission ID: {submission_id}'
-        results = f'Test Passed: {successful_tests}/{len(quest_inputs)}'
+        results = f'Tests Passed: {successful_tests}/{len(quest_inputs)}'
         
-        print(results)
+
         return jsonify({
-            'successful_tests': successful_tests,
-            'unsuccessful_tests': unsuccessful_tests,
             'message': message,
+            'passed': str(quest_passed),
             'submission_id_info': submission_id_info,
             'results': results,
             'zero_test_input': zero_tests[0],
