@@ -1,8 +1,4 @@
 import subprocess, os, re, uuid, shutil
-from datetime import datetime
-# Import MongoDB transactions functions
-from app.database.mongodb_transactions import (javascript_compliation_error_transaction,
-                                               javascript_code_runner_transaction)
 
 def run_code(js_code, inputs, outputs, user_id, username, quest_id):
     tests_count = len(inputs)
@@ -49,18 +45,6 @@ def run_code(js_code, inputs, outputs, user_id, username, quest_id):
         
         all_results.update({f"Test {i+1}": {"input": current_input, "output": stdout_str, "expected_output": correct_output, "error": stderr_str}})
 
-        
-        if stderr_str:
-            # Insert the compilation error transaction into the MongoDB log database
-            javascript_compliation_error_transaction('javascript_compliation_errors', 
-                                                user_id=user_id, 
-                                                username=username, 
-                                                quest_id=quest_id, 
-                                                javascript_code=js_code,
-                                                stderr_str=stderr_str,
-                                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
-        
         # Handle the zero test case
         if i == 0:
             zero_tests.append(current_input)
@@ -82,19 +66,4 @@ def run_code(js_code, inputs, outputs, user_id, username, quest_id):
             
     # Cleanup the directory
     shutil.rmtree(workdir)
-    # Insert the code runner transaction into the MongoDB log database
-    javascript_code_runner_transaction('javascript_code_runner', 
-                                    user_id=user_id, 
-                                    username=username, 
-                                    quest_id=quest_id, 
-                                    javascript_code=js_code,
-                                    inputs=inputs,
-                                    outputs=outputs,
-                                    message=message,
-                                    successful_tests=successful_tests,
-                                    unsuccessful_tests=unsuccessful_tests,
-                                    zero_tests=zero_tests,
-                                    zero_tests_outputs=zero_tests_outputs,
-                                    all_results=all_results,
-                                    timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs
+    return successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results
