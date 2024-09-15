@@ -1,4 +1,4 @@
-import requests, json, uuid, os, re, subprocess
+import requests, uuid, os
 from flask import jsonify
 from dotenv import load_dotenv
 
@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def run_code(code, inputs, outputs, user_id, username, quest_id, language):
-    tests_count = len(inputs)
     successful_tests = 0
     unsuccessful_tests = 0
     zero_tests = [] # Hold the first example test input and putput
@@ -17,19 +16,20 @@ def run_code(code, inputs, outputs, user_id, username, quest_id, language):
     
     for i in range(len(inputs)):
         flattened_values = [str(value) for sublist in inputs[i] for value in sublist]
-        result = "\n".join(flattened_values)
-        print(f"The inputs will be:\n{result}")
+        current_input = "\n".join(flattened_values)
+        expected_output = outputs[i][0]
+        # print(f"The inputs will be:\n{result}") # Debugging purposes
             
         data = {
             "language": f"{language}",
-            "version": "3.12",
+            "version": "*",
             "files": [
                 {
-                    "name": f"{language}_{execution_id}_{quest_id}.{language}",
+                    "name": f"{username}_{user_id}_{quest_id}.{language}",
                     "content": code
                 }
             ],
-            "stdin": result,
+            "stdin": current_input,
             "args": [],
             "compile_timeout": 10000,
             "run_timeout": 3000,
@@ -43,18 +43,18 @@ def run_code(code, inputs, outputs, user_id, username, quest_id, language):
         if response.status_code == 200:
             current_output = response.json()['run']['stdout'].strip()
             current_error = response.json()['run']['stderr'].strip()
-            print(f"The output is: {current_output}")
-            print(f"The expected output is: {outputs[i][0]}")
-            if str(current_output) == str(outputs[i][0]):
+            # print(f"The output is: {current_output}") # Debugging purposes
+            # print(f"The expected output is: {outputs[i][0]}") # Debugging purposes
+            if str(current_output) == str(expected_output):
                 successful_tests += 1
-                print("Test passed!")
+                # print("Test passed!") # Debugging purposes
             else:
                 unsuccessful_tests += 1
-                print("Test failed!")
+                # print("Test failed!") # Debugging purposes
             
             if i == 0:
-                zero_tests.append(result)
-                zero_tests.append(outputs[i][0])
+                zero_tests.append(current_input)
+                zero_tests.append(expected_output)
                 zero_tests_outputs.append(current_output)
                 zero_tests_outputs.append(current_error)
         
@@ -62,6 +62,7 @@ def run_code(code, inputs, outputs, user_id, username, quest_id, language):
         else:
             message = 'Runtime Error! Try again!'
             logs_message = response.json()
+            # print(logs_message) # Debugging purposes
             successful_tests = 0
             unsuccessful_tests = len(inputs)
             zero_tests.append("")
