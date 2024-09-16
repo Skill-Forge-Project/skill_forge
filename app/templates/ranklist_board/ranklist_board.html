@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <title>Skill Forge - Ranklist Board</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ranklist_board/ranklist_board.css') }}">
+</head>
+
+<body class="bg-gradient-to-b from-gray-800 to-gray-900 min-h-screen flex flex-col">
+    <!-- Include Navbar template -->
+    {% include 'navbar.html' %}
+
+    <div class="flex flex-col justify-center items-center py-6 px-0">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="w-full max-w-md space-y-4">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} p-4 rounded-md bg-{{ category }}-100 text-{{ category }}-800">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="container flex flex-col items-center mt-2">
+        <div class="description-text text-gray-300 text-center">
+            <h3 class="mb-2 text-cyan-400">Ranklist Board</h3>
+        </div>
+    </div>
+
+    <!-- Footer section -->
+    <footer class="mt-auto w-full flex justify-start">
+        <!-- Include Footer template -->
+        {% include 'footer.html' %}
+    </footer>
+</body>

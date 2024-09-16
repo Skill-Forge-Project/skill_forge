@@ -65,7 +65,9 @@
                     <p class="mb-2 text-base" id="onlineUsersNumber">Online users: {{ online_users }}</p>
                     <p class="mb-2 text-base">Total Quests: {{ quest_count }}</p>
                     <p class="mb-2 text-base">Solved Quests: {{ solutions_count }}</p>
-                    <p class="mt-4 text-xl font-medium leading-tight homepage_box title">Ranklist Board</p>
+                    <a href="{{ url_for('ranklist.open_ranklist_board') }}" class="mt-4 text-xl font-medium leading-tight homepage_box title">
+                        Ranklist Board
+                      </a>
                 </div>
             </div>
 

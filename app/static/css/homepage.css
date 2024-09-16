@@ -170,6 +170,7 @@ button {
     font-size: 24px;
     color: #03e9f4;
     flex: 1;
+    text-decoration: none;
 }
 
 .box {
