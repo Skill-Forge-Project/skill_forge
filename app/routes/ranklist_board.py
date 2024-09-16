@@ -11,9 +11,15 @@ ranklist = Blueprint('ranklist', __name__)
 # Open the ranklist page
 @ranklist.route('/ranklist')
 def open_ranklist_board():
-    # Get top 20 players by XP points
-    top_players = User.query.order_by(User.xp.desc()).limit(20).all()
-    return render_template('ranklist_board/ranklist_board.html', top_players=top_players)
+    # Get the first, second and third players from the database by XP points
+    first_player = User.query.filter(User.user_role != 'Admin').order_by(User.xp.desc()).first()
+    second_player = User.query.filter(User.user_role != 'Admin').order_by(User.xp.desc()).offset(1).first()
+    third_player = User.query.filter(User.user_role != 'Admin').order_by(User.xp.desc()).offset(2).first()
+    
+    return render_template('ranklist_board/ranklist_board.html', 
+                           first_player=first_player,
+                           second_player=second_player,
+                           third_player=third_player)
     
 
 @ranklist.route('/ranklist/top_three_players')

@@ -31,18 +31,47 @@
             <h3 class="mb-2 text-cyan-400">Ranklist Board</h3>
         </div>
 
-        <div class="relative flex items-center justify-center mt-8 mb-10">
+        <div class="relative flex items-center justify-center w-full mt-8 mb-10">
             <!-- Gold Medal -->
             <div class="medal gold absolute top-0">
                 <img src="../static/images/ranklist_medals/gold_medal.png" alt="Gold Medal">
-            </div>
-            <!-- Silver Medal -->
-            <div class="medal silver absolute right-10 top-20 mr-10 mt-20 flex items-center justify-center">
-                <img src="../static/images/ranklist_medals/silver_medal.png" alt="Silver Medal">
+                <div class="user-profile flex flex-col">
+                    <img src="{{ url_for('usr.get_user_avatar', user_id=first_player.user_id) }}" alt="User Avatar">
+                    <h3><a class="ranklist username"
+                        href="{{ url_for('usr.open_user_profile_view', username=first_player.username) }}">{{ first_player.username }}</a></h3>
+                    <div class="info flex flex-row gap-4">
+                        <p>XP: {{ first_player.xp }}</p>
+                        <p>Level: {{first_player.level }}</p>
+                        <p>Rank: {{ first_player.rank }}</p>
+                    </div>
+                </div>
             </div>
             <!-- Bronze Medal -->
-            <div class="medal bronze absolute left-10 top-20 ml-10 mt-20 flex items-center justify-center">
+            <div class="medal silver absolute -right-0 top-40 mr-10 mt-20 flex items-center justify-center">
                 <img src="../static/images/ranklist_medals/bronze_medal.png" alt="Bronze Medal">
+                <div class="user-profile flex flex-col">
+                    <img src="{{ url_for('usr.get_user_avatar', user_id=second_player.user_id) }}" alt="User Avatar">
+                    <h3><a class="ranklist username"
+                        href="{{ url_for('usr.open_user_profile_view', username=second_player.username) }}">{{ second_player.username }}</a></h3>
+                    <div class="info flex flex-row gap-4">
+                        <p>XP: {{ second_player.xp }}</p>
+                        <p>Level: {{second_player.level }}</p>
+                        <p>Rank: {{ second_player.rank }}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Silver Medal -->
+            <div class="medal bronze absolute left-0 top-40 ml-5 mt-20 flex items-center justify-center">
+                <img src="../static/images/ranklist_medals/silver_medal.png" alt="Silver Medal">
+                <div class="user-profile flex flex-col">
+                    <img src="{{ url_for('usr.get_user_avatar', user_id=third_player.user_id) }}" alt="User Avatar">
+                    <h3><a class="ranklist username"
+                        href="{{ url_for('usr.open_user_profile_view', username=third_player.username) }}">{{ third_player.username }}</a></h3>                    <div class="info flex flex-row gap-4">
+                        <p>XP: {{ third_player.xp }}</p>
+                        <p>Level: {{third_player.level }}</p>
+                        <p>Rank: {{ third_player.rank }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

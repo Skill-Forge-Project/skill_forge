@@ -1,6 +1,6 @@
-import base64, json, random, string
+import base64, json, random, string, io
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, flash, render_template, abort
+from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 # Import the forms and models
@@ -101,6 +101,17 @@ def open_user_profile():
                         xp_percentage=xp_percentage,
                         max_xp=max_xp)
 
+
+# Get the users avatar
+@bp_usr.route('/avatar/<user_id>')
+def get_user_avatar(user_id):
+    user = User.query.filter_by(user_id=user_id).first_or_404()
+    if user.avatar:
+        img_data = user.avatar
+    else:
+        with open('app/static/images/anvil.png', 'rb') as f:
+            img_data = f.read()
+    return send_file(io.BytesIO(img_data), mimetype='image/jpeg')
 
 # Open user for editing from the Admin Panel
 @bp_usr.route('/edit_user/<user_id>')

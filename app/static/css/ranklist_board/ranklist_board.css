@@ -65,3 +65,39 @@ body {
     height: 100%;
     object-fit: contain;
 }
+
+/* User profile styling */
+.user-profile {
+    position: absolute;
+    bottom: -50px;
+    right: -100px;
+    /* padding: 10px; */
+    border-radius: 10px;
+    color: white;
+    width: 100%;
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    font-size: 14px;
+}
+.user-profile img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #03e9f4;
+}
+.user-profile h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+.user-profile .info {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.ranklist.username {
+    color: #03e9f4;
+    text-decoration: none;
+}
