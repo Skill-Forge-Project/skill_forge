@@ -58,8 +58,8 @@ As an open source project, Skill Forge is fully open and transparent, including 
 
 #### ➡️ **Contributing Guidelines:**
 
-##### 1️⃣ Fork the repository
-##### 2️⃣ Create your own branch with the proper name. Branch naming convention:
+#### 1️⃣ Fork the repository
+#### 2️⃣ Create your own branch with the proper name. Branch naming convention:
 
 **New Feature Development:**
 Includes new user stories or whole new feature introduction, e.g.:
@@ -95,29 +95,22 @@ Priority 0 bug fixes, production critical, e.g.:
 • refactor/new-database-integration
 ```
 
-##### 3️⃣ After you are done with you changes open an Pull-Request and submit you commits. 
+#### 3️⃣ After you are done with you changes open an Pull-Request and submit you commits. 
 
 To ensure a smooth and efficient code review process, please follow these guidelines when creating a pull request (PR):
 
 **Descriptive Title**
 * Provide a concise and clear title that summarizes the purpose of the PR. Avoid generic titles like “Fixes” or “Changes”—be specific.
-* 
-	• ✅  Add user authentication with JWT
-	
-	• ❌  Fixed stuff
+* ✅  Add user authentication with JWT
+*  ❌  Fixed stuff
 
 **Detailed Description**
-* The description should clearly explain:
-	• **What was changed:** Provide a summary of the changes made in the PR.
-	
-	• **Why it was changed:** Explain the problem you’re solving or the new feature you’re adding.
-	
-	• **How it was changed:** Outline the approach taken, and any relevant design decisions.
-	
-	• **Dependencies:** List any other PRs, issue, libraries, or configurations this PR depends on.
-	
-	• **Additional context or screenshots:** If relevant, include screenshots for UI changes or logs of issues solved.
-	
+* **What was changed:** Provide a summary of the changes made in the PR.
+* **Why it was changed:** Explain the problem you’re solving or the new feature you’re adding.
+* **How it was changed:** Outline the approach taken, and any relevant design decisions.
+* **Dependencies:** List any other PRs, issue, libraries, or configurations this PR depends on.
+* **Additional context or screenshots:** If relevant, include screenshots for UI changes or logs of issues solved.
+
 **Break Down Large PRs**
 * Keep your pull requests small and focused. If the change is large, consider splitting it into smaller, incremental PRs. This makes reviews quicker and less error-prone.
 
@@ -126,11 +119,9 @@ To ensure a smooth and efficient code review process, please follow these guidel
 
 **Follow Coding Standards**
 * Ensure your code follows the project’s coding conventions, such as:
-	• Code style (e.g., naming conventions, formatting)
-	
-	• Consistent use of comments and documentation
-	
-	• Tests for new or updated functionality
+* Code style (e.g., naming conventions, formatting)
+* Consistent use of comments and documentation
+* Tests for new or updated functionality
 
 **Document Changes**
 * Update any relevant documentation, such as API endpoints, configuration files, or README.md, as part of the PR.
