@@ -32,7 +32,7 @@ As you complete coding challenges, gain experience points (XP), climb through ra
 * MongoDB
 ##### Build & Deploy ⚒️
 * Docker & Docker Compose
-##### Hosting:
+##### Hosting 🌐:
 * Proxmox & Debian 12
 * Cloudflare
 * Mailtrap
@@ -51,14 +51,17 @@ As you complete coding challenges, gain experience points (XP), climb through ra
 
 As an open source project, Skill Forge is fully open and transparent, including the project roadmap. You are more than welcome to take place in the development process by commit your own code, report bugs, propose new features and ideas or simply engage in the discussions.
 
-🗺️ [Skill Forge roadmap](https://github.com/users/karastoyanov/projects/22)
-💡Report Bugs, open enhancement ticket or documentation improvement by using [our issue templates](https://github.com/karastoyanov/skill_forge/issues/new/choose)
+#### 🗺️ [Skill Forge roadmap](https://github.com/users/karastoyanov/projects/22)
+
+#### 💡Report Bugs, open enhancement ticket or documentation improvement by using [our issue templates](https://github.com/karastoyanov/skill_forge/issues/new/choose)
+
 
 #### ➡️ **Contributing Guidelines:**
 
 ##### 1️⃣ Fork the repository
 ##### 2️⃣ Create your own branch with the proper name. Branch naming convention:
-###### **New Feature Development:**
+
+**New Feature Development:**
 Includes new user stories or whole new feature introduction, e.g.:
 ```
 • feature/user-authentication
@@ -66,7 +69,7 @@ Includes new user stories or whole new feature introduction, e.g.:
 • feature/add-search-functionality
 • feature/update-profile-page
 ```
-###### **Bug Fixes:**
+**Bug Fixes:**
 Priority 1 and 2 bug fixes, not critical, e.g.:
 ```
 • bugfix/login-issue
@@ -74,7 +77,7 @@ Priority 1 and 2 bug fixes, not critical, e.g.:
 • bugfix/api-response-fix
 • bugfix/database-connection-error
 ```
-###### **Hot-fixes:**
+**Hot-fixes:**
 Priority 0 bug fixes, production critical, e.g.:
 ```
 • hotfix/critical-security-patch
@@ -83,7 +86,7 @@ Priority 0 bug fixes, production critical, e.g.:
 • hotfix/authentication-issue
 ```
 
-###### **Miscellaneous:**
+**Miscellaneous:**
 ```
 • chore/update-dependencies
 • chore/code-cleanup
