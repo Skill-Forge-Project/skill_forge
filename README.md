@@ -1,7 +1,6 @@
-´
 ## Skill Forge: An Open-Source platform
 
-### 1. About 📖
+## 1. About 📖
 
 Welcome to Skill Forge, where you can embark on a journey of learning, creativity, and problem-solving through programming. Whether you're a novice coder looking to sharpen your skills, an adventurous programmer seeking new challenges, or an experienced developer ready for epic campaigns, our platform has something for everyone.
 
@@ -17,7 +16,7 @@ Celebrate your milestones and achievements as you progress through our quests an
 
 As you complete coding challenges, gain experience points (XP), climb through ranks, and submit your own quests to challenge the community. Share your knowledge, creativity, and problem-solving skills with others, and contribute to the growth of our platform.
 
-### 2. Tech Stack 🔖
+## 2. Tech Stack 🔖
 
 ##### Languages 🔧
 * Python
@@ -46,7 +45,7 @@ As you complete coding challenges, gain experience points (XP), climb through ra
 * Postman
 * Piston API
 
-### 3. Contributing 👨‍💻👩‍💻
+## 3. Contributing 👨‍💻👩‍💻
 
 #### ℹ️ Dev self-hosted version is currently under developing
 
@@ -139,13 +138,13 @@ To ensure a smooth and efficient code review process, please follow these guidel
 * If feedback requires changes, update the PR promptly and re-request reviews.
 * For larger discussions or significant design changes, consider discussing them in a separate issue or meeting.
 
-### 4. Authors & Maintainers 👨‍💻
+## 4. Authors & Maintainers 👨‍💻
 
 👨‍🚀 [@karastoyanov](https://github.com/karastoyanov) - Project Owner
 
 👩‍💻 [@raya](https://github.com/rayapetkova) - Developer & Site Admin
 👨‍💻 [@petyo](https://github.com/borovaneca) - Java Guru & Site Admin
-### 5. Skill Forge Community
+## 5. Skill Forge Community
 
 At Skill Forge, we believe that learning is a journey best shared with others. Our community thrives when everyone participates in a supportive and respectful way. Here’s how you can help create a welcoming environment for everyone:
 
