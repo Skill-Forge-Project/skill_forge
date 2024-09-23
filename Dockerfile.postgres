@@ -4,5 +4,9 @@ FROM postgres:latest
 # Install pg_cron scheduler for Postgres
 RUN apt update && apt install -y postgresql-16-cron
 
+
+# Copy the SQL achievements script to the container (will be executed at startup)
+# COPY achievements.sql /docker-entrypoint-initdb.d/
+
 # Copy the SQL init script to the container (will be executed at startup)
 COPY init.sql /docker-entrypoint-initdb.d/
