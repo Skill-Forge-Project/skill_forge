@@ -1,5 +1,14 @@
 -- achievements.sql
 
+-- Create the achievements table
+CREATE TABLE achievements (
+    achievement_id VARCHAR(20) PRIMARY KEY,
+    achievement_name VARCHAR(50) NOT NULL,
+    achievement_description VARCHAR(255) NOT NULL,
+    achievement_picture VARCHAR(255) NOT NULL,
+    "language" VARCHAR(50) NOT NULL,
+    quests_number_required INTEGER NOT NULL
+);
 
 -- Create achivements table and insert some data
 INSERT INTO achievements (achievement_id,achievement_name,achievement_description,achievement_picture,"language",quests_number_required) VALUES

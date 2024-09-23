@@ -15,6 +15,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
+      - ./achievements.sql:/docker-entrypoint-initdb.d/achievements.sql
       - postgres-dev:/var/lib/postgresql/data/pgdata
 
   
@@ -57,7 +58,6 @@ services:
       - '8000:8000'
     volumes:
       - skill-forge-dev:/app
-      - ./achievements.sql:/docker-entrypoint-initdb.d/achievements.sql
     depends_on:
       - postgres-dev
       - mongo1-master
