@@ -1,0 +1,8 @@
+# Use the official Postgres 16 Alpine image as a base
+FROM postgres:latest
+
+# Install pg_cron scheduler for Postgres
+RUN apt update && apt install -y postgresql-16-cron
+
+# Copy the SQL init script to the container (will be executed at startup)
+COPY init.sql /docker-entrypoint-initdb.d/

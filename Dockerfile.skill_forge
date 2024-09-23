@@ -1,5 +1,5 @@
 # Use the base image containing Python 3.8, NodeJS, npm, mono-complete compiler and java compiler
-FROM karastoyanov/skill-forge-baseimage
+FROM python:latest
 
 # Image Labels. Update values for each build
 LABEL Name="Skill-Forge"
@@ -11,8 +11,16 @@ LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GNU GPL v3.0 license"
 LABEL GitHub SourceCode="https://github.com/SoftUni-Discord-Community/skill_forge"
 
+# Set default timezone
+ENV TZ=Europe/Sofia
+RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime \ 
+    && dpkg-reconfigure -f noninteractive tzdata
+
 # Set the working directory in the container
 WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
 
 # Copy the Python app requirements file into the container at /app
 COPY ./requirements.txt /app/requirements.txt
@@ -21,8 +29,6 @@ COPY ./requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt --no-cache 
 
-# Copy the current directory contents into the container at /app
-COPY . /app
 
 # Expose port 8000
 EXPOSE 8000
