@@ -15,8 +15,9 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - ./achievements.sql:/docker-entrypoint-initdb.d/achievements.sql
       - postgres-dev:/var/lib/postgresql/data/pgdata
+      - ./achievements.sql:/docker-entrypoint-initdb.d/achievements.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   
   # MongoDB database replica cluster
