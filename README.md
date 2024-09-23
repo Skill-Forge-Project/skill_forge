@@ -55,7 +55,7 @@ As an open source project, Skill Forge is fully open and transparent, including 
 
 #### 💡Report Bugs, open enhancement ticket or documentation improvement by using [our issue templates](https://github.com/karastoyanov/skill_forge/issues/new/choose)
 
-#### Read [our contributing guidelines]([https://github.com/karastoyanov/skill_forge/blob/chore/readme-file/CONTRIBUTING.md](https://github.com/karastoyanov/skill_forge/blob/main/CONTRIBUTING.md)) before considering committing to the project.
+#### Read [our contributing guidelines](https://github.com/karastoyanov/skill_forge/blob/main/CONTRIBUTING.md) before considering committing to the project.
 
 ## 4. Authors & Maintainers 👨‍💻
 
