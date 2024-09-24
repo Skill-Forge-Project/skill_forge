@@ -65,7 +65,7 @@ Priority 0 bug fixes, production critical, e.g.:
 • refactor/ui-reword
 ```
 
-### 3️⃣ After you are done with you changes open an Pull-Request and submit you commits. 
+### 4️⃣ After you are done with you changes open an Pull-Request and submit you commits. 
 
 To ensure a smooth and efficient code review process, please follow these guidelines when creating a pull request (PR):
 
