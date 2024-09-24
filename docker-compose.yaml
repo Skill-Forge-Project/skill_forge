@@ -47,6 +47,19 @@ services:
     networks:
       - skillforge-net
 
+  # Piston API instance
+  piston-api:
+    image: ghcr.io/engineer-man/piston@sha256:6500f2af69ce18fe16ca9a0ba7b0ea895366fc0efa46860c03d1d3c8a6cd270d
+    container_name: piston-api
+    ports:
+      - "2000:2000"
+    privileged: true
+    volumes:
+      - ../data/piston/packages:/piston/packages
+    tmpfs:
+      - /tmp:exec
+    networks:
+      - skillforge-net
 
   # Skill Forge application dev instance
   skill-forge-dev:
@@ -62,6 +75,7 @@ services:
     depends_on:
       - postgres-dev
       - mongo-dev
+      - piston-api
     networks:
       - skillforge-net
 
