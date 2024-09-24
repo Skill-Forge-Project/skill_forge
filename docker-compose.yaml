@@ -18,7 +18,17 @@ services:
       - postgres-dev:/var/lib/postgresql/data/pgdata
       - ./achievements.sql:/docker-entrypoint-initdb.d/achievements.sql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_preload_libraries=pg_cron"
+      - "-c"
+      - "cron.database_name=${DB_NAME}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "localhost", "-p", "5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   
   # MongoDB database replica cluster
   mongo1-master:

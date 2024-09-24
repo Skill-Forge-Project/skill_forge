@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sleep 10
 
 # This directory is created during the first run of PostgreSQL
 if [ -f /var/lib/postgresql/data/pgdata/postgresql.conf ]; then
@@ -12,7 +11,7 @@ if [ -f /var/lib/postgresql/data/pgdata/postgresql.conf ]; then
 
   # Restart PostgreSQL to apply the changes
   echo "Restarting PostgreSQL to apply changes..."
-  # su - postgres -c "/usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/data/pgdata restart"
+  su - postgres -c "/usr/lib/postgresql/16/bin/pg_ctl -D /var/lib/postgresql/data/pgdata restart"
 else
   echo "postgresql.conf not found, skipping pg_cron configuration."
 fi
