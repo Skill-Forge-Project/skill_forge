@@ -1,23 +1,47 @@
 
-# Skill Forge Contributing Guidelines
+# ➡️ Skill Forge Contributing Guidelines
 
-### ➡️ **Contributing Guidelines:**
+## 📝 Prerequisites:
+* Docker & Docker Compose
+* Piston API
+* It is recommended to use VSCode with Remote SSH
 
-### 1️⃣ Fork the repository
-### 2️⃣ Create your own branch with the proper name. Branch naming convention:
+## 1️⃣ Fork the repository
+
+## 2️⃣ Checkout to `dev-stack` branch.
+* Inside the branch you will find the `docker-compose.yaml` file. 
+* Change the `.env_variables` to `.env`
+* Run `docker compose up -d` in order to build and deploy all the necessary services: PostgreSQL, MongoDB, PistonAPI and the Skill Forge app 
+
+⌛ The build process will take some tame so grab a cup of coffee ☕
+After the services are built and deployed run `docker ps` to check all the containers.
+
+⚠️ In order to execute code snippets from Skill Forge you will have to install the required runtimes for each programming language supported: 
+```
+Java=15.0.2
+Python=3.12.0
+Csharp=6.12.0
+JavaScript=20.11.1
+```
+
+You might need Postman to send the POST requests in order to install the runtime environments. Refer to the [Piston API](https://github.com/engineer-man/piston) docs 
+
+❗You can re-build your local dev version each time when you did some changes in order to verify in the application can be build and deployed succsesfulyl. 
+
+## 3️⃣ Create your own branch with the proper name. Branch naming convention:
 
 **New Feature Development:**
 Includes new user stories or whole new feature introduction, e.g.:
 ```
-• feature/user-authentication
-• feature/ui-redesign
+• feature/user-google-authentication
+• feature/homepage-uui-cards
 • feature/add-search-functionality
-• feature/update-profile-page
+• feature/add-profile-page
 ```
 **Bug Fixes:**
 Priority 1 and 2 bug fixes, not critical, e.g.:
 ```
-• bugfix/login-issue
+• bugfix/logs-database-issue
 • bugfix/resolve-signup-error
 • bugfix/api-response-fix
 • bugfix/database-connection-error
@@ -38,6 +62,7 @@ Priority 0 bug fixes, production critical, e.g.:
 • test/add-unit-tests
 • refactor/remove-legacy-code
 • refactor/new-database-integration
+• refactor/ui-reword
 ```
 
 ### 3️⃣ After you are done with you changes open an Pull-Request and submit you commits. 

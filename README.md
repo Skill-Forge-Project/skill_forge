@@ -47,15 +47,15 @@ As you complete coding challenges, gain experience points (XP), climb through ra
 
 ## 3. Contributing 👨‍💻👩‍💻
 
-#### ℹ️ Dev self-hosted version is currently under developing
-
-As an open source project, Skill Forge is fully open and transparent, including the project roadmap. You are more than welcome to take place in the development process by commit your own code, report bugs, propose new features and ideas or simply engage in the discussions.
+#### As an open source project, Skill Forge is fully open and transparent, including the project roadmap. You are more than welcome to take place in the development process by committing your own code, report bugs, propose new features and ideas or simply engage in the discussions.
 
 #### 🗺️ [Skill Forge roadmap](https://github.com/users/karastoyanov/projects/22)
 
 #### 💡Report Bugs, open enhancement ticket or documentation improvement by using [our issue templates](https://github.com/karastoyanov/skill_forge/issues/new/choose)
 
 #### Read [our contributing guidelines](https://github.com/karastoyanov/skill_forge/blob/main/CONTRIBUTING.md) before considering committing to the project.
+
+#### ℹ️ Dev self-hosted version can be found in `dev-stack` branch.
 
 ## 4. Authors & Maintainers 👨‍💻
 
