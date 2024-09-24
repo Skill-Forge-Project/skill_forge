@@ -3,6 +3,3 @@ FROM postgres:latest
 
 # Install pg_cron scheduler for Postgres
 RUN apt update && apt install -y postgresql-16-cron
-
-RUN echo "shared_preload_libraries = 'pg_cron'" >> /var/lib/postgresql/data/postgresql.conf
-RUN echo "cron.database_name = 'skill_forge_dev'" >> /var/lib/postgresql/data/postgresql.conf
