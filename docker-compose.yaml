@@ -29,34 +29,24 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - skillforge-net
   
   # MongoDB database replica cluster
-  mongo1-master:
+  mongo-dev:
     image: mongo:4.4.18
-    container_name: mongo1
-    command: mongod --replSet rs0 --bind_ip localhost,mongo1
+    container_name: mongo-dev
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ADMIN_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ADMIN_PASSWORD}
     volumes:
-      - mongo1-master:/data/db
+      - mongo-dev:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    networks:
+      - skillforge-net
 
-  mongo2-slave:
-    image: mongo:4.4.18
-    container_name: mongo2
-    command: mongod --replSet rs0 --bind_ip localhost,mongo2
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo2-slave:/data/db
-
-  mongo3-slave:
-    image: mongo:4.4.18
-    container_name: mongo3
-    command: mongod --replSet rs0 --bind_ip localhost,mongo3
-    ports:
-      - "27019:27017"
-    volumes:
-      - mongo3-slave:/data/db
 
   # Skill Forge application dev instance
   skill-forge-dev:
@@ -71,21 +61,21 @@ services:
       - skill-forge-dev:/app
     depends_on:
       - postgres-dev
-      - mongo1-master
-      - mongo2-slave
-      - mongo3-slave
-
+      - mongo-dev
+    networks:
+      - skillforge-net
 
 
 
 volumes:
   postgres-dev:
     driver: local
-  mongo1-master:
-    driver: local
-  mongo2-slave:
-    driver: local
-  mongo3-slave:
+  mongo-dev:
     driver: local
   skill-forge-dev:
     driver: local
+
+networks:
+  skillforge-net:
+    driver: bridge
+    
