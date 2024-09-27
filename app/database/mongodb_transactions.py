@@ -1,7 +1,6 @@
 # Import connection to primary MongoDB node
 from app.database.mongodb_init import mongo1_db, mongo1_client
-# Import connection to secondary MongoDB node
-from app.database.mongodb_init import mongo2_db, mongo2_client
+
 
 # Create a transaction for inserting a log entry in the userLogins or userLoggouts collection
 def mongo_transaction(collection_name, **kwargs):
