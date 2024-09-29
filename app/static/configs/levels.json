@@ -103,407 +103,402 @@
     "Archmage": {
       "level": 21,
       "min_xp": 3400,
-      "max_xp": 3653
+      "max_xp": 3660
     },
     "Sage": {
       "level": 22,
-      "min_xp": 3654,
-      "max_xp": 3915
+      "min_xp": 3661,
+      "max_xp": 4026
     },
     "Mystic": {
       "level": 23,
-      "min_xp": 3916,
-      "max_xp": 4185
+      "min_xp": 4027,
+      "max_xp": 4428
     },
     "Hierophant": {
       "level": 24,
-      "min_xp": 4186,
-      "max_xp": 4463
+      "min_xp": 4429,
+      "max_xp": 4861
     },
     "Druid": {
       "level": 25,
-      "min_xp": 4464,
-      "max_xp": 4749
+      "min_xp": 4862,
+      "max_xp": 5334
     },
     "Shaman": {
       "level": 26,
-      "min_xp": 4750,
-      "max_xp": 5043
+      "min_xp": 5335,
+      "max_xp": 5847
     },
     "Oracle": {
       "level": 27,
-      "min_xp": 5044,
-      "max_xp": 5345
+      "min_xp": 5848,
+      "max_xp": 6400
     },
     "Seer": {
       "level": 28,
-      "min_xp": 5346,
-      "max_xp": 5655
+      "min_xp": 6401,
+      "max_xp": 6993
     },
     "Visionary": {
       "level": 29,
-      "min_xp": 5656,
-      "max_xp": 5973
+      "min_xp": 6994,
+      "max_xp": 7627
     },
     "Sage Master": {
       "level": 30,
-      "min_xp": 5974,
-      "max_xp": 6299
+      "min_xp": 7628,
+      "max_xp": 8302
     },
     "Grand Magus": {
       "level": 31,
-      "min_xp": 6300,
-      "max_xp": 6633
+      "min_xp": 8303,
+      "max_xp": 9018
     },
     "Archsage": {
       "level": 32,
-      "min_xp": 6634,
-      "max_xp": 6975
+      "min_xp": 9019,
+      "max_xp": 9776
     },
     "High Enchanter": {
       "level": 33,
-      "min_xp": 6976,
-      "max_xp": 7325
+      "min_xp": 9777,
+      "max_xp": 10576
     },
     "Mystic Adept": {
       "level": 34,
-      "min_xp": 7326,
-      "max_xp": 7683
+      "min_xp": 10577,
+      "max_xp": 11419
     },
     "Arcane Maestro": {
       "level": 35,
-      "min_xp": 7684,
-      "max_xp": 8049
+      "min_xp": 11420,
+      "max_xp": 12306
     },
     "Grand Thaumaturge": {
       "level": 36,
-      "min_xp": 8050,
-      "max_xp": 8423
+      "min_xp": 12307,
+      "max_xp": 13237
     },
     "Arch Warlock": {
       "level": 37,
-      "min_xp": 8424,
-      "max_xp": 8805
+      "min_xp": 13238,
+      "max_xp": 14214
     },
     "Sorcerer Supreme": {
       "level": 38,
-      "min_xp": 8806,
-      "max_xp": 9195
+      "min_xp": 14215,
+      "max_xp": 15238
     },
     "Master Illusionist": {
       "level": 39,
-      "min_xp": 9196,
-      "max_xp": 9593
+      "min_xp": 15239,
+      "max_xp": 16309
     },
     "Dark Magician": {
       "level": 40,
-      "min_xp": 9594,
-      "max_xp": 9999
+      "min_xp": 16310,
+      "max_xp": 17428
     },
     "Celestial Conjurer": {
       "level": 41,
-      "min_xp": 10000,
-      "max_xp": 10413
+      "min_xp": 17429,
+      "max_xp": 18595
     },
     "Ethereal Enchanter": {
       "level": 42,
-      "min_xp": 10414,
-      "max_xp": 10835
+      "min_xp": 18596,
+      "max_xp": 19811
     },
     "Elemental Summoner": {
       "level": 43,
-      "min_xp": 10836,
-      "max_xp": 11265
+      "min_xp": 19812,
+      "max_xp": 21077
     },
     "Astral Adept": {
       "level": 44,
-      "min_xp": 11266,
-      "max_xp": 11703
+      "min_xp": 21078,
+      "max_xp": 22394
     },
     "Planar Magus": {
       "level": 45,
-      "min_xp": 11704,
-      "max_xp": 12149
+      "min_xp": 22395,
+      "max_xp": 23762
     },
     "Arcane Archmage": {
       "level": 46,
-      "min_xp": 12150,
-      "max_xp": 12603
+      "min_xp": 23763,
+      "max_xp": 25183
     },
     "Mystic Prophet": {
       "level": 47,
-      "min_xp": 12604,
-      "max_xp": 13065
+      "min_xp": 25184,
+      "max_xp": 26658
     },
     "Elder Sorcerer": {
       "level": 48,
-      "min_xp": 13066,
-      "max_xp": 13535
+      "min_xp": 26659,
+      "max_xp": 28200
     },
     "Grand Illusionist": {
       "level": 49,
-      "min_xp": 13536,
-      "max_xp": 14013
+      "min_xp": 28201,
+      "max_xp": 29810
     },
     "Supreme Warlock": {
       "level": 50,
-      "min_xp": 14014,
-      "max_xp": 14499
+      "min_xp": 29811,
+      "max_xp": 31490
     },
     "Arcane Hierophant": {
-      "level": 50,
-      "min_xp": 14500,
-      "max_xp": 14993
+      "level": 51,
+      "min_xp": 31491,
+      "max_xp": 33235
     },
     "Celestial Druid": {
-      "level": 51,
-      "min_xp": 14994,
-      "max_xp": 15495
+      "level": 52,
+      "min_xp": 33236,
+      "max_xp": 35049
     },
     "Ethereal Shaman": {
-      "level": 52,
-      "min_xp": 15496,
-      "max_xp": 16005
-    },
-    "Elemental Oracle": {
       "level": 53,
-      "min_xp": 16006,
-      "max_xp": 16523
+      "min_xp": 35050,
+      "max_xp": 36936
     },
-    "Astral Seer": {
+    "Astral Oracle": {
       "level": 54,
-      "min_xp": 16524,
-      "max_xp": 17049
+      "min_xp": 36937,
+      "max_xp": 38900
     },
-    "Planar Visionary": {
+    "Divine Seer": {
       "level": 55,
-      "min_xp": 17050,
-      "max_xp": 17583
+      "min_xp": 38901,
+      "max_xp": 40945
     },
-    "Arcane Sage Master": {
+    "Grand Visionary": {
       "level": 56,
-      "min_xp": 17584,
-      "max_xp": 18125
+      "min_xp": 40946,
+      "max_xp": 43076
     },
-    "Mystic Grand Magus": {
+    "Supreme Sage": {
       "level": 57,
-      "min_xp": 18126,
-      "max_xp": 18675
+      "min_xp": 43077,
+      "max_xp": 45298
     },
-    "Elder Archsage": {
+    "Elder Archmage": {
       "level": 58,
-      "min_xp": 18676,
-      "max_xp": 19233
+      "min_xp": 45299,
+      "max_xp": 47618
     },
-    "Supreme Hierophant": {
+    "Celestial Warlock": {
       "level": 59,
-      "min_xp": 19234,
-      "max_xp": 19799
+      "min_xp": 47619,
+      "max_xp": 50041
     },
-    "Celestial Arcanist": {
+    "Arcane Luminary": {
       "level": 60,
-      "min_xp": 19800,
-      "max_xp": 20373
+      "min_xp": 50042,
+      "max_xp": 52575
     },
-    "Ethereal Magus": {
+    "Master Mystic": {
       "level": 61,
-      "min_xp": 20374,
-      "max_xp": 20955
-    },
-    "Elemental Conjurer": {
-      "level": 62,
-      "min_xp": 20956,
-      "max_xp": 21545
-    },
-    "Astral Enchanter": {
-      "level": 63,
-      "min_xp": 21546,
-      "max_xp": 22143
-    },
-    "Planar Spellbinder": {
-      "level": 64,
-      "min_xp": 22144,
-      "max_xp": 22749
-    },
-    "Arcane Thaumaturge": {
-      "level": 65,
-      "min_xp": 22750,
-      "max_xp": 23363
-    },
-    "Mystic Warlock": {
-      "level": 66,
-      "min_xp": 23364,
-      "max_xp": 23985
-    },
-    "Grand Shaman": {
-      "level": 67,
-      "min_xp": 23986,
-      "max_xp": 24615
+      "min_xp": 52576,
+      "max_xp": 55223
     },
     "Grand Magician": {
-      "level": 68,
-      "min_xp": 24616,
-      "max_xp": 25253
+      "level": 62,
+      "min_xp": 55224,
+      "max_xp": 58001
+    },
+    "Arcane Prophet": {
+      "level": 63,
+      "min_xp": 58002,
+      "max_xp": 60915
+    },
+    "Elder Magician": {
+      "level": 64,
+      "min_xp": 60916,
+      "max_xp": 63974
     },
     "Supreme Illusionist": {
+      "level": 65,
+      "min_xp": 63975,
+      "max_xp": 67185
+    },
+    "Grand Warlock": {
+      "level": 66,
+      "min_xp": 67186,
+      "max_xp": 70574
+    },
+    "Arcane Sage": {
+      "level": 67,
+      "min_xp": 70575,
+      "max_xp": 74158
+    },
+    "Celestial Magus": {
+      "level": 68,
+      "min_xp": 74159,
+      "max_xp": 77954
+    },
+    "Elder Mage": {
       "level": 69,
-      "min_xp": 25254,
-      "max_xp": 25899
+      "min_xp": 77955,
+      "max_xp": 81982
     },
-    "Celestial Necromancer": {
+    "Supreme Conjurer": {
       "level": 70,
-      "min_xp": 25900,
-      "max_xp": 26553
+      "min_xp": 81983,
+      "max_xp": 86259
     },
-    "Ethereal Archmage": {
+    "Grand Enchanter": {
       "level": 71,
-      "min_xp": 26554,
-      "max_xp": 27215
+      "min_xp": 86260,
+      "max_xp": 90802
     },
-    "Elemental Sage": {
+    "Arcane Master": {
       "level": 72,
-      "min_xp": 27216,
-      "max_xp": 27885
+      "min_xp": 90803,
+      "max_xp": 95529
     },
-    "Astral Mystic": {
+    "Celestial Sorcerer": {
       "level": 73,
-      "min_xp": 27886,
-      "max_xp": 28563
+      "min_xp": 95530,
+      "max_xp": 100962
     },
-    "Planar Hierophant": {
+    "Elder Firemage": {
       "level": 74,
-      "min_xp": 28564,
-      "max_xp": 29249
+      "min_xp": 100963,
+      "max_xp": 106118
     },
-    "Arcane Druid": {
+    "Supreme Mystic": {
       "level": 75,
-      "min_xp": 29250,
-      "max_xp": 29943
+      "min_xp": 106119,
+      "max_xp": 111504
     },
-    "Mystic Shaman": {
+    "Grand Paladin": {
       "level": 76,
-      "min_xp": 29944,
-      "max_xp": 30645
+      "min_xp": 111505,
+      "max_xp": 117140
     },
-    "Elder Oracle": {
+    "Arcane Sage Master": {
       "level": 77,
-      "min_xp": 30646,
-      "max_xp": 31355
+      "min_xp": 117141,
+      "max_xp": 123038
     },
-    "Grand Seer": {
+    "Celestial Master": {
       "level": 78,
-      "min_xp": 31356,
-      "max_xp": 32073
+      "min_xp": 123039,
+      "max_xp": 129218
     },
-    "Supreme Visionary": {
+    "Elder Warlock": {
       "level": 79,
-      "min_xp": 32074,
-      "max_xp": 32799
+      "min_xp": 129219,
+      "max_xp": 135691
     },
-    "Celestial Sage Master": {
+    "Supreme Sorcerer": {
       "level": 80,
-      "min_xp": 32800,
-      "max_xp": 33533
+      "min_xp": 135692,
+      "max_xp": 142488
     },
-    "Ethereal Grand Magus": {
+    "Grand Spellcaster": {
       "level": 81,
-      "min_xp": 33534,
-      "max_xp": 34275
+      "min_xp": 142489,
+      "max_xp": 149637
     },
-    "Elemental Archsage": {
+    "Arcane Darkmage": {
       "level": 82,
-      "min_xp": 34276,
-      "max_xp": 35025
+      "min_xp": 149638,
+      "max_xp": 157166
     },
-    "Astral High Enchanter": {
+    "Celestial Sage": {
       "level": 83,
-      "min_xp": 35026,
-      "max_xp": 35783
+      "min_xp": 157167,
+      "max_xp": 165105
     },
-    "Planar Mystic Adept": {
+    "Elder Shaman": {
       "level": 84,
-      "min_xp": 35784,
-      "max_xp": 36549
+      "min_xp": 165106,
+      "max_xp": 173483
     },
-    "Arcane Arcane Maestro": {
+    "Supreme Magician": {
       "level": 85,
-      "min_xp": 36550,
-      "max_xp": 37323
+      "min_xp": 173484,
+      "max_xp": 182330
     },
-    "Mystic Planar Hierophant": {
+    "Master Hunter": {
       "level": 86,
-      "min_xp": 37324,
-      "max_xp": 38105
+      "min_xp": 182331,
+      "max_xp": 191676
     },
-    "Elder Arc Warlock": {
+    "Arcane Warlock": {
       "level": 87,
-      "min_xp": 38106,
-      "max_xp": 38895
+      "min_xp": 191677,
+      "max_xp": 201550
     },
-    "Grand Sorcerer Supreme": {
+    "Celestial Spellcaster": {
       "level": 88,
-      "min_xp": 38896,
-      "max_xp": 39693
+      "min_xp": 201551,
+      "max_xp": 211983
     },
-    "Supreme Master Illusionist": {
+    "Elder Warrior": {
       "level": 89,
-      "min_xp": 39694,
-      "max_xp": 40499
+      "min_xp": 211984,
+      "max_xp": 222992
     },
-    "Celestial Dark Magician": {
+    "Supreme Enchanter": {
       "level": 90,
-      "min_xp": 40500,
-      "max_xp": 41313
+      "min_xp": 222993,
+      "max_xp": 234576
     },
-    "Ethereal Celestial Conjurer": {
+    "Grand Sorcerer": {
       "level": 91,
-      "min_xp": 41314,
-      "max_xp": 42135
+      "min_xp": 234577,
+      "max_xp": 246748
     },
-    "Elemental Ethereal Enchanter": {
+    "Arcane Grandmaster": {
       "level": 92,
-      "min_xp": 42136,
-      "max_xp": 42965
+      "min_xp": 246749,
+      "max_xp": 259534
     },
-    "Astral Elemental Summoner": {
+    "Celestial Grandmaster": {
       "level": 93,
-      "min_xp": 42966,
-      "max_xp": 43803
+      "min_xp": 259535,
+      "max_xp": 272979
     },
-    "Planar Astral Adept": {
+    "Elder Grandmaster": {
       "level": 94,
-      "min_xp": 43804,
-      "max_xp": 44649
+      "min_xp": 272980,
+      "max_xp": 287122
     },
-    "Arcane Planar Magus": {
+    "Shaman Grandmaster": {
       "level": 95,
-      "min_xp": 44650,
-      "max_xp": 45503
+      "min_xp": 287123,
+      "max_xp": 302002
     },
-    "Mystic Arcane Archmage": {
+    "Grand Grandmaster": {
       "level": 96,
-      "min_xp": 45504,
-      "max_xp": 46365
+      "min_xp": 302003,
+      "max_xp": 317658
     },
-    "Elder Mystic Prophet": {
+    "Spellcaster Grandmaster": {
       "level": 97,
-      "min_xp": 46366,
-      "max_xp": 47235
+      "min_xp": 317659,
+      "max_xp": 334130
     },
-    "Grand Elder Sorcerer": {
+    "Total Grandmaster": {
       "level": 98,
-      "min_xp": 47236,
-      "max_xp": 48113
+      "min_xp": 334131,
+      "max_xp": 351460
     },
-    "Supreme Grand Magician": {
+    "Divine Grandmaster": {
       "level": 99,
-      "min_xp": 48114,
-      "max_xp": 48999
+      "min_xp": 351461,
+      "max_xp": 369702
     },
-    "Celestial Supreme Illusionist": {
+    "Supreme Grandmaster": {
       "level": 100,
-      "min_xp": 49000,
-      "max_xp": 49893
+      "min_xp": 369703,
+      "max_xp": 388900
     }
   }
 ]
