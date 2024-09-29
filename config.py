@@ -1,13 +1,25 @@
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
+import urllib.parse
 
 # Load the env variables
 load_dotenv()
 
+# Define the connection parameters as variables
+USERNAME = os.getenv('DB_USER')
+PASSWORD = os.getenv('DB_PASSWORD')
+ENCODED_PASSWORD = urllib.parse.quote_plus(PASSWORD)
+DB_NAME = os.getenv('DB_NAME')
+HOST = os.getenv('DB_HOST')
+PORT = os.getenv('DB_PORT')
+
+sql_uri = f'postgresql://{USERNAME}:{ENCODED_PASSWORD}@{HOST}:{PORT}/{DB_NAME}'
+
+
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
+    SQLALCHEMY_DATABASE_URI = sql_uri
     TEMPLATES_AUTO_RELOAD = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_COOKIE_DOMAIN = False

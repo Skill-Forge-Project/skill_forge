@@ -1,5 +1,9 @@
 # Ignore VSCode settings
 .vscode/
+
+# Ignore Obsidian configs
+.obsidian/
+
 # Ignore venv dir
 /venv/
 /skill_forge/
