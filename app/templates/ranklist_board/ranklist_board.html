@@ -100,7 +100,12 @@
                 </div>
                 <!-- User Details -->
                 <div class="user-profile flex-grow ml-6 text-start">
-                    <h3 class="ranklist username text-xl font-semibold">{{ user.username }}</h3>
+                    <h3 class="mt-2 text-xl font-semibold text-gray-800">
+                        <a class="ranklist username" 
+                            href="{{ url_for('usr.open_user_profile_view', username=third_player.username) }}">
+                            {{ third_player.username }}
+                        </a>
+                    </h3>
                     <div class="flex flex-row justify-left gap-0">
                         <p class="user-profile infot m-0 p-0">XP: {{ user.xp }}</p>
                         <p class="user-profile infot m-0">Level: {{ user.level }}</p>
