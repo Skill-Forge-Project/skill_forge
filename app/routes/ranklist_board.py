@@ -16,10 +16,19 @@ def open_ranklist_board():
     second_player = User.query.filter(User.user_role != 'Admin').order_by(User.xp.desc()).offset(1).first()
     third_player = User.query.filter(User.user_role != 'Admin').order_by(User.xp.desc()).offset(2).first()
     
+    # Get the top users by XP points(4-10)
+    top_users = User.query.filter(User.user_role != 'Admin')\
+    .order_by(User.xp.desc())\
+    .offset(3)\
+    .limit(7)\
+    .all()
+    
+    
     return render_template('ranklist_board/ranklist_board.html', 
                            first_player=first_player,
                            second_player=second_player,
-                           third_player=third_player)
+                           third_player=third_player,
+                           top_users=top_users)
     
 
 @ranklist.route('/ranklist/top_three_players')

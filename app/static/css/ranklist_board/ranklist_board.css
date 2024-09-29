@@ -48,36 +48,31 @@ body {
 
 /* Custom styles for the medals */
 .medal {
-    width: 170px;
-    height: 170px;
+    width: 120px;
+    height: 120px;
     display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 50%;
     color: white;
-    font-weight: bold;
     font-size: 24px;
     text-shadow: 1px 1px 2px black;
 }
 
 .medal img {
-    width: 100%;
-    height: 100%;
     object-fit: contain;
 }
 
 /* User profile styling */
 .user-profile {
-    position: absolute;
-    bottom: -50px;
+    /* position: absolute; */
+    /* bottom: -50px; */
     right: -100px;
     /* padding: 10px; */
     border-radius: 10px;
     color: white;
     width: 100%;
     display: flex;
-    /* flex-direction: column; */
-    align-items: center;
+    flex-direction: column;
+    /* align-items: center; */
     font-size: 14px;
 }
 .user-profile img {
@@ -90,14 +85,42 @@ body {
 .user-profile h3 {
     margin: 0;
     font-size: 16px;
-    font-weight: bold;
 }
+
 .user-profile .info {
-    margin-top: 5px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-style: normal;
+    display: inline;
     text-align: center;
 }
 
+.user-profile .infot {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-style: normal;
+    display: inline;
+    width: 20%;
+}
+
+.user-profile.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #03e9f4;
+}
+
 .ranklist.username {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
     color: #03e9f4;
     text-decoration: none;
+}
+
+.box {
+    font-family: 'JetBrainsMonoRegular', sans-serif !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+
 }
