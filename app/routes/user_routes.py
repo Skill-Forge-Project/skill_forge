@@ -83,11 +83,22 @@ def open_user_profile():
 
     with open('app/static/configs/levels.json', 'r') as file:
         levels_data = json.load(file)
+
+    current_level_xp = 0  # Default for level 1 or the lowest rank
+    max_xp = 0
+
+    # Loop through levels to find the user's current level and next level max XP
     for level in levels_data:
         for rank, data in level.items():
             if rank == user.rank:
-                max_xp = data['max_xp']
-    xp_percentage = int((user.xp / max_xp) * 100)
+                max_xp = data['max_xp']  # Get max XP for the next level
+                break
+            else:
+                current_level_xp = data['max_xp']  # Set current level's XP as the max of the previous level
+
+    # Calculate XP percentage for the progress bar
+    xp_percentage = int(((user.xp - current_level_xp) / (max_xp - current_level_xp)) * 100)
+
 
     return render_template('user_profile.html',
                         form=form,
