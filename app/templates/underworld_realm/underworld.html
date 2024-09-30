@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Forge Underworld</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.2/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/underworld_realm/underworld.css') }}">
+</head>
+
+
+<body>
+  <!-- Include Navbar template -->
+  {% include 'navbar.html' %}
+
+  <div class="container mx-auto p-6">
+    <h2 class="underworld-title font-bold text-center mb-4">
+        Welcome, Brave Soul, to the Underworld Realm!
+    </h2>
+    <p class="underworld-description font-bold text-center mb-4">
+        In this enchanted domain, where shadows dance and whispers of ancient knowledge echo, prepare to face the mightiest bosses of lore. 
+        Gather your wits, summon your courage, and embark on a quest filled with trials and triumphs. 
+        May fortune favor the bold as you delve into the depths of the Underworld!
+    </p>
+    
+    <div class="bg-overlay p-6 rounded-lg">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {% for boss in bosses %}
+            <div class="bosses-container rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow duration-300">
+                <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss.boss_name + '.png') }}" alt="{{ boss.boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
+              <h3 class="boss-name text-xl font-semibold text-center mb-0">{{ boss.boss_name }}</h3>
+              <p class="boss-title font-bold text-center mt-0 mb-3">{{ boss.boss_title }}</p>
+              <p class="boss-descr text-center">Language: <strong>{{ boss.boss_language }}</strong></p>
+              <p class="boss-descr text-center">Specialty: <strong>{{ boss.boss_specialty }}</strong></p>
+              <p class="boss-descr text-center">Difficulty: <strong>{{ boss.boss_difficulty }}</strong></p>
+            </div>
+          {% else %}
+            <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center">
+              <p class="text-gray-600">No bosses found.</p>
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+
+
+  <footer class="mt-auto bg-inherit">
+    <!-- Include Footer template -->
+    {% include 'footer.html' %}
+  </footer>
+</body>
+
+</html>

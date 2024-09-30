@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap');
+@font-face {
+    font-family: 'JetBrainsMonoRegular';
+    src: url('/static/fonts/ttf/JetBrainsMono-Regular.ttf') format('woff');
+    font-family: 'JetBrainsMonoBold';
+    src: url('/static/fonts/ttf/JetBrainsMono-Bold.ttf') format('woff');
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    background: linear-gradient(180deg, rgba(10, 10, 20, 1) 10%, rgba(50, 0, 0, 1) 60%, rgba(100, 0, 0, 1) 120%);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.underworld-title {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 34px;
+    color: #f93a33;
+}
+
+.underworld-description {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+    color: #d2d0d0;
+}
+
+/* Boss styling */
+.bosses-container {
+    background: linear-gradient(180deg, rgba(30, 30, 40, 0.8), rgba(10, 10, 20, 0.7)), url('path/to/your/dark-texture.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding: 1.5rem;
+}
+
+
+.bosses-container:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+
+.boss-name {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+    color: #f93a33;
+}
+
+.boss-title {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 14px;
+    color: #d2d0d0;
+}
+
+.boss-descr {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 14px;
+    color: #d2d0d0;
+    margin: 0px;
+}
