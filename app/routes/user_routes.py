@@ -225,17 +225,27 @@ def open_user_profile_view(username):
     else:
         # Convert avatar binary data to Base64-encoded string
         avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+        
         # Get the last logged date
         user_status = User.query.filter(User.user_id == user_id).first().user_online_status
         last_logged_date = User.query.filter(User.user_id == user_id).first().last_status_update
+        
         # Get the xp points for the level rank
         with open('app/static/configs/levels.json', 'r') as file:
             levels_data = json.load(file)
-        for i in levels_data:
-            for rank, data in i.items():
-                if rank== user.rank:
-                    max_xp = data['max_xp']
-        xp_percentage = int((user.xp / max_xp) * 100)
+        current_level_xp = 0  # Default for level 1 or the lowest rank
+        max_xp = 0
+        # Loop through levels to find the user's current level and next level max XP
+        for level in levels_data:
+            for rank, data in level.items():
+                if rank == user.rank:
+                    max_xp = data['max_xp']  # Get max XP for the next level
+                    break
+                else:
+                    current_level_xp = data['max_xp']  # Set current level's XP as the max of the previous level
+
+        # Calculate XP percentage for the progress bar
+        xp_percentage = int(((user.xp - current_level_xp) / (max_xp - current_level_xp)) * 100)
         
         # Get the user achievements
         user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
