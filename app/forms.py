@@ -254,3 +254,11 @@ class CreateGuildForm(FlaskForm):
     description = TextAreaField('Description', validators=[Optional(), Length(min=10, max=500)])
     avatar = FileField('Avatar')
     submit = SubmitField('Create Guild')
+    
+
+########### Boss Question Reponse Form ###########
+class BossResponseForm(FlaskForm):
+    boss_question = HiddenField('Boss Question')
+    user_response = TextAreaField('Response', validators=[DataRequired()], render_kw={'placeholder': 'REQUIRED: Provide your answer'})
+    code_response = TextAreaField('Code Response', validators=[Optional()], render_kw={'placeholder': 'OPTIONAL: Provide your code answer'})
+    submit = SubmitField('Submit Response')

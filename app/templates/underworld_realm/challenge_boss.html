@@ -14,10 +14,17 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/underworld_realm/underworld.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/underworld_realm/challenge_boss.css') }}">
-    <!-- JavaScript managing the Markdown support -->
-    <script type="module" src="{{ url_for('static', filename='js/markdownSupport.js') }}"></script>
-    <!-- Markdown showdown library -->
-    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <!-- Include CodeMirror library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <!-- Include CodeMirror theme (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+    <!-- Include CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+    <!-- Include CodeMirror mode (e.g., Python) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 </head>
@@ -26,40 +33,69 @@
   <!-- Include Navbar template -->
   {% include 'navbar.html' %}
 
+  <form action="{{ url_for('undwrld_bp.submit_boss_challenge') }}" method="post" enctype="multipart/form-data">
+        <div class="container mx-auto py-8">
+            <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+                <div class="col-span-4 sm:col-span-3">
+                    <div class="bosses-container shadow rounded-lg p-6">
+                        <div class="flex flex-col items-center">
+                            <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss.boss_name + '.png') }}" alt="{{ boss.boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
+                            <h1 class=" boss-name text-xl font-bold mb-0">{{ boss.boss_name }}</h1>
+                            <p class="boss-title text-gray-700 m-0">{{ boss.boss_title }}</p>
+                            <p class="boss-descr mt-2 text-center"><strong>{{ boss.boss_description }}</strong></p>
 
-    <div class="container mx-auto py-8">
-        <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
-            <div class="col-span-4 sm:col-span-3">
-                <div class="bosses-container shadow rounded-lg p-6">
-                    <div class="flex flex-col items-center">
-                        <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss.boss_name + '.png') }}" alt="{{ boss.boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
-                        <h1 class=" boss-name text-xl font-bold mb-0">{{ boss.boss_name }}</h1>
-                        <p class="boss-title text-gray-700 m-0">{{ boss.boss_title }}</p>
-                        <p class="boss-descr mt-2 text-center"><strong>{{ boss.boss_description }}</strong></p>
-
-                    </div>
-                    <hr class="my-6 border-t border-gray-300">
-                    <div class="flex flex-col">
-                        <span class="boss-descr text-gray-700 uppercase font-bold tracking-wider mb-2">Boss Stats</span>
-                        <ul>
-                            <p class="boss-descr">Language: <strong>{{ boss.boss_language }}</strong></p>
-                            <p class="boss-descr">Specialty: <strong>{{ boss.boss_specialty }}</strong></p>
-                            <p class="boss-descr">Difficulty: <strong>{{ boss.boss_difficulty }}</strong></p>
-                        </ul>
+                        </div>
+                        <hr class="my-6 border-t border-gray-300">
+                        <div class="flex flex-col">
+                            <span class="boss-descr text-gray-700 uppercase font-bold tracking-wider mb-2">Boss Stats</span>
+                            <ul>
+                                <p class="boss-descr">Language: <strong>{{ boss.boss_language }}</strong></p>
+                                <p class="boss-descr">Specialty: <strong>{{ boss.boss_specialty }}</strong></p>
+                                <p class="boss-descr">Difficulty: <strong>{{ boss.boss_difficulty }}</strong></p>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-span-4 sm:col-span-9">
-                <div class="bosses-container shadow rounded-lg p-6">
-                    <h2 class="boss-descr challenge font-bold mb-4">My Challenge for you</h2>
-                    <textarea class="boss-descr" style="display: none;" id="markdown-textarea" rows="10" cols="50">
-                        {{ question }}
-                    </textarea>
-                    <div id="html-output"></div>
+                <div class="col-span-4 sm:col-span-9">
+                        <!-- Boss Question -->
+                        <div class="bosses-container shadow rounded-lg p-6">
+                            <h2 class="boss-descr challenge font-bold">My Challenge for you</h2>
+                            <p class="boss-descr text-justify" >{{ question }}</p>
+                        </div>
+                        <hr class="bg-white mb-2">
+                        <!-- User Anwser Form -->
+                        <div class="bosses-container shadow rounded-lg p-6">
+                            <h2 class="boss-descr challenge font-bold">Your Anwser</h2>
+                            {{ form.user_response (class="text-gray-900 rounded-lg 
+                            focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
+                            dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+                            user_response about_me_field", placeholder="That field is required - provide your anwser", required=True, rows=10) }}
+                            
+                        </div>
+                        <!-- User Code -->
+                        <div class="bosses-container shadow rounded-lg p-6 mt-2 user_response_code">
+                            <h2 class="boss-descr challenge font-bold mb-4">Your Code</h2>
+                            <textarea class="user_response_code rounded-xl" name="user_code" id="editor"></textarea>
+                            <input type="hidden" id="quest_language" name="quest_language" value="{{ boss.boss_language }}">
+                        </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
+
+
+    <!-- JavaScript script to handle the CodeMirror custom fields. 
+        This script should be loaded after the initialization of the fields above! 
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
+    <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
+
+
     <footer class="mt-auto bg-inherit">
         <!-- Include Footer template -->
         {% include 'footer.html' %}

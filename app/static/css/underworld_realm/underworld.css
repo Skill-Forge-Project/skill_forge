@@ -88,3 +88,56 @@ html, body {
     color: #d2d0d0;
     text-decoration: none;
 }
+
+/* Boss Challenge Styling */
+
+.user_response_title {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+    color: #d2d0d0;
+    margin-top: 0px;
+}
+
+.user_response {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    background: transparent;
+    color: #d2d0d0;
+    border-radius: 5px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    border: 0px;
+    text-align: justify;
+    width: 100%;
+}
+
+.user_response_code {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
+    border-radius: 10px !important;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    padding: 20px;
+}
+
+.user_response_code .CodeMirror {
+    /* border: 5px solid #eee; */
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.CodeMirror-scroll {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+}
+
+.CodeMirror.cm-s-dracula {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    /* height: 50%; */
+}

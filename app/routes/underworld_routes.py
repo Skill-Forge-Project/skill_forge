@@ -1,6 +1,7 @@
 import os, requests
 from flask import Blueprint, render_template, redirect, url_for, abort
 from flask_login import login_required
+from app.forms import BossResponseForm
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
 
@@ -48,7 +49,6 @@ def open_underworld():
 @login_required
 def challenge_boss(boss_id):
     boss_details = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/get_boss" 
-    print(f"Boss details URL: {boss_details}")
     try:
         # Send a GET request to the microservice
         response = requests.get(boss_details, json={'boss_id': boss_id})
@@ -57,13 +57,15 @@ def challenge_boss(boss_id):
             boss = response.json()
             # Generate new question from the Boss
             question = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/generate_new_question"
-            question_response = requests.post(question, json={'boss_id': boss_id, 
-                                                             "boss_name": boss['boss_name'], 
-                                                             "boss_language": boss['boss_language'], 
-                                                             "boss_difficulty": boss['boss_difficulty'],
-                                                             "boss_specialty": boss['boss_specialty'],
-                                                             "boss_description": boss['boss_description']}).json()
-            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, question=question_response['question'])
+            form = BossResponseForm()
+            # question_response = requests.post(question, json={'boss_id': boss_id, 
+            #                                                  "boss_name": boss['boss_name'], 
+            #                                                  "boss_language": boss['boss_language'], 
+            #                                                  "boss_difficulty": boss['boss_difficulty'],
+            #                                                  "boss_specialty": boss['boss_specialty'],
+            #                                                  "boss_description": boss['boss_description']}).json()
+            # question=question_response['question']
+            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, form=form)
         else:
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
@@ -72,3 +74,42 @@ def challenge_boss(boss_id):
     except requests.exceptions.RequestException as e:
         boss = {}
         abort(404)
+
+# Submit Challenge
+@undwrld_bp.route('/submit_challenge', methods=['POST'])
+@login_required
+def submit_boss_challenge():
+    form = BossResponseForm()
+    if form.validate_on_submit():
+        # Get the form data
+        boss_id = form.boss_id.data
+        boss_name = form.boss_name.data
+        boss_language = form.boss_language.data
+        boss_difficulty = form.boss_difficulty.data
+        boss_specialty = form.boss_specialty.data
+        boss_description = form.boss_description.data
+        question = form.question.data
+        answer = form.answer.data
+        user_answer = form.user_answer.data
+        # Submit the challenge to the Underworld Realm service
+        submit_challenge_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/submit_challenge"
+        try:
+            response = requests.post(submit_challenge_url, json={'boss_id': boss_id, 
+                                                                 "boss_name": boss_name, 
+                                                                 "boss_language": boss_language, 
+                                                                 "boss_difficulty": boss_difficulty,
+                                                                 "boss_specialty": boss_specialty,
+                                                                 "boss_description": boss_description,
+                                                                 "question": question,
+                                                                 "answer": answer,
+                                                                 "user_answer": user_answer})
+            if response.status_code == 200:
+                result = response.json()
+                return render_template('underworld_realm/challenge_result.html', title='Challenge Result', result=result)
+            else:
+                print(f"Error submitting challenge: {response.status_code}")
+                abort(404)
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed: {e}")
+            abort(404)
+    return redirect(url_for('undwrld_bp.open_underworld'))
