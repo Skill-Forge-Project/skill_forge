@@ -33,13 +33,15 @@
     <div class="bg-overlay p-6 rounded-lg">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% for boss in bosses %}
-            <div class="bosses-container rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow duration-300">
+            <div class="bosses-container rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow duration-300 flex flex-col">
                 <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss.boss_name + '.png') }}" alt="{{ boss.boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
               <h3 class="boss-name text-xl font-semibold text-center mb-0">{{ boss.boss_name }}</h3>
               <p class="boss-title font-bold text-center mt-0 mb-3">{{ boss.boss_title }}</p>
               <p class="boss-descr text-center">Language: <strong>{{ boss.boss_language }}</strong></p>
               <p class="boss-descr text-center">Specialty: <strong>{{ boss.boss_specialty }}</strong></p>
               <p class="boss-descr text-center">Difficulty: <strong>{{ boss.boss_difficulty }}</strong></p>
+              <div class="flex-grow"></div>
+              <a href="{{ url_for('undwrld_bp.challenge_boss', boss_id=boss.boss_id) }}" class="challenge-btn btn-block mt-4">Challenge!</a>
             </div>
           {% else %}
             <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center">

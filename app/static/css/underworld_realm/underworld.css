@@ -61,3 +61,30 @@ html, body {
     color: #d2d0d0;
     margin: 0px;
 }
+
+.boss-descr.challenge {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 22px;
+    color: #d2d0d0;
+    margin: 0px;
+}
+
+.challenge-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 14px;
+    color: #d2d0d0;
+    background: rgba(100, 0, 0, 1);
+    border: 1px solid #a51b16;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.challenge-btn:hover {
+    background: #a51b16;
+    color: #d2d0d0;
+    text-decoration: none;
+}
