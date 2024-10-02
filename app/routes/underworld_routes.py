@@ -1,5 +1,5 @@
 import os, requests
-from flask import Blueprint, render_template, redirect, url_for, abort
+from flask import Blueprint, render_template, redirect, url_for, abort, request
 from flask_login import login_required
 from app.forms import BossResponseForm
 # Import MongoDB transactions functions
@@ -58,14 +58,14 @@ def challenge_boss(boss_id):
             # Generate new question from the Boss
             question = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/generate_new_question"
             form = BossResponseForm()
-            # question_response = requests.post(question, json={'boss_id': boss_id, 
-            #                                                  "boss_name": boss['boss_name'], 
-            #                                                  "boss_language": boss['boss_language'], 
-            #                                                  "boss_difficulty": boss['boss_difficulty'],
-            #                                                  "boss_specialty": boss['boss_specialty'],
-            #                                                  "boss_description": boss['boss_description']}).json()
+            question_response = requests.post(question, json={'boss_id': boss_id, 
+                                                             "boss_name": boss['boss_name'], 
+                                                             "boss_language": boss['boss_language'], 
+                                                             "boss_difficulty": boss['boss_difficulty'],
+                                                             "boss_specialty": boss['boss_specialty'],
+                                                             "boss_description": boss['boss_description']}).json()
             # question=question_response['question']
-            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, form=form)
+            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, form=form, question=question_response['question'])
         else:
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
@@ -82,17 +82,17 @@ def submit_boss_challenge():
     form = BossResponseForm()
     if form.validate_on_submit():
         # Get the form data
-        boss_id = form.boss_id.data
-        boss_name = form.boss_name.data
-        boss_language = form.boss_language.data
-        boss_difficulty = form.boss_difficulty.data
-        boss_specialty = form.boss_specialty.data
-        boss_description = form.boss_description.data
-        question = form.question.data
-        answer = form.answer.data
+        question = request.form.get('question')
         user_answer = form.user_answer.data
+        code_answer = form.code_answer.data
+        boss_id = request.form.get('boss_id')
+        boss_name = request.form.get('boss_name')
+        boss_language = request.form.get('boss_language')
+        boss_difficulty = request.form.get('boss_difficulty')
+        boss_specialty = request.form.get('boss_specialty')
+        boss_description = request.form.get('boss_description')
         # Submit the challenge to the Underworld Realm service
-        submit_challenge_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/submit_challenge"
+        submit_challenge_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/evaluate_user_answer"
         try:
             response = requests.post(submit_challenge_url, json={'boss_id': boss_id, 
                                                                  "boss_name": boss_name, 
@@ -100,12 +100,13 @@ def submit_boss_challenge():
                                                                  "boss_difficulty": boss_difficulty,
                                                                  "boss_specialty": boss_specialty,
                                                                  "boss_description": boss_description,
-                                                                 "question": question,
-                                                                 "answer": answer,
-                                                                 "user_answer": user_answer})
-            if response.status_code == 200:
+                                                                 "boss_question": question,
+                                                                 "answer": user_answer,
+                                                                 "user_code_answer": code_answer})
+            if response.ok:
                 result = response.json()
-                return render_template('underworld_realm/challenge_result.html', title='Challenge Result', result=result)
+                print(result)
+                return "Success"
             else:
                 print(f"Error submitting challenge: {response.status_code}")
                 abort(404)

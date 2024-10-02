@@ -29,7 +29,7 @@ html, body {
 
 /* Boss styling */
 .bosses-container {
-    background: linear-gradient(180deg, rgba(30, 30, 40, 0.8), rgba(10, 10, 20, 0.7)), url('path/to/your/dark-texture.png');
+    background: linear-gradient(180deg, rgba(30, 30, 40, 0.8), rgba(10, 10, 20, 0.7));
     background-size: cover;
     background-position: center;
     border-radius: 10px;
@@ -140,4 +140,22 @@ html, body {
     box-sizing: border-box;
     display: flex;
     /* height: 50%; */
+}
+
+.challenge-btn-submit {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 14px;
+    color: #d2d0d0;
+    background: linear-gradient(180deg, rgba(30, 30, 40, 0.8), rgba(10, 10, 20, 0.7));
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.challenge-btn-submit:hover {
+    box-shadow: 0 0 2px #ff0000ba,
+        0 0 20px #ff0000ba,
+        0 0 20px #ff0000ba,
+        0 0 20px #ff0000ba;
 }

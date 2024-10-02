@@ -34,6 +34,7 @@
   {% include 'navbar.html' %}
 
   <form action="{{ url_for('undwrld_bp.submit_boss_challenge') }}" method="post" enctype="multipart/form-data">
+    {{ form.csrf_token() }}
         <div class="container mx-auto py-8">
             <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
                 <div class="col-span-4 sm:col-span-3">
@@ -60,13 +61,21 @@
                         <!-- Boss Question -->
                         <div class="bosses-container shadow rounded-lg p-6">
                             <h2 class="boss-descr challenge font-bold">My Challenge for you</h2>
-                            <p class="boss-descr text-justify" >{{ question }}</p>
+                            <p class="boss-descr text-justify">{{ question }}</p>
+                            <!-- Form Data -->
+                            <input type="hidden" name="question" value="{{ question }}">
+                            <input type="hidden" name="boss_id" value="{{ boss.boss_id }}">
+                            <input type="hidden" name="boss_name" value="{{ boss.boss_name }}">
+                            <input type="hidden" name="boss_language" value="{{ boss.boss_language }}">
+                            <input type="hidden" name="boss_difficulty" value="{{ boss.boss_difficulty }}">
+                            <input type="hidden" name="boss_specialty" value="{{ boss.boss_specialty }}">
+                            <input type="hidden" name="boss_description" value="{{ boss.boss_description }}">
                         </div>
-                        <hr class="bg-white mb-2">
+                        <hr class="bg-white mt-4 mb-4">
                         <!-- User Anwser Form -->
                         <div class="bosses-container shadow rounded-lg p-6">
                             <h2 class="boss-descr challenge font-bold">Your Anwser</h2>
-                            {{ form.user_response (class="text-gray-900 rounded-lg 
+                            {{ form.user_answer (class="text-gray-900 rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
                             dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
                             user_response about_me_field", placeholder="That field is required - provide your anwser", required=True, rows=10) }}
@@ -75,8 +84,12 @@
                         <!-- User Code -->
                         <div class="bosses-container shadow rounded-lg p-6 mt-2 user_response_code">
                             <h2 class="boss-descr challenge font-bold mb-4">Your Code</h2>
-                            <textarea class="user_response_code rounded-xl" name="user_code" id="editor"></textarea>
-                            <input type="hidden" id="quest_language" name="quest_language" value="{{ boss.boss_language }}">
+                            {{ form.code_answer (class="user_anwser_code rounded-xl", id="editor") }}
+
+                        </div>
+                        <!-- Submit Challenge -->
+                        <div class="flex justify-end mt-3">
+                            <button type="submit" class="challenge-btn-submit btn-block p-2 mt-1">Submit</button>
                         </div>
                 </div>
             </div>
