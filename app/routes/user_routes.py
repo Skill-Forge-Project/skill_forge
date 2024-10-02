@@ -324,13 +324,7 @@ def open_admin_panel():
                 csharp_submissions = [convert_objectid_to_string(sub) for sub in csharp_submissions]
                 javascript_submissions = [convert_objectid_to_string(sub) for sub in javascript_submissions]
 
-                # Combine all data into a single dictionary or process as needed
-                all_submissions = {
-                    "python_submissions": python_submissions,
-                    "java_submissions": java_submissions,
-                    "csharp_submissions": csharp_submissions,
-                    "javascript_submissions": javascript_submissions
-                }
+                all_submissions = python_submissions + java_submissions + csharp_submissions + javascript_submissions
             except Exception as e:
                 session.abort_transaction()
                 all_submissions = {}
