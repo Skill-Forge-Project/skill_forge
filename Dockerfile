@@ -5,7 +5,7 @@ FROM python:latest
 LABEL Name="Skill-Forge"
 LABEL Version="1.3.17"
 LABEL Release="pre-release"
-LABEL ReleaseDate="15.09.2024"
+LABEL ReleaseDate="28.09.2024"
 LABEL Description="Skill Forge is a open-source platform for learning and practicing programming languages."
 LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GNU GPL v3.0 license"
@@ -39,3 +39,4 @@ EXPOSE 8000
 
 # Run the Python app
 CMD ["gunicorn", "-k", "eventlet", "-w", "1", "-b", "0.0.0.0:8000", "wsgi:app"]
+
