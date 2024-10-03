@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Underworld Challenge - {{ boss.boss_name }}</title>
@@ -25,78 +24,70 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-</head>
-
-<body>
-  <!-- Include Navbar template -->
-  {% include 'navbar.html' %}
-
-  <form action="{{ url_for('undwrld_bp.submit_boss_challenge') }}" method="post" enctype="multipart/form-data">
-    {{ form.csrf_token() }}
-        <div class="container mx-auto py-8">
-            <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
-                <div class="col-span-4 sm:col-span-3">
-                    <div class="bosses-container shadow rounded-lg p-6">
-                        <div class="flex flex-col items-center">
-                            <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss.boss_name + '.png') }}" alt="{{ boss.boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
-                            <h1 class=" boss-name text-xl font-bold mb-0">{{ boss.boss_name }}</h1>
-                            <p class="boss-title text-gray-700 m-0">{{ boss.boss_title }}</p>
-                            <p class="boss-descr mt-2 text-center"><strong>{{ boss.boss_description }}</strong></p>
-
-                        </div>
-                        <hr class="my-6 border-t border-gray-300">
-                        <div class="flex flex-col">
-                            <span class="boss-descr text-gray-700 uppercase font-bold tracking-wider mb-2">Boss Stats</span>
-                            <ul>
-                                <p class="boss-descr">Language: <strong>{{ boss.boss_language }}</strong></p>
-                                <p class="boss-descr">Specialty: <strong>{{ boss.boss_specialty }}</strong></p>
-                                <p class="boss-descr">Difficulty: <strong>{{ boss.boss_difficulty }}</strong></p>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-span-4 sm:col-span-9">
-                        <!-- Boss Question -->
-                        <div class="bosses-container shadow rounded-lg p-6">
-                            <h2 class="boss-descr challenge font-bold mb-1">My Challenge for you</h2>
-                            <p class="boss-descr text-justify">{{ question }}</p>
-                            <!-- Form Data -->
-                            <input type="hidden" name="question" value="{{ question }}">
-                            <input type="hidden" name="boss_id" value="{{ boss.boss_id }}">
-                            <input type="hidden" name="boss_name" value="{{ boss.boss_name }}">
-                            <input type="hidden" name="boss_language" value="{{ boss.boss_language }}">
-                            <input type="hidden" name="boss_difficulty" value="{{ boss.boss_difficulty }}">
-                            <input type="hidden" name="boss_specialty" value="{{ boss.boss_specialty }}">
-                            <input type="hidden" name="boss_description" value="{{ boss.boss_description }}">
-                        </div>
-                        <hr class="bg-white mt-4 mb-4">
-                        <!-- User Anwser Form -->
-                        <div class="bosses-container shadow rounded-lg p-6">
-                            <h2 class="boss-descr challenge font-bold">Your Anwser</h2>
-                            {{ form.user_answer (class="text-gray-900 rounded-lg 
+  </head>
+  <body>
+    <!-- Include Navbar template --> {% include 'navbar.html' %} <form action="{{ url_for('undwrld_bp.submit_boss_challenge') }}" method="post" enctype="multipart/form-data">
+      {{ form.csrf_token() }}
+      <div class="container mx-auto py-8">
+        <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+          <div class="col-span-4 sm:col-span-3">
+            <div class="bosses-container shadow rounded-lg p-6">
+              <div class="flex flex-col items-center">
+                <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss.boss_name + '.png') }}" alt="{{ boss.boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
+                <h1 class=" boss-name text-xl font-bold mb-0">{{ boss.boss_name }}</h1>
+                <p class="boss-title text-gray-700 m-0">{{ boss.boss_title }}</p>
+                <p class="boss-descr mt-2 text-center">
+                  <strong>{{ boss.boss_description }}</strong>
+                </p>
+              </div>
+              <hr class="my-6 border-t border-gray-300">
+              <div class="flex flex-col">
+                <span class="boss-descr text-gray-700 uppercase font-bold tracking-wider mb-2">Boss Stats</span>
+                <ul>
+                  <p class="boss-descr">Language: <strong>{{ boss.boss_language }}</strong></p>
+                  <p class="boss-descr">Specialty: <strong>{{ boss.boss_specialty }}</strong></p>
+                  <p class="boss-descr">Difficulty: <strong>{{ boss.boss_difficulty }}</strong></p>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-span-4 sm:col-span-9">
+            <!-- Boss Question -->
+            <div class="bosses-container shadow rounded-lg p-6">
+              <h2 class="boss-descr challenge font-bold mb-1">My Challenge for you</h2>
+              <p class="boss-descr text-justify">{{ question }}</p>
+              <!-- Form Data -->
+              <input type="hidden" name="question" value="{{ question }}">
+              <input type="hidden" name="boss_id" value="{{ boss.boss_id }}">
+              <input type="hidden" name="boss_name" value="{{ boss.boss_name }}">
+              <input type="hidden" name="boss_title" value="{{ boss.boss_title }}">
+              <input type="hidden" name="boss_language" value="{{ boss.boss_language }}">
+              <input type="hidden" name="boss_difficulty" value="{{ boss.boss_difficulty }}">
+              <input type="hidden" name="boss_specialty" value="{{ boss.boss_specialty }}">
+              <input type="hidden" name="boss_description" value="{{ boss.boss_description }}">
+            </div>
+            <hr class="bg-white mt-4 mb-4">
+            <!-- User Anwser Form -->
+            <div class="bosses-container shadow rounded-lg p-6">
+              <h2 class="boss-descr challenge font-bold">Your Anwser</h2>
+              {{ form.user_answer (class="text-gray-900 rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
                             dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
                             user_response about_me_field", placeholder="That field is required - provide your anwser", required=True, rows=10) }}
-                            
-                        </div>
-                        <!-- User Code -->
-                        <div class="bosses-container shadow rounded-lg p-6 mt-2 user_response_code">
-                            <h2 class="boss-descr challenge font-bold mb-4">Your Code</h2>
-                            {{ form.code_answer (class="user_anwser_code rounded-xl", id="editor") }}
-
-                        </div>
-                        <!-- Submit Challenge -->
-                        <div class="flex justify-end mt-3">
-                            <button type="submit" class="challenge-btn-submit btn-block p-2 mt-1">Submit</button>
-                        </div>
-                </div>
             </div>
+                <!-- User Code -->
+                <div class="bosses-container shadow rounded-lg p-6 mt-2 user_response_code">
+                <h2 class="boss-descr challenge font-bold mb-4">Your Code</h2>
+                {{ form.code_answer (class="user_anwser_code rounded-xl", id="editor") }}
+            </div>
+                <!-- Submit Challenge -->
+            <div class="flex justify-end mt-3">
+              <button type="submit" class="challenge-btn-submit btn-block p-2 mt-1">Submit</button>
+            </div>
+          </div>
         </div>
+      </div>
     </form>
-
-
     <!-- JavaScript script to handle the CodeMirror custom fields. 
         This script should be loaded after the initialization of the fields above! 
     -->
@@ -107,13 +98,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
     <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
-
-
     <footer class="mt-auto bg-inherit">
-        <!-- Include Footer template -->
-        {% include 'footer.html' %}
+      <!-- Include Footer template --> {% include 'footer.html' %}
     </footer>
-
-</body>
-
+  </body>
 </html>

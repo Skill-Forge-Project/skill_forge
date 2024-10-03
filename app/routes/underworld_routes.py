@@ -1,4 +1,4 @@
-import os, requests
+import os, requests, ast
 from flask import Blueprint, render_template, redirect, url_for, abort, request
 from flask_login import login_required
 from app.forms import BossResponseForm
@@ -87,6 +87,7 @@ def submit_boss_challenge():
         code_answer = form.code_answer.data
         boss_id = request.form.get('boss_id')
         boss_name = request.form.get('boss_name')
+        boss_title = request.form.get('boss_title')
         boss_language = request.form.get('boss_language')
         boss_difficulty = request.form.get('boss_difficulty')
         boss_specialty = request.form.get('boss_specialty')
@@ -104,9 +105,20 @@ def submit_boss_challenge():
                                                                  "answer": user_answer,
                                                                  "user_code_answer": code_answer})
             if response.ok:
-                result = response.json()
-                print(result)
-                return "Success"
+                # evaluation = response.json()
+                evaluation = response.json()
+                # Convert string to a dictionary
+                evaluation = ast.literal_eval(evaluation)
+                return render_template('underworld_realm/challenge_grade.html', title='Challenge Result', 
+                                        boss_name=boss_name, 
+                                        boss_description=boss_description,
+                                        boss_title=boss_title,
+                                        boss_language=boss_language,
+                                        boss_specialty=boss_specialty,
+                                        boss_difficulty=boss_difficulty,
+                                        evaluation=evaluation['evaluation'],
+                                        feedback=evaluation['feedback'],
+                                        xp_points=evaluation['xp_points'],)
             else:
                 print(f"Error submitting challenge: {response.status_code}")
                 abort(404)

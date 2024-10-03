@@ -159,3 +159,26 @@ html, body {
         0 0 20px #ff0000ba,
         0 0 20px #ff0000ba;
 }
+
+/* Boss Challenge Evalution */
+.boss-descr.challenge.eval {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+    margin: 0px;
+}
+
+.text-red-500 {
+    color: #f56565 !important; /* Red */
+}
+
+.text-yellow-500 {
+    color: #ecc94b !important; /* Yellow */
+}
+
+.text-green-500 {
+    color: #48bb78 !important; /* Green */
+}
+
+.text-blue-500 {
+    color: #4299e1 !important; /* Blue */
+}

@@ -325,10 +325,13 @@
 
     <!-- JavaScript managing the Markdown support -->
     <script src="{{ url_for('static', filename='js/markdownSupport.js') }}"></script>
+
+
+    <footer>
+        <!-- Include Footer template -->
+        {% include 'footer.html' %}
+    </footer>
 </body>
-<footer>
-    <!-- Include Footer template -->
-    {% include 'footer.html' %}
-</footer>
+
 
 </html>
