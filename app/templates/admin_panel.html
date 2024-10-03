@@ -306,6 +306,7 @@
                 </div>
             </div>
 
+            <!-- Check Logs -->
             <div id="viewLogsContent" class="content" style="display: block;">
                     <div class="container-fluid">
                         <h2>Skill Forge Logs</h2>
@@ -318,24 +319,22 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Submission ID</th>
-                                                        <th>Quest Name</th>
-                                                        <th>Language</th>
-                                                        <th>Difficulty</th>
-                                                        <th>Author</th>
-                                                        <th>Date Created</th>
-                                                        <th>Last Updated</th>
+                                                        <th>User ID</th>
+                                                        <th>Username</th>
+                                                        <th>Successful Tests</th>
+                                                        <th>Unsuccessful Tests</th>
+                                                        <th>Date Submitted</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {% for submission in all_submissions %}
                                                     <tr>
                                                         <td>{{ submission["submission_id"] }}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td>{{ submission["user_id"] }}</td>
+                                                        <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=submission['username']) }}">{{ submission["username"] }}</a></td>
+                                                        <td>{{ submission["successful_tests"] }}</td>
+                                                        <td>{{ submission["unsuccessful_tests"] }}</td>
+                                                        <td>{{ submission["timestamp"] }}</td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>
