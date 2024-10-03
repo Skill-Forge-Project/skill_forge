@@ -27,7 +27,12 @@ COPY ./requirements.txt /app/requirements.txt
 
 # Install the Python app requirements
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt --no-cache 
+RUN pip install -r requirements.txt --no-cache
+
+# Install nodejs & npm
+RUN apt install nodejs npm -y
+# Install firejail
+RUN apt install firejail -y
 
 # Expose port 8000
 EXPOSE 8000
