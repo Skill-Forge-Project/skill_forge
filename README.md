@@ -53,9 +53,7 @@ As you complete coding challenges, gain experience points (XP), climb through ra
 
 #### 💡Report Bugs, open enhancement ticket or documentation improvement by using [our issue templates](https://github.com/karastoyanov/skill_forge/issues/new/choose)
 
-#### A specially crafted Development version [Skill Forge Drakenfell](https://github.com/Skill-Forge-Project/skill-forge-drakenfell)has been prepared for developers and contributors
-
-#### ℹ️ Dev self-hosted version can be found in `dev-stack` branch.
+### A specially crafted Development version [Skill Forge Drakenfell](https://github.com/Skill-Forge-Project/skill-forge-drakenfell) has been prepared for developers and contributors.
 
 ## 4. Authors & Maintainers 👨‍💻
 
