@@ -41,3 +41,4 @@ basic_email.py
 
 # Ignore DOC.md
 DOC.md
+/old-build/
