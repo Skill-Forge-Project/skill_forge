@@ -55,7 +55,7 @@
         <div id="addQuestContent" class="content">
             <div class="input-row">
                 <h4><strong class="row-label">Quest Name: </strong></h4>
-                {{ form.quest_name(class="text_input") }}
+                {{ form.quest_name(class="text_input", placeholder="Enter the quest name") }}
             </div>
             <div class="input-row">
                 <h4><strong class="row-label">Quest Language: </strong></h4>
@@ -67,7 +67,7 @@
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Quest Condition: </strong></h4>
-                {{ form.quest_condition(rows=10, class="text_input") }}
+                {{ form.quest_condition(rows=10, class="text_input", placeholder="Enter the quest condition") }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Example Solution: </strong></h4>
@@ -75,17 +75,17 @@
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Inputs Samples: </strong></h4>
-                <p class="row-label" style="color:aliceblue">Example inputs for the function in format: [first_argument, second_argument....] [first_argument, second_argument....]</p>
-                {{ form.quest_inputs(class="text_input", rows=10) }}
+                <p class="row-label" style="color:aliceblue"></p>
+                {{ form.quest_inputs(class="text_input", rows=10, placeholder="Provide dummy inputs. If submitting more than one, place each on a separate line") }}
             </div>
             <div class="input-row" style="flex-direction: column;">
                 <h4><strong class="row-label">Outputs Samples: </strong></h4>
-                <p class="row-label" style="color:aliceblue">Expected outputs from the function in the same order as the inputs in format: [output, output...] [output, output...]</p>
-                {{ form.quest_outputs(class="text_input", rows=10) }}
+                <p class="row-label" style="color:aliceblue"></p>
+                {{ form.quest_outputs(class="text_input", rows=10, placeholder="Enter the expected outputs") }}
             </div>
             <div class="input-row">
-                <h4><strong class="row-label">Quest Unit Tests(Not Obligatory): </strong></h4>
-                {{ form.quest_unitests(id="unit_tests_input") }}
+                <h4><strong class="row-label">Additional Details: </strong></h4>
+                {{ form.quest_unitests(id="unit_tests_input", placeholder="Submit any additional details or remarks") }}
             </div>
             <div class="button-container">
                 {{ form.submit(class="submit-button") }}

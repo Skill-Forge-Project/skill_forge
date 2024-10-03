@@ -26,18 +26,28 @@ document.addEventListener('DOMContentLoaded', function() {
         button.disabled = true;
         button.classList.remove('submit-button');
         button.classList.add('inactive-button');
-        button.textContent = 'Please wait for 30 seconds.';
     }
 
-    // Function to start the timer
+    // Function to start the timer with dynamic countdown
     function startTimer(elapsedTime) {
         var remainingTime = thirtySeconds - elapsedTime;
+        updateButtonText(Math.ceil(remainingTime / 1000));
 
-        // Set a timeout to restore the button's previous state after the remaining time
-        setTimeout(function() {
-            // Enable the button
-            enableButton();
-        }, remainingTime);
+        // Use setInterval to update the button text every second
+        var interval = setInterval(function() {
+            remainingTime -= 1000;
+            if (remainingTime <= 0) {
+                clearInterval(interval);
+                enableButton(); // Re-enable the button when the time is up
+            } else {
+                updateButtonText(Math.ceil(remainingTime / 1000));
+            }
+        }, 1000);
+    }
+
+    // Function to update button text with the remaining seconds
+    function updateButtonText(seconds) {
+        button.textContent = `Wait for ${seconds} second${seconds > 1 ? 's' : ''}`;
     }
 
     // Function to enable the button

@@ -1,0 +1,5 @@
+# Use the official Postgres 16 Alpine image as a base
+FROM postgres:latest
+
+# Install pg_cron scheduler for Postgres
+RUN apt update && apt install -y postgresql-16-cron
