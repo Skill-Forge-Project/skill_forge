@@ -1,6 +1,6 @@
 import os, requests, ast
 from flask import Blueprint, render_template, redirect, url_for, abort, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.forms import BossResponseForm
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
@@ -58,14 +58,15 @@ def challenge_boss(boss_id):
             # Generate new question from the Boss
             question = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/generate_new_question"
             form = BossResponseForm()
-            question_response = requests.post(question, json={'boss_id': boss_id, 
+            question_request = requests.post(question, json={'boss_id': boss_id,
                                                              "boss_name": boss['boss_name'], 
                                                              "boss_language": boss['boss_language'], 
                                                              "boss_difficulty": boss['boss_difficulty'],
                                                              "boss_specialty": boss['boss_specialty'],
-                                                             "boss_description": boss['boss_description']}).json()
-            # question=question_response['question']
-            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, form=form, question=question_response['question'])
+                                                             "boss_description": boss['boss_description'],
+                                                             "user_id": current_user.user_id,
+                                                             "user_name": current_user.username}).json()
+            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, form=form, question=question_request['question'])
         else:
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
