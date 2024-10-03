@@ -329,7 +329,7 @@
                                                 <tbody>
                                                     {% for submission in all_submissions %}
                                                     <tr>
-                                                        <td>{{ submission["submission_id"] }}</td>
+                                                        <td><a style="color:#569deb" href="{{ url_for('usr.submission_log', submission_id=submission['submission_id']) }}">{{ submission["submission_id"] }}</a></td>
                                                         <td>{{ submission["user_id"] }}</td>
                                                         <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=submission['username']) }}">{{ submission["username"] }}</a></td>
                                                         <td>{{ submission["successful_tests"] }}</td>

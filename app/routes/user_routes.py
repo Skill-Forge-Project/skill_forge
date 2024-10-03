@@ -344,6 +344,25 @@ def open_admin_panel():
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))
 
+@bp_usr.route('/submissions_logs/<submission_id>')
+@login_required
+@admin_required
+def submission_log(submission_id):
+    with mongo1_client.start_session() as session:
+        with session.start_transaction():
+            try:
+                db = mongo1_client['skill_forge_logs']
+                submission = db['python_submissions'].find_one({'submission_id': submission_id})
+                quest = Quest.query.get(submission['quest_id'])
+            except Exception as e:
+                session.abort_transaction()
+                submission = {}
+                quest = {}
+                flash('An error occurred while fetching the submission.', 'error')
+                return redirect(url_for('usr.open_admin_panel'))
+    
+    return render_template('display_submission_log.html', submission=submission, quest=quest)
+
 # Ban user route
 @bp_usr.route('/ban_user/<user_id>')
 @login_required
