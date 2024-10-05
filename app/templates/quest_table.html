@@ -103,7 +103,6 @@
                     <th class="px-4 py-2">Quest Name</th>
                     <th class="px-4 py-2">Difficulty</th>
                     <th class="px-4 py-2">Author</th>
-                    <th class="px-4 py-2">Date Created</th>
                     <th class="px-4 py-2">Solved</th>
                   </tr>
                 </thead>
@@ -119,14 +118,19 @@
                     <td class="px-4 py-2"><a class="text-blue-500 hover:underline"
                         href="{{ url_for('usr.open_user_profile_view', username=quest.quest_author) }}">{{
                         quest.quest_author }}</a></td>
-                    <td class="px-4 py-2">{{ quest.date_added.strftime('%d-%m-%Y %H:%M:%S') }}</td>
                     <td class="px-4 py-2 text-center">
                       {% if quest.solved %}
-                      <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Passed" width="20"
-                        height="20">
+                      <div class="py-2 px-0 flex flex-row gap-2 m-0 align-middle">
+                        <p class="my-0 px-0 align-middle text-green-400">Solved</p>
+                        <img src="{{ url_for('static', filename='images/checked.png') }}" alt="Failed" width="25"
+                        height="25">
+                      </div>
                       {% else %}
-                      <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="20"
-                        height="20">
+                      <div class="py-2 px-0 flex flex-row gap-2 m-0 align-middle">
+                        <p class="my-0 px-0 align-middle text-red-400">Unsolved</p>
+                        <img src="{{ url_for('static', filename='images/unchecked.png') }}" alt="Failed" width="25"
+                          height="25">
+                      </div>
                       {% endif %}
                     </td>
                   </tr>
