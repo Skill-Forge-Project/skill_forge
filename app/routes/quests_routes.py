@@ -409,11 +409,13 @@ def submit_solution():
     current_quest_difficulty = request.form.get('quest_difficulty')
     current_quest_unit_tests = request.form.get('unit_tests')
     
+    quest = Quest.query.filter_by(quest_id=current_quest_id).first()
+    
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
-        quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
-        quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
+        quest_inputs = [eval(x) for x in quest.test_inputs.split("\r\n")]
+        quest_outputs = [eval(x) for x in  quest.test_outputs.split("\r\n")]
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'py')
