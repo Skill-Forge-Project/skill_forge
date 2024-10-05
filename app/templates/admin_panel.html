@@ -306,7 +306,49 @@
                 </div>
             </div>
 
-            <div id="viewLogsContent" class="content" style="display: block;">View Logs Content</div>
+            <!-- Check Logs -->
+            <div id="viewLogsContent" class="content" style="display: block;">
+                    <div class="container-fluid">
+                        <h2>Skill Forge Logs</h2>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="card rounded shadow border-0">
+                                    <div class="card-body p-5 bg-white rounded">
+                                        <div class="table-responsive">
+                                            <table id="skill_forge_logs" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Submission ID</th>
+                                                        <th>User ID</th>
+                                                        <th>Username</th>
+                                                        <th>Quest</th>
+                                                        <th>Successful Tests</th>
+                                                        <th>Unsuccessful Tests</th>
+                                                        <th>Date Submitted</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for submission in all_submissions %}
+                                                    <tr>
+                                                        <td><a style="color:#569deb" href="{{ url_for('usr.submission_log', submission_id=submission['submission_id']) }}">{{ submission["submission_id"] }}</a></td>
+                                                        <td>{{ submission["user_id"] }}</td>
+                                                        <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=submission['username']) }}">{{ submission["username"] }}</a></td>
+                                                        <td>{{ submission["quest_id"] }}</td>
+                                                        <td>{{ submission["successful_tests"] }}</td>
+                                                        <td>{{ submission["unsuccessful_tests"] }}</td>
+                                                        <td>{{ submission["timestamp"].strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </div>
         </div>
     </div>
     <!-- JavaScript script to handle the CodeMirror custom fields. 
