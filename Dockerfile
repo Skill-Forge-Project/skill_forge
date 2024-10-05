@@ -11,6 +11,9 @@ LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GNU GPL v3.0 license"
 LABEL GitHub SourceCode="https://github.com/SoftUni-Discord-Community/skill_forge"
 
+# Update repositories list
+RUN apt update
+
 # Set default timezone
 ENV TZ=Europe/Sofia
 RUN ln -fs /usr/share/zoneinfo/$TZ /etc/localtime \ 
