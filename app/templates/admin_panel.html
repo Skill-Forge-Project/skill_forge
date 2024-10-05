@@ -321,6 +321,7 @@
                                                         <th>Submission ID</th>
                                                         <th>User ID</th>
                                                         <th>Username</th>
+                                                        <th>Quest</th>
                                                         <th>Successful Tests</th>
                                                         <th>Unsuccessful Tests</th>
                                                         <th>Date Submitted</th>
@@ -332,9 +333,10 @@
                                                         <td><a style="color:#569deb" href="{{ url_for('usr.submission_log', submission_id=submission['submission_id']) }}">{{ submission["submission_id"] }}</a></td>
                                                         <td>{{ submission["user_id"] }}</td>
                                                         <td><a style="color:#569deb" href="{{ url_for('usr.open_user_profile_view', username=submission['username']) }}">{{ submission["username"] }}</a></td>
+                                                        <td>{{ submission["quest_id"] }}</td>
                                                         <td>{{ submission["successful_tests"] }}</td>
                                                         <td>{{ submission["unsuccessful_tests"] }}</td>
-                                                        <td>{{ submission["timestamp"] }}</td>
+                                                        <td>{{ submission["timestamp"].strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>

@@ -97,6 +97,17 @@ body {
     background: transparent;
 }
 
+.text_input.logs {
+    font-family: inherit;
+    font-size: 16px;
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    overflow: auto;
+    white-space: pre;
+
+}
+
 .dropdown_input {
     font-family: inherit;
     font-size: 16px;
@@ -149,10 +160,12 @@ body {
     border: 5px solid #eee;
     border-radius: 10px;
     width: 100%;
+    height: auto;
     box-sizing: border-box;
     display: flex;
     padding: 0px;
 }
+
 
 .CodeMirror-scroll {
     font-family: 'JetBrainsMonoRegular', sans-serif;

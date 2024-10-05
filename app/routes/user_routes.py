@@ -1,5 +1,6 @@
 import base64, json, random, string, io
 from datetime import datetime
+from bson import ObjectId
 from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
@@ -353,15 +354,21 @@ def submission_log(submission_id):
             try:
                 db = mongo1_client['skill_forge_logs']
                 submission = db['python_submissions'].find_one({'submission_id': submission_id})
+                # Convert ObjectId and datetime fields to strings
+                if isinstance(submission['_id'], ObjectId):
+                    submission['_id'] = str(submission['_id'])
+                if isinstance(submission['timestamp'], datetime):
+                    submission['timestamp'] = submission['timestamp'].isoformat()
+                submission_json = json.dumps(submission, indent=4)
                 quest = Quest.query.get(submission['quest_id'])
             except Exception as e:
                 session.abort_transaction()
                 submission = {}
                 quest = {}
-                flash('An error occurred while fetching the submission.', 'error')
+                flash(f'An error occurred while fetching the submission. {e}', 'error')
                 return redirect(url_for('usr.open_admin_panel'))
     
-    return render_template('display_submission_log.html', submission=submission, quest=quest)
+    return render_template('display_submission_log.html', submission=submission_json, quest=quest)
 
 # Ban user route
 @bp_usr.route('/ban_user/<user_id>')
