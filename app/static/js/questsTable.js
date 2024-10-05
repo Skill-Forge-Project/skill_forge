@@ -18,9 +18,17 @@ $(function () {
   });
 });
 
+// Table for reported quests in the admin panel
 $(function () {
   $(document).ready(function () {
       $('#reported_quests_table').DataTable();
+  });
+});
+
+// Table for Skill Forge Logs
+$(function () {
+  $(document).ready(function () {
+      $('#skill_forge_logs').DataTable();
   });
 });
 

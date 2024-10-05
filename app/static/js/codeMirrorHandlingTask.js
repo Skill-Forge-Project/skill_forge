@@ -10,6 +10,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
     scrollbars: true
 });
 
+
 // Function to update modes of CodeMirror editors
 function updateModes(selectedLanguage) {
     var mode;

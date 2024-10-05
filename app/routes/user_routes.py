@@ -1,6 +1,7 @@
 import base64, json, random, string, io
 from datetime import datetime
-from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file
+from bson import ObjectId
+from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy.orm import joinedload
 # Import the forms and models
@@ -10,6 +11,9 @@ from app.forms import QuestForm, UserProfileForm, GiveAchievementForm
 from app.database.db_init import db
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
+from app.database.mongodb_init import mongo1_db, mongo1_client
+
+
 # Import admin_required decorator
 from app.user_permission import admin_required
 
@@ -281,6 +285,53 @@ def open_admin_panel():
     # Get all users (this is needed so we can extract the name of the user who has reported a quest)
     all_users = User.query.all()
     # Get all admins (this is needed so we can create a dropdown menu in the `Check Reports` table)
+    
+    # Take all JSON files from skill_forge_logs collection in MongoDB
+    # Start a client session
+    
+    # Function to convert ObjectId to string
+    def convert_objectid_to_string(submission):
+        # Create a new dict with string IDs
+        submission['_id'] = str(submission['_id'])
+        return submission
+    
+    with mongo1_client.start_session() as session:
+        with session.start_transaction():
+            try:
+                db = mongo1_client['skill_forge_logs']
+                python_submissions = list(db['python_submissions']
+                                        .find({}, session=session)
+                                        .sort('timestamp', -1)
+                                        .limit(20))
+                
+                java_submissions = list(db['java_submissions']
+                                        .find({}, session=session)
+                                        .sort('timestamp', -1)
+                                        .limit(20))
+                
+                csharp_submissions = list(db['csharp_submissions']
+                                        .find({}, session=session)
+                                        .sort('timestamp', -1)
+                                        .limit(20))
+                
+                javascript_submissions = list(db['javascript_submissions']
+                                            .find({}, session=session)
+                                            .sort('timestamp', -1)
+                                            .limit(20))
+                
+                # Convert ObjectId in each submission to string
+                python_submissions = [convert_objectid_to_string(sub) for sub in python_submissions]
+                java_submissions = [convert_objectid_to_string(sub) for sub in java_submissions]
+                csharp_submissions = [convert_objectid_to_string(sub) for sub in csharp_submissions]
+                javascript_submissions = [convert_objectid_to_string(sub) for sub in javascript_submissions]
+
+                all_submissions = python_submissions + java_submissions + csharp_submissions + javascript_submissions
+            except Exception as e:
+                session.abort_transaction()
+                all_submissions = {}
+                flash('An error occurred while fetching the submissions.', 'error')
+                return redirect(url_for('usr.open_admin_panel'))
+    
     all_admins = User.query.filter_by(user_role='Admin').all()
     if currently_logged_user.user_role == "Admin":
         return render_template('admin_panel.html', 
@@ -289,9 +340,35 @@ def open_admin_panel():
         reported_quests=all_reported_quests,
         all_users=all_users,
         all_admins=all_admins,
-        form=create_quest_post)
+        form=create_quest_post,
+        all_submissions=all_submissions)
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))
+
+@bp_usr.route('/submissions_logs/<submission_id>')
+@login_required
+@admin_required
+def submission_log(submission_id):
+    with mongo1_client.start_session() as session:
+        with session.start_transaction():
+            try:
+                db = mongo1_client['skill_forge_logs']
+                submission = db['python_submissions'].find_one({'submission_id': submission_id})
+                # Convert ObjectId and datetime fields to strings
+                if isinstance(submission['_id'], ObjectId):
+                    submission['_id'] = str(submission['_id'])
+                if isinstance(submission['timestamp'], datetime):
+                    submission['timestamp'] = submission['timestamp'].isoformat()
+                submission_json = json.dumps(submission, indent=4)
+                quest = Quest.query.get(submission['quest_id'])
+            except Exception as e:
+                session.abort_transaction()
+                submission = {}
+                quest = {}
+                flash(f'An error occurred while fetching the submission. {e}', 'error')
+                return redirect(url_for('usr.open_admin_panel'))
+    
+    return render_template('display_submission_log.html', submission=submission_json, quest=quest)
 
 # Ban user route
 @bp_usr.route('/ban_user/<user_id>')
