@@ -63,7 +63,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         # Check if the email or username is already in use
-        existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
+        existing_user = User.query.filter((User.email == form.email.data.lower()) | (User.username == form.username.data.lower())).first()
         if existing_user:
             flash('Email or username already in use', 'error')
             return render_template('register.html', form=form)
