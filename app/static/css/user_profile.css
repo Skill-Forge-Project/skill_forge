@@ -131,6 +131,9 @@ body {
     margin-bottom: 20px;
     border: 0px;
     text-align: justify;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
 }
 
 
