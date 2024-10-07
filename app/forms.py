@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from flask import flash
 from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField, TextAreaField, RadioField, FileField, BooleanField
 from wtforms.validators import Email, Length, EqualTo, DataRequired, ValidationError, Regexp, Optional
@@ -191,15 +192,15 @@ class ContactForm(FlaskForm):
 ########### User Profile Form - update user's profile ###########
 class UserProfileForm(FlaskForm):
     about_me = TextAreaField('About Me', validators=[Optional(), Length(max=500)])
-    first_name = StringField('First Name', validators=[Optional()])
-    last_name = StringField('Last Name', validators=[Optional()])
-    email = StringField('Email', validators=[Optional(), Email(), latin_characters_only])
-    facebook_profile = StringField('Facebook Profile', validators=[Optional()])
-    instagram_profile = StringField('Instagram', validators=[Optional()])
-    github_profile = StringField('GitHub', validators=[Optional()])
-    discord_id = StringField('Discord ID', validators=[Optional()])
-    linked_in = StringField('LinkedIn', validators=[Optional()])
-    avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional()])
+    first_name = StringField('First Name', validators=[Optional(), Length(max=30)])
+    last_name = StringField('Last Name', validators=[Optional(), Length(max=30)])
+    email = StringField('Email', validators=[Optional(), Email(), latin_characters_only, Length(max=120)])
+    facebook_profile = StringField('Facebook Profile', validators=[Optional(), Length(max=120)])
+    instagram_profile = StringField('Instagram', validators=[Optional(), Length(max=120)])
+    github_profile = StringField('GitHub', validators=[Optional(), Length(max=120)])
+    discord_id = StringField('Discord ID', validators=[Optional(), Length(max=120)])
+    linked_in = StringField('LinkedIn', validators=[Optional(), Length(max=120)])
+    avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], "File type not allowed! Please upload an image file(jpg, jpeg, png).")])  
     submit = SubmitField('Update Profile', name="submit")
 
 ########### Submit Quest Form - as a Regular User ###########
