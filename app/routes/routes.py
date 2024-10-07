@@ -6,6 +6,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.mailtrap import send_reset_email, send_welcome_mail, send_contact_email
 # Import the database instance
 from app.database.db_init import db
+from sqlalchemy import func
 from app import bcrypt
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm, EmailResetForm, PasswordResetForm, ContactForm
@@ -24,7 +25,11 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
+        # Convert the input (username or email) to lowercase
+        input_lower = form.username.data.lower()
+        
+        # Check for a user by username or email (case-insensitive check for email)
+        user = User.query.filter((User.username == input_lower) | (func.lower(User.email) == input_lower)).first()
         if user:
             if not user.is_banned:
                 if bcrypt.check_password_hash(user.password, form.password.data):
@@ -62,14 +67,19 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Convert the email and the username to lowercase
+        email_lower = form.email.data.lower()
+        username_lower = form.username.data.lower()
         # Check if the email or username is already in use
-        existing_user = User.query.filter((User.email == form.email.data.lower()) | (User.username == form.username.data.lower())).first()
+        existing_user = User.query.filter((User.email == email_lower) | (User.username == username_lower)).first()
+        
         if existing_user:
             flash('Email or username already in use', 'error')
             return render_template('register.html', form=form)
+        
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(email=form.email.data, username=form.username.data, 
+        new_user = User(email=email_lower, username=username_lower, 
                         first_name=form.first_name.data, last_name=form.last_name.data, 
                         password=hashed_password)
         
@@ -90,7 +100,7 @@ def register():
             
         db.session.add(new_user)
         db.session.commit()
-        send_welcome_mail(form.email.data, form.username.data)
+        send_welcome_mail(email_lower, username_lower)
         flash('Your account has been created! You are now able to log in.', 'success')
         return render_template('index.html', form=LoginForm())
     else:
