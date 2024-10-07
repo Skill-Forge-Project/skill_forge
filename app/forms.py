@@ -200,7 +200,7 @@ class UserProfileForm(FlaskForm):
     github_profile = StringField('GitHub', validators=[Optional(), Length(max=120)])
     discord_id = StringField('Discord ID', validators=[Optional(), Length(max=120)])
     linked_in = StringField('LinkedIn', validators=[Optional(), Length(max=120)])
-    avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], "File type not allowed!")])
+    avatar = FileField('Upload Avatar', name="update_avatar", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], "File type not allowed! Please upload an image file(jpg, jpeg, png).")])  
     submit = SubmitField('Update Profile', name="submit")
 
 ########### Submit Quest Form - as a Regular User ###########
