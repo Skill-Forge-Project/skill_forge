@@ -3,6 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file, jsonify
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 # Import the forms and models
 from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest, Achievement
@@ -19,7 +20,7 @@ from app.user_permission import admin_required
 
 bp_usr = Blueprint('usr', __name__)
 
-#  Get the user's avatar, used in the comments section
+#  Open the user profile page
 @bp_usr.route('/my_profile', methods=['GET', 'POST'])
 @login_required
 def open_user_profile():
@@ -28,28 +29,42 @@ def open_user_profile():
     user = User.query.get(user_id)
 
     if form.validate_on_submit():
+        new_email = form.email.data.lower()
+        current_email = user.email.lower()
+        if new_email != current_email:
+            is_email_taken = User.query.filter(func.lower(User.email) == new_email).first()
+            if is_email_taken:
+                flash('This email is already taken. Please choose another one.', 'danger')
+                return redirect(url_for('usr.open_user_profile'))
+            
         if 'submit' in request.form:
-            user.about_me = form.about_me.data
-            user.first_name = form.first_name.data
-            user.last_name = form.last_name.data
-            user.email = form.email.data
-            user.facebook_profile = form.facebook_profile.data
-            user.instagram_profile = form.instagram_profile.data
-            user.github_profile = form.github_profile.data
-            user.discord_id = form.discord_id.data
-            user.linked_in = form.linked_in.data
+            try:
+                user.about_me = form.about_me.data
+                user.first_name = form.first_name.data
+                user.last_name = form.last_name.data
+                user.email = form.email.data
+                user.facebook_profile = form.facebook_profile.data
+                user.instagram_profile = form.instagram_profile.data
+                user.github_profile = form.github_profile.data
+                user.discord_id = form.discord_id.data
+                user.linked_in = form.linked_in.data
 
-            db.session.commit()
+                db.session.commit()
 
-            mongo_transaction(
-                'user_info_update',
-                action=f'User {user.username} updated their info',
-                user_id=user_id,
-                username=user.username,
-                timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            )
-            flash('Profile updated successfully', 'success')
-            return redirect(url_for('usr.open_user_profile'))
+                mongo_transaction(
+                    'user_info_update',
+                    action=f'User {user.username} updated their info',
+                    user_id=user_id,
+                    username=user.username,
+                    timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                )
+                flash('Profile updated successfully', 'success')
+                return redirect(url_for('usr.open_user_profile'))
+            except Exception as e:
+                flash(f'Error during updating user\'s profile!', 'danger')
+                return redirect(url_for('usr.open_user_profile'))
+            
+            
         if 'update_avatar' in request.form:
             if form.avatar.data:
                 avatar_data = form.avatar.data.read()
@@ -118,7 +133,7 @@ def open_user_profile():
 
 
 # Get the users avatar
-@bp_usr.route('/avatar/<user_id>')
+@bp_usr.route('/avatar/<user_id>', methods=['GET'])
 def get_user_avatar(user_id):
     user = User.query.filter_by(user_id=user_id).first_or_404()
     if user.avatar:
@@ -129,7 +144,7 @@ def get_user_avatar(user_id):
     return send_file(io.BytesIO(img_data), mimetype='image/jpeg')
 
 # Open user for editing from the Admin Panel
-@bp_usr.route('/edit_user/<user_id>')
+@bp_usr.route('/edit_user/<user_id>', methods=['GET'])
 @login_required
 @admin_required
 def open_edit_user(user_id):
@@ -268,7 +283,7 @@ def open_user_profile_view(username):
             return abort(404)
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
-@bp_usr.route('/admin_panel')
+@bp_usr.route('/admin_panel', methods=['GET'])
 @login_required
 @admin_required
 def open_admin_panel():
@@ -345,7 +360,7 @@ def open_admin_panel():
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))
 
-@bp_usr.route('/submissions_logs/<submission_id>')
+@bp_usr.route('/submissions_logs/<submission_id>', methods=['GET'])
 @login_required
 @admin_required
 def submission_log(submission_id):
@@ -353,7 +368,15 @@ def submission_log(submission_id):
         with session.start_transaction():
             try:
                 db = mongo1_client['skill_forge_logs']
-                submission = db['python_submissions'].find_one({'submission_id': submission_id})
+                collections = ['python_submissions', 'java_submissions', 'csharp_submissions', 'javascript_submissions']
+
+                submission = None
+
+                for collection in collections:
+                    submission = db[collection].find_one({'submission_id': submission_id})
+                    if submission:
+                        break
+                
                 # Convert ObjectId and datetime fields to strings
                 if isinstance(submission['_id'], ObjectId):
                     submission['_id'] = str(submission['_id'])
@@ -367,11 +390,10 @@ def submission_log(submission_id):
                 quest = {}
                 flash(f'An error occurred while fetching the submission. {e}', 'error')
                 return redirect(url_for('usr.open_admin_panel'))
-    
     return render_template('display_submission_log.html', submission=submission_json, quest=quest)
 
 # Ban user route
-@bp_usr.route('/ban_user/<user_id>')
+@bp_usr.route('/ban_user/<user_id>', methods=['POST'])
 @login_required
 @admin_required
 def ban_user(user_id, ban_reason='no reason'):
@@ -386,7 +408,7 @@ def ban_user(user_id, ban_reason='no reason'):
     return redirect(url_for('usr.open_admin_panel'))
 
 # Unban user route
-@bp_usr.route('/unban_user/<user_id>')
+@bp_usr.route('/unban_user/<user_id>', methods=['POST'])
 @login_required
 @admin_required
 def unban_user(user_id):
