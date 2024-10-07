@@ -3,6 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file, jsonify
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 # Import the forms and models
 from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest, Achievement
@@ -28,16 +29,19 @@ def open_user_profile():
     user = User.query.get(user_id)
 
     if form.validate_on_submit():
+        new_email = form.email.data.lower()
+        current_email = user.email.lower()
+        if new_email != current_email:
+            is_email_taken = User.query.filter(func.lower(User.email) == new_email).first()
+            if is_email_taken:
+                flash('This email is already taken. Please choose another one.', 'danger')
+                return redirect(url_for('usr.open_user_profile'))
+            
         if 'submit' in request.form:
             try:
                 user.about_me = form.about_me.data
                 user.first_name = form.first_name.data
                 user.last_name = form.last_name.data
-                is_mail_taken = User.query.filter(User.email == form.email.data.lower()).first()
-                if is_mail_taken:
-                    if is_mail_taken.email.lower() == form.email.data.lower():
-                        flash('Email already in use by another user!', 'danger')
-                        return redirect(url_for('usr.open_user_profile'))
                 user.email = form.email.data
                 user.facebook_profile = form.facebook_profile.data
                 user.instagram_profile = form.instagram_profile.data
