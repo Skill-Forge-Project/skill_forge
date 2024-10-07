@@ -122,7 +122,7 @@ def open_forgot_password():
 def send_email_token():
     form = EmailResetForm()
     if form.validate_on_submit():
-        email = form.email_address.data
+        email = form.email_address.data.lower()
         current_user = User.query.filter_by(email=email).first()
         all_token = ResetToken.query.filter_by(user_email=email).first()
         
