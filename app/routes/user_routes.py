@@ -33,9 +33,9 @@ def open_user_profile():
                 user.about_me = form.about_me.data
                 user.first_name = form.first_name.data
                 user.last_name = form.last_name.data
-                existing_email = User.query.filter(User.email == form.email.data).first()
-                if existing_email:
-                    if existing_email.user_id != user_id:
+                is_mail_taken = User.query.filter(User.email == form.email.data.lower()).first()
+                if is_mail_taken:
+                    if is_mail_taken.email.lower() == form.email.data.lower():
                         flash('Email already in use by another user!', 'danger')
                         return redirect(url_for('usr.open_user_profile'))
                 user.email = form.email.data
