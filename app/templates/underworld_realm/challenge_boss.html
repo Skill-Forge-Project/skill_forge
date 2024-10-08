@@ -30,7 +30,7 @@
   </head>
   <body>
     <!-- Include Navbar template --> 
-     {% include 'navbar.html' %} 
+     {% include 'navbar.html' %}
      <form action="{{ url_for('undwrld_bp.submit_boss_challenge') }}" method="post" enctype="multipart/form-data">
       {{ form.csrf_token() }}
       <div class="container mx-auto py-8">

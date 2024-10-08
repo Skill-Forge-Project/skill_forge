@@ -19,7 +19,6 @@
 <body>
   <!-- Include Navbar template -->
   {% include 'navbar.html' %}
-
   <div class="container mx-auto p-6">
     <h2 class="underworld-title font-bold text-center mb-4">
         Welcome, Brave Soul, to the Underworld Realm!
@@ -29,6 +28,18 @@
         Gather your wits, summon your courage, and embark on a quest filled with trials and triumphs. 
         May fortune favor the bold as you delve into the depths of the Underworld!
     </p>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="w-full space-y-4">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} p-4 rounded-md bg-{{ category }}-100 text-{{ category }}-800 text-center">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
     
     <div class="bg-overlay p-6 rounded-lg">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

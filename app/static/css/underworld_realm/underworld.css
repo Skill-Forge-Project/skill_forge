@@ -15,6 +15,27 @@ html, body {
     background-attachment: fixed;
 }
 
+
+.alert {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+}
+
+.alert-success {
+    color: #4CAF50;
+}
+
+.alert-error {
+    color: #f93a33;
+}
+
+.alert-info {
+    color: #2196F3;
+}
+
 .underworld-title {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     font-size: 34px;

@@ -1,5 +1,5 @@
 import os, requests, ast, re
-from flask import Blueprint, render_template, redirect, url_for, abort, request
+from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
 from flask_login import login_required, current_user
 from app.forms import BossResponseForm
 # Import MongoDB transactions functions
@@ -43,6 +43,16 @@ def open_underworld():
         abort(404)
     
 
+# Reload the Underworld Realm if the challenge timer is over
+@undwrld_bp.route('/challenge_timer_over')
+@login_required
+def challenge_timer_over():
+    try:
+        flash('You have failed the challenge! Train you skills and try again!', 'error')
+        return redirect(url_for('undwrld_bp.open_underworld'))
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        abort(404)
 
 # Challenge Boss
 @undwrld_bp.route('/challenge_boss/<boss_id>')
@@ -72,8 +82,6 @@ def challenge_boss(boss_id):
                 question = question_request['question']
                 question_code = pattern.search(question).group(1)
                 question = question.replace(f'```python\n{question_code}\n```', '').replace(f'```java\n{question_code}\n```', '').replace(f'```javascript\n{question_code}\n```', '').replace(f'```csharp\n{question_code}\n```', '').strip()                
-                print(f"Question: {question}")
-                print(f"Question Code: {question_code}")
             except AttributeError:
                 question = question_request['question']
                 question_code = ''
