@@ -90,7 +90,12 @@ html, body {
 }
 
 /* Boss Challenge Styling */
-
+.timer {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    font-size: 16px;
+    color: #ff0000ba;
+    margin-top: 0px;
+}
 .user_response_title {
     font-family: 'JetBrainsMonoRegular', sans-serif;
     font-size: 16px;

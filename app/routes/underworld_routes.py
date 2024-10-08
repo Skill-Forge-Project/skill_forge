@@ -1,4 +1,4 @@
-import os, requests, ast
+import os, requests, ast, time
 from flask import Blueprint, render_template, redirect, url_for, abort, request
 from flask_login import login_required, current_user
 from app.forms import BossResponseForm
@@ -66,7 +66,12 @@ def challenge_boss(boss_id):
                                                              "boss_description": boss['boss_description'],
                                                              "user_id": current_user.user_id,
                                                              "user_name": current_user.username}).json()
-            return render_template('underworld_realm/challenge_boss.html', title='Challenge Boss', boss=boss, form=form, question=question_request['question'])
+            
+            return render_template('underworld_realm/challenge_boss.html', 
+                                   title='Challenge Boss', 
+                                   boss=boss, 
+                                   form=form, 
+                                   question=question_request['question'])
         else:
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
