@@ -1,5 +1,5 @@
 # Use the base image containing Python 3.8, NodeJS, npm, mono-complete compiler and java compiler
-FROM python:latest
+FROM python:3.12.7
 
 # Image Labels. Update values for each build
 LABEL Name="Skill-Forge"
