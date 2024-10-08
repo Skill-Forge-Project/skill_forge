@@ -61,7 +61,7 @@
               <input type="hidden" name="boss_id" value="{{ boss.boss_id }}">
               <input type="hidden" name="boss_name" value="{{ boss.boss_name }}">
               <input type="hidden" name="boss_title" value="{{ boss.boss_title }}">
-              <input type="hidden" name="boss_language" value="{{ boss.boss_language }}">
+              <input type="hidden" name="boss_language" id="boss_language" value="{{ boss.boss_language }}">
               <input type="hidden" name="boss_difficulty" value="{{ boss.boss_difficulty }}">
               <input type="hidden" name="boss_specialty" value="{{ boss.boss_specialty }}">
               <input type="hidden" name="boss_description" value="{{ boss.boss_description }}">
@@ -78,7 +78,7 @@
                 <!-- User Code -->
                 <div class="bosses-container shadow rounded-lg p-6 mt-2 user_response_code">
                 <h2 class="boss-descr challenge font-bold mb-4">Your Code</h2>
-                {{ form.code_answer (class="user_anwser_code rounded-xl", id="editor") }}
+                {{ form.code_answer (class="user_anwser_code rounded-xl", id="bossQuestion") }}
             </div>
                 <!-- Submit Challenge -->
             <div class="flex justify-end mt-3">
@@ -97,7 +97,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
-    <script src="{{ url_for('static', filename='js/codeMirrorHandlingTask.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/codeMirrorBossChallenge.js') }}"></script>
     <footer class="mt-auto bg-inherit">
       <!-- Include Footer template --> {% include 'footer.html' %}
     </footer>
