@@ -1,4 +1,4 @@
-import os, requests, ast, time
+import os, requests, ast, re
 from flask import Blueprint, render_template, redirect, url_for, abort, request
 from flask_login import login_required, current_user
 from app.forms import BossResponseForm
@@ -66,12 +66,33 @@ def challenge_boss(boss_id):
                                                              "boss_description": boss['boss_description'],
                                                              "user_id": current_user.user_id,
                                                              "user_name": current_user.username}).json()
-            
+            # If AI generated question contains code, extract it and separate it from the question
+            pattern = re.compile(r'```(?:javascript|java|python|csharp)?\s*([\s\S]*?)\s*```')
+            try:
+                question = question_request['question']
+                question_code = pattern.search(question).group(1)
+                question = question.replace(f'```python\n{question_code}\n```', '').replace(f'```java\n{question_code}\n```', '').replace(f'```javascript\n{question_code}\n```', '').replace(f'```csharp\n{question_code}\n```', '').strip()                
+                print(f"Question: {question}")
+                print(f"Question Code: {question_code}")
+            except AttributeError:
+                question = question_request['question']
+                question_code = ''
+            language = boss['boss_language']
+            if language == 'Python':
+                question_language = 'python'
+            elif language == 'Java':
+                question_language = 'java'
+            elif language == 'JavaScript':
+                question_language = 'javascript'
+            elif language == 'C#':
+                question_language = 'csharp'        
             return render_template('underworld_realm/challenge_boss.html', 
                                    title='Challenge Boss', 
                                    boss=boss, 
                                    form=form, 
-                                   question=question_request['question'])
+                                   question=question,
+                                   question_code=question_code,
+                                   question_language=question_language)
         else:
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
