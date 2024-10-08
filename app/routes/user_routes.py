@@ -29,20 +29,21 @@ def open_user_profile():
     user = User.query.get(user_id)
 
     if form.validate_on_submit():
-        new_email = form.email.data.lower()
-        current_email = user.email.lower()
-        if new_email != current_email:
-            is_email_taken = User.query.filter(func.lower(User.email) == new_email).first()
-            if is_email_taken:
-                flash('This email is already taken. Please choose another one.', 'danger')
-                return redirect(url_for('usr.open_user_profile'))
+
             
         if 'submit' in request.form:
+            new_email = form.email.data.lower()
+            current_email = user.email.lower()
+            if new_email != current_email:
+                is_email_taken = User.query.filter(func.lower(User.email) == new_email).first()
+                if is_email_taken:
+                    flash('This email is already taken. Please choose another one.', 'danger')
+                    return redirect(url_for('usr.open_user_profile'))
             try:
                 user.about_me = form.about_me.data
                 user.first_name = form.first_name.data
                 user.last_name = form.last_name.data
-                user.email = form.email.data
+                user.email = form.email.data.lower()
                 user.facebook_profile = form.facebook_profile.data
                 user.instagram_profile = form.instagram_profile.data
                 user.github_profile = form.github_profile.data
