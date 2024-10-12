@@ -154,6 +154,8 @@ def delete_comment(comment_id):
 
 # Handle quest edit from the Admin Panel
 @bp_qst.route('/edit_quest', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def edit_quest_db():
     form = EditQuestForm()
     if request.method == 'POST':
