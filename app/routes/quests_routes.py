@@ -152,7 +152,7 @@ def delete_comment(comment_id):
         flash('Comment deletion failed!', 'danger')
         return redirect(url_for('quests.open_curr_quest', quest_id=comment.quest_id))
 
-# Handle quest edit from the Admin Panel
+# Open quest edit from the Admin Panel
 @bp_qst.route('/edit_quest', methods=['GET', 'POST'])
 @login_required
 @admin_required
