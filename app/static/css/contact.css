@@ -48,19 +48,19 @@ body {
 }
 
 .description-image {
-    max-width: 200px;
+    max-width: 250px;
     margin-right: 20px !important;
 }
 .description-text {
     color: #d2d0d0;
 }
 .description-text h2 {
-    font-size: 16px;
+    font-size: 20px;
     /* margin-bottom: 10px; */
     color: #03e9f4;
 }
 .description-text p {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.5;
 }
 
