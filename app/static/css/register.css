@@ -20,6 +20,7 @@ html {
     justify-content: center;
     align-items: center;
     background: linear-gradient(#141e30, #243b55) !important;
+    line-height: 0;
 }
 
 .alert {
@@ -61,19 +62,27 @@ html {
     text-align: center;
 }
 
+.container {
+    max-width: 100%
+}
+
 .login-box {
     display: flex;
     flex-direction: column;
     font-family: 'JetBrainsMonoRegular', sans-serif !important;
     color: #03e9f4;
-    padding: 40px;
+    margin: auto;
+    padding-left: 5%;
+    padding-right: 5%;
     background: rgba(0, 0, 0, .5);
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px;
-    margin-bottom: 20px;
-    /* Adjust margin as needed */
+    /* margin-bottom: 20px; */
 }
+
+
+
 
 .login-box p {
     margin-top: 20px;
