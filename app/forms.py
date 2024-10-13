@@ -48,12 +48,12 @@ class LoginForm(FlaskForm):
 
 ########### Register Form ###########
 class RegistrationForm(FlaskForm):
-    username = StringField('', render_kw={'placeholder': 'Username'}, validators=[DataRequired(), Length(min=4, max=25)])
-    first_name = StringField('', render_kw={'placeholder': 'First name'}, validators=[DataRequired(), Length(min=1, max=30)])
-    last_name = StringField('', render_kw={'placeholder': 'Last name'}, validators=[DataRequired(), Length(min=1, max=30)])
-    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(), Email(), latin_characters_only])   
+    username = StringField('', render_kw={'placeholder': 'Username'}, validators=[DataRequired(message="Username is required"), Length(min=4, max=25, message="Username must be between 4 and 25 characters.")])
+    first_name = StringField('', render_kw={'placeholder': 'First name'}, validators=[DataRequired(message="First name is required"), Length(min=1, max=30, message="First name must be between 1 and 30 characters.")])
+    last_name = StringField('', render_kw={'placeholder': 'Last name'}, validators=[DataRequired(message="Last name is required"), Length(min=1, max=30, message="Last name must be between 1 and 30 characters.")])
+    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(message="Email address is required"), Email(message="Invalid emal address"), latin_characters_only])   
     password = PasswordField('', validators=[
-        DataRequired(),
+        DataRequired(message="Password is required"),
         Length(min=10, max=50, message='Password must be between 10 and 50 characters.'),
         Regexp(re.compile(r'.*[A-Z].*'), message='Password must contain at least one uppercase letter.'),
         Regexp(re.compile(r'.*[0-9].*'), message='Password must contain at least one digit.'),
@@ -61,7 +61,7 @@ class RegistrationForm(FlaskForm):
     ],
         render_kw={'placeholder': 'Password'})
     confirm = PasswordField('', render_kw={'placeholder': 'Repeat password'}, validators=[
-        DataRequired(), 
+        DataRequired(message="Please confirm your password"), 
         EqualTo('password', message='Passwords must match'), 
         Length(min=10, max=50, message='Password must be between 10 and 50 characters.')
     ])
@@ -183,10 +183,10 @@ class PublishCommentForm(FlaskForm):
 
 ########### Contact Form ###########
 class ContactForm(FlaskForm):
-    username = StringField('Name', validators=[DataRequired(), Length(min=4, max=25)],)
-    email = StringField('Email address', validators=[DataRequired(), Email(), latin_characters_only])
-    subject = StringField('Subject', validators=[DataRequired(), Length(min=4, max=25)])
-    message = TextAreaField('Message', validators=[DataRequired(), Length(min=10)])
+    username = StringField('Name', validators=[DataRequired(message="Name is required"), Length(min=4, max=25, message="Name must be between 4 and 25 characters.")],)
+    email = StringField('Email address', validators=[DataRequired(message="Email address is required."), Email(message="Invalid email address."), latin_characters_only])
+    subject = StringField('Subject', validators=[DataRequired(message="Subject is required"), Length(min=4, max=25, message="Subject must be between 4 and 25 characters.")])
+    message = TextAreaField('Message', validators=[DataRequired(message="Message is required"), Length(min=10, max=500, message="Message must be between 10 and 500 characters.")])
     submit = SubmitField('Send Message')
     
 ########### User Profile Form - update user's profile ###########
