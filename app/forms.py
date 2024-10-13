@@ -183,10 +183,10 @@ class PublishCommentForm(FlaskForm):
 
 ########### Contact Form ###########
 class ContactForm(FlaskForm):
-    username = StringField('Name', validators=[DataRequired(), Length(min=4, max=25)],)
-    email = StringField('Email address', validators=[DataRequired(), Email(), latin_characters_only])
-    subject = StringField('Subject', validators=[DataRequired(), Length(min=4, max=25)])
-    message = TextAreaField('Message', validators=[DataRequired(), Length(min=10)])
+    username = StringField('Name', validators=[DataRequired(message="Name is required"), Length(min=4, max=25, message="Name must be between 4 and 25 characters.")],)
+    email = StringField('Email address', validators=[DataRequired(message="Email address is required."), Email(message="Invalid email address."), latin_characters_only])
+    subject = StringField('Subject', validators=[DataRequired(message="Subject is required"), Length(min=4, max=25, message="Subject must be between 4 and 25 characters.")])
+    message = TextAreaField('Message', validators=[DataRequired(message="Message is required"), Length(min=10, max=500, message="Message must be between 10 and 500 characters.")])
     submit = SubmitField('Send Message')
     
 ########### User Profile Form - update user's profile ###########

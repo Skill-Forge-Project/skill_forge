@@ -49,7 +49,7 @@ def login():
     return render_template('index.html', form=form)
 
 # Route to handle the logout functionality
-@bp.route('/logout')
+@bp.route('/logout', methods=['POST'])
 @login_required
 def logout():
     user = current_user
@@ -60,7 +60,6 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
-
 
 # Handle the registration route
 @bp.route('/register', methods=['GET', 'POST'])
@@ -109,7 +108,6 @@ def register():
                 for error in errors:
                     flash(f"{getattr(form, field).label.text} - {error}", 'error')
     return render_template('register.html', form=form)
-
 
 ########### Routes handling password reset functionality ###########
 # Route to open the forgot password form
@@ -221,9 +219,9 @@ def update_new_password(form=None):
     # Pass necessary parameters to the template in case of errors
     return render_template('reset_password.html', form=form, token=form.token.data, user_id=form.user_id.data, username=form.username.data, expiration_time=form.expiration_time.data)
 
-########### Routes handling main apge ###########
+########### Routes handling main page ###########
 # Open the main page
-@bp.route('/home')
+@bp.route('/home', methods=['GET'])
 @login_required
 def main_page():
     user_count = User.query.count()
@@ -240,19 +238,19 @@ def main_page():
                            solutions_count=solutions_count)
 
 # Check the number of online users. Function used by the websockets and client side script.
-@bp.route('/get_online_users')
+@bp.route('/get_online_users', methods=['GET'])
 def get_online_users():
     online_users = User.query.filter_by(user_online_status='Online').count()
     return jsonify({'online_users': online_users})
 
 # Route to open the about page
-@bp.route('/about')
+@bp.route('/about', methods=['GET'])
 @login_required
 def about():
     return render_template('about.html')
 
 # Route to open the contact page
-@bp.route('/contact_us')
+@bp.route('/contact_us', methods=['GET'])
 @login_required
 def contact():
     contact_form = ContactForm()
@@ -264,15 +262,25 @@ def contact():
 @login_required
 def send_message():
     contact_form = ContactForm()
-    user = contact_form.username.data
-    email = contact_form.email.data
-    subject = contact_form.subject.data
-    message = contact_form.message.data
+    
     if contact_form.validate_on_submit():
+        # Extract data only after validation succeeds
+        user = contact_form.username.data
+        email = contact_form.email.data
+        subject = contact_form.subject.data
+        message = contact_form.message.data
+
+        # Call function to send the email
         send_contact_email(user, email, subject, message)
+
+        # Success feedback
         flash('Thank you for contacting us. We will get back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
+    
+    # Error handling if form is not valid
     flash('Error during sending the email.', 'error')
-    for error in contact_form.errors:
-        flash(f'{contact_form.errors[error][0]}', 'error')
+    for field, errors in contact_form.errors.items():
+        for error in errors:
+            flash(f'{field}: {error}', 'error')
+        
     return render_template('contact.html', form=contact_form)
