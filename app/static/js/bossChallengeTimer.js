@@ -1,7 +1,7 @@
 var h3 = document.getElementsByTagName("h3");
+var challengeId = document.getElementById("challenge_id").value;
 
-
-var sec         = 1800,
+var sec         = 5,
     countDiv    = document.getElementById("timer"),
     secpass,
     countDown   = setInterval(function () {
@@ -26,7 +26,7 @@ function secpass() {
         clearInterval(countDown);
         countDiv.innerHTML = 'Your time is over!';
         // Redirect to the underworld page after the timer ends
-        window.location.href = '/challenge_timer_over';
+        window.location.href = '/challenge_timer_over?challenge_id=' + challengeId;
     }
 }
 

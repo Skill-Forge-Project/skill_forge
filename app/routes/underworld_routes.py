@@ -10,14 +10,14 @@ from app.database.mongodb_transactions import mongo_transaction
 undwrld_bp = Blueprint('undwrld_bp', __name__, template_folder='templates/underworld_realm', static_folder='static/css/underworld_realm')
 
 # Underworld Realm
-@undwrld_bp.route('/underworld')
+@undwrld_bp.route('/underworld', methods=['GET'])
 @login_required
 def open_underworld():
     underworld_status_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/"
     try:
         status_response = requests.get(underworld_status_url)
         
-        if status_response.status_code != 200:
+        if not status_response.ok:
             abort(404)
         else:
             # Attempt to retrieve bosses from the Underworld Realm service
@@ -44,18 +44,31 @@ def open_underworld():
     
 
 # Reload the Underworld Realm if the challenge timer is over
-@undwrld_bp.route('/challenge_timer_over')
+@undwrld_bp.route('/challenge_timer_over', methods=['GET','POST'])
 @login_required
 def challenge_timer_over():
+    update_status_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/update_challenge_fail"
     try:
-        flash('Your time is over! You have failed the challenge!\nTrain you skills and try again!', 'error')
-        return redirect(url_for('undwrld_bp.open_underworld'))
+        # Extract the challenge_id from the query string
+        challenge_id = request.args.get('challenge_id')
+        print(challenge_id)
+        if not challenge_id:
+            flash('Invalid challenge ID!', 'error')
+            return redirect(url_for('undwrld_bp.open_underworld'))
+        
+        response = requests.post(update_status_url, json={'challenge_id': challenge_id})
+        if response.ok:
+            flash('Your time is over! You have failed the challenge!\nTrain you skills and try again!', 'error')
+            return redirect(url_for('undwrld_bp.open_underworld'))
+        else:
+            print(f"Error updating challenge status: {response.status_code}")
+            abort(404)
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         abort(404)
 
 # Challenge Boss
-@undwrld_bp.route('/challenge_boss/<boss_id>')
+@undwrld_bp.route('/challenge_boss/<boss_id>', methods=['GET', 'POST'])
 @login_required
 def challenge_boss(boss_id):
     boss_details = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/get_boss" 
@@ -76,6 +89,8 @@ def challenge_boss(boss_id):
                                                              "boss_description": boss['boss_description'],
                                                              "user_id": current_user.user_id,
                                                              "user_name": current_user.username}).json()
+            # Extract the challenge_id from the response
+            challenge_id = question_request['challenge_id']
             # If AI generated question contains code, extract it and separate it from the question
             pattern = re.compile(r'```(?:javascript|java|python|csharp)?\s*([\s\S]*?)\s*```')
             try:
@@ -93,14 +108,16 @@ def challenge_boss(boss_id):
             elif language == 'JavaScript':
                 question_language = 'javascript'
             elif language == 'C#':
-                question_language = 'csharp'        
+                question_language = 'csharp'
+                
             return render_template('underworld_realm/challenge_boss.html', 
                                    title='Challenge Boss', 
                                    boss=boss, 
                                    form=form, 
                                    question=question,
                                    question_code=question_code,
-                                   question_language=question_language)
+                                   question_language=question_language,
+                                   challenge_id=challenge_id)
         else:
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
