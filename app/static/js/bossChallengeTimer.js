@@ -1,7 +1,7 @@
 var h3 = document.getElementsByTagName("h3");
 
 
-var sec         = 5,
+var sec         = 1800,
     countDiv    = document.getElementById("timer"),
     secpass,
     countDown   = setInterval(function () {

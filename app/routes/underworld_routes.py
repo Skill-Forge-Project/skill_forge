@@ -48,7 +48,7 @@ def open_underworld():
 @login_required
 def challenge_timer_over():
     try:
-        flash('You have failed the challenge! Train you skills and try again!', 'error')
+        flash('Your time is over! You have failed the challenge!\nTrain you skills and try again!', 'error')
         return redirect(url_for('undwrld_bp.open_underworld'))
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
