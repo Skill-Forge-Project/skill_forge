@@ -1,4 +1,4 @@
-import random, string, base64
+import random, string, base64, json
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
 from flask_login import login_required, current_user
@@ -242,7 +242,7 @@ def approve_submited_quest(quest_id):
 @login_required
 def post_comment():
     submited_quest_id = request.form.get('submited_quest_id')
-    all_comments = eval(request.form.get('submited_quest_comments'))
+    all_comments = json.loads(request.form.get('submited_quest_comments'))
     comment = request.form.get('submited_quest_comment')
     user_id = current_user.user_id
     user_role = current_user.user_role
