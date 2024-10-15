@@ -276,7 +276,7 @@ def post_comment():
 @bp_usq.route('/edit_submited_quest/<quest_id>', methods=['GET'])
 @login_required
 def open_submited_quest_as_user(quest_id):
-    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first_or_404()
     
     # Throw 404 error if the user is not the author of the quest OR the user is not an admin
     if current_user.username != submited_quest.quest_author and current_user.user_role != 'Admin':
