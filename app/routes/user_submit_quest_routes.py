@@ -32,7 +32,7 @@ def open_user_submit_quest():
 @login_required
 @admin_required
 def open_submited_quest(quest_id):
-    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first_or_404()
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
     form = QuestApprovalForm()
     form.submited_quest_id.data = quest_id
