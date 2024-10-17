@@ -1,7 +1,7 @@
 import base64, json, random, string, io
 from datetime import datetime
 from bson import ObjectId
-from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file, jsonify
+from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file
 from flask_login import login_required, current_user
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
@@ -12,7 +12,7 @@ from app.forms import QuestForm, UserProfileForm, GiveAchievementForm
 from app.database.db_init import db
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
-from app.database.mongodb_init import mongo1_db, mongo1_client
+from app.database.mongodb_init import  mongo1_client
 
 
 # Import admin_required decorator
@@ -105,15 +105,18 @@ def open_user_profile():
         form.discord_id.data = user.discord_id
         form.linked_in.data = user.linked_in
 
+    # Get the user's submited quests
     user_submited_quests = SubmitedQuest.query.filter(SubmitedQuest.quest_author_id == user_id).all()
-    user_solved_quests = SubmitedSolution.query.options(
-        joinedload(SubmitedSolution.coding_quest)
-    ).filter_by(user_id=user_id).all()    
+    # Get the user's solved quests in descending order
+    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).filter_by(user_id=user_id).all() 
+    # Get the user's achievements
     user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
+    # Get the user's avatar
     avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    # Get the user's status and last logged date
     user_status = user.user_online_status
     last_logged_date = user.last_status_update
-
+    # Get the xp points for the level rank
     with open('app/static/configs/levels.json', 'r') as file:
         levels_data = json.load(file)
 
