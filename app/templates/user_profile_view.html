@@ -43,9 +43,9 @@
                         <div class="flex flex-col items-center">
                             <div>
                                 {% if avatar %}
-                                <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
+                                <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="inline-block w-48 h-48 rounded-full user_avatar">
                                 {% else %}
-                                <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                                <img src="../static/images/anvil.png" alt="Default Avatar" class="inline-block w-48 h-48 rounded-full user_avatar">
                                 {% endif %}
                             </div>
                             <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
