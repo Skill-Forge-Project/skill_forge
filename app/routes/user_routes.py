@@ -112,7 +112,10 @@ def open_user_profile():
     # Get the user's achievements
     user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
     # Get the user's avatar
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    if user.avatar:
+        avatar_base64 = base64.b64encode(user.avatar).decode('utf-8')
+    else:
+        avatar_base64 = None
     # Get the user's status and last logged date
     user_status = user.user_online_status
     last_logged_date = user.last_status_update
