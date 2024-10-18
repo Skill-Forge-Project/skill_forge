@@ -1,5 +1,5 @@
 import os, requests, ast, re
-from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
+from flask import Blueprint, render_template, redirect, url_for, abort, request, flash, jsonify
 from flask_login import login_required, current_user
 from app.forms import BossResponseForm
 # Import MongoDB transactions functions
@@ -42,6 +42,28 @@ def open_underworld():
         print(f"Underworld Realm is unreachable: {e}")
         abort(404)
     
+# Update Boss Challenge Status
+@undwrld_bp.route('/update_challenge_status', methods=['POST'])
+@login_required
+def update_challenge_status():
+    update_status_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/update_challenge_fail"
+    data = request.get_json()
+    challenge_id = data.get('challenge_id')
+    status = data.get('status')
+    
+    try:
+        if challenge_id and status == 'Failed':
+            response = requests.post(update_status_url, json={'challenge_id': challenge_id})
+            if response.ok:
+                flash('Reloading the page during challenge is not allowed!', 'error')
+                return redirect(url_for('undwrld_bp.open_underworld'))
+            else:
+                print(f"Error updating challenge status: {response.status_code}")
+                abort(404)
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        abort(404)
+
 
 # Reload the Underworld Realm if the challenge timer is over
 @undwrld_bp.route('/challenge_timer_over', methods=['GET','POST'])
@@ -72,11 +94,18 @@ def challenge_timer_over():
 @login_required
 def challenge_boss(boss_id):
     boss_details = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/get_boss" 
+    
     try:
+        # Check if user has already challenged the boss (today)
+        check_if_challenge = requests.get(f"{os.getenv('UNDERWORLD_REALM_API_URL')}/check_active_challenge", json={'user_id': current_user.user_id, 'boss_id': boss_id})
+        if check_if_challenge.ok:
+            flash('You have already challenged this boss! Try again tommorow.', 'info')
+            return redirect(url_for('undwrld_bp.open_underworld'))
+        
         # Send a GET request to the microservice
         response = requests.get(boss_details, json={'boss_id': boss_id})
         # Check if the request was successful
-        if response.status_code == 200:
+        if response.ok:
             boss = response.json()
             # Generate new question from the Boss
             question = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/generate_new_question"
