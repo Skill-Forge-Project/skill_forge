@@ -160,7 +160,7 @@ def challenge_boss(boss_id):
 @undwrld_bp.route('/submit_challenge', methods=['POST'])
 @login_required
 def submit_boss_challenge():
-    form = BossResponseForm()
+    form = BossResponseForm()    
     if form.validate_on_submit():
         # Get the form data
         question = request.form.get('question')
