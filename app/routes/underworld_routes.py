@@ -166,6 +166,7 @@ def submit_boss_challenge():
         question = request.form.get('question')
         user_answer = form.user_answer.data
         code_answer = form.code_answer.data
+        challenge_id = request.form.get('challenge_id')
         boss_id = request.form.get('boss_id')
         boss_name = request.form.get('boss_name')
         boss_title = request.form.get('boss_title')
@@ -178,19 +179,21 @@ def submit_boss_challenge():
         try:
             response = requests.post(submit_challenge_url, json={'boss_id': boss_id, 
                                                                  "boss_name": boss_name, 
+                                                                 "challenge_id": challenge_id,
+                                                                 "user_id": current_user.user_id,
+                                                                 "user_name": current_user.username,
                                                                  "boss_language": boss_language, 
                                                                  "boss_difficulty": boss_difficulty,
                                                                  "boss_specialty": boss_specialty,
                                                                  "boss_description": boss_description,
                                                                  "boss_question": question,
-                                                                 "answer": user_answer,
+                                                                 "user_answer": user_answer,
                                                                  "user_code_answer": code_answer})
             if response.ok:
                 # evaluation = response.json()
                 evaluation = response.json()
                 # Convert string to a dictionary
                 evaluation = ast.literal_eval(evaluation)
-                print(evaluation)
                 return render_template('underworld_realm/challenge_grade.html', title='Challenge Result', 
                                         boss_name=boss_name, 
                                         boss_description=boss_description,
