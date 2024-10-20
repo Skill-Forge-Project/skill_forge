@@ -46,14 +46,14 @@ def open_underworld():
 @undwrld_bp.route('/update_challenge_status', methods=['POST'])
 @login_required
 def update_challenge_status():
-    update_status_url = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/update_challenge_fail"
+    update_status_url_failed = f"{os.getenv('UNDERWORLD_REALM_API_URL')}/update_challenge_fail"
     data = request.get_json()
     challenge_id = data.get('challenge_id')
     status = data.get('status')
     
     try:
         if challenge_id and status == 'Failed':
-            response = requests.post(update_status_url, json={'challenge_id': challenge_id})
+            response = requests.post(update_status_url_failed, json={'challenge_id': challenge_id})
             if response.ok:
                 flash('Reloading the page during challenge is not allowed!', 'error')
                 return redirect(url_for('undwrld_bp.open_underworld'))
@@ -190,6 +190,7 @@ def submit_boss_challenge():
                 evaluation = response.json()
                 # Convert string to a dictionary
                 evaluation = ast.literal_eval(evaluation)
+                print(evaluation)
                 return render_template('underworld_realm/challenge_grade.html', title='Challenge Result', 
                                         boss_name=boss_name, 
                                         boss_description=boss_description,

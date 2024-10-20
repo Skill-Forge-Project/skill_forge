@@ -1,7 +1,7 @@
 var h3 = document.getElementsByTagName("h3");
 var challengeId = document.getElementById("challenge_id").value;
 
-var sec         = 15,
+var sec         =  1800,
     countDiv    = document.getElementById("timer"),
     secpass,
     countDown   = setInterval(function () {
