@@ -41,8 +41,8 @@
                 <div class="col-span-4 sm:col-span-3">
                     <div class="shadow rounded-lg p-6 user_profile_info left_pane">
                         <div class="flex flex-col items-center">
-                            <img class="inline-block w-48 rounded-full user_avatar"
-                                src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}"
+                            <img class="inline-block w-48 h-48 rounded-full user_avatar"
+                                src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='../static/images/achievements-icons/General/quest_approved.png') }}"
                                 id="avatarPreview" alt="Avatar">
                             <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
                             <p class="text-l user_profile_info name">{{user.first_name}} {{user.last_name}}</p>
@@ -336,7 +336,6 @@
                                 alt="Failed" width="15" height="15">
                             {% endif %}
                           </td>
-
                       </tr>
                       {% endfor %}
                   </tbody>
