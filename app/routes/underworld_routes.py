@@ -1,8 +1,11 @@
-import os, requests, ast, re
-from flask import Blueprint, render_template, redirect, url_for, abort, request, flash, jsonify
+import os, requests, string, re, random
+from datetime import datetime
+from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
 from flask_login import login_required, current_user
 from app.forms import BossResponseForm
+from app.models import Achievement, UserAchievement
 # Import MongoDB transactions functions
+from app.database.db_init import db
 from app.database.mongodb_transactions import mongo_transaction
 
 
@@ -192,8 +195,60 @@ def submit_boss_challenge():
             if response.ok:
                 # evaluation = response.json()
                 evaluation = response.json()
-                # Convert string to a dictionary
-                evaluation = ast.literal_eval(evaluation)
+                print(evaluation["underworld_achievement"])
+                print(evaluation["boss_achievement"])
+                
+                
+                # Check if user has completed the Underworld Conqueror achievement
+                if evaluation["underworld_achievement"] == True:
+                    try:
+                        # Generate a new unique achievement ID
+                        achievement_id = Achievement.query.filter(Achievement.achievement_name == "Underworld Conqueror").first().achievement_id
+                        suffix_length = 16
+                        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                        prefix = 'USR-ACHV-'
+                        user_achievement_id = f"{prefix}{suffix}"
+                        while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                        # If it exists, generate a new submission_id
+                            suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                            user_achievement_id = f"{prefix}{suffix}"
+                        # Give user's achievement
+                        user_achievement = UserAchievement(
+                                            user_achievement_id=user_achievement_id,
+                                            user_id=current_user.user_id,
+                                            username=current_user.username,
+                                            achievement_id=achievement_id,
+                                            earned_on=datetime.now())
+                        db.session.add(user_achievement)
+                        db.session.commit()
+                    except Exception as e:
+                        print(f"Error giving achievement: {e}.")
+                
+                # Check if user has completed the Underworld specific boss achievement
+                if evaluation["boss_achievement"] == True:
+                    try:
+                        # Generate a new unique achievement ID
+                        achievement_id = Achievement.query.filter(Achievement.achievement_description.like(f'%{boss_name}%')).first().achievement_id
+                        suffix_length = 16
+                        suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                        prefix = 'USR-ACHV-'
+                        user_achievement_id = f"{prefix}{suffix}"
+                        while UserAchievement.query.filter_by(user_achievement_id=user_achievement_id).first():
+                        # If it exists, generate a new submission_id
+                            suffix = ''.join(random.choices(string.digits, k=suffix_length))
+                            user_achievement_id = f"{prefix}{suffix}"
+                        # Give user's achievement
+                        user_achievement = UserAchievement(
+                                            user_achievement_id=user_achievement_id,
+                                            user_id=current_user.user_id,
+                                            username=current_user.username,
+                                            achievement_id=achievement_id,
+                                            earned_on=datetime.now())
+                        db.session.add(user_achievement)
+                        db.session.commit()
+                    except Exception as e:
+                        print(f"Error giving achievement: {e}.")
+                
                 return render_template('underworld_realm/challenge_grade.html', title='Challenge Result', 
                                         boss_name=boss_name, 
                                         boss_description=boss_description,
@@ -201,13 +256,13 @@ def submit_boss_challenge():
                                         boss_language=boss_language,
                                         boss_specialty=boss_specialty,
                                         boss_difficulty=boss_difficulty,
-                                        evaluation=evaluation['evaluation'],
-                                        feedback=evaluation['feedback'],
-                                        xp_points=evaluation['xp_points'],)
+                                        evaluation=evaluation["evaluation"],
+                                        feedback=evaluation["feedback"],
+                                        xp_points=evaluation["xp_points"],)
             else:
-                print(f"Error submitting challenge: {response.status_code}")
+                print(f"Error submitting challenge: {response.status_code} for challenge ID: {challenge_id}")
                 abort(404)
         except requests.exceptions.RequestException as e:
-            print(f"Request failed: {e}")
+            print(f"Request failed: {e}. Challenge ID: {challenge_id}")
             abort(404)
     return redirect(url_for('undwrld_bp.open_underworld'))
