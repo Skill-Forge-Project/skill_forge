@@ -51,7 +51,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('', render_kw={'placeholder': 'Username'}, validators=[DataRequired(message="Username is required"), Length(min=4, max=25, message="Username must be between 4 and 25 characters.")])
     first_name = StringField('', render_kw={'placeholder': 'First name'}, validators=[DataRequired(message="First name is required"), Length(min=1, max=30, message="First name must be between 1 and 30 characters.")])
     last_name = StringField('', render_kw={'placeholder': 'Last name'}, validators=[DataRequired(message="Last name is required"), Length(min=1, max=30, message="Last name must be between 1 and 30 characters.")])
-    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(message="Email address is required"), Email(message="Invalid emal address"), latin_characters_only])   
+    email = StringField('', render_kw={'placeholder': 'Email address'}, validators=[DataRequired(message="Email address is required"), Email(message="Invalid email address"), latin_characters_only])   
     password = PasswordField('', validators=[
         DataRequired(message="Password is required"),
         Length(min=10, max=50, message='Password must be between 10 and 50 characters.'),
