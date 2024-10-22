@@ -67,7 +67,6 @@ def update_challenge_status():
         print(f"Request failed: {e}")
         abort(404)
 
-
 # Reload the Underworld Realm if the challenge timer is over
 @undwrld_bp.route('/challenge_timer_over', methods=['GET','POST'])
 @login_required
@@ -195,10 +194,10 @@ def submit_boss_challenge():
             if response.ok:
                 # evaluation = response.json()
                 evaluation = response.json()
-                print(evaluation["underworld_achievement"])
-                print(evaluation["boss_achievement"])
-                
-                
+
+                # Update user's XP points
+                current_user.xp_points += evaluation["xp_points"]
+                            
                 # Check if user has completed the Underworld Conqueror achievement
                 if evaluation["underworld_achievement"] == True:
                     try:
