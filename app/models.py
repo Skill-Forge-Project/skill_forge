@@ -11,6 +11,10 @@ from app.database.db_init import db
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
+# Set the default avatar
+def set_default_avatar():
+    with open('app/static/images/achievements-icons/General/quest_approved.png', 'rb') as f:
+        return f.read()
 
 ########### Define the User model ###########
 class User(UserMixin, db.Model):
@@ -24,7 +28,7 @@ class User(UserMixin, db.Model):
     xp = db.Column(db.Integer, default=0, nullable=False)
     level = db.Column(db.Integer, default=1, nullable=False)
     rank = db.Column(db.String(30), default="Neophyte")
-    avatar = db.Column(db.LargeBinary, default=None)
+    avatar = db.Column(db.LargeBinary, default=set_default_avatar, nullable=False)
     date_registered = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
