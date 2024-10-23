@@ -1,11 +1,11 @@
-# Use the base image containing Python 3.8, NodeJS, npm, mono-complete compiler and java compiler
+# Python3.12.7 Base Image
 FROM python:3.12.7
 
 # Image Labels. Update values for each build
 LABEL Name="Skill-Forge"
-LABEL Version="1.4.6"
+LABEL Version="1.4.7"
 LABEL Release="public"
-LABEL ReleaseDate="20.10.2024"
+LABEL ReleaseDate="23.10.2024"
 LABEL Description="Skill Forge is a open-source platform for learning and practicing programming languages."
 LABEL Maintainer="Aleksandar Karastoyanov <karastoqnov.alexadar@gmail.com>"
 LABEL License="GNU GPL v3.0 license"
