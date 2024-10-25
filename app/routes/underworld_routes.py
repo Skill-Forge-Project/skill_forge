@@ -196,7 +196,7 @@ def submit_boss_challenge():
                 evaluation = response.json()
 
                 # Update user's XP points
-                current_user.xp_points += int(evaluation["xp_points"])
+                current_user.xp += int(evaluation["xp_points"])
                             
                 # Check if user has completed the Underworld Conqueror achievement
                 if evaluation["underworld_achievement"] == True:
