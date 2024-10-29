@@ -1,4 +1,4 @@
-import os, requests, string, re, random
+import os, requests, string, re, random, json
 from datetime import datetime
 from flask import Blueprint, render_template, redirect, url_for, abort, request, flash
 from flask_login import login_required, current_user
@@ -197,6 +197,17 @@ def submit_boss_challenge():
 
                 # Update user's XP points
                 current_user.xp += int(evaluation["xp_points"])
+                
+                # !!!!!!!!!!!!!!!!! Update the user XP level and rank (NOT YET TESTED FOR UNDERWORLD) !!!!!!!!!!!!!!!!!
+                with open(os.path.join('app/static/configs/levels.json'), 'r') as levels_file:
+                    leveling_data = json.load(levels_file)
+                for level in leveling_data:
+                    for level_name, level_stats in level.items():
+                        if int(level_stats['min_xp']) <= int(current_user.xp) <= int(level_stats['max_xp']):
+                            current_user.level = level_stats['level']
+                            current_user.rank = level_name
+                            db.session.commit()        
+                            break
                             
                 # Check if user has completed the Underworld Conqueror achievement
                 if evaluation["underworld_achievement"] == True:
