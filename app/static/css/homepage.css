@@ -251,35 +251,6 @@ button {
     }
 }
 
-/* Underworld Section */
-.underworld_button {
-    font-family: 'JetBrainsMonoRegular', sans-serif;
-    font-size: 18px;
-    background: linear-gradient(#141e30, #243b55);
-    color: #03e9f4;
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
-    border-radius: 5px;
-    margin-left: 5px;
-    padding: 5px;
-    height: 40px;
-    border: 0px;
-    vertical-align: middle;
-    width: auto;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.underworld_button:hover {
-    background: #a51b16;
-    color: #fff;
-    box-shadow: 0 0 5px #ff0000ba,
-                0 0 25px #ff0000ba,
-                0 0 50px #ff0000ba,
-                0 0 100px #ff0000ba;
-    text-decoration: none;
-}
-
 /* Guild Section */
 .guild_button {
     font-family: 'JetBrainsMonoBold', sans-serif !important;
