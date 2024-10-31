@@ -259,6 +259,6 @@ class CreateGuildForm(FlaskForm):
 ########### Boss Question Reponse Form ###########
 class BossResponseForm(FlaskForm):
     boss_question = HiddenField('Boss Question')
-    user_answer = TextAreaField('Response', validators=[DataRequired()], render_kw={'placeholder': 'REQUIRED: Provide your answer'})
-    code_answer = TextAreaField('Code Response', validators=[Optional()], render_kw={'placeholder': 'OPTIONAL: Provide your code answer'})
+    user_answer = TextAreaField('Response', validators=[Optional()], render_kw={'placeholder': 'Provide your answer'})
+    code_answer = TextAreaField('Code Response', validators=[Optional()], render_kw={'placeholder': 'Provide your code snippet'})
     submit = SubmitField('Submit Response')
