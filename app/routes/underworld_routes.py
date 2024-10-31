@@ -83,6 +83,13 @@ def challenge_timer_over():
         response = requests.post(update_status_url, json={'challenge_id': challenge_id})
         if response.ok:
             flash('Your time is over! You have failed the challenge!\nTrain you skills and try again!', 'error')
+            
+            # MongoDB Log Transaction
+            try:
+                mongo_transaction('underworld_time_over_challenge', action=f'User {current_user.username} failed a challenge due to time over. Challenge ID: {challenge_id}',)
+            except Exception as e:
+                print(f"Error while inserting log entry in underworld_time_over_challenge collection for user: {current_user.username}, Error: {e}")
+                
             return redirect(url_for('undwrld_bp.open_underworld'))
         else:
             print(f"Error updating challenge status: {response.status_code}")
@@ -140,6 +147,15 @@ def challenge_boss(boss_id):
                 question_language = 'javascript'
             elif language == 'C#':
                 question_language = 'csharp'
+            
+            # MongoDB Log Transaction
+            try:
+                mongo_transaction('underworld_challenge', action=f'User {current_user.username} challenged boss {boss["boss_name"]}. Challenge ID: {challenge_id}', 
+                                user_id=current_user.user_id, 
+                                username=current_user.username,
+                                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            except Exception as e:
+                print(f"Error while inserting log entry in underworld_challenge collection for user: {current_user.username}, Error: {e}")
                 
             return render_template('underworld_realm/challenge_boss.html', 
                                    title='Challenge Boss', 
@@ -153,7 +169,6 @@ def challenge_boss(boss_id):
             boss = {}
             print(f"Error fetching boss details: {response.status_code}")
             abort(404)
-        return boss
     except requests.exceptions.RequestException as e:
         boss = {}
         abort(404)
@@ -258,6 +273,15 @@ def submit_boss_challenge():
                         db.session.commit()
                     except Exception as e:
                         print(f"Error giving achievement: {e}.")
+                    
+                # MongoDB Log transaction
+                try:
+                    mongo_transaction('underworld_eval_challenge', action=f'User {current_user.username} finished challenge for boss {boss_name}. Challenge ID: {challenge_id}', 
+                                    user_id=current_user.user_id, 
+                                    username=current_user.username,
+                                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+                except Exception as e:
+                    print(f"Error while inserting log entry in underworld_eval_challenge collection for user: {current_user.username}, Error: {e}")
                 
                 return render_template('underworld_realm/challenge_grade.html', title='Challenge Result', 
                                         boss_name=boss_name, 
