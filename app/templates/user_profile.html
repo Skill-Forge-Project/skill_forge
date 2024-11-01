@@ -282,8 +282,8 @@
                             <td class="px-2 py-2"><a style="color:#569deb" href="{{ url_for('usq.open_submited_quest_as_user', quest_id=submited_quest.quest_id) }}">{{ submited_quest.quest_name }}</a></td>
                             <td class="px-2 py-2">{{ submited_quest.language }}</td>
                             <td class="px-2 py-2">{{ submited_quest.difficulty }}</td>
-                            <td class="px-2 py-2">{{ submited_quest.date_added.strftime('%d-%m-%Y %H:%M') }}</td>
-                            <td class="px-2 py-2">{{ submited_quest.last_modified.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td class="px-2 py-2">{{ submited_quest.date_added.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td class="px-2 py-2">{{ submited_quest.last_modified.strftime('%Y-%m-%d %H:%M') }}</td>
                             <td class="px-2 py-2 labels {{ submited_quest.status }}">{{ submited_quest.status}}</td>
                         </tr>
                         {% endfor %}
@@ -324,7 +324,7 @@
                           <td class="text-xs px-2 py-2"><a style="color:#569deb" href="{{ url_for('quests.open_curr_quest', quest_id=solved_quest.coding_quest.quest_id) }}">{{ solved_quest.coding_quest.quest_name  }}</a></td>
                           <td class="text-xs px-2 py-2">{{ solved_quest.coding_quest.language }}</td>
                           <td class="text-xs px-2 py-2">{{ solved_quest.coding_quest.difficulty }}</td>
-                          <td class="text-xs px-2 py-2">{{ solved_quest.submission_date.strftime('%d-%m-%Y %H:%M') }}</td>
+                          <td class="text-xs px-2 py-2">{{ solved_quest.submission_date.strftime('%Y-%m-%d %H:%M') }}</td>
                           <td class="text-xs px-2 py-2">{{ solved_quest.successful_tests }}</td>
                           <td class="text-xs px-2 py-2">{{ solved_quest.unsuccessful_tests }}</td>
                           <td class="text-xs px-2 py-2">
