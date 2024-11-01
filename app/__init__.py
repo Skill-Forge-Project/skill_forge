@@ -37,7 +37,7 @@ def create_app():
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1, x_prefix=1)
     
     # Import routes
-    from app.routes import routes, user_routes, user_submited_solutions, quests_routes, user_submit_quest_routes, guild_routes, ranklist_board
+    from app.routes import routes, user_routes, user_submited_solutions, quests_routes, user_submit_quest_routes, guild_routes, ranklist_board, underworld_routes
     app.register_blueprint(routes.bp)
     app.register_blueprint(user_routes.bp_usr)
     app.register_blueprint(user_submit_quest_routes.bp_usq)
@@ -45,6 +45,7 @@ def create_app():
     app.register_blueprint(quests_routes.bp_qst)
     app.register_blueprint(guild_routes.bp_guild)
     app.register_blueprint(ranklist_board.ranklist)
+    app.register_blueprint(underworld_routes.undwrld_bp)
     
     # Import websockets
     # Define ping timeout and ping interval (in seconds)

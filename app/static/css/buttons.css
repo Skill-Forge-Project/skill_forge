@@ -39,6 +39,25 @@
                 0 0 100px #03e9f4;
 }
 
+/* Underworld Button */
+.btn.underworld-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    margin: 0px;
+    width: 250px;
+}
+
+.btn.underworld-btn:hover {
+    background: #a51b16 !important;
+    color: #fff !important;
+    box-shadow: 0 0 5px #ff0000ba,
+                0 0 25px #ff0000ba,
+                0 0 50px #ff0000ba,
+                0 0 100px #ff0000ba;
+    text-decoration: none;
+}
+
+
 /* Python button styles */
 .btn.python-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge Evaluation - {{ boss_name }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/anvil.png') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.22.2/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/underworld_realm/underworld.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/underworld_realm/challenge_boss.css') }}">
+  </head>
+  <body>
+    <!-- Include Navbar template --> {% include 'navbar.html' %} <div class="container mx-auto py-8">
+      <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+        <div class="col-span-4 sm:col-span-3">
+          <!-- Boss details -->
+          <div class="bosses-container shadow rounded-lg p-6">
+            <div class="flex flex-col items-center">
+              <img src="{{ url_for('static', filename='images/underworld_realm/bosses/' + boss_name + '.png') }}" alt="{{ boss_name }}" class="w-64 rounded-2xl mx-auto mb-4">
+              <h1 class=" boss-name text-xl font-bold mb-0">{{ boss_name }}</h1>
+              <p class="boss-title text-gray-700 m-0">{{ boss_title }}</p>
+              <p class="boss-descr mt-2 text-center">
+                <strong>{{ boss_description }}</strong>
+              </p>
+            </div>
+            <hr class="my-6 border-t border-gray-300">
+            <div class="flex flex-col">
+              <span class="boss-descr text-gray-700 uppercase font-bold tracking-wider mb-2">Boss Stats</span>
+              <ul>
+                <p class="boss-descr">Language: <strong>{{ boss_language }}</strong></p>
+                <p class="boss-descr">Specialty: <strong>{{ boss_specialty }}</strong></p>
+                <p class="boss-descr">Difficulty: <strong>{{ boss_difficulty }}</strong></p>
+              </ul>
+            </div>
+          </div>
+        </div>
+          <!-- Boss evaluation section -->
+          <div class="col-span-4 sm:col-span-9">
+            <div class="bosses-container shadow rounded-lg p-6">
+              <h2 class="boss-descr challenge font-bold mb-1">Challenge Evaluation</h2>
+                <!-- Conditional color based on evaluation -->
+                <p class="boss-descr challenge eval font-bold mb-1
+                  {% if evaluation == 'Poor' %}
+                      text-red-500 
+                  {% elif evaluation == 'Satisfactory' %}
+                      text-yellow-500
+                  {% elif evaluation == 'Good' %}
+                      text-green-500
+                  {% elif evaluation == 'Excellent' %}
+                      text-blue-500
+                  {% endif %}">
+                    You did: {{ evaluation }}
+                </p>
+                <p class="boss-descr challenge eval font-bold mb-1">You have earned: {{ xp_points }} XP</p>
+            </div>
+            <div class="bosses-container shadow rounded-lg p-6 mt-3">
+              <p class="boss-descr challenge eval font-bold text-justify mb-1">{{ feedback }}</p>
+            </div>
+          </div>
+      </div>
+      <footer>
+        <!-- Include Footer template --> {% include 'footer.html' %}
+      </footer>
+  </body>
+</html>
