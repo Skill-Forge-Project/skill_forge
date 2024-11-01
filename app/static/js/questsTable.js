@@ -7,28 +7,37 @@
 
 $(function () {
   $(document).ready(function () {
-      $('#edit_quest_table').DataTable();
+      $('#edit_quest_table').DataTable({
+        "order": [[ 5, "desc" ]]
+      });
+
   });
 });
 
 // Table for user submited quests in the admin panel
 $(function () {
   $(document).ready(function () {
-      $('#submited_quests_table').DataTable();
+      $('#submited_quests_table').DataTable({
+        "order": [[ 5, "desc" ]]
+      });
   });
 });
 
 // Table for reported quests in the admin panel
 $(function () {
   $(document).ready(function () {
-      $('#reported_quests_table').DataTable();
+      $('#reported_quests_table').DataTable({
+        "order": [[ 5, "desc" ]]
+      });
   });
 });
 
 // Table for Skill Forge Logs
 $(function () {
   $(document).ready(function () {
-      $('#skill_forge_logs').DataTable();
+      $('#skill_forge_logs').DataTable({
+        "order": [[ 6, "desc" ]]
+      });
   });
 });
 
@@ -61,7 +70,9 @@ $(function () {
 // Table for editing users from admin panel
 $(function () {
   $(document).ready(function () {
-    $('#mange_users_table').DataTable();
+    $('#mange_users_table').DataTable({
+      "order": [[ 3, "desc" ]]
+    });
   });
 });
 
