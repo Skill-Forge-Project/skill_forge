@@ -1,6 +1,6 @@
-import random, string, base64
+import random, string, base64, json
 from datetime import datetime
-from flask import Blueprint, render_template, redirect, url_for, flash, current_app, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
 from flask_login import login_required, current_user
 # Import the database instance
 from app.database.db_init import db
@@ -9,7 +9,7 @@ from app.database.mongodb_transactions import mongo_transaction
 # Import the forms and models
 from app.models import SubmitedQuest, Quest, User, Achievement, UserAchievement
 # Import the forms
-from app.forms import QuestSubmissionForm, QuestApprovalForm, EditQuestForm
+from app.forms import QuestSubmissionForm, QuestApprovalForm
 # Import admin_required decorator
 from app.user_permission import admin_required
 # Import the mail functions
@@ -27,12 +27,12 @@ def open_user_submit_quest():
     return render_template('user_submit_quest.html', form=form)
 
 
-# # Open User Submited Quest for editing from the Admin Panel
+#  Open User Submited Quest for editing from the Admin Panel
 @bp_usq.route('/open_submited_quest/<quest_id>', methods=['GET'])
 @login_required
 @admin_required
 def open_submited_quest(quest_id):
-    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first_or_404()
     user_avatar = base64.b64encode(current_user.avatar).decode('utf-8')
     form = QuestApprovalForm()
     form.submited_quest_id.data = quest_id
@@ -255,7 +255,7 @@ def approve_submited_quest(quest_id):
 @login_required
 def post_comment():
     submited_quest_id = request.form.get('submited_quest_id')
-    all_comments = eval(request.form.get('submited_quest_comments'))
+    all_comments = json.loads(request.form.get('submited_quest_comments'))
     comment = request.form.get('submited_quest_comment')
     user_id = current_user.user_id
     user_role = current_user.user_role
@@ -285,24 +285,36 @@ def post_comment():
                            user_role=user_role, 
                            user_id=user_id))
     
-
 # Route to open submited quest for editing as regular user
 @bp_usq.route('/edit_submited_quest/<quest_id>', methods=['GET'])
 @login_required
 def open_submited_quest_as_user(quest_id):
-    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
+    submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first_or_404()
+    
+    # Throw 404 error if the user is not the author of the quest OR the user is not an admin
+    if current_user.username != submited_quest.quest_author and current_user.user_role != 'Admin':
+        abort(404)
+    
     form = QuestApprovalForm()
-    form.submited_quest_id.data = quest_id
-    form.submited_quest_name.data = submited_quest.quest_name
-    form.submited_quest_language.data = submited_quest.language
-    form.submited_quest_difficulty.data = submited_quest.difficulty
-    form.submited_quest_author.data = submited_quest.quest_author
-    form.submited_quest_date_added.data = submited_quest.date_added
-    form.submited_quest_condition.data = submited_quest.condition
-    form.submited_function_template.data = submited_quest.function_template
-    form.submited_quest_unitests.data = submited_quest.unit_tests
-    form.submited_quest_inputs.data = submited_quest.test_inputs
-    form.submited_quest_outputs.data = submited_quest.test_outputs
+    
+    try:
+        if form.validate_on_submit():
+            form.submited_quest_id.data = quest_id
+            form.submited_quest_name.data = submited_quest.quest_name
+            form.submited_quest_language.data = submited_quest.language
+            form.submited_quest_difficulty.data = submited_quest.difficulty
+            form.submited_quest_author.data = submited_quest.quest_author
+            form.submited_quest_date_added.data = submited_quest.date_added
+            form.submited_quest_condition.data = submited_quest.condition
+            form.submited_function_template.data = submited_quest.function_template
+            form.submited_quest_unitests.data = submited_quest.unit_tests
+            form.submited_quest_inputs.data = submited_quest.test_inputs
+            form.submited_quest_outputs.data = submited_quest.test_outputs
+    except:
+        flash('Quest update failed! Check the fields and try again', 'danger')
+        return render_template('edit_submited_quest_as_user.html', 
+                               submited_quest=submited_quest,
+                               form=form)
     
     return render_template('edit_submited_quest_as_user.html', 
                            submited_quest=submited_quest,
@@ -315,20 +327,31 @@ def update_submited_quest(quest_id):
     quest_id = form.submited_quest_id.data
     submited_quest = SubmitedQuest.query.filter_by(quest_id=quest_id).first()
     
-    if form.validate_on_submit():
-        submited_quest.quest_name = form.submited_quest_name.data
-        submited_quest.language = form.submited_quest_language.data
-        submited_quest.difficulty = form.submited_quest_difficulty.data
-        submited_quest.condition = form.submited_quest_condition.data
-        submited_quest.function_template = form.submited_function_template.data
-        submited_quest.unit_tests = form.submited_quest_unitests.data
-        submited_quest.test_inputs = form.submited_quest_inputs.data
-        submited_quest.test_outputs = form.submited_quest_outputs.data
-        submited_quest.last_modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        db.session.commit()
-        flash('Quest updated successfully!', 'success')
-        return redirect(url_for('usq.open_submited_quest_as_user', quest_id=quest_id))
+    # Check if the quest is pending
+    if submited_quest.status != 'Pending':
+        flash('You can only edit pending quests!', 'danger')
+        return redirect(url_for('main.main_page'))
+    
+    try:
+        if form.validate_on_submit():
+            submited_quest.quest_name = form.submited_quest_name.data
+            submited_quest.language = form.submited_quest_language.data
+            submited_quest.difficulty = form.submited_quest_difficulty.data
+            submited_quest.condition = form.submited_quest_condition.data
+            submited_quest.function_template = form.submited_function_template.data
+            submited_quest.unit_tests = form.submited_quest_unitests.data
+            submited_quest.test_inputs = form.submited_quest_inputs.data
+            submited_quest.test_outputs = form.submited_quest_outputs.data
+            submited_quest.last_modified = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            db.session.commit()
+            flash('Quest updated successfully!', 'success')
+            return redirect(url_for('usq.open_submited_quest_as_user', quest_id=quest_id))
+    except:
+        flash('Quest update failed! Check the fields and try again', 'danger')
+        return render_template('edit_submited_quest_as_user.html', 
+                               submited_quest=submited_quest,
+                               form=form)
     else:
         flash('Quest update failed! Check the fields and try again', 'danger')
         return render_template('edit_submited_quest_as_user.html', 

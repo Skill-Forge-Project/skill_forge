@@ -31,18 +31,18 @@
     <div>
         <div class="container mx-auto py-8 user_profile_info">
             {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-            {% endif %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
             {% endwith %}
             <div class="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
                 <div class="col-span-4 sm:col-span-3">
                     <div class="shadow rounded-lg p-6 user_profile_info left_pane">
                         <div class="flex flex-col items-center">
-                            <img class="inline-block w-48 rounded-full user_avatar"
-                                src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='images/anvil.png') }}"
+                            <img class="inline-block w-48 h-48 rounded-full user_avatar"
+                                src="{{ user.avatar and 'data:image/jpeg;base64,' + avatar_base64 or url_for('static', filename='../static/images/achievements-icons/General/quest_approved.png') }}"
                                 id="avatarPreview" alt="Avatar">
                             <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
                             <p class="text-l user_profile_info name">{{user.first_name}} {{user.last_name}}</p>
@@ -80,7 +80,7 @@
                             {{ form.about_me (class="text-gray-900 rounded-lg 
                             focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
                             dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                            user_profile_info about_me_field", placeholder="Share your story or interests. What makes you unique?", required=True, rows=10) }}
+                            user_profile_info about_me_field", placeholder="Share your story or interests. What makes you unique?", rows=7) }}
                             <div class="grid gap-6 mb-6 md:grid-cols-2">
                                 <div>
                                     <label for="first_name" class="block mb-2 font-medium text-gray-900 dark:text-white">First name</label>
@@ -336,7 +336,6 @@
                                 alt="Failed" width="15" height="15">
                             {% endif %}
                           </td>
-
                       </tr>
                       {% endfor %}
                   </tbody>

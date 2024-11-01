@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from app.models import Quest, ReportedQuest, User, SubmitedSolution, UserAchievement, Achievement, Comment
 from app.forms import QuestForm, PublishCommentForm, EditQuestForm, EditReportedQuestForm
 # Import code runners
-from app.code_runners import run_python, run_javascript, run_java, run_csharp
+from app.code_runners import run_javascript
 from app.code_runners.piston_api import code_runner
 # Import the database instance
 from app.database.db_init import db
@@ -152,10 +152,10 @@ def delete_comment(comment_id):
         flash('Comment deletion failed!', 'danger')
         return redirect(url_for('quests.open_curr_quest', quest_id=comment.quest_id))
 
-
-
-# Handle quest edit from the Admin Panel
+# Open quest edit from the Admin Panel
 @bp_qst.route('/edit_quest', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def edit_quest_db():
     form = EditQuestForm()
     if request.method == 'POST':
@@ -264,7 +264,6 @@ def edit_reported_quest():
             flash('Form validation failed!', 'danger')
     return render_template('edit_quest.html', form=form)
 
-
 # Open Quest for editing from the Admin Panel
 @bp_qst.route('/edit_quest/<quest_id>', methods=['GET'])
 @login_required
@@ -288,7 +287,6 @@ def open_edit_quest(quest_id):
         flash('Quest not found!', 'danger')
         return redirect(url_for('usr.open_admin_panel')), 404
 
-
 # Open Reported Quest for editing from the Admin Panel
 @bp_qst.route('/edit_reported_quest/<report_id>')
 @login_required
@@ -311,7 +309,6 @@ def open_edit_reported_quest(report_id):
     else:
         flash('Quest not found!', 'danger')
         return redirect(url_for('usr.open_admin_panel')), 404
-
 
 # Route to handle `Report Quest` Button
 @bp_qst.route('/report_quest/<curr_quest_id>')
@@ -357,7 +354,6 @@ def report_quest(curr_quest_id, report_reason='no reason'):
     flash('Quest reported successfully! Administrator will review your report and will take actions shortly.', 'success')
     return redirect(url_for('main.main_page', quest_id=curr_quest_id))
 
-
 # Redirect to the table with all tasks. Change from template to real page!!!! 
 @bp_qst.route('/quests/<language>', methods=['GET'])
 @login_required
@@ -377,7 +373,7 @@ def open_quests_table(language):
     
     return render_template('quest_table.html', quests=all_quests, users=all_users, solved_quests=solved_quests, language=language) 
 
-# Open Quest for submitting. Change from template to real page!!!!
+# Open a specific quest
 @bp_qst.route('/quest/<quest_id>', methods=['GET'])
 @login_required
 def open_curr_quest(quest_id):
@@ -396,7 +392,7 @@ def open_curr_quest(quest_id):
                            user_role=user_role,
                            form=quest_post_form)
 
-# Route to handle solution submission
+# Submit Quest Solution
 @bp_qst.route('/submit-solution', methods=['POST'])
 @login_required
 def submit_solution():
@@ -409,11 +405,13 @@ def submit_solution():
     current_quest_difficulty = request.form.get('quest_difficulty')
     current_quest_unit_tests = request.form.get('unit_tests')
     
+    quest = Quest.query.filter_by(quest_id=current_quest_id).first()
+    
     # Handle the simple quests testing
     if current_quest_type == 'Basic':
         user_code = request.form.get('user_code')
-        quest_inputs = [eval(x) for x in request.form.get('quest_inputs').split("\r\n")]
-        quest_outputs = [eval(x) for x in request.form.get('quest_outputs').split("\r\n")]
+        quest_inputs = [eval(x) for x in quest.test_inputs.split("\r\n")]
+        quest_outputs = [eval(x) for x in  quest.test_outputs.split("\r\n")]
         # Handle the code runner exection based on the Quest language
         if current_quest_language == 'Python':
             successful_tests, unsuccessful_tests, message, zero_tests, zero_tests_outputs, all_results  = code_runner.run_code(user_code, quest_inputs, quest_outputs, user_id, username, current_quest_id, 'py')

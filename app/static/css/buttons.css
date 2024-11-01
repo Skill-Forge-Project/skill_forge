@@ -23,6 +23,22 @@
     width: 200px;
 }
 
+/* Ranklist button styles */
+.btn.ranklist-btn {
+    font-family: 'JetBrainsMonoRegular', sans-serif;
+    color: #03e9f4;
+    width: 250px;
+}
+
+.btn.ranklist-btn:hover {
+    color: rgba(0, 0, 0, .5) !important;
+    background: #03e9f4 !important;
+    box-shadow: 0 0 5px #03e9f4,
+                0 0 25px #03e9f4,
+                0 0 50px #03e9f4,
+                0 0 100px #03e9f4;
+}
+
 /* Underworld Button */
 .btn.underworld-btn {
     font-family: 'JetBrainsMonoRegular', sans-serif;

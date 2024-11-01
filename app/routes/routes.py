@@ -6,6 +6,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.mailtrap import send_reset_email, send_welcome_mail, send_contact_email
 # Import the database instance
 from app.database.db_init import db
+from sqlalchemy import func
 from app import bcrypt
 # Import the forms and models
 from app.forms import LoginForm, RegistrationForm, EmailResetForm, PasswordResetForm, ContactForm
@@ -24,7 +25,11 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter((User.username==form.username.data) | (User.email==form.username.data)).first()
+        # Convert the input (username or email) to lowercase
+        input_lower = form.username.data.lower()
+        
+        # Check for a user by username or email (case-insensitive check for email)
+        user = User.query.filter((User.username == input_lower) | (func.lower(User.email) == input_lower)).first()
         if user:
             if not user.is_banned:
                 if bcrypt.check_password_hash(user.password, form.password.data):
@@ -44,7 +49,7 @@ def login():
     return render_template('index.html', form=form)
 
 # Route to handle the logout functionality
-@bp.route('/logout')
+@bp.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     user = current_user
@@ -56,20 +61,24 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
 
-
 # Handle the registration route
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Convert the email and the username to lowercase
+        email_lower = form.email.data.lower()
+        username_lower = form.username.data.lower()
         # Check if the email or username is already in use
-        existing_user = User.query.filter((User.email == form.email.data) | (User.username == form.username.data)).first()
+        existing_user = User.query.filter((User.email == email_lower) | (User.username == username_lower)).first()
+        
         if existing_user:
             flash('Email or username already in use', 'error')
             return render_template('register.html', form=form)
+        
         # Create a new user
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        new_user = User(email=form.email.data, username=form.username.data, 
+        new_user = User(email=email_lower, username=username_lower, 
                         first_name=form.first_name.data, last_name=form.last_name.data, 
                         password=hashed_password)
         
@@ -90,7 +99,7 @@ def register():
             
         db.session.add(new_user)
         db.session.commit()
-        send_welcome_mail(form.email.data, form.username.data)
+        send_welcome_mail(email_lower, username_lower)
         flash('Your account has been created! You are now able to log in.', 'success')
         return render_template('index.html', form=LoginForm())
     else:
@@ -99,7 +108,6 @@ def register():
                 for error in errors:
                     flash(f"{getattr(form, field).label.text} - {error}", 'error')
     return render_template('register.html', form=form)
-
 
 ########### Routes handling password reset functionality ###########
 # Route to open the forgot password form
@@ -112,7 +120,7 @@ def open_forgot_password():
 def send_email_token():
     form = EmailResetForm()
     if form.validate_on_submit():
-        email = form.email_address.data
+        email = form.email_address.data.lower()
         current_user = User.query.filter_by(email=email).first()
         all_token = ResetToken.query.filter_by(user_email=email).first()
         
@@ -211,9 +219,9 @@ def update_new_password(form=None):
     # Pass necessary parameters to the template in case of errors
     return render_template('reset_password.html', form=form, token=form.token.data, user_id=form.user_id.data, username=form.username.data, expiration_time=form.expiration_time.data)
 
-########### Routes handling main apge ###########
+########### Routes handling main page ###########
 # Open the main page
-@bp.route('/home')
+@bp.route('/home', methods=['GET'])
 @login_required
 def main_page():
     user_count = User.query.count()
@@ -230,19 +238,19 @@ def main_page():
                            solutions_count=solutions_count)
 
 # Check the number of online users. Function used by the websockets and client side script.
-@bp.route('/get_online_users')
+@bp.route('/get_online_users', methods=['GET'])
 def get_online_users():
     online_users = User.query.filter_by(user_online_status='Online').count()
     return jsonify({'online_users': online_users})
 
 # Route to open the about page
-@bp.route('/about')
+@bp.route('/about', methods=['GET'])
 @login_required
 def about():
     return render_template('about.html')
 
 # Route to open the contact page
-@bp.route('/contact_us')
+@bp.route('/contact_us', methods=['GET'])
 @login_required
 def contact():
     contact_form = ContactForm()
@@ -254,15 +262,25 @@ def contact():
 @login_required
 def send_message():
     contact_form = ContactForm()
-    user = contact_form.username.data
-    email = contact_form.email.data
-    subject = contact_form.subject.data
-    message = contact_form.message.data
+    
     if contact_form.validate_on_submit():
+        # Extract data only after validation succeeds
+        user = contact_form.username.data
+        email = contact_form.email.data
+        subject = contact_form.subject.data
+        message = contact_form.message.data
+
+        # Call function to send the email
         send_contact_email(user, email, subject, message)
+
+        # Success feedback
         flash('Thank you for contacting us. We will get back to you as soon as possible.', 'success')
         return redirect(url_for('main.contact'))
+    
+    # Error handling if form is not valid
     flash('Error during sending the email.', 'error')
-    for error in contact_form.errors:
-        flash(f'{contact_form.errors[error][0]}', 'error')
+    for field, errors in contact_form.errors.items():
+        for error in errors:
+            flash(f'{field}: {error}', 'error')
+        
     return render_template('contact.html', form=contact_form)

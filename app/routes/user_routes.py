@@ -1,7 +1,9 @@
 import base64, json, random, string, io
 from datetime import datetime
+from bson import ObjectId
 from flask import Blueprint, redirect, url_for, request, flash, render_template, abort, send_file
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from sqlalchemy.orm import joinedload
 # Import the forms and models
 from app.models import SubmitedSolution, User, UserAchievement, Quest, ReportedQuest, SubmitedQuest, Achievement
@@ -10,12 +12,28 @@ from app.forms import QuestForm, UserProfileForm, GiveAchievementForm
 from app.database.db_init import db
 # Import MongoDB transactions functions
 from app.database.mongodb_transactions import mongo_transaction
+from app.database.mongodb_init import  mongo1_client
+
+
 # Import admin_required decorator
 from app.user_permission import admin_required
 
 bp_usr = Blueprint('usr', __name__)
 
-#  Get the user's avatar, used in the comments section
+fields_flash_messages = {
+    'about_me': 'About me',
+    'first_name': 'First name',
+    'last_name': 'Last name',
+    'email': 'Email',
+    'facebook_profile': 'Facebook profile',
+    'instagram_profile': 'Instagram profile',
+    'github_profile': 'GitHub profile',
+    'discord_id': 'Discord ID',
+    'linked_in': 'LinkedIn',
+    'avatar': 'Avatar'
+}
+
+#  Open the user profile page
 @bp_usr.route('/my_profile', methods=['GET', 'POST'])
 @login_required
 def open_user_profile():
@@ -24,28 +42,43 @@ def open_user_profile():
     user = User.query.get(user_id)
 
     if form.validate_on_submit():
+
+            
         if 'submit' in request.form:
-            user.about_me = form.about_me.data
-            user.first_name = form.first_name.data
-            user.last_name = form.last_name.data
-            user.email = form.email.data
-            user.facebook_profile = form.facebook_profile.data
-            user.instagram_profile = form.instagram_profile.data
-            user.github_profile = form.github_profile.data
-            user.discord_id = form.discord_id.data
-            user.linked_in = form.linked_in.data
+            new_email = form.email.data.lower()
+            current_email = user.email.lower()
+            if new_email != current_email:
+                is_email_taken = User.query.filter(func.lower(User.email) == new_email).first()
+                if is_email_taken:
+                    flash('This email is already taken. Please choose another one.', 'danger')
+                    return redirect(url_for('usr.open_user_profile'))
+            try:
+                user.about_me = form.about_me.data
+                user.first_name = form.first_name.data
+                user.last_name = form.last_name.data
+                user.email = form.email.data.lower()
+                user.facebook_profile = form.facebook_profile.data
+                user.instagram_profile = form.instagram_profile.data
+                user.github_profile = form.github_profile.data
+                user.discord_id = form.discord_id.data
+                user.linked_in = form.linked_in.data
 
-            db.session.commit()
+                db.session.commit()
 
-            mongo_transaction(
-                'user_info_update',
-                action=f'User {user.username} updated their info',
-                user_id=user_id,
-                username=user.username,
-                timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            )
-            flash('Profile updated successfully', 'success')
-            return redirect(url_for('usr.open_user_profile'))
+                mongo_transaction(
+                    'user_info_update',
+                    action=f'User {user.username} updated their info',
+                    user_id=user_id,
+                    username=user.username,
+                    timestamp=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                )
+                flash('Profile updated successfully', 'success')
+                return redirect(url_for('usr.open_user_profile'))
+            except Exception as e:
+                flash(f'Error during updating user\'s profile!', 'danger')
+                return redirect(url_for('usr.open_user_profile'))
+            
+            
         if 'update_avatar' in request.form:
             if form.avatar.data:
                 avatar_data = form.avatar.data.read()
@@ -58,7 +91,7 @@ def open_user_profile():
     else:
         for field, errors in form.errors.items():
             for error in errors:
-                flash(f'{field}: {error}', 'danger')
+                flash(f'{fields_flash_messages[field]}: {error}', 'danger')
                 return redirect(url_for('usr.open_user_profile'))
 
     if request.method == 'GET':
@@ -72,15 +105,21 @@ def open_user_profile():
         form.discord_id.data = user.discord_id
         form.linked_in.data = user.linked_in
 
+    # Get the user's submited quests
     user_submited_quests = SubmitedQuest.query.filter(SubmitedQuest.quest_author_id == user_id).all()
-    user_solved_quests = SubmitedSolution.query.options(
-        joinedload(SubmitedSolution.coding_quest)
-    ).filter_by(user_id=user_id).all()    
+    # Get the user's solved quests in descending order
+    user_solved_quests = SubmitedSolution.query.options(joinedload(SubmitedSolution.coding_quest)).filter_by(user_id=user_id).all() 
+    # Get the user's achievements
     user_achievements = UserAchievement.query.filter(UserAchievement.user_id == user_id).all()
-    avatar_base64 = base64.b64encode(user.avatar).decode('utf-8') if user.avatar else None
+    # Get the user's avatar
+    if user.avatar:
+        avatar_base64 = base64.b64encode(user.avatar).decode('utf-8')
+    else:
+        avatar_base64 = None
+    # Get the user's status and last logged date
     user_status = user.user_online_status
     last_logged_date = user.last_status_update
-
+    # Get the xp points for the level rank
     with open('app/static/configs/levels.json', 'r') as file:
         levels_data = json.load(file)
 
@@ -114,7 +153,7 @@ def open_user_profile():
 
 
 # Get the users avatar
-@bp_usr.route('/avatar/<user_id>')
+@bp_usr.route('/avatar/<user_id>', methods=['GET'])
 def get_user_avatar(user_id):
     user = User.query.filter_by(user_id=user_id).first_or_404()
     if user.avatar:
@@ -125,7 +164,7 @@ def get_user_avatar(user_id):
     return send_file(io.BytesIO(img_data), mimetype='image/jpeg')
 
 # Open user for editing from the Admin Panel
-@bp_usr.route('/edit_user/<user_id>')
+@bp_usr.route('/edit_user/<user_id>', methods=['GET'])
 @login_required
 @admin_required
 def open_edit_user(user_id):
@@ -264,7 +303,7 @@ def open_user_profile_view(username):
             return abort(404)
 
 # Redirect to the Admin Panel (Admin Role in the database is needed)
-@bp_usr.route('/admin_panel')
+@bp_usr.route('/admin_panel', methods=['GET'])
 @login_required
 @admin_required
 def open_admin_panel():
@@ -281,6 +320,53 @@ def open_admin_panel():
     # Get all users (this is needed so we can extract the name of the user who has reported a quest)
     all_users = User.query.all()
     # Get all admins (this is needed so we can create a dropdown menu in the `Check Reports` table)
+    
+    # Take all JSON files from skill_forge_logs collection in MongoDB
+    # Start a client session
+    
+    # Function to convert ObjectId to string
+    def convert_objectid_to_string(submission):
+        # Create a new dict with string IDs
+        submission['_id'] = str(submission['_id'])
+        return submission
+    
+    with mongo1_client.start_session() as session:
+        with session.start_transaction():
+            try:
+                db = mongo1_client['skill_forge_logs']
+                python_submissions = list(db['python_submissions']
+                                        .find({}, session=session)
+                                        .sort('timestamp', -1)
+                                        .limit(20))
+                
+                java_submissions = list(db['java_submissions']
+                                        .find({}, session=session)
+                                        .sort('timestamp', -1)
+                                        .limit(20))
+                
+                csharp_submissions = list(db['csharp_submissions']
+                                        .find({}, session=session)
+                                        .sort('timestamp', -1)
+                                        .limit(20))
+                
+                javascript_submissions = list(db['javascript_submissions']
+                                            .find({}, session=session)
+                                            .sort('timestamp', -1)
+                                            .limit(20))
+                
+                # Convert ObjectId in each submission to string
+                python_submissions = [convert_objectid_to_string(sub) for sub in python_submissions]
+                java_submissions = [convert_objectid_to_string(sub) for sub in java_submissions]
+                csharp_submissions = [convert_objectid_to_string(sub) for sub in csharp_submissions]
+                javascript_submissions = [convert_objectid_to_string(sub) for sub in javascript_submissions]
+
+                all_submissions = python_submissions + java_submissions + csharp_submissions + javascript_submissions
+            except Exception as e:
+                session.abort_transaction()
+                all_submissions = {}
+                flash('An error occurred while fetching the submissions.', 'error')
+                return redirect(url_for('usr.open_admin_panel'))
+    
     all_admins = User.query.filter_by(user_role='Admin').all()
     if currently_logged_user.user_role == "Admin":
         return render_template('admin_panel.html', 
@@ -289,12 +375,45 @@ def open_admin_panel():
         reported_quests=all_reported_quests,
         all_users=all_users,
         all_admins=all_admins,
-        form=create_quest_post)
+        form=create_quest_post,
+        all_submissions=all_submissions)
     flash('You must be an admin to access this page.', 'error')
     return redirect(url_for('main.login'))
 
+@bp_usr.route('/submissions_logs/<submission_id>', methods=['GET'])
+@login_required
+@admin_required
+def submission_log(submission_id):
+    with mongo1_client.start_session() as session:
+        with session.start_transaction():
+            try:
+                db = mongo1_client['skill_forge_logs']
+                collections = ['python_submissions', 'java_submissions', 'csharp_submissions', 'javascript_submissions']
+
+                submission = None
+
+                for collection in collections:
+                    submission = db[collection].find_one({'submission_id': submission_id})
+                    if submission:
+                        break
+                
+                # Convert ObjectId and datetime fields to strings
+                if isinstance(submission['_id'], ObjectId):
+                    submission['_id'] = str(submission['_id'])
+                if isinstance(submission['timestamp'], datetime):
+                    submission['timestamp'] = submission['timestamp'].isoformat()
+                submission_json = json.dumps(submission, indent=4)
+                quest = Quest.query.get(submission['quest_id'])
+            except Exception as e:
+                session.abort_transaction()
+                submission = {}
+                quest = {}
+                flash(f'An error occurred while fetching the submission. {e}', 'error')
+                return redirect(url_for('usr.open_admin_panel'))
+    return render_template('display_submission_log.html', submission=submission_json, quest=quest)
+
 # Ban user route
-@bp_usr.route('/ban_user/<user_id>')
+@bp_usr.route('/ban_user/<user_id>', methods=['POST'])
 @login_required
 @admin_required
 def ban_user(user_id, ban_reason='no reason'):
@@ -309,7 +428,7 @@ def ban_user(user_id, ban_reason='no reason'):
     return redirect(url_for('usr.open_admin_panel'))
 
 # Unban user route
-@bp_usr.route('/unban_user/<user_id>')
+@bp_usr.route('/unban_user/<user_id>', methods=['POST'])
 @login_required
 @admin_required
 def unban_user(user_id):

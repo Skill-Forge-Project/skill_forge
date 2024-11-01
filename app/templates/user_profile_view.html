@@ -43,9 +43,9 @@
                         <div class="flex flex-col items-center">
                             <div>
                                 {% if avatar %}
-                                <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="user_avatar">
+                                <img src="data:image/jpeg;base64,{{ avatar }}" alt="Avatar" class="inline-block w-48 h-48 rounded-full user_avatar">
                                 {% else %}
-                                <img src="../static/images/anvil.png" alt="Default Avatar" class="user_avatar">
+                                <img src="../static/images/anvil.png" alt="Default Avatar" class="inline-block w-48 h-48 rounded-full user_avatar">
                                 {% endif %}
                             </div>
                             <h1 class="text-xl font-bold user_profile_info username">{{user.username}}</h1>
@@ -82,7 +82,7 @@
                         <div class="text-gray-900 rounded-lg 
                         focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 
                         dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                        user_profile_info about_me_field">{{user.about_me}}</div>
+                        user_profile_info about_me_field whitespace-pre-wrap">{{user.about_me}}</div>
                         <!-- User Info Section -->
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
                             <div>
@@ -107,9 +107,6 @@
                             Find me on
                         </h3>
                         <div class="flex justify-center items-center gap-6 my-6">
-                            <a href="mailto:{{ user.email }}" target="_blank">
-                                <img src="../static/images/email.jpg" width="32" height="32" alt="Facebook Profile">
-                            </a>
                             {% if user.facebook_profile %}
                             <a href="{{ user.facebook_profile }}" target="_blank">
                                 <img src="../static/images/facebook.svg" width="12" height="12" alt="Facebook Profile">

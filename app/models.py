@@ -10,7 +10,11 @@ from sqlalchemy.dialects.postgresql import JSON
 from app.database.db_init import db
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-default_avatar_path = os.path.join(script_dir, 'static', 'images', 'anvil.png')
+
+# Set the default avatar
+def set_default_avatar():
+    with open('app/static/images/achievements-icons/General/quest_approved.png', 'rb') as f:
+        return f.read()
 
 ########### Define the User model ###########
 class User(UserMixin, db.Model):
@@ -24,7 +28,7 @@ class User(UserMixin, db.Model):
     xp = db.Column(db.Integer, default=0, nullable=False)
     level = db.Column(db.Integer, default=1, nullable=False)
     rank = db.Column(db.String(30), default="Neophyte")
-    avatar = db.Column(db.LargeBinary, default=None)
+    avatar = db.Column(db.LargeBinary, default=set_default_avatar, nullable=False)
     date_registered = db.Column(db.DateTime, default=datetime.now(), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     total_solved_quests = db.Column(db.Integer, default=0, nullable=False)
@@ -62,9 +66,7 @@ class User(UserMixin, db.Model):
         self.last_name = last_name
         self.email = email
         self.password = password
-        self.date_registered = datetime.now()
-        with open(default_avatar_path, 'rb') as f:
-            self.avatar = base64.b64encode(f.read())
+        self.date_registered = datetime.now()            
         self.generate_user_id()
         
     # Generate random UserID

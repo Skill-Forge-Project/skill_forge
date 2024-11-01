@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='./images/anvil.png') }}">
+        <title>Submission Log - {{submission["submission_id"]}}</title>
+
+        <!-- Import Navigation bar styles -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">    
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin_panel.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/edit_quest.css') }}">
+        <!-- Include CodeMirror library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <!-- Include CodeMirror theme (optional) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/dracula.min.css">
+        <!-- Include CodeMirror CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+        <!-- Include CodeMirror mode (e.g., Python) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/lint/json-lint.min.js" integrity="sha512-40xVcCik6TlUiZadnRc6ZM0BN65s7F+C3K7eBqGRf8dmjKApjzoiT/GB1GJmdICOZbXjJCiTBbVlsIvFs8A/+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!-- Include bootstrap dataTables libraries -->
+        <script src="{{ url_for('static', filename='js/questsTable.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/toggleVisibilitySections.js') }}"></script>
+        <!-- JavaScript to toggle visibility of content sections -->
+        <script src="{{ url_for('static', filename='js/showContentsSections.js') }}"></script>
+        <!-- Track the user status -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+        <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
+    </head>
+
+    <body>
+        <!-- Include Navbar template -->
+        {% include 'navbar.html' %}
+
+        <div class="content-section">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div id="editQuestContent" class="content">
+                <form method="get">
+                    <div class="input-row">
+                        <h4><strong class="row-label">Quest Name</strong></h4>
+                        <a style="color:#569deb" href="{{ url_for('quests.open_curr_quest', quest_id=quest.quest_id) }}" class="text_input">{{ quest.quest_name }}</a>
+                    </div>
+                    <div class="input-row" style="flex-direction: column;">
+                        <h4><strong class="row-label">Submission</strong></h4>
+                        <textarea id="submission" name="submission" class="text_input logs" readonly>{{ submission }}</textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- JavaScript script to handle the CodeMirror custom fields. 
+            This script should be loaded after the initialization of the fields above! 
+        -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/clike/clike.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/matchbrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/addon/edit/closebrackets.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/lint/json-lint.min.js" integrity="sha512-40xVcCik6TlUiZadnRc6ZM0BN65s7F+C3K7eBqGRf8dmjKApjzoiT/GB1GJmdICOZbXjJCiTBbVlsIvFs8A/+Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="{{ url_for('static', filename='js/codeMirrorLogsHandling.js') }}"></script>
+    </body>
+</html>

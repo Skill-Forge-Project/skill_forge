@@ -18,12 +18,19 @@ $(function () {
   });
 });
 
+// Table for reported quests in the admin panel
 $(function () {
   $(document).ready(function () {
       $('#reported_quests_table').DataTable();
   });
 });
 
+// Table for Skill Forge Logs
+$(function () {
+  $(document).ready(function () {
+      $('#skill_forge_logs').DataTable();
+  });
+});
 
 // Table for quests
 $(function () {
@@ -36,14 +43,18 @@ $(function () {
 // Table for user submited quests in the user profile
 $(function () {
   $(document).ready(function () {
-    $('#user_submited_quests').DataTable();
+    $('#user_submited_quests').DataTable({
+      "order": [[ 4, "desc" ]]
+    });
   });
 });
 
 // Table for user solved quests
 $(function () {
   $(document).ready(function () {
-    $('#user_solved_quests').DataTable();
+    $('#user_solved_quests').DataTable({
+      "order": [[ 5, "desc" ]]
+    }); 
   });
 });
 
