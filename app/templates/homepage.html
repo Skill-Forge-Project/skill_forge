@@ -59,23 +59,27 @@
             
             <div class="homepage_box mx-3 mt-6 flex flex-col rounded-lg text-gray-300 shadow-secondary-1 transform transition-transform duration-300 hover:scale-105">
                 <img class="box rounded-t-lg object-contain w-200 h-200" src="{{ url_for('static', filename='images/stats_avatar.png') }}" alt="Alchemist" />
-                <div class="box mt-4 p-4 md:p-6">
+                <div class="box mt-4 p-4 md:p-6 text-center">
                     <p class="mb-4 text-xl font-medium leading-tight homepage_box title">Stats</p>
                     <p class="mb-2 text-base">Total Users: {{ user_count }}</p>
                     <p class="mb-2 text-base" id="onlineUsersNumber">Online users: {{ online_users }}</p>
                     <p class="mb-2 text-base">Total Quests: {{ quest_count }}</p>
                     <p class="mb-2 text-base">Solved Quests: {{ solutions_count }}</p>
-                    <a href="{{ url_for('ranklist.open_ranklist_board') }}" class="mt-4 text-xl font-medium leading-tight homepage_box title">
+                    <a href="{{ url_for('ranklist.open_ranklist_board') }}" class="mt-4 text-xl font-medium leading-tight btn ranklist-btn">
                         Ranklist Board
                       </a>
                 </div>
             </div>
 
             <div class="homepage_box mx-3 mt-6 flex flex-col rounded-lg text-gray-300 shadow-secondary-1 transform transition-transform duration-300 hover:scale-105">
-                <img class="box rounded-t-lg object-contain w-200 h-200" src="{{ url_for('static', filename='images/construction_worker.png') }}" alt="Coming Soon" />
-                <div class="box mt-4 p-4 md:p-6">
-                    <p class="mb-4 text-xl font-medium leading-tight homepage_box title">Coming Soon</p>
-                    <p class="mb-2 text-base">This section is coming soon with more features.</p>
+                <img class="box rounded-t-lg  object-contain w-200 h-200" src="{{ url_for('static', filename='images/underworld_realm/underworld_realm.png') }}" alt="Coming Soon" />
+                <div class="box mt-4 p-4 md:p-6 text-center">
+                    <p class="mb-0 text-xl font-medium text-center leading-tight homepage_box title">Underworld Realm</p>
+                    <p class="mb-2 mt-0 text-red-400">BETA</p>
+                    <p class="mb-2 text-base text-center">Challenge your skills against the AI bosses of the Underworld</p>
+                    <a href="{{ url_for('undwrld_bp.open_underworld') }}" class="mt-4 text-xl font-medium leading-tight btn underworld-btn">
+                        Enter Underworld
+                      </a>
                 </div>
             </div>
             <div class="homepage_box mx-3 mt-6 flex flex-col rounded-lg text-gray-300 shadow-secondary-1 transform transition-transform duration-300 hover:scale-105">

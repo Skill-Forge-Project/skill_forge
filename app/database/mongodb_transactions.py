@@ -2,7 +2,7 @@
 from app.database.mongodb_init import mongo1_db, mongo1_client
 
 
-# Create a transaction for inserting a log entry in the userLogins or userLoggouts collection
+# Create a MongoDB Log transaction
 def mongo_transaction(collection_name, **kwargs):
     collection = mongo1_db[collection_name]
     session = mongo1_client.start_session()
