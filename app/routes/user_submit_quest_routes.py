@@ -119,9 +119,12 @@ def user_submit_quest():
         
         db.session.add(new_user_submitted_quest)
         db.session.commit()
+        
+        # MongoDB Log Transaction
         mongo_transaction('user_submitted_quests', action = f'User {current_user.username} submitted a new quest with ID: {quest_id}',
                           user_id = current_user.user_id, username = current_user.username, timestamp = current_time)
         flash('Your quest has been submitted successfully!', 'success')
+        
         return redirect(url_for('main.main_page'))
     else:
         flash('Quest submission failed! Check the fields and try again', 'danger')
@@ -210,7 +213,17 @@ def approve_submited_quest(quest_id):
             
             db.session.add(new_quest)
             send_quest_approved_email(quest_author.email, quest_author.username, quest.quest_name, quest.language, quest.quest_id)
-            mongo_transaction('user_submited_approved_quests', action=f'Quest {quest.quest_name} has been approved by {current_user.username}', user_id=current_user.user_id, username=current_user.username, timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            
+            # MongoDB Log Transaction
+            try:
+                mongo_transaction('user_submited_approved_quests', 
+                                action=f'Quest {quest.quest_name} has been approved by {current_user.username}',
+                                user_id=current_user.user_id, 
+                                username=current_user.username, 
+                                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            except:
+                print('Error while inserting log entry in user_submited_approved_quests collection')
+            
             flash('Quest approved successfully.', 'success')
         elif action == 'reject':
             quest.status = 'Rejected'
