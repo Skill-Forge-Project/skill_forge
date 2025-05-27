@@ -1,0 +1,14 @@
+# Ignore Python bytecode files
+*__pycache__/
+
+# Ignore Python virtual environment directories
+*venv/
+
+# Ignore environment variables files
+*.env
+*.ropeproject
+.DS_Store
+g4f
+
+# Ignore Docker dev files
+/data

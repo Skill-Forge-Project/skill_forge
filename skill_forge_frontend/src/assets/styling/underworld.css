@@ -1,0 +1,55 @@
+/* Custom Underworld styling */
+
+:root {
+    --und_background: linear-gradient(360deg, rgba(10, 10, 20, 1) 10%, rgba(50, 0, 0, 1) 60%, rgba(100, 0, 0, 1) 120%);
+    --und_boss_container: linear-gradient(180deg, rgba(30, 30, 40, 0.8), rgba(10, 10, 20, 0.7));
+    --und_primary_color: #f93a33;
+    --und_secondary_color: #d2d0d0;
+    --und_font_primary: "Barlow", sans-serif;
+}
+
+
+
+body {
+    background: var(--und_background);
+}
+
+
+.underworld_primary_text {
+    color: var(--und_primary_color);
+    font-family: var(--und_font_primary);
+    font-size: 2em;
+}
+
+.underworld_secondary_text {
+    color: var(--und_secondary_color);
+    font-family: var(--und_font_primary);
+    font-size: 1.0em;
+}
+
+.underworld_boss_container {
+    background: var(--und_boss_container);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.underworld_button {
+    background: rgba(100, 0, 0, 1);
+    color: var(--und_secondary_color);
+    font-family: var(--und_font_primary);
+    border: 1px solid #a51b16;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.underworld_button:hover {
+    background: #a51b16;
+    color: #d2d0d0;
+    text-decoration: none;
+    border: 1px solid var(--und_primary_color);
+}

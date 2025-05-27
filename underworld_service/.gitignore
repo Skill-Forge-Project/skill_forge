@@ -1,0 +1,16 @@
+# Ignore Python cache
+**/__pycache__/
+
+# Ignore config files and docs
+**.vscode/
+**.idea/
+**/docs/
+**/.ropeproject/
+**/migrations/
+
+# Ignore Python virtual environments
+**/venv/
+
+# Ignore env variables
+**.env
+.DS_Store

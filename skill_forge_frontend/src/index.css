@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  --color-primary: #212529;
+  --color-secondary: #364153;
+  --color-accent: #03e9f4;
+  --color-text: #03e9f4;
+  --color-text-secondary: #ffffff;
+  --color-text-link: #647eff;
+  --color-primary-object: #ff0303;
+  --color-primary-object-snd: #212529;
+
+  --font-primary: "Barlow", sans-serif;
+  
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-primary-object-snd);
+  
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+
+/* Custom Classes */
+.custom_background {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-primary);
+}
+
+.primary_object {
+  /* background: linear-gradient(180deg, #1a1a1ae6 40%);  border: 0px; */
+  background: rgba(0, 0, 0, .5);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.2), 4px 6px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+  border-radius: 8px;
+}
+
+.primary_text_area {
+  background-color: var(--color-secondary);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #ffffff;
+  font-family: var(--font-primary);
+  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.2), 4px 6px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.primary_text {
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  font-size: 2em;
+}
+
+.secondary_text {
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  font-size: 1.2em;
+}
+
+.link_text {
+  color: var(--color-text-link);
+  font-family: var(--font-primary);
+  text-decoration: none;
+}
+
+
+.primary_button {
+  /* background-color: var(--color-secondary); */
+  font-family: var(--font-primary);
+  background: rgba(0, 0, 0, .5);
+  color: var(--color-text);
+  border: 0px;
+}
+
+
+.primary_button:hover {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+  border: 0px;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 0 5px #03e9f4,
+  0 0 25px #03e9f4,
+  0 0 50px #03e9f4,
+  0 0 100px #03e9f4;
+  outline: none;
+  border: none;
+}
+
+.primary_button:disabled {
+  font-family: var(--font-primary);
+  background-color: var(--color-primary);
+  color: var(--color-primary-object);
+  border: 0px;
+  cursor: not-allowed;
+}
+
+.primary_button:disabled:hover {
+  font-family: var(--font-primary);
+  background-color: var(--color-primary);
+  color: var(--color-primary-object);
+  border: 0px;
+  cursor: not-allowed;
+  box-shadow: 0 0 5px #f40303,
+  0 0 25px #f40303,
+  0 0 50px #f40303,
+  0 0 100px #f40303;
+}
+
+.python_button:hover {
+  background: #4584b6;
+  color: #ffffff;
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 0 0 5px #ffde57,
+              0 0 25px #ffde57,
+              0 0 50px #ffde57,
+              0 0 100px #4584b6;
+  cursor: pointer;
+}
+
+.js_button:hover {
+  background: #e4c70b;
+  color: #fffefe;
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 0 0 5px #323330,
+              0 0 25px #f0db4f,
+              0 0 50px #323330,
+              0 0 100px #323330;
+  cursor: pointer;
+}
+
+.java_button:hover {
+  background: #f89820;
+  color: #ffffff;
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 0 0 5px #5382a1,
+              0 0 25px #f89820,
+              0 0 50px #5382a1,
+              0 0 100px #f89820;
+  cursor: pointer;
+}
+
+.csharp_button:hover {
+  background: #9b4993;
+  color: #fff;
+  border-radius: 5px;
+  transition: all 0.25s;
+  box-shadow: 0 0 5px #682876,
+              0 0 25px #682876,
+              0 0 50px #682876,
+              0 0 100px #9b4993;
+  cursor: pointer;
+}

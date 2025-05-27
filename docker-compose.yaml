@@ -1,0 +1,86 @@
+services:
+  # Postgres users database
+  skill-forge-auth:
+    image: postgres:16
+    container_name: sf-auth-db
+    hostname: postgres-auth
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${AUTH_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AUTH_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AUTH_POSTGRES_DB}
+      TZ: ${TZ}
+    ports:
+      - "${AUTH_POSTGRES_PORT}:5432"
+    volumes:
+      - auth_db:/var/lib/postgresql/data
+    networks:
+      - skill_forge_network
+
+  # Postgres quests database
+  skill-forge-quests:
+    image: postgres:16
+    container_name: sf-quest-db
+    hostname: postgres-quests
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${QUESTS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${QUESTS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${QUESTS_POSTGRES_DB}
+      TZ: ${TZ}
+    ports:
+      - "${QUESTS_POSTGRES_PORT}:5432"
+    volumes:
+      - quests_db:/var/lib/postgresql/data
+    networks:
+      - skill_forge_network
+
+  # Postgres underworld database
+  skill-forge-underworld:
+    image: postgres:16
+    container_name: sf-underworld-db
+    hostname: postgres-underworld
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${UNDERWORLD_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${UNDERWORLD_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${UNDERWORLD_POSTGRES_DB}
+      TZ: ${TZ}
+    ports:
+      - "${UNDERWORLD_POSTGRES_PORT}:5432"
+    volumes:
+      - underworld_db:/var/lib/postgresql/data
+    networks:
+      - skill_forge_network
+
+  # Piston API
+  piston-api:
+    image: ghcr.io/engineer-man/piston
+    container_name: piston-api
+    hostname: pistonapi
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - 2000:2000
+    volumes:
+      - ./data/piston/packages:/piston/packages
+    tmpfs:
+      - /tmp:exec
+    networks:
+      - skill_forge_network
+
+volumes:
+  auth_db:
+    driver: local
+    name: auth_db
+  quests_db:
+    driver: local
+    name: quests_db
+  underworld_db:
+    driver: local
+    name: underworld_db
+
+networks:
+  skill_forge_network:
+    driver: bridge
+    name: skill_forge_network
