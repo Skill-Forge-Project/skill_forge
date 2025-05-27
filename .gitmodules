@@ -5,3 +5,7 @@
 [submodule "skill_forge_quests"]
     path = quests_service
     url = git@github.com:Skill-Forge-Project/skill_forge_quests.git
+    
+[submodule "underworld_service"]
+	path = underworld_service
+	url = git@github.com:Skill-Forge-Project/skill_forge_underworld.git
