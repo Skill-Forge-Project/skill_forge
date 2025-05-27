@@ -1,5 +1,5 @@
 [submodule "skill_forge_auth"]
-	path = skill_forge_auth
+	path = auth_service
 	url = git@github.com:Skill-Forge-Project/skill_forge_auth.git
 
 [submodule "skill_forge_quests"]
