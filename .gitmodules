@@ -10,3 +10,6 @@
 [submodule "users_service"]
 	path = users_service
 	url = git@github.com:Skill-Forge-Project/skill_forge_users.git
+[submodule "skill_forge_frontend"]
+	path = skill_forge_frontend
+	url = git@github.com:Skill-Forge-Project/skill_forge_frontend.git
