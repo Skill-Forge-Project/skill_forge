@@ -12,3 +12,7 @@ g4f
 
 # Ignore Docker dev files
 /data
+
+# Ignore PyCharm/VSCode configs
+**.idea/
+**.vscode/
