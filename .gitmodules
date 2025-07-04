@@ -1,6 +1,6 @@
 [submodule "skill_forge_quests"]
-    path = quests_service
-    url = git@github.com:Skill-Forge-Project/skill_forge_quests.git
+	path = quests_service
+	url = git@github.com:Skill-Forge-Project/skill_forge_quests.git@master
 [submodule "underworld_service"]
 	  path = underworld_service
 	  url = git@github.com:Skill-Forge-Project/skill_forge_underworld.git
@@ -14,5 +14,5 @@
 	  path = skill_forge_frontend
 	  url = git@github.com:Skill-Forge-Project/skill_forge_frontend.git
 [submodule "skill_forge_admin"]
-    path = skill_forge_admin
-    url = git@github.com:Skill-Forge-Project/skill_forge_admin.git
+	path = skill_forge_admin
+	url = git@github.com:Skill-Forge-Project/skill_forge_admin.git
