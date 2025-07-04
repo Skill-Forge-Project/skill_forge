@@ -1,18 +1,18 @@
 [submodule "skill_forge_quests"]
 	path = quests_service
-	url = git@github.com:Skill-Forge-Project/skill_forge_quests.git@master
+	url = git@github.com:Skill-Forge-Project/skill_forge_quests.git
 [submodule "underworld_service"]
-	  path = underworld_service
-	  url = git@github.com:Skill-Forge-Project/skill_forge_underworld.git
+	path = underworld_service
+	url = git@github.com:Skill-Forge-Project/skill_forge_underworld.git
 [submodule "auth_service"]
-	  path = auth_service
-	  url = git@github.com:Skill-Forge-Project/skill_forge_auth.git
+	path = auth_service
+	url = git@github.com:Skill-Forge-Project/skill_forge_auth.git
 [submodule "users_service"]
-	  path = users_service
-	  url = git@github.com:Skill-Forge-Project/skill_forge_users.git
+	path = users_service
+	url = git@github.com:Skill-Forge-Project/skill_forge_users.git
 [submodule "skill_forge_frontend"]
-	  path = skill_forge_frontend
-	  url = git@github.com:Skill-Forge-Project/skill_forge_frontend.git
+	path = skill_forge_frontend
+	url = git@github.com:Skill-Forge-Project/skill_forge_frontend.git
 [submodule "skill_forge_admin"]
 	path = skill_forge_admin
 	url = git@github.com:Skill-Forge-Project/skill_forge_admin.git
