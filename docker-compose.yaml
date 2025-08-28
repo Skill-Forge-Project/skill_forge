@@ -55,7 +55,8 @@ services:
 
   # Piston API
   piston-api:
-    image: ghcr.io/engineer-man/piston
+    # image: ghcr.io/engineer-man/piston
+    image: ghcr.io/engineer-man/piston@sha256:6500f2af69ce18fe16ca9a0ba7b0ea895366fc0efa46860c03d1d3c8a6cd270d
     container_name: piston-api
     hostname: pistonapi
     restart: unless-stopped
